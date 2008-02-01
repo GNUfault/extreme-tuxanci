@@ -1,0 +1,11 @@
+
+#include <stdlib.h>
+#include "dynamicInt.h"
+
+int* newInt(int x)
+{
+	int *new;
+	new = malloc( sizeof(int) );
+	*new = x;
+	return new;
+}

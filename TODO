@@ -1,0 +1,23 @@
+Oroborus_: mozna by nebylo spatne checknout, jestli to ma soubory, co pouzivas, a kdyz ne, tak vypsat error a skoncit nejak pekneji, nez segfaultem
+
+<xHire> Nějak mi to nedalo a musel jsem vytvořit (alespoň z mého pohledu) lepší zvuk pro smrt tuxánka. Tady je: http://hosting.digiservis.cz/upload/tuxanci-smrt.ogg Podle mě se k této postavičce hodí daleko lépe. ;c) Akorát má 17 kilobajtů, což je oproti původnímu docela obr. Kdyžtak to tedy projeďte někdo nějakým zmenšovákem, já se zvukem moc nedělám. :-D
+<Oroborus> xHire : no, je to zaujamvy zvuk ;)
+<Oroborus> zaujamvy -> zaujmavy
+<xHire> :c)
+<xHire> Mně se prostě tamten původní nelíbil, tak jsem si vytvořil (resp. nahrál) vlastní. Jestli bude zařazen do vývojového stromu je druhá věc, ale já ho budu "používat". ;c) (Po chvilce hraní se na něj docela dobře zvykne. :c)
+<Oroborus> BTW dnes som akurat programoval "spravu zvukov a hudby" do "tuxanci-bg" ;)
+<xHire> tak nějak mě napadlo, jestli půjde "cíl" nebo hra nebo něco ..jak to jenom říct.. nějakým způsobem dál, nebylo by špatné zavést "bodovací systém" - nejen za počet zastřelení, ale i za sebrání zbraní, bonusů, eventuelně by se tam mohly náhodně (jenom na chvíli - ne tak dlouho jako normální věci) zobrazovat bodové bonusy
+<xHire> třeba v jedné hře můžu být lepší, že toho víc nasbírám, ale teďka prostě jenom kolik toho zastřelím. podobně bodově rozrůznit, jak byl nepřítel zabit - jestli minou nebo kterou zbraní (příp. jestli to nebyl odraz z teleportu). myslím, že by se to využilo při síťových turnajích
+<xHire> případně i podle rychlosti odehraného zápasu - pokud ho vyřídím během půl minuty, tak na tom budu líp než když budu stejný zápas hrát deset minut (vím, je to i o tom, jak si člověk tu hru vychutnává, ale přecijenom...). časové limity ne (aby se to muselo stihnout do pěti minut apod.) - to by zase byl asi krok špatným směrem
+<xHire> tak mě napadá, že v TopScore tabulce by mohla být i informace v jaké mapě, příp. možnost filtrovat Top podle map. Eventuálně každé mapě přiřadit určitý koeficient obtížnosti (a pokud by byl to byl zápas proti počítači, tak i zobrazit nastavenou obtížnost (a/nebo opět podle toho filtrovat)), podle kterého by se dal vytvořit 'absolutní' žebříček TopScore
+<xHire> btw počáteční pauza by mohla být trošku speciální (např. nápis START), takže by šla zrušit *libovolnou* klávesou. já mám třeba nastavený levý Ctrl na střelbu, takže to je od Péčka docela daleko ;c) (když ne libovolnou, tak alespoň tou střelbou..)
+* CIA-33 has quit ()
+<xHire> nebylo by i špatné (navrhoval jsem už něco podobného - tohle je trošku jiné a spíš k této verzi - do nové bych spíš napasoval ten původní návrh ;c)), kdyby se po dohrání hry zobrazilo (třeba na chvíli - mohl by u toho být nějaký potlesk nebo tak :-D) odehrané skóre (s vyznačeným jménem, aby bylo zřejmé ke komu to patří), a pak by se to buď odkliklo, ale spíš automaticky, by to přešlo na TopScore
+Hire> Oroborus__: fakt fikaný by bylo, kdyby bylo možné bonusy sbírat do zásoby a použít je až v tu pravou chvíli (prostě kdy člověk chce), ale asi by to bylo o dost složitější (příp. by se dal sebrat jenom jeden a ten původní by se "vypustil", takže by ze hry nezmizel)
+<xHire> Oroborus__: vzhledem k tvé poznámce, že na začátku hry nemá nikdo nic, tak by teoreticky i mohli mít náhodně přiřazené bonusy :-D
+<xHire> btw nebylo by špatné, kdyby si Tuxánci pamatovali, kterou mapu jsem hrál minule - pravidelně překlikávám na 8bit, ale už by mohl být předvybraný (+ by to vybrání mohlo být zvýrazněno např. oranžovým rámečkem (1-2-3px))
+<xHire> a taky by se šiklo, když seberu víckrát jednu zbraň (mám tedy více než 1 zásobník), tak by se zobrazoval ten aktuální + nějak znázornit, kolik dalších jich ještě mám.
+<xHire> a ještě k těm zbraním: bylo by fajn, kdyby pak po Tuxánkovi (třeba náhodně) zůstal balíček s municí (samozřejmě ošizený nějakým náhodným koeficientem), ale jenom dočasně - tak jako normální zbraně/bonusy (aby zmizel)
+<Oroborus__> xHire : ako, tux zomrie a zostane ponom zbrane ktore mal ?
+<xHire> buď všechny (jako jeden balíček (=> bude chtít novou ikonku)) nebo jenom některé nebo jenom větší zlomek toho co měl (takže některé mohou chybět nebo nemusí mít původní zásobníky)
+<xHire> ale vždycky bych to nechal jako balíček..

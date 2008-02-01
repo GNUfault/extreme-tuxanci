@@ -1,0 +1,573 @@
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
+
+#include "main.h"
+#include "tux.h"
+#include "image.h"
+#include "layer.h"
+#include "screen_world.h"
+#include "shot.h"
+#include "gun.h"
+#include "wall.h"
+#include "item.h"
+#include "arena.h"
+#include "myTimer.h"
+#include "net_multiplayer.h"
+#include "dynamicInt.h"
+
+static SDL_Surface *g_tux_up;
+static SDL_Surface *g_tux_right;
+static SDL_Surface *g_tux_left;
+static SDL_Surface *g_tux_down;
+static SDL_Surface *g_cross;
+
+static bool_t isTuxInit = FALSE;
+
+bool_t isTuxInicialized()
+{
+	return isTuxInit;
+}
+
+void initTux()
+{
+	assert( isImageInicialized() == TRUE );
+
+	g_tux_up = addImageData("tux8.png", IMAGE_ALPHA, "tux8", IMAGE_GROUP_BASE);
+	g_tux_right = addImageData("tux6.png", IMAGE_ALPHA, "tux6", IMAGE_GROUP_BASE);
+	g_tux_left = addImageData("tux4.png", IMAGE_ALPHA, "tux4", IMAGE_GROUP_BASE);
+	g_tux_down = addImageData("tux2.png", IMAGE_ALPHA, "tux2", IMAGE_GROUP_BASE);
+	g_cross = addImageData("cross.png", IMAGE_ALPHA, "cross", IMAGE_GROUP_BASE);
+
+	isTuxInit = TRUE;
+}
+
+tux_t* newTux()
+{
+	static int last_id = 0;
+	tux_t *new;
+
+	new = malloc( sizeof(tux_t) );
+	assert( new != NULL );
+
+	memset(new, 0, sizeof(tux_t) );
+	
+	new->id = last_id++;
+	new->status = TUX_STATUS_ALIVE;
+	new->control = TUX_CONTROL_NONE;
+	findFreeSpace(&new->x, &new->y, TUX_WIDTH, TUX_HEIGHT);
+	new->position = TUX_DOWN;
+	new->gun = GUN_SIMPLE;
+	new->shot[ new->gun ] = GUN_MAX_SHOT;
+	
+	sprintf(new->name, "no_name_id_%d", new->id);
+	new->score = 0;
+	new->frame = 0;
+
+	new->bonus = BONUS_NONE;
+	new->bonus_time = 0;
+
+	new->isCanShot = TRUE;
+	new->isCanSwitchGun = TRUE;
+
+	return new;
+}
+
+bool_t isTuxAnyGun(tux_t *tux)
+{
+	int i;
+	
+	for( i = 0 ; i < GUN_COUNT ; i++ )
+	{
+		if( tux->shot[i] > 0 )
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+void getCourse(int n, int *x, int *y)
+{
+	assert( x != NULL );
+	assert( y != NULL );
+
+	switch( n )
+	{
+		case TUX_UP :
+			*x = 0;
+			*y = -1;
+		break;
+
+		case TUX_LEFT :
+			*x = -1;
+			*y = 0;
+		break;
+
+		case TUX_RIGHT :
+			*x = +1;
+			*y = 0;
+		break;
+
+		case TUX_DOWN :
+			*x = 0;
+			*y = +1;
+		break;
+
+		default :
+			assert( ! "premenna n ma zlu hodnotu !" );
+		break;
+	}	
+}
+
+void drawTux(tux_t *p)
+{
+	SDL_Surface *g_image = NULL;
+
+	assert( p != NULL );
+
+	if( p->bonus == BONUS_HIDDEN && 
+	    getNetTypeGame() != NET_GAME_TYPE_NONE &&
+	    p->control == TUX_CONTROL_NET )
+	{
+		return;
+	}
+
+	switch( p->position )
+	{
+		case TUX_UP :
+			g_image = g_tux_up;
+		break;
+
+		case TUX_LEFT :
+			g_image = g_tux_left;
+		break;
+
+		case TUX_RIGHT :
+			g_image = g_tux_right;
+		break;
+
+		case TUX_DOWN :
+			g_image = g_tux_down;
+		break;
+
+		default :
+			assert( ! "premenna p->control ma zlu hodnotu !" );
+		break;
+	}
+
+	if( p->status == TUX_STATUS_DEAD )
+	{
+		g_image = g_cross;
+
+		addLayer(g_cross,
+			p->x - g_cross->w / 2,
+			( p->y + g_cross->h / 2 ) - g_cross->h,
+			0, 0,
+			g_cross->w, g_cross->h, TUX_LAYER);
+
+		return;
+	}
+
+	addLayer(g_image,
+		p->x - TUX_IMG_WIDTH / 2,
+		( p->y + TUX_HEIGHT / 2 ) - TUX_IMG_HEIGHT,
+		p->frame * TUX_IMG_WIDTH, 0,
+		TUX_IMG_WIDTH, TUX_IMG_HEIGHT, TUX_LAYER);
+}
+
+void drawListTux(list_t *listTux)
+{
+	tux_t *thisTux;
+	int i;
+
+	assert( listTux != NULL );
+
+	for( i = 0 ; i < listTux->count ; i++ )
+	{
+		thisTux  = (tux_t *)listTux->list[i];
+		assert( thisTux != NULL );
+		drawTux(thisTux);
+	}
+}
+
+tux_t* getTuxID(list_t *listTux, int id)
+{
+	tux_t *thisTux;
+	int i;
+
+	assert( listTux != NULL );
+
+	for( i = 0 ; i < listTux->count ; i++ )
+	{
+		thisTux  = (tux_t *)listTux->list[i];
+		assert( thisTux != NULL );
+
+		if( thisTux->id == id )
+		{
+			return thisTux;
+		}
+	}
+
+	return NULL;
+}
+
+tux_t* isConflictWithListTux(list_t *listTux, int x, int y, int w, int h)
+{
+	tux_t *thisTux;
+	int tx, ty, tw, th;
+	int i;
+
+	assert( listTux != NULL );
+
+	for( i = 0 ; i < listTux->count ; i++ )
+	{
+		thisTux  = (tux_t *)listTux->list[i];
+		assert( thisTux != NULL );
+
+		getTuxProportion(thisTux, &tx, &ty, &tw, &th);
+		
+		if( conflictSpace(x, y, w, h, tx, ty, tw, th) )
+		{
+			return thisTux;
+		}
+	}
+
+	return NULL;
+}
+
+static void timer_spawnTux(void *p)
+{
+	tux_t *tux;
+	arena_t *arena;
+	int id;
+
+	id =  * ((int *)p);
+	free(p);
+
+	arena = getWorldArena();
+	tux = getTuxID(arena->listTux, id);
+
+	if( tux == NULL )return;
+
+	tux->status = TUX_STATUS_ALIVE;
+	findFreeSpace(&tux->x, &tux->y, TUX_WIDTH, TUX_HEIGHT);
+	tux->gun = GUN_SIMPLE;
+
+	memset(tux->shot, 0, sizeof(int) * GUN_COUNT);
+	tux->shot[ tux->gun ] = GUN_MAX_SHOT;
+
+	tux->bonus = BONUS_NONE;
+	tux->bonus_time = 0;
+
+	tux->isCanShot = TRUE;
+	tux->isCanSwitchGun = TRUE;
+	
+	addNewItem(arena->listItem);
+
+	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+	{
+		proto_send_settux(tux);
+	}
+}
+
+static void timer_tuxCanShot(void *p)
+{
+	tux_t *tux;
+	int id;
+
+	id =  * ((int *)p);
+	free(p);
+
+	tux = getTuxID(getWorldArena()->listTux, id);
+
+	if( tux == NULL )return;
+
+	tux->isCanShot = TRUE;
+}
+
+static void timer_tuxCanSwitchGun(void *p)
+{
+	tux_t *tux;
+	int id;
+
+	id =  * ((int *)p);
+	free(p);
+
+	tux = getTuxID(getWorldArena()->listTux, id);
+
+	if( tux == NULL )return;
+
+	tux->isCanSwitchGun = TRUE;
+}
+
+void switchTuxGun(tux_t *tux)
+{
+	int i;
+	
+	if( tux->isCanSwitchGun == FALSE )
+	{
+		return;
+	}
+
+	for( i = tux->gun+1 ; i < GUN_COUNT ; i++ )
+	{
+		if( tux->shot[i] > 0 )
+		{
+			tux->gun = i;
+			tux->isCanSwitchGun = FALSE;
+			addTimer(timer_tuxCanSwitchGun, newInt(tux->id), TUX_TIME_CAN_SWITCH_GUN );
+			return;
+		}
+	}
+
+	for( i = 0 ; i < GUN_COUNT ; i++ )
+	{
+		if( tux->shot[i] > 0 )
+		{
+			tux->gun = i;
+			tux->isCanSwitchGun = FALSE;
+			addTimer(timer_tuxCanSwitchGun, newInt(tux->id), TUX_TIME_CAN_SWITCH_GUN );
+			return;
+		}
+	}
+}
+
+void eventTuxIsDead(tux_t *tux)
+{
+	if( tux->status == TUX_STATUS_DEAD )
+	{
+		return;
+	}
+
+	tux->status = TUX_STATUS_DEAD;
+
+	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+	{
+		addTimer(timer_spawnTux, newInt(tux->id), TUX_TIME_SPAWN );
+	}
+}
+
+static void eventTuxIsDeadWIthShot(tux_t *tux,shot_t *shot)
+{
+	shot->author->score++;
+	countRoundInc();
+	eventTuxIsDead(tux);
+
+}
+
+void tuxTeleport(tux_t *tux)
+{
+	findFreeSpace(&tux->x, &tux->y, TUX_WIDTH, TUX_HEIGHT);
+	
+	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+	{
+		proto_send_settux(tux);
+	}
+}
+
+void eventConflictShotWithTux(list_t *listTux, list_t *listShot)
+{
+	shot_t *thisShot;
+	tux_t *thisTux;
+
+	int i;
+
+	assert( listTux != NULL );
+	assert( listShot != NULL );
+
+	for( i = 0 ; i < listShot->count ; i++ )
+	{
+		thisShot = (shot_t *)listShot->list[i];
+		assert( thisShot != NULL );
+
+		if( ( thisTux = isConflictWithListTux(listTux, thisShot->x, thisShot->y,
+			thisShot->w, thisShot->h) ) != NULL ) 
+		{
+			if(  thisTux->status == TUX_STATUS_ALIVE )
+			{
+				if( thisShot->author == thisTux &&
+				    thisShot->isCanKillAuthor == FALSE )
+				{
+					continue;
+				}
+
+				if( thisTux->bonus == BONUS_TELEPORT )
+				{
+					tuxTeleport(thisTux);
+					continue;
+				}
+
+
+				eventTuxIsDeadWIthShot(thisTux, thisShot);
+			}
+
+			delListItem(listShot, i, destroyShot);
+			i--;
+
+			continue;
+		}
+	}
+}
+
+void moveTux(tux_t *tux,int n)
+{
+	int px, py;
+	int zal_x, zal_y;
+	int x, y, w, h;
+	arena_t *arena;
+
+	assert( tux != NULL );
+
+	if( tux->position != n )
+	{
+		tux->position = n;
+		if( getNetTypeGame() != NET_GAME_TYPE_NONE )proto_send_settux(tux);
+		return;
+	}
+
+	arena = getWorldArena();
+	getCourse(tux->position, &px, &py);
+	
+	zal_x = tux->x;
+	zal_y = tux->y;
+
+	tux->x += px * TUX_STEP;
+	tux->y += py * TUX_STEP;
+
+	if( tux->bonus == BONUS_SPEED )
+	{
+		tux->x += px * TUX_STEP;
+		tux->y += py * TUX_STEP;
+	}
+
+	getTuxProportion(tux, &x, &y, &w, &h);
+
+	if( tux->bonus != BONUS_GHOST && (
+	    isConflictWithListTux(arena->listTux, x, y, w, h) != tux ||
+	    isConflictWithListWall(arena->listWall, x, y, w, h) ) )
+	{
+		tux->x = zal_x;
+		tux->y = zal_y;
+	}
+	else
+	{
+		tux->frame++;
+
+		if( tux->frame == TUX_MAX_ANIMATION_FRAME ) tux->frame = 0;
+		if( getNetTypeGame() != NET_GAME_TYPE_NONE )proto_send_settux(tux);
+	}
+}
+
+void shotTux(tux_t *tux)
+{
+	assert( tux != NULL );
+
+	if( tux->isCanShot == FALSE  ||
+	    tux->shot[tux->gun] == 0 )
+	{
+		return;
+	}
+
+	shotInGun(tux);
+
+	if( tux->bonus != BONUS_SHOT )
+	{
+		tux->shot[tux->gun]--;
+	}
+
+	tux->isCanShot = FALSE;
+	addTimer(timer_tuxCanShot, newInt(tux->id), TUX_TIME_CAN_SHOT );
+
+	if( tux->shot[tux->gun] == 0 )
+	{
+		switchTuxGun(tux);
+	}
+}
+
+static void pickUpGun(tux_t *tux)
+{
+	if( isTuxAnyGun(tux) == FALSE )
+	{
+		tux->gun = GUN_SIMPLE;
+		tux->pickup_time++;
+
+		if( tux->pickup_time == TUX_MAX_PICKUP )
+		{
+			tux->gun = GUN_SIMPLE;
+			tux->shot[ tux->gun ] = GUN_MAX_SHOT;
+			tux->pickup_time = 0;
+		}
+	}
+}
+
+static void eventBonus(tux_t *tux)
+{
+	if( tux->bonus != BONUS_NONE )
+	{
+		if( tux->bonus_time > 0 )
+		{
+			tux->bonus_time--;
+		}
+
+		if( tux->bonus_time == 0 )
+		{			
+			if( tux->bonus == BONUS_GHOST )
+			{
+				int x, y, w, h;
+				getTuxProportion(tux, &x, &y, &w, &h);
+
+				if ( isConflictWithListWall(getWorldArena()->listWall, x, y, w, h) )
+				{
+					return;
+				}
+			}
+
+			tux->bonus = BONUS_NONE;
+		}
+	}
+}
+
+void eventListTux(list_t *listTux)
+{
+	tux_t *thisTux;
+	int i;
+
+	assert( listTux != NULL );
+
+	for( i = 0 ; i < listTux->count ; i++ )
+	{
+		thisTux  = (tux_t *)listTux->list[i];
+		assert( thisTux != NULL );
+
+		tuxControl(thisTux);
+		pickUpGun(thisTux);
+		eventBonus(thisTux);
+		eventGiveTuxItem(thisTux, getWorldArena()->listItem);
+	}
+}
+
+void getTuxProportion(tux_t *p, int *x,int *y, int *w, int *h)
+{
+	assert( p != NULL );
+
+	if( x != NULL ) *x = p->x - TUX_WIDTH / 2;
+	if( y != NULL ) *y = p->y - TUX_HEIGHT / 2;
+	if( w != NULL ) *w = TUX_WIDTH;
+	if( h != NULL ) *h = TUX_HEIGHT;
+}
+
+void destroyTux(tux_t *p)
+{
+	assert( p != NULL );
+	free(p);
+}
+
+void quitTux()
+{
+	isTuxInit = FALSE;
+}
+
