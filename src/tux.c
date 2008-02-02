@@ -7,6 +7,7 @@
 #include "main.h"
 #include "tux.h"
 #include "image.h"
+#include "sound.h"
 #include "layer.h"
 #include "screen_world.h"
 #include "shot.h"
@@ -239,6 +240,40 @@ tux_t* isConflictWithListTux(list_t *listTux, int x, int y, int w, int h)
 	return NULL;
 }
 
+int isConflictTuxWithListTux(tux_t *tux, list_t *listTux)
+{
+	tux_t *thisTux;
+	int tux_x, tux_y, tux_w, tux_h;
+	int thisTux_x, thisTux_y, thisTux_w, thisTux_h;
+	int i;
+
+	assert( tux != NULL );
+	assert( listTux != NULL );
+
+	getTuxProportion(tux, &tux_x, &tux_y, &tux_w, &tux_h);
+
+	for( i = 0 ; i < listTux->count ; i++ )
+	{
+		thisTux  = (tux_t *)listTux->list[i];
+		assert( thisTux != NULL );
+
+		if( thisTux == tux )
+		{
+			continue;
+		}
+
+		getTuxProportion(thisTux, &thisTux_x, &thisTux_y, &thisTux_w, &thisTux_h);
+		
+		if( conflictSpace(tux_x, tux_y, tux_w, tux_h,
+		    thisTux_x, thisTux_y, thisTux_w, thisTux_h) )
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 static void timer_spawnTux(void *p)
 {
 	tux_t *tux;
@@ -313,6 +348,8 @@ void switchTuxGun(tux_t *tux)
 		return;
 	}
 
+	playSound("switch_gun", SOUND_GROUP_BASE);
+
 	for( i = tux->gun+1 ; i < GUN_COUNT ; i++ )
 	{
 		if( tux->shot[i] > 0 )
@@ -343,6 +380,7 @@ void eventTuxIsDead(tux_t *tux)
 		return;
 	}
 
+	playSound("dead", SOUND_GROUP_BASE);
 	tux->status = TUX_STATUS_DEAD;
 
 	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
@@ -361,6 +399,8 @@ static void eventTuxIsDeadWIthShot(tux_t *tux,shot_t *shot)
 
 void tuxTeleport(tux_t *tux)
 {
+	playSound("teleport", SOUND_GROUP_BASE);
+
 	findFreeSpace(&tux->x, &tux->y, TUX_WIDTH, TUX_HEIGHT);
 	
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
@@ -413,7 +453,7 @@ void eventConflictShotWithTux(list_t *listTux, list_t *listShot)
 	}
 }
 
-void moveTux(tux_t *tux,int n)
+void moveTux(tux_t *tux, int n)
 {
 	int px, py;
 	int zal_x, zal_y;
@@ -426,6 +466,26 @@ void moveTux(tux_t *tux,int n)
 	{
 		tux->position = n;
 		if( getNetTypeGame() != NET_GAME_TYPE_NONE )proto_send_settux(tux);
+		return;
+	}
+
+	if( n == TUX_LEFT && tux->x < 0 )
+	{
+		return;
+	}
+
+	if( n == TUX_RIGHT && tux->x > WINDOW_SIZE_X )
+	{
+		return;
+	}
+
+	if( n == TUX_UP && tux->y < 0 )
+	{
+		return;
+	}
+
+	if( n == TUX_DOWN && tux->y > WINDOW_SIZE_Y )
+	{
 		return;
 	}
 
@@ -447,7 +507,7 @@ void moveTux(tux_t *tux,int n)
 	getTuxProportion(tux, &x, &y, &w, &h);
 
 	if( tux->bonus != BONUS_GHOST && (
-	    isConflictWithListTux(arena->listTux, x, y, w, h) != tux ||
+	    isConflictTuxWithListTux(tux, arena->listTux) ||
 	    isConflictWithListWall(arena->listWall, x, y, w, h) ) )
 	{
 		tux->x = zal_x;

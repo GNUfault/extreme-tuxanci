@@ -7,6 +7,7 @@
 #include "screen.h"
 #include "image.h"
 #include "music.h"
+#include "sound.h"
 #include "screen_mainMenu.h"
 #include "list.h"
 #include "screen_setting.h"
@@ -25,8 +26,12 @@ static widget_button_t *button_back;
 static widget_label_t *label_count_round;
 static widget_label_t *label_name_player1;
 static widget_label_t *label_name_player2;
+static widget_label_t *label_music;
+static widget_label_t *label_sound;
 
 static widget_check_t *check[ITEM_COUNT];
+static widget_check_t *check_music;
+static widget_check_t *check_sound;
 
 static widget_image_t *image_gun_dual_revolver;
 static widget_image_t *image_gun_scatter;
@@ -60,6 +65,8 @@ void drawScreenSetting()
 	drawWidgetLabel(label_count_round);
 	drawWidgetLabel(label_name_player1);
 	drawWidgetLabel(label_name_player2);
+	drawWidgetLabel(label_music);
+	drawWidgetLabel(label_sound);
 
 	drawWidgetTextfield(textfield_count_cound);
 	drawWidgetTextfield(textfield_name_player1);
@@ -78,6 +85,9 @@ void drawScreenSetting()
 	drawWidgetImage(image_bonus_ghost);
 	drawWidgetImage(image_bonus_4x);
 	drawWidgetImage(image_bonus_hidden);
+
+	drawWidgetCheck(check_music);
+	drawWidgetCheck(check_sound);
 
 	for( i = GUN_DUAL_SIMPLE ; i <= GUN_BOMBBALL ; i++ )
 	{
@@ -100,6 +110,9 @@ void eventScreenSetting()
 	eventWidgetTextfield(textfield_name_player1);
 	eventWidgetTextfield(textfield_name_player2);
 
+	eventWidgetCheck(check_music);
+	eventWidgetCheck(check_sound);
+
 	for( i = GUN_DUAL_SIMPLE ; i <= GUN_BOMBBALL ; i++ )
 	{
 		eventWidgetCheck(check[i]);
@@ -120,12 +133,24 @@ void stopScreenSetting()
 static void eventWidget(void *p)
 {
 	widget_button_t *button;
+	widget_check_t *check;
 	
 	button = (widget_button_t *)(p);
+	check = (widget_check_t *)(p);
 
 	if( button == button_back )
 	{
 		setScreen("mainMenu");
+	}
+
+	if( check == check_music )
+	{
+		setMusicActive( check_music->status );
+	}
+
+	if( check == check_sound )
+	{
+		setSoundActive( check_sound->status );
 	}
 }
 
@@ -146,6 +171,14 @@ void initScreenSetting()
 	textfield_count_cound = newWidgetTextfield("15", 110+label_count_round->w, WINDOW_SIZE_Y-200);
 	textfield_name_player1 = newWidgetTextfield("name1", 110+label_name_player1->w, WINDOW_SIZE_Y-160);
 	textfield_name_player2 = newWidgetTextfield("name2", 110+label_name_player2->w, WINDOW_SIZE_Y-120);
+
+	label_music = newWidgetLabel("Music :", 100, WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
+	check_music = newWidgetCheck(label_music->x + label_music->w  + 10,
+		WINDOW_SIZE_Y-80, TRUE, eventWidget);
+	label_sound = newWidgetLabel("Sound :", check_music->x + WIDGET_CHECK_WIDTH + 10,
+		WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
+	check_sound = newWidgetCheck(label_sound->x + label_sound->w + 10,
+		WINDOW_SIZE_Y-80, TRUE, eventWidget);
 
 	for( i = GUN_DUAL_SIMPLE ; i <= GUN_BOMBBALL ; i++ )
 	{
@@ -257,6 +290,8 @@ void quitScreenSetting()
 	destroyWidgetLabel(label_count_round);
 	destroyWidgetLabel(label_name_player1);
 	destroyWidgetLabel(label_name_player2);
+	destroyWidgetLabel(label_music);
+	destroyWidgetLabel(label_sound);
 
 	destroyWidgetTextfield(textfield_count_cound);
 	destroyWidgetTextfield(textfield_name_player1);
@@ -275,6 +310,9 @@ void quitScreenSetting()
 	destroyWidgetImage(image_bonus_ghost);
 	destroyWidgetImage(image_bonus_4x);
 	destroyWidgetImage(image_bonus_hidden);
+
+	destroyWidgetCheck(check_music);
+	destroyWidgetCheck(check_sound);
 
 	for( i = GUN_DUAL_SIMPLE ; i <= GUN_BOMBBALL ; i++ )
 	{

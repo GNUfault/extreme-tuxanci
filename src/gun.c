@@ -10,6 +10,7 @@
 #include "myTimer.h"
 #include "main.h"
 #include "item.h"
+#include "sound.h"
 #include "screen_world.h"
 #include "interface.h"
 #include "gun.h"
@@ -215,17 +216,29 @@ void shotInGun(tux_t *tux)
 {
 	switch( tux->gun )
 	{
-		case GUN_SIMPLE : shotInGunSimpe(tux);
+		case GUN_SIMPLE :
+			playSound("gun_revolver", SOUND_GROUP_BASE);
+			shotInGunSimpe(tux);
 		break;
-		case GUN_DUAL_SIMPLE : shotInGunDualSimpe(tux);
+		case GUN_DUAL_SIMPLE :
+			playSound("gun_revolver", SOUND_GROUP_BASE);
+			shotInGunDualSimpe(tux);
 		break;
-		case GUN_SCATTER : shotInGunScatter(tux);
+		case GUN_SCATTER :
+			playSound("gun_scatter", SOUND_GROUP_BASE);
+			shotInGunScatter(tux);
 		break;
-		case GUN_TOMMY : shotInGunTommy(tux);
+		case GUN_TOMMY :
+			playSound("gun_tommy", SOUND_GROUP_BASE);
+			shotInGunTommy(tux);
 		break;
-		case GUN_LASSER : shotInGunLasser(tux);
+		case GUN_LASSER :
+			playSound("gun_lasser", SOUND_GROUP_BASE);
+			shotInGunLasser(tux);
 		break;
-		case GUN_MINE : putInGunMine(tux);
+		case GUN_MINE :
+			playSound("put_mine", SOUND_GROUP_BASE);
+			putInGunMine(tux);
 		break;
 	}
 }

@@ -14,6 +14,7 @@
 static list_t *listSound;
 
 static bool_t isSoundInit = FALSE;
+static bool_t isSoundActive = TRUE;
 
 bool_t isSoundInicialized()
 {
@@ -22,10 +23,14 @@ bool_t isSoundInicialized()
 
 void initSound()
 {
-	assert( isAudioInicialized() );
+	if( isAudioInicialized() == FALSE )
+	{
+		isSoundInit = FALSE;
+	}
 
 	listSound = newList();
 	isSoundInit = TRUE;
+	isSoundActive = TRUE;
 
 	printf("init sound..\n");
 }
@@ -35,6 +40,7 @@ static Mix_Chunk* loadMixSound(char *file)
 	Mix_Chunk *new;
 	char str[STR_PATH_SIZE];
 
+	printf("load sound %s..\n", file);
 	sprintf(str, PATH_SOUND "%s", file);
 	new = Mix_LoadWAV(str);
 
@@ -85,6 +91,12 @@ void playSound(char *name, int group)
 	int i;
 	sound_t *this;
 
+	if( isSoundInit == FALSE ||
+	    isSoundActive == FALSE )
+	{
+		return;
+	}
+
 	for( i = 0 ; i < listSound->count ; i++ )
 	{
 		this = (sound_t *)listSound->list[i];
@@ -97,8 +109,18 @@ void playSound(char *name, int group)
 	}
 }
 
+void setSoundActive(bool_t n)
+{
+	isSoundActive = n;
+}
+
 void quitSound()
 {
+	if( isSoundInit == FALSE )
+	{
+		return;
+	}
+
 	destroyListItem(listSound, destroySound);
 	isSoundInit = FALSE;
 	printf("quit sound..\n");

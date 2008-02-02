@@ -5,6 +5,7 @@
 #include "main.h"
 #include "interface.h"
 #include "image.h"
+#include "sound.h"
 #include "layer.h"
 #include "screen_world.h"
 #include "screen_setting.h"
@@ -75,11 +76,13 @@ item_t* newItem(int x, int y, int type)
 		break;
 
 		case ITEM_EXPLOSION :
+			playSound("explozion", SOUND_GROUP_BASE);
 			new->w = ITEM_EXPLOSION_WIDTH;
 			new->h = ITEM_EXPLOSION_HEIGHT;
 		break;
 
 		case ITEM_BIG_EXPLOSION :
+			playSound("explozion", SOUND_GROUP_BASE);
 			new->w = ITEM_BIG_EXPLOSION_WIDTH;
 			new->h = ITEM_BIG_EXPLOSION_HEIGHT;
 		break;
@@ -115,27 +118,29 @@ void addNewItem(list_t *listItem)
 	findFreeSpace(&new_x, &new_y, ITEM_GUN_WIDTH, ITEM_GUN_HEIGHT);
 
 	do{
-		switch( random() % 10 )
+		switch( random() % 11 )
 		{
 			case 0 : type = GUN_DUAL_SIMPLE;
 			break;
 			case 1 : type = GUN_SCATTER;
 			break;
-			case 2 : type = GUN_MINE;
+			case 2 : type = GUN_TOMMY;
 			break;
-			case 3 : type = GUN_LASSER;
+			case 3 : type = GUN_MINE;
 			break;
-			case 4 : type = BONUS_SPEED;
+			case 4 : type = GUN_LASSER;
 			break;
-			case 5 : type = BONUS_SHOT;
+			case 5 : type = BONUS_SPEED;
 			break;
-			case 6 : type = BONUS_TELEPORT;
+			case 6 : type = BONUS_SHOT;
 			break;
-			case 7 : type = BONUS_GHOST;
+			case 7 : type = BONUS_TELEPORT;
 			break;
-			case 8 : type = BONUS_4X;
+			case 8 : type = BONUS_GHOST;
 			break;
-			case 9 : type = BONUS_HIDDEN;
+			case 9 : type = BONUS_4X;
+			break;
+			case 10 : type = BONUS_HIDDEN;
 			break;
 		}
 	}while( isSettingItem(type) == FALSE );
@@ -332,6 +337,7 @@ void eventGiveTuxItem(tux_t *tux, list_t *listItem)
 				case GUN_SCATTER :
 				case GUN_LASSER :
 				case GUN_MINE :
+					playSound("item_gun", SOUND_GROUP_BASE);
 					tux->shot[ thisItem->type ] += GUN_MAX_SHOT;
 					tux->gun = thisItem->type;
 					delListItem(listItem, i, destroyItem);
@@ -362,6 +368,7 @@ void eventGiveTuxItem(tux_t *tux, list_t *listItem)
 				case BONUS_GHOST :
 				case BONUS_4X :
 				case BONUS_HIDDEN :
+					playSound("item_bonus", SOUND_GROUP_BASE);
 					tux->bonus = thisItem->type;
 					tux->bonus_time = TUX_MAX_BONUS;
 					delListItem(listItem, i, destroyItem);

@@ -15,6 +15,7 @@
 #include "layer.h"
 #include "image.h"
 #include "music.h"
+#include "sound.h"
 #include "tux.h"
 #include "wall.h"
 #include "item.h"
@@ -174,6 +175,18 @@ static void control_keyboard_left(tux_t *p)
 	if( mapa[(SDLKey)SDLK_d] == SDL_PRESSED )moveTux(p, TUX_RIGHT);
 	if( mapa[(SDLKey)SDLK_a] == SDL_PRESSED )moveTux(p, TUX_LEFT);
 	if( mapa[(SDLKey)SDLK_s] == SDL_PRESSED )moveTux(p, TUX_DOWN);
+
+	if( mapa[(SDLKey)SDLK_q] == SDL_PRESSED )
+	{
+		proto_send_shottux(p);
+		shotTux(p);
+	}
+
+	if( mapa[(SDLKey)SDLK_TAB] == SDL_PRESSED )
+	{
+		proto_send_switchgun(p);
+		switchTuxGun(p);
+	}
 }
 
 static void eventEnd()
@@ -285,6 +298,19 @@ void initWorld()
 	assert( isScreenInicialized() == TRUE );
 
 	registerScreen( newScreen("world", startWorld, eventWorld, drawWorld, stoptWorld) );
+
+	addSound("dead.ogg", "dead", SOUND_GROUP_BASE);
+	addSound("explozion.ogg", "explozion", SOUND_GROUP_BASE);
+	addSound("gun_lasser.ogg", "gun_lasser", SOUND_GROUP_BASE);
+	addSound("gun_revolver.ogg", "gun_revolver", SOUND_GROUP_BASE);
+	addSound("gun_scatter.ogg", "gun_scatter", SOUND_GROUP_BASE);
+	addSound("gun_tommy.ogg", "gun_tommy", SOUND_GROUP_BASE);
+	addSound("put_mine.ogg", "put_mine", SOUND_GROUP_BASE);
+	addSound("teleport.ogg", "teleport", SOUND_GROUP_BASE);
+	addSound("item_bonus.ogg", "item_bonus", SOUND_GROUP_BASE);
+	addSound("item_gun.ogg", "item_gun", SOUND_GROUP_BASE);
+	addSound("switch_gun.ogg", "switch_gun", SOUND_GROUP_BASE);
+	addSound("end.ogg", "end", SOUND_GROUP_BASE);
 
 	isScreenWorldInit = TRUE;
 }

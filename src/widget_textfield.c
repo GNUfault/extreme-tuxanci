@@ -109,6 +109,11 @@ static void readKey(widget_textfield_t *p)
 		return;
 	}
 
+	if( p->w > WIDGET_TEXTFIELD_WIDTH-40 )
+	{
+		return;
+	}
+
 	//klavesy abecedy
 	for(i=SDLK_SPACE /*SDLK_a*/;i<=SDLK_z;i++)
 	{
@@ -118,11 +123,13 @@ static void readKey(widget_textfield_t *p)
 			 p->time = WIDGET_TEXTFIELD_TIME_READ_KEY;
 
 			strcat( p->text, SDL_GetKeyName(i) );
+			getTextSize(p->text, &p->w, &p->h);
 			
 			if( mapa[SDLK_LSHIFT] == SDL_PRESSED ||
 			    mapa[SDLK_RSHIFT] == SDL_PRESSED)
 			{
 				p->text[ strlen( p->text ) - 1 ] -= 32;
+				getTextSize(p->text, &p->w, &p->h);
 				return;
 			}
 		}
@@ -135,6 +142,7 @@ static void readKey(widget_textfield_t *p)
 		{
 			 p->time = WIDGET_TEXTFIELD_TIME_READ_KEY;
 			strcat( p->text, SDL_GetKeyName(i) );
+			getTextSize(p->text, &p->w, &p->h);
 			return;
 		}
 	}
@@ -146,6 +154,7 @@ static void readKey(widget_textfield_t *p)
 		{
 			 p->time = WIDGET_TEXTFIELD_TIME_READ_KEY;
 			strncat( p->text, SDL_GetKeyName(i)+1, 1 ); // napr. "[4]"
+			getTextSize(p->text, &p->w, &p->h);
 			return;
 		}
 	}

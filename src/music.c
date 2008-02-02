@@ -14,6 +14,7 @@
 static list_t *listMusic;
 
 static bool_t isMusicInit = FALSE;
+static bool_t isMusicActive = TRUE;
 static music_t *currentMusic;
 
 bool_t isMusicInicialized()
@@ -23,12 +24,18 @@ bool_t isMusicInicialized()
 
 void initMusic()
 {
-	assert( isAudioInicialized() );
+	if( isAudioInicialized() == FALSE )
+	{
+		isMusicInit = FALSE;
+		return;
+	}
 
 	listMusic = newList();
 	currentMusic = NULL;
 
 	isMusicInit = TRUE;
+	isMusicActive = TRUE;
+
 	printf("init music..\n");
 }
 
@@ -83,6 +90,12 @@ void addMusic(char *file, char *name, int group)
 
 void stopMusic()
 {
+	if( isMusicInit == FALSE ||
+	    isMusicActive == FALSE )
+	{
+		return;
+	}
+
 	if( currentMusic != NULL )
 	{
 		printf("stop music %s..\n", currentMusic->name);
@@ -95,6 +108,12 @@ void playMusic(char *name, int group)
 {
 	int i;
 	music_t *this;
+
+	if( isMusicInit == FALSE ||
+	    isMusicActive == FALSE )
+	{
+		return;
+	}
 
 	if( currentMusic != NULL &&
 	    currentMusic->group == group &&
@@ -125,6 +144,25 @@ void playMusic(char *name, int group)
 	}
 }
 
+void setMusicActive(bool_t n)
+{
+	static music_t *music = NULL;
+
+	if( n == FALSE )
+	{
+		music = currentMusic;
+		stopMusic();
+	}
+
+	if( n == TRUE )
+	{
+		currentMusic = music;
+		playMixMusic();
+	}
+
+	isMusicActive = n;
+}
+
 char* getCurrentMusic()
 {
 	return currentMusic->name;
@@ -149,6 +187,11 @@ void delAllMusicInGroup(int group)
 
 void quitMusic()
 {
+	if( isMusicInit == FALSE )
+	{
+		return;
+	}
+
 	stopMusic();
 	destroyListItem(listMusic, destroyMusic);
 	isMusicInit = FALSE;
