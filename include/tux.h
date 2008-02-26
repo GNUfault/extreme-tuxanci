@@ -6,11 +6,11 @@
 #include "main.h"
 #include "list.h"
 
-#define TUX_STEP 4
+#define TUX_STEP 6
 #define TUX_LAYER 0
 #define TUX_MAX_ANIMATION_FRAME 10
 #define TUX_MAX_PICKUP	50
-#define TUX_MAX_BONUS	500
+#define TUX_MAX_BONUS	250
 
 #define TUX_TIME_SPAWN		2000
 #define TUX_TIME_CAN_SHOT	500

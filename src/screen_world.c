@@ -56,9 +56,29 @@ arena_t* getWorldArena()
 	return arena;
 }
 
+static void timer_endArena()
+{
+	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+	{
+		setScreen("analyze");
+		return;
+	}
+}
+
 void countRoundInc()
 {
+	if( count >= max_count )
+	{
+		return;
+	}
+
 	count++;
+
+	if( count >= max_count )
+	{
+		playSound("end", SOUND_GROUP_BASE);
+		addTimer(timer_endArena, NULL, TIMER_END_ARENA);
+	}
 }
 
 static tux_t* getControlTux(int control_type)
@@ -250,12 +270,13 @@ static void eventEnd()
 		setScreen("analyze");
 		return;
 	}
-
+/*
 	if( count >= max_count && getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 	{
 		setScreen("analyze");
 		return;
-	}	
+	}
+*/
 }
 
 void tuxControl(tux_t *p)

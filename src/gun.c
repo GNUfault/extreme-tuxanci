@@ -15,38 +15,28 @@
 #include "interface.h"
 #include "gun.h"
 
-static void modificiationCopuse(int courser,
-	int right_x, int right_y, int right_px, int right_py,
-	int *dest_x, int *dest_y, int *dest_px, int *dest_py)
+static void modificiationCopuse(int courser, int right_x, int right_y, int *dest_x, int *dest_y)
 {
-	assert( dest_px != NULL );
-	assert( dest_py != NULL );
+	assert( dest_x != NULL );
+	assert( dest_y != NULL );
 
 	switch( courser )
 	{
 		case TUX_UP :
 			*dest_x = right_y;
 			*dest_y = -right_x;
-			*dest_px = right_py;
-			*dest_py = -right_px;
 		break;
 		case TUX_RIGHT :
 			*dest_x = right_x;
 			*dest_y = right_y;
-			*dest_px = right_px;
-			*dest_py = right_py;
 		break;
 		case TUX_LEFT :
 			*dest_x = -right_x;
 			*dest_y = right_y;
-			*dest_px = -right_px;
-			*dest_py = right_py;
 		break;
 		case TUX_DOWN :
 			*dest_x = right_y;
 			*dest_y = right_x;
-			*dest_px = right_py;
-			*dest_py = right_px;
 		break;
 		default :
 			assert( ! "V premennej courser je zly smer !" );
@@ -90,8 +80,8 @@ static void addShot(tux_t *tux,int x, int y, int px, int py)
 				case 3 : tux->position = TUX_DOWN; break;
 			}
 
-			modificiationCopuse(tux->position, x, y, px, py, 
-				&dest_x, &dest_y, &dest_px, &dest_py);
+			modificiationCopuse(tux->position, x, y, &dest_x, &dest_y);
+			modificiationCopuse(tux->position, px, py, &dest_px, &dest_py);
 
 			shot = newShot(tux->x + dest_x, tux->y + dest_y, dest_px, dest_py, gun, tux);
 			addList( arena->listShot, shot );
@@ -101,8 +91,8 @@ static void addShot(tux_t *tux,int x, int y, int px, int py)
 	}
 	else
 	{
-		modificiationCopuse(tux->position, x, y, px, py, 
-			&dest_x, &dest_y, &dest_px, &dest_py);
+		modificiationCopuse(tux->position, x, y, &dest_x, &dest_y);
+		modificiationCopuse(tux->position, px, py, &dest_px, &dest_py);
 
 		shot = newShot(tux->x + dest_x, tux->y + dest_y, dest_px, dest_py, gun, tux);
 		addList( arena->listShot, shot );
@@ -111,13 +101,13 @@ static void addShot(tux_t *tux,int x, int y, int px, int py)
 
 static void shotInGunSimpe(tux_t *tux)
 {
-	addShot(tux, 0, 0, +10, 0);
+	addShot(tux, 0, 0, +20, 0);
 }
 
 static void shotInGunDualSimpe(tux_t *tux)
 {
-	addShot(tux, 0, -5, +10, 0);
-	addShot(tux, 0, +5, +10, 0);
+	addShot(tux, 0, -5, +20, 0);
+	addShot(tux, 0, +5, +20, 0);
 }
 
 static void shotInGunScatter(tux_t *tux)
@@ -126,7 +116,7 @@ static void shotInGunScatter(tux_t *tux)
 
 	for( i = -2 ; i <= +2 ; i++ )
 	{
-		addShot(tux, 0, 0, +12, i);
+		addShot(tux, 0, 0, +25, i);
 	}
 }
 
@@ -145,7 +135,7 @@ static void timer_addShotTimer(void *p)
 
 	gun = tux->gun;
 	tux->gun = GUN_SIMPLE;
-	addShot(tux, 0, 0, +15, 0);
+	addShot(tux, 0, 0, +25, 0);
 	tux->gun = gun;
 }
 
@@ -174,7 +164,7 @@ static void timer_addLaserTimer(void *p)
 
 	gun = tux->gun;
 	tux->gun = GUN_LASSER;
-	addShot(tux, 0, 0, +20, 0);
+	addShot(tux, 0, 0, +25, 0);
 	tux->gun = gun;
 }
 

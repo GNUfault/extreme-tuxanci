@@ -352,6 +352,7 @@ void eventTuxIsDead(tux_t *tux)
 
 	tux->bonus = BONUS_NONE;
 	tux->bonus_time = 0;
+	tux->pickup_time = 0;
 
 	tux->isCanShot = TRUE;
 	tux->isCanSwitchGun = TRUE;

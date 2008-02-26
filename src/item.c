@@ -346,6 +346,7 @@ void eventGiveTuxItem(tux_t *tux, list_t *listItem)
 				case GUN_SCATTER :
 				case GUN_LASSER :
 				case GUN_MINE :
+					tux->pickup_time = 0;
 					playSound("item_gun", SOUND_GROUP_BASE);
 					tux->shot[ thisItem->type ] += GUN_MAX_SHOT;
 					tux->gun = thisItem->type;

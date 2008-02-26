@@ -5,12 +5,13 @@
 
 //povrch okna
 static SDL_Surface *screen;
+static SDL_Surface *fake_screen;
 
 //casovac
 static SDL_TimerID timer;
 
 //priznaky okna
-static Uint32 g_win_flags = SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT;
+static Uint32 g_win_flags = SDL_HWSURFACE|SDL_DOUBLEBUF;
 
 static bool_t isInterfaceInit = FALSE;
 
@@ -48,6 +49,11 @@ int initSDL()
 	//screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 	screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 
+        fake_screen = SDL_CreateRGBSurface(screen->flags, WINDOW_SIZE_X, WINDOW_SIZE_Y,
+		screen->format->BitsPerPixel,
+		screen->format->Rmask,	screen->format->Gmask,
+		screen->format->Bmask,	screen->format->Amask);
+
 	if (screen == NULL )
 	{
 		fprintf(stderr, "%s\n", SDL_GetError());
@@ -68,7 +74,15 @@ int initSDL()
 
 SDL_Surface* getSDL_Screen()
 {
+	//return fake_screen;
 	return screen;
+}
+
+void interfaceRefresh()
+{
+	//SDL_BlitSurface(fake_screen, NULL, screen, NULL);
+	SDL_UpdateRect(screen, 0, 0, screen->w, screen->h);
+	//SDL_Flip(screen);
 }
 
 int toggleFullscreen()
@@ -78,7 +92,7 @@ int toggleFullscreen()
 	else
 		g_win_flags |= SDL_FULLSCREEN;
 
-	if(SDL_WM_ToggleFullScreen(screen) == 0)
+	if( SDL_WM_ToggleFullScreen(screen) == 0 )
 	{
 		fprintf(stderr, "Nemozem prepnut do fullscreenu!\n");
 

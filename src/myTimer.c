@@ -62,6 +62,12 @@ void eventTimer()
 		if( currentTime >= thisTimer->time )
 		{
 			thisTimer->fce(thisTimer->arg);
+
+			if( isTimerInit == FALSE )
+			{
+				return;
+			}
+
 			delListItem(listTime, i, free);
 			i--;
 		}

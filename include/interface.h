@@ -28,7 +28,7 @@
 #define USR_EVT_TIMER 0
 
 //interval pri ktorom sa spusta akcia();
-#define INTERVAL 25
+#define INTERVAL 50
 
 extern bool_t isInterfaceInicialized();
 extern int initSDL();

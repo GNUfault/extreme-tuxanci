@@ -115,7 +115,7 @@ void drawScreen()
 	assert( currentScreen != NULL );
 	currentScreen->fce_draw();
 
-	SDL_Flip(p_screen);
+	interfaceRefresh();
 }
 
 void eventScreen()

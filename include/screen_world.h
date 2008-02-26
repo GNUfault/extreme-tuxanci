@@ -7,6 +7,8 @@
 #include "tux.h"
 #include "arena.h"
 
+#define TIMER_END_ARENA 5000
+
 extern bool_t isScreenWorldInicialized();
 extern void initWorld();
 extern arena_t* getWorldArena();
