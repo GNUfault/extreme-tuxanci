@@ -10,11 +10,15 @@
 typedef struct arena_struct
 {
 	char music[STR_SIZE];
+
 	SDL_Surface *background;
+
 	list_t *listTux;
 	list_t *listShot;
 	list_t *listWall;
 	list_t *listItem;
+	list_t *listTeleport;
+	list_t *listPipe;
 } arena_t;
 
 extern arena_t* newArena();

@@ -6,8 +6,10 @@ mkdir deb/DEBIAN
 mkdir deb/usr
 mkdir deb/usr/bin
 mkdir deb/usr/share
+mkdir deb/usr/share/applications
 
 cp control deb/DEBIAN/
+cp tuxanci-ng.desktop deb/usr/share/applications
 
 cd deb
 
@@ -20,4 +22,4 @@ md5sum `find ./ -type f | awk '/.\// { print substr($0, 3) }'` > DEBIAN/md5sums
 
 cd ..
 rm -rf *.deb
-dpkg -b ./deb tuxanci-ng_i386.deb
+dpkg -b ./deb tuxanci-ng_svn8-1_i386.deb

@@ -13,6 +13,8 @@
 #include "shot.h"
 #include "gun.h"
 #include "wall.h"
+#include "teleport.h"
+#include "pipe.h"
 #include "item.h"
 #include "arena.h"
 #include "myTimer.h"
@@ -385,7 +387,7 @@ void tuxTeleport(tux_t *tux)
 	}
 }
 
-void eventConflictShotWithTux(list_t *listTux, list_t *listShot)
+void eventConflictTuxWithShot(list_t *listTux, list_t *listShot)
 {
 	shot_t *thisShot;
 	tux_t *thisTux;
@@ -424,6 +426,29 @@ void eventConflictShotWithTux(list_t *listTux, list_t *listShot)
 			i--;
 
 			continue;
+		}
+	}
+}
+
+void eventConflictTuxWithTeleport(list_t *listTux, list_t *listTeleport)
+{
+	teleport_t *thisTeleport;
+	tux_t *thisTux;
+
+	int i;
+
+	assert( listTux != NULL );
+	assert( listTeleport != NULL );
+
+	for( i = 0 ; i < listTeleport->count ; i++ )
+	{
+		thisTeleport = (teleport_t *)listTeleport->list[i];
+		assert( thisTeleport != NULL );
+
+		if( ( thisTux = isConflictWithListTux(listTux, thisTeleport->x, thisTeleport->y,
+			thisTeleport->w, thisTeleport->h) ) != NULL )
+		{
+			eventTeleportTux(listTeleport, thisTeleport, thisTux);
 		}
 	}
 }
@@ -480,9 +505,11 @@ void moveTux(tux_t *tux, int n)
 
 	getTuxProportion(tux, &x, &y, &w, &h);
 
+
 	if( tux->bonus != BONUS_GHOST && (
 	    isConflictTuxWithListTux(tux, arena->listTux) ||
-	    isConflictWithListWall(arena->listWall, x, y, w, h) ) )
+	    isConflictWithListWall(arena->listWall, x, y, w, h) ||
+	    isConflictWithListPipe(arena->listPipe, x, y, w, h) ) )
 	{
 		tux->x = zal_x;
 		tux->y = zal_y;

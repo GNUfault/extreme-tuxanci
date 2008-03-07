@@ -1,6 +1,6 @@
 
 #DISTDIR=/usr/local
-DISTDIR:=/usr/local/
+DISTDIR:=/usr/
 
 all:
 	make -C ./src DISTDIR=$(DISTDIR)

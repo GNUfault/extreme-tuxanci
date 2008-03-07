@@ -10,7 +10,7 @@
 #define TUX_LAYER 0
 #define TUX_MAX_ANIMATION_FRAME 10
 #define TUX_MAX_PICKUP	50
-#define TUX_MAX_BONUS	250
+#define TUX_MAX_BONUS	500
 
 #define TUX_TIME_SPAWN		2000
 #define TUX_TIME_CAN_SHOT	500
@@ -107,7 +107,8 @@ extern void drawListTux(list_t *listTux);
 extern void eventTuxIsDead(tux_t *tux);
 extern tux_t* isConflictWithListTux(list_t *listTux, int x, int y, int w, int h);
 extern int isConflictTuxWithListTux(tux_t *tux, list_t *listTux);
-extern void eventConflictShotWithTux(list_t *listTux, list_t *listShot);
+extern void eventConflictTuxWithShot(list_t *listTux, list_t *listShot);
+extern void eventConflictTuxWithTeleport(list_t *listTux, list_t *listTeleport);
 extern void tuxTeleport(tux_t *tux);
 extern void actionTux(tux_t *tux, int action);
 extern void eventListTux(list_t *listTux);

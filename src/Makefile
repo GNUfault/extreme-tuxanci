@@ -2,7 +2,7 @@
 CC = gcc
 
 #CFLAGS = -g -O0 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
-CFLAGS = -O2 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
+CFLAGS = -g -O0 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
 
 LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer
 
@@ -11,8 +11,7 @@ FILES = interface.o font.o list.o image.o layer.o director.o configFile.o tux.o 
 	buffer.o dynamicInt.o arena.o arenaFile.o textFile.o sound.o audio.o music.o gun.o \
 	item.o widget_label.o screen_mainMenu.o widget_button.o screen_analyze.o widget_textfield.o \
 	widget_check.o widget_image.o screen_setting.o screen_gameType.o screen_choiceArena.o \
-	widget_buttonimage.o screen_credits.o
- 
+	widget_buttonimage.o screen_credits.o teleport.o pipe.o
  
 tuxanci-ng: $(FILES)
 	$(CC) $(CFLAGS) $(LIBS) -o tuxanci-ng $(FILES)
@@ -134,6 +133,11 @@ widget_check.o: widget_check.c ../include/widget_check.h
 widget_image.o: widget_image.c ../include/widget_image.h
 	$(CC) $(CFLAGS) -o widget_image.o -c widget_image.c
 
+teleport.o: teleport.c ../include/teleport.h
+	$(CC) $(CFLAGS) -o teleport.o -c teleport.c
+
+pipe.o: pipe.c ../include/pipe.h
+	$(CC) $(CFLAGS) -o pipe.o -c pipe.c
 
 clean:
 	rm -rf *.o *.c~ *.h~ tuxanci-ng

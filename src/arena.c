@@ -22,6 +22,8 @@ arena_t* newArena()
 	new->listShot = newList();
 	new->listWall = newList();
 	new->listItem = newList();
+	new->listTeleport = newList();
+	new->listPipe = newList();
 
 	return new;
 }
@@ -32,6 +34,8 @@ void destroyArena(arena_t *p)
 	destroyListItem(p->listShot, destroyShot);
 	destroyListItem(p->listWall, destroyWall);
 	destroyListItem(p->listItem, destroyItem);
+	destroyListItem(p->listTeleport, destroyItem);
+	destroyListItem(p->listPipe, destroyItem);
 
 	free(p);
 }

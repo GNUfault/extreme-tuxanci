@@ -19,6 +19,8 @@
 #include "sound.h"
 #include "tux.h"
 #include "wall.h"
+#include "teleport.h"
+#include "pipe.h"
 #include "item.h"
 #include "shot.h"
 #include "gun.h"
@@ -178,6 +180,8 @@ void drawWorld()
 
 	drawListTux(arena->listTux);
 	drawListWall(arena->listWall);
+	drawListTeleport(arena->listTeleport);
+	drawListPipe(arena->listPipe);
 	drawListShot(arena->listShot);
 	drawListItem(arena->listItem);
 
@@ -206,6 +210,8 @@ int isFreeSpace(int x, int y, int w, int h)
 	if ( isConflictWithListWall(arena->listWall, x, y, w, h) )return 0;
 	if ( isConflictWithListShot(arena->listShot, x, y, w, h) )return 0;
 	if ( isConflictWithListItem(arena->listItem, x, y, w, h) )return 0;
+	if ( isConflictWithListTeleport(arena->listTeleport, x, y, w, h) )return 0;
+	if ( isConflictWithListPipe(arena->listPipe, x, y, w, h) )return 0;
 
 	return 1;
 }
@@ -356,11 +362,16 @@ void eventWorld()
 		return;
 	}
 
-	eventConflictShotWithTux(arena->listTux, arena->listShot);
+	eventConflictTuxWithTeleport(arena->listTux, arena->listTeleport);
+	eventConflictTuxWithShot(arena->listTux, arena->listShot);
+
 	eventConflictShotWithWall(arena->listWall, arena->listShot);
+	eventConflictShotWithTeleport(arena->listTeleport, arena->listShot);
+	eventConflictShotWithPipe(arena->listPipe, arena->listShot);
+	eventConflictShotWithItem(arena->listItem, arena->listShot);
+
 	eventMoveListShot(arena->listShot);
 	eventListItem(arena->listItem);
-	eventConflictShotWithItem(arena->listItem, arena->listShot);
 	eventListTux(arena->listTux);
 
 	eventTimer();

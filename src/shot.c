@@ -48,6 +48,7 @@ shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
 	new->py = py;
 	new->gun = gun;
 	new->author = author;
+	new->position = author->position;
 	new->isCanKillAuthor = FALSE;
 
 	switch( gun )
@@ -149,6 +150,117 @@ void eventMoveListShot(list_t *listShot)
 			i--;
 			continue;
 		}
+	}
+}
+
+static int myAbs(int n)
+{
+	return ( n > 0 ? n : -n );
+}
+
+static int getSppedShot(shot_t *shot)
+{
+	return ( myAbs(shot->px) > myAbs(shot->py) ? myAbs(shot->px) : myAbs(shot->py) );
+}
+
+static void eventOnlyLasser(shot_t *shot)
+{
+	switch( shot->position )
+	{
+		case TUX_RIGHT :
+		case TUX_LEFT :
+			shot->w = GUN_LASSER_HORIZONTAL; 
+			shot->h = GUN_SHOT_VERTICAL; 
+			shot->img = g_shot_lasserX;
+		break;
+		case TUX_UP :
+		case TUX_DOWN :
+			shot->w = GUN_SHOT_VERTICAL; 
+			shot->h = GUN_LASSER_HORIZONTAL; 
+			shot->img = g_shot_lasserY;
+		break;
+	}
+}
+
+static void transformShot(shot_t *shot, int position)
+{
+	int speed;
+
+	speed = getSppedShot(shot);
+
+	switch( position )
+	{
+		case TUX_UP :
+			shot->px = 0;
+			shot->py = -speed;
+		break;
+
+		case TUX_LEFT :
+			shot->px = -speed;
+			shot->py = 0;
+		break;
+
+		case TUX_RIGHT :
+			shot->px = speed;
+			shot->py = 0;
+		break;
+
+		case TUX_DOWN :
+			shot->px = 0;
+			shot->py = +speed;
+		break;
+	}
+
+	shot->position = position;	
+	shot->isCanKillAuthor = TRUE;
+
+	if( shot->gun == GUN_LASSER )
+	{
+		eventOnlyLasser(shot);
+	}
+}
+
+void moveShot(shot_t *shot, int position, int src_x, int src_y,
+	int dist_x, int dist_y, int dist_w, int dist_h)
+{
+	int offset;
+
+	switch( shot->position )
+	{
+		case TUX_UP :
+		case TUX_DOWN :
+			offset = shot->x - src_x;
+		break;
+
+		case TUX_RIGHT :
+		case TUX_LEFT :
+			offset = shot->y - src_y;
+		break;
+	}
+
+	transformShot(shot, position);
+
+	switch( shot->position )
+	{
+		case TUX_UP :
+			shot->x = dist_x + offset;
+			shot->y = dist_y;
+		break;
+
+		case TUX_LEFT :
+			shot->x = dist_x;
+			shot->y = dist_y + offset;
+		break;
+
+		case TUX_RIGHT :
+			shot->x = dist_x + dist_w;
+			shot->y = dist_y + offset;
+		break;
+
+		case TUX_DOWN :
+			shot->x = dist_x + offset;
+			shot->y = dist_y + dist_h;
+		break;
 	}
 }
 
