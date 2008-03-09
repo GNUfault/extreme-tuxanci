@@ -44,7 +44,7 @@ void initItem()
 	isItemInit = TRUE;
 }
 
-item_t* newItem(int x, int y, int type)
+item_t* newItem(int x, int y, int type, tux_t *author)
 {
 	item_t *new;
 	
@@ -58,6 +58,7 @@ item_t* newItem(int x, int y, int type)
 	new->frame = 0;
 	new->count = 0;
 	new->img = g_item[type];
+	new->author = author;
 
 	switch( type )
 	{
@@ -101,7 +102,7 @@ item_t* newItem(int x, int y, int type)
 	return new;
 }
 
-void addNewItem(list_t *listItem)
+void addNewItem(list_t *listItem, tux_t *author)
 {
 	arena_t *arena;
 	item_t *item;
@@ -147,7 +148,7 @@ void addNewItem(list_t *listItem)
 		}
 	}while( isSettingItem(type) == FALSE );
 
-	item = newItem(new_x, new_y, type);
+	item = newItem(new_x, new_y, type, author);
 	addList(listItem, item);
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
@@ -298,7 +299,7 @@ void eventConflictShotWithItem(list_t *listItem, list_t *listShot)
 						x = ( thisItem->x + thisItem->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
 						y = ( thisItem->y + thisItem->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
 		
-						addList(listItem, newItem(x, y, ITEM_BIG_EXPLOSION) );
+						addList(listItem, newItem(x, y, ITEM_BIG_EXPLOSION, NULL) );
 						j--;
 					}
 				break;
@@ -359,8 +360,13 @@ void eventGiveTuxItem(tux_t *tux, list_t *listItem)
 				case ITEM_MINE :
 					if( tux->bonus != BONUS_GHOST )
 					{
+						if( thisItem->author != NULL )
+						{
+							thisItem->author->score++;
+						}
+
 						delListItem(listItem, i, destroyItem);
-						addList(listItem, newItem(x, y, ITEM_EXPLOSION) );
+						addList(listItem, newItem(x, y, ITEM_EXPLOSION, NULL) );
 						i--;
 					}
 				break;

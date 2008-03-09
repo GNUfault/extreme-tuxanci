@@ -300,7 +300,7 @@ static void timer_spawnTux(void *p)
 	setTuxProportion(tux, x, y);
 	tux->gun = GUN_SIMPLE;
 	
-	addNewItem(arena->listItem);
+	addNewItem(arena->listItem, NULL);
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
@@ -365,7 +365,7 @@ void eventTuxIsDead(tux_t *tux)
 	}
 }
 
-static void eventTuxIsDeadWIthShot(tux_t *tux,shot_t *shot)
+static void eventTuxIsDeadWIthShot(tux_t *tux, shot_t *shot)
 {
 	shot->author->score++;
 	countRoundInc();

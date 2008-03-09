@@ -223,7 +223,7 @@ static void putInGunMine(tux_t *tux)
 
 	if( isFreeSpace(x, y, ITEM_MINE_WIDTH, ITEM_MINE_HEIGHT) )
 	{
-		addList(arena->listItem, newItem(x, y, ITEM_MINE) );
+		addList(arena->listItem, newItem(x, y, ITEM_MINE, tux) );
 		tux->shot[tux->gun]--;
 	}
 }

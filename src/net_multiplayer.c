@@ -340,8 +340,15 @@ void proto_recv_deltux_client(char *msg)
 void proto_send_additem_server(item_t *p)
 {
 	char msg[STR_SIZE];
-	
-	sprintf(msg, "additem %d %d %d %d %d\n", p->type, p->x, p->y, p->count, p->frame);
+	int id = -1;
+
+	if( p->author != NULL )
+	{
+		id = p->author->id;
+	}
+
+	sprintf(msg, "additem %d %d %d %d %d %d\n",
+		p->type, p->x, p->y, p->count, p->frame, id);
 
 	sendAllClient(msg);
 }
@@ -349,12 +356,12 @@ void proto_send_additem_server(item_t *p)
 void proto_recv_additem_client(char *msg)
 {
 	char cmd[STR_SIZE];
-	int type, x, y, count, frame;
+	int type, x, y, count, frame, id;
 	item_t *item;
 
-	sscanf(msg, "%s %d %d %d %d %d\n", cmd, &type, &x, &y, &count, &frame);
+	sscanf(msg, "%s %d %d %d %d %d %d\n", cmd, &type, &x, &y, &count, &frame, &id);
 
-	item = newItem(x, y, type);
+	item = newItem(x, y, type, getTuxID(arena->listTux, id));
 
 	if( isConflictWithListItem(arena->listItem, item->x, item->y, item->w, item->h) )
 	{

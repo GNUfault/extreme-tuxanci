@@ -191,6 +191,8 @@ static void initSettingFile()
 
 	loadValueFromConfigFile(configFile, "GUN_DUAL_SIMPLE", val, STR_SIZE, "YES");
 	check[GUN_DUAL_SIMPLE]->status = isYesOrNO(val);
+	loadValueFromConfigFile(configFile, "GUN_SCATTER", val, STR_SIZE, "YES");
+	check[GUN_SCATTER]->status = isYesOrNO(val);
 	loadValueFromConfigFile(configFile, "GUN_TOMMY", val, STR_SIZE, "YES");
 	check[GUN_TOMMY]->status = isYesOrNO(val);
 	loadValueFromConfigFile(configFile, "GUN_LASSER", val, STR_SIZE, "YES");
@@ -218,15 +220,26 @@ static void initSettingFile()
 
 	loadValueFromConfigFile(configFile, "SOUND", val, STR_SIZE, "YES");
 	check_sound->status = isYesOrNO(val);
+
+	saveTextFile(configFile);
 }
 
 static void saveAndDestroyConfigFile()
 {
+	if( configFile == NULL )
+	{
+		fprintf(stderr, "i can't save configure, "
+			"because config file not created !\n");
+
+		return;
+	}
+
 	setValueInConfigFile(configFile, "COUNT_ROUND", textfield_count_cound->text );
 	setValueInConfigFile(configFile, "NAME_PLAYER_RIGHT", textfield_name_player1->text );
 	setValueInConfigFile(configFile, "NAME_PLAYER_LEFT", textfield_name_player2->text );
 
 	setValueInConfigFile(configFile, "GUN_DUAL_SIMPLE", getYesOrNo(check[GUN_DUAL_SIMPLE]->status) );
+	setValueInConfigFile(configFile, "GUN_SCATTER", getYesOrNo(check[GUN_SCATTER]->status) );
 	setValueInConfigFile(configFile, "GUN_TOMMY", getYesOrNo(check[GUN_TOMMY]->status) );
 	setValueInConfigFile(configFile, "GUN_LASSER", getYesOrNo(check[GUN_LASSER]->status) );
 	setValueInConfigFile(configFile, "GUN_MINE", getYesOrNo(check[GUN_MINE]->status) );

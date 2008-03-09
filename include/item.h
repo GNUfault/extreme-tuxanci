@@ -21,6 +21,7 @@ typedef struct item_struct
 	int frame; //poradove cislo animacie
 	int count; 
 
+	tux_t *author;
 	SDL_Surface *img; //obrazok
 	
 } item_t;
@@ -49,8 +50,8 @@ typedef struct item_struct
 
 extern bool_t isItemInicialized();
 extern void initItem();
-extern item_t* newItem(int x, int y, int type);
-extern void addNewItem(list_t *listItem);
+extern item_t* newItem(int x, int y, int type, tux_t *author);
+extern void addNewItem(list_t *listItem, tux_t *author);
 extern void drawItem(item_t *p);
 extern void drawListItem(list_t *listItem);
 extern void eventListItem(list_t *listItem);

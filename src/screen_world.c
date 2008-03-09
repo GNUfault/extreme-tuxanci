@@ -11,6 +11,7 @@
 #include "screen_setting.h"
 #include "screen_gameType.h"
 #include "screen_choiceArena.h"
+#include "screen_table.h"
 
 #include "list.h"
 #include "layer.h"
@@ -135,7 +136,7 @@ void prepareArena()
 	{
 		case NET_GAME_TYPE_NONE :
 			setWorldArena( getChoiceArenaId() );
-			addNewItem(arena->listItem);
+			addNewItem(arena->listItem, NULL);
 			playMusic(arena->music, MUSIC_GROUP_USER);
 			getSettingCountRound(&max_count);
 
@@ -152,7 +153,7 @@ void prepareArena()
 
 		case NET_GAME_TYPE_SERVER :
 			setWorldArena( getChoiceArenaId() );
-			addNewItem(arena->listItem);
+			addNewItem(arena->listItem, NULL);
 			playMusic(arena->music, MUSIC_GROUP_USER);
 			getSettingCountRound(&max_count);
 
@@ -409,8 +410,33 @@ static void setAnalyze()
 	endAnalyze();
 }
 
+static void setTable()
+{
+	tux_t *tuxRight;
+	tux_t *tuxLeft;
+
+	if( getSettingGameType() != NET_GAME_TYPE_NONE )
+	{
+		return;
+	}
+
+	tuxRight = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
+	tuxLeft = getControlTux(TUX_CONTROL_KEYBOARD_LEFT);
+
+	if( tuxRight->score > tuxLeft->score )
+	{
+		addPlayerInHighScore(tuxRight->name, tuxRight->score);
+	}
+
+	if( tuxLeft->score > tuxRight->score )
+	{
+		addPlayerInHighScore(tuxLeft->name, tuxLeft->score);
+	}
+}
+
 void stoptWorld()
 {
+	setTable();
 	setAnalyze();
 	delAllImageInGroup(IMAGE_GROUP_USER);
 	quitNetMultiplayer();
