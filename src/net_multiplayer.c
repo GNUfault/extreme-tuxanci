@@ -23,6 +23,7 @@
 #include "udp.h"
 
 static int netGameType;
+static int netProtoType = NET_PROTOCOL_TYPE_UDP;
 
 int getNetTypeGame()
 {
@@ -39,20 +40,47 @@ int initNetMuliplayer(int type, char *ip, int port)
 		break;
 
 		case NET_GAME_TYPE_SERVER :
-			if( initTcpServer(port) != 0 )
+			switch( netProtoType )
 			{
-				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre server !\n");
-				netGameType = NET_GAME_TYPE_NONE;
-				return -1;
+				case NET_PROTOCOL_TYPE_TCP :
+					if( initTcpServer(port) != 0 )
+					{
+						fprintf(stderr, "Neomzem inicalizovat sietovu hru pre server !\n");
+						netGameType = NET_GAME_TYPE_NONE;
+						return -1;
+					}
+				break;
+				case NET_PROTOCOL_TYPE_UDP :
+					if( initUdpServer(port) != 0 )
+					{
+						fprintf(stderr, "Neomzem inicalizovat sietovu hru pre server !\n");
+						netGameType = NET_GAME_TYPE_NONE;
+						return -1;
+					}
+				break;
 			}
+
 		break;
 
 		case NET_GAME_TYPE_CLIENT :
-			if( initTcpClient(ip, port) != 0 )
+			switch( netProtoType )
 			{
-				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre clienta !\n");
-				netGameType = NET_GAME_TYPE_NONE;
-				return -1;
+				case NET_PROTOCOL_TYPE_TCP :
+					if( initTcpClient(ip, port) != 0 )
+					{
+						fprintf(stderr, "Neomzem inicalizovat sietovu hru pre clienta !\n");
+						netGameType = NET_GAME_TYPE_NONE;
+						return -1;
+					}
+				break;
+				case NET_PROTOCOL_TYPE_UDP :
+					if( initUdpClient(ip, port) != 0 )
+					{
+						fprintf(stderr, "Neomzem inicalizovat sietovu hru pre clienta !\n");
+						netGameType = NET_GAME_TYPE_NONE;
+						return -1;
+					}
+				break;
 			}
 		break;
 
@@ -72,13 +100,31 @@ void eventNetMultiplayer()
 		break;
 
 		case NET_GAME_TYPE_SERVER :
-			selectServerTcpSocket();
-			eventClientListBuffer();
+			switch( netProtoType )
+			{
+				case NET_PROTOCOL_TYPE_TCP :
+					selectServerTcpSocket();
+					eventClientListBuffer();
+				break;
+				case NET_PROTOCOL_TYPE_UDP :
+					selectServerUdpSocket();
+					eventClientListBuffer();
+				break;
+			}
 		break;
 
 		case NET_GAME_TYPE_CLIENT :
-			selectClientTcpSocket();
-			eventServerBuffer();
+			switch( netProtoType )
+			{
+				case NET_PROTOCOL_TYPE_TCP :
+					selectClientTcpSocket();
+					eventServerBuffer();
+				break;
+				case NET_PROTOCOL_TYPE_UDP :
+					selectClientUdpSocket();
+					eventServerBuffer();
+				break;
+			}
 		break;
 
 		default :
@@ -95,11 +141,27 @@ void quitNetMultiplayer()
 		break;
 
 		case NET_GAME_TYPE_SERVER :
-			quitTcpServer();
+			switch( netProtoType )
+			{
+				case NET_PROTOCOL_TYPE_TCP :
+					quitTcpServer();
+				break;
+				case NET_PROTOCOL_TYPE_UDP :
+					quitUdpServer();
+				break;
+			}
 		break;
 
 		case NET_GAME_TYPE_CLIENT :
-			quitTcpClient();
+			switch( netProtoType )
+			{
+				case NET_PROTOCOL_TYPE_TCP :
+					quitTcpClient();
+				break;
+				case NET_PROTOCOL_TYPE_UDP :
+					quitUdpClient();
+				break;
+			}
 		break;
 
 		default :

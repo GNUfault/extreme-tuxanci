@@ -27,6 +27,7 @@ sock_tcp_t* newSockTcp()
 
 void destroySockTcp(sock_tcp_t *p)
 {
+	assert( p != NULL );
 	free(p);
 }
 
@@ -38,6 +39,8 @@ sock_tcp_t* bindTcpSocket(int port)
 	assert( port > 0 && port < 65535 );
 
 	new = newSockTcp();
+
+	assert( new != NULL );
 
 	new->sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -71,7 +74,8 @@ sock_tcp_t* getTcpNewClient(sock_tcp_t *p)
 	sock_tcp_t *new;
 	int client_len;
 
-	assert( new->sock >= 0 );
+	assert( p != NULL );
+	assert( p->sock >= 0 );
 
 	new = newSockTcp();
 
@@ -85,6 +89,9 @@ sock_tcp_t* getTcpNewClient(sock_tcp_t *p)
 
 void getSockTcpIp(sock_tcp_t *p, char *str_ip)
 {
+	assert( p != NULL );
+	assert( str_ip != NULL );
+
 	strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));
 }
 
@@ -93,6 +100,7 @@ sock_tcp_t* connectTcpSocket(char *ip, int port)
 	sock_tcp_t *new;
 	int len;
 
+	assert( ip != NULL );
 	assert( port > 0 && port < 65535 );
 
 	new = newSockTcp();
@@ -124,16 +132,24 @@ sock_tcp_t* connectTcpSocket(char *ip, int port)
 
 int readTcpSocket(sock_tcp_t *p, void *address, int len)
 {
+	assert( p != NULL );
+	assert( address != NULL );
+
 	return read(p->sock, address, len);
 }
 
 int writeTcpSocket(sock_tcp_t *p, void *address, int len)
 {
+	assert( p != NULL );
+	assert( address != NULL );
+
 	return write(p->sock, address, len);
 }
 
 void closeTcpSocket(sock_tcp_t *p)
 {
+	assert( p != NULL );
+
 	close(p->sock);
 	destroySockTcp(p);
 }
@@ -207,4 +223,6 @@ int test_tcp_main(int argc, char **argv)
 		
 		closeTcpSocket(sock);
 	}
+
+	return 0;
 }

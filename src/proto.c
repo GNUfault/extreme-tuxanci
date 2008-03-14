@@ -1,4 +1,7 @@
 
+#include <stdio.h>
+#include <assert.h>
+
 #include "list.h"
 #include "tux.h"
 #include "item.h"
@@ -13,10 +16,24 @@
 #include "server.h"
 #include "proto.h"
 
+void proto_send_hello_client()
+{
+	char msg[STR_SIZE];
+	
+	strcpy(msg, "hello\n");
+	sendServer(msg);
+}
+
+void proto_recv_hello_server(client_t *client, char *msg)
+{
+}
+
 void proto_send_init_server(client_t *client)
 {
 	char msg[STR_SIZE];
 	int n;
+
+	assert( client != NULL );
 
 	getSettingCountRound(&n);
 
@@ -34,6 +51,8 @@ void proto_recv_init_client(char *msg)
 	tux_t *tux;
 	int id;
 	int x, y, n;
+
+	assert( msg != NULL );
 
 	sscanf(msg, "%s %d %d %d %d %s\n",
 	cmd, &id, &x, &y, &n, arena_name);
@@ -56,6 +75,8 @@ void proto_send_event_server(tux_t *tux, int action, client_t *client)
 {
 	char msg[STR_SIZE];
 	
+	assert( tux != NULL );
+
 	sprintf(msg, "event %d %d\n", tux->id, action);
 	
 	sendAllClientBut(msg, client);
@@ -66,6 +87,8 @@ void proto_recv_event_client(char *msg)
 	char cmd[STR_SIZE];
 	int id, action;
 	tux_t *tux;
+
+	assert( msg != NULL );
 
 	sscanf(msg, "%s %d %d", cmd, &id, &action);
 
@@ -91,6 +114,9 @@ void proto_recv_event_server(client_t *client, char *msg)
 	char cmd[STR_SIZE];
 	int action;
 
+	assert( client != NULL );
+	assert( msg != NULL );
+
 	sscanf(msg, "%s %d", cmd, &action);
 
 	actionTux(client->tux, action);
@@ -101,6 +127,8 @@ void proto_recv_event_server(client_t *client, char *msg)
 void proto_send_newtux_server(client_t *client, tux_t *tux)
 {
 	char msg[STR_SIZE];
+
+	assert( tux != NULL );
 
 	sprintf(msg, "newtux %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d\n",
 	tux->id ,tux->x, tux->y, tux->position ,tux->frame, tux->score, tux->name,
@@ -128,6 +156,8 @@ void proto_recv_newtux_client(char *msg)
 	int  gun1, gun2, gun3, gun4, gun5, gun6, gun7;
 	int time1, time2;
 	tux_t *tux;
+
+	assert( msg != NULL );
 
 	sscanf(msg, "%s %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d",
 	cmd, &id, &x, &y, &position, &frame, &score, name,
@@ -167,6 +197,8 @@ void proto_send_deltux_server(client_t *client)
 {
 	char msg[STR_SIZE];
 	
+	assert( client != NULL );
+
 	sprintf(msg, "deltux %d\n", client->tux->id);
 
 	sendAllClientBut(msg, client);
@@ -177,6 +209,8 @@ void proto_recv_deltux_client(char *msg)
 	char cmd[STR_SIZE];
 	int id;
 	tux_t *tux;
+
+	assert( msg != NULL );
 
 	sscanf(msg, "%s %d\n", cmd, &id);
 
@@ -196,6 +230,8 @@ void proto_send_additem_server(item_t *p)
 	char msg[STR_SIZE];
 	int id = -1;
 
+	assert( p != NULL );
+
 	if( p->author != NULL )
 	{
 		id = p->author->id;
@@ -212,6 +248,8 @@ void proto_recv_additem_client(char *msg)
 	char cmd[STR_SIZE];
 	int type, x, y, count, frame, id;
 	item_t *item;
+
+	assert( msg != NULL );
 
 	sscanf(msg, "%s %d %d %d %d %d %d\n", cmd, &type, &x, &y, &count, &frame, &id);
 
@@ -233,6 +271,8 @@ void proto_send_context_client(tux_t *tux)
 {
 	char msg[STR_SIZE];
 	
+	assert( tux != NULL );
+
 	sprintf(msg, "context %s\n", tux->name);
 
 	sendServer(msg);
@@ -243,10 +283,42 @@ void proto_recv_context_server(client_t *client, char *msg)
 	char cmd[STR_SIZE];
 	char name[STR_NAME_SIZE];
 
+	assert( client != NULL );
+	assert( msg != NULL );
+
 	sscanf(msg, "%s %s\n", cmd, name);
 
 	strcpy(client->tux->name, name);
 	
 	proto_send_newtux_server(NULL, client->tux);
 }
- 
+
+void proto_send_end_client()
+{
+	char msg[STR_SIZE];
+	strcpy(msg, "end\n");
+	sendServer(msg);
+	printf("proto_send_end_client\n");
+}
+
+void proto_recv_end_server(client_t *client, char *msg)
+{
+	assert( msg != NULL );
+	client->status = NET_STATUS_ZOMBIE;
+	printf("proto_recv_end_server\n");
+}
+
+void proto_send_end_server()
+{
+	char msg[STR_SIZE];
+	strcpy(msg, "end\n");
+	sendAllClient(msg);
+}
+
+void proto_recv_end_client(char *msg)
+{
+	assert( msg != NULL );
+
+	setWorldEnd();
+}
+

@@ -16,17 +16,41 @@ static sock_tcp_t *sock_server_tcp;
 static sock_udp_t *sock_server_udp;
 static list_t *listClient;
 
+void static initServer()
+{
+	listClient = newList();
+}
+
 int initTcpServer(int port)
 {
 	protocolType = NET_PROTOCOL_TYPE_TCP;
 
 	sock_server_tcp = bindTcpSocket(port);
-	listClient = newList();
 
 	if( sock_server_tcp == NULL )
 	{
 		return -1;
 	}
+
+	initServer();
+
+	printf("server listen port %d\n", port);
+
+	return 0;
+}
+
+int initUdpServer(int port)
+{
+	protocolType = NET_PROTOCOL_TYPE_UDP;
+
+	sock_server_udp = bindUdpSocket(port);
+
+	if( sock_server_udp == NULL )
+	{
+		return -1;
+	}
+
+	initServer();
 
 	printf("server listen port %d\n", port);
 
@@ -53,6 +77,8 @@ client_t* newTcpClient(sock_tcp_t *sock_tcp)
 {
 	client_t *new;
 	
+	assert( sock_tcp != NULL );
+
 	new = newAnyClient();
 	new->socket_tcp = sock_tcp;
 
@@ -63,6 +89,8 @@ client_t* newUdpClient(sock_udp_t *sock_udp)
 {
 	client_t *new;
 	
+	assert( sock_udp != NULL );
+
 	new = newAnyClient();
 	new->socket_udp = sock_udp;
 
@@ -72,6 +100,8 @@ client_t* newUdpClient(sock_udp_t *sock_udp)
 void destroyClient(client_t *p)
 {
 	int index;
+
+	assert( p != NULL );
 
 	if( p->socket_tcp != NULL )
 	{
@@ -92,29 +122,33 @@ void destroyClient(client_t *p)
 
 void sendClient(client_t *p, char *msg)
 {
+	assert( p != NULL );
+	assert( msg != NULL );
+
 	if( p->status == NET_STATUS_OK )
 	{
 		int ret;
 
 		if( protocolType == NET_PROTOCOL_TYPE_TCP )
 		{
-			ret = writeTcpSocket(p->socket_tcp, msg, strlen(msg));
-	
-			if( ret == 0 )
-			{
-				fprintf(stderr, "client sa odpojil\n");
-				p->status = NET_STATUS_ZOMBIE;
-			}
-	
-			if( ret < 0 )
-			{
-				fprintf(stderr, "nastala chyba pri posielanie spravy clientovy\n");
-				p->status = NET_STATUS_ZOMBIE;
-			}
+			ret = writeTcpSocket(p->socket_tcp, msg, strlen(msg));	
 		}
 	
 		if( protocolType == NET_PROTOCOL_TYPE_UDP )
 		{
+			ret = writeUdpSocket(sock_server_udp, p->socket_udp, msg, strlen(msg));
+		}
+
+		if( ret == 0 )
+		{
+			fprintf(stderr, "client sa odpojil\n");
+			p->status = NET_STATUS_ZOMBIE;
+		}
+	
+		if( ret < 0 )
+		{
+			fprintf(stderr, "nastala chyba pri posielanie spravy clientovy\n");
+			p->status = NET_STATUS_ZOMBIE;
 		}
 	}
 }
@@ -123,6 +157,8 @@ void sendAllClientBut(char *msg, client_t *p)
 {
 	client_t *thisClient;
 	int i;
+
+	assert( msg != NULL );
 
 	for( i = 0 ; i < listClient->count; i++)
 	{
@@ -137,19 +173,17 @@ void sendAllClientBut(char *msg, client_t *p)
 
 void sendAllClient(char *msg)
 {
+	assert( msg != NULL );
+
 	sendAllClientBut(msg, NULL);
 }
 
-static void eventCreateNewTcpClient(sock_tcp_t *socket_tcp)
+static void eventCreateClient(client_t *client)
 {
-	client_t *client;
 	client_t *thisClient;
 	tux_t *thisTux;
 	item_t *thisItem;
 	int i;
-
-	client = newTcpClient( getTcpNewClient(socket_tcp) );
-	addList(listClient, client);
 
 	proto_send_init_server(client);
 
@@ -172,6 +206,29 @@ static void eventCreateNewTcpClient(sock_tcp_t *socket_tcp)
 		thisItem = (item_t *) getWorldArena()->listItem->list[i];
 		proto_send_additem_server(thisItem);
 	}
+}
+
+static void eventCreateNewTcpClient(sock_tcp_t *socket_tcp)
+{
+	client_t *client;
+
+	assert( socket_tcp != NULL );
+
+	client = newTcpClient( getTcpNewClient(socket_tcp) );
+	addList(listClient, client);
+
+	eventCreateClient(client);
+}
+
+static void eventCreateNewUdpClient(sock_udp_t *socket_udp)
+{
+	client_t *client;
+
+	assert( socket_udp != NULL );
+
+	client = newUdpClient( socket_udp );
+	addList(listClient, client);
+	eventCreateClient(client);
 }
 
 static void eventClientTcpSelect(client_t *client)
@@ -201,14 +258,18 @@ static void eventClientBuffer(client_t *client)
 {
 	char line[STR_SIZE];
 
+	assert( client != NULL );
+
 	/* obsluha udalosti od clientov */
 	
 	while( getBufferLine(client->buffer, line, STR_SIZE) >= 0 )
 	{
  		//printf("dostal som %s", line);
 
+		if( strncmp(line, "hello", 5) == 0 )proto_recv_hello_server(client, line);
 		if( strncmp(line, "event", 5) == 0 )proto_recv_event_server(client, line);
 		if( strncmp(line, "context", 7) == 0 )proto_recv_context_server(client, line);
+		if( strncmp(line, "end", 3) == 0 )proto_recv_end_server(client, line);
 	}
 }
 
@@ -275,11 +336,128 @@ void selectServerTcpSocket()
 	}
 }
 
+static client_t* findUdpClient(sock_udp_t *sock_udp)
+{
+	int i;
+	client_t *thisClient;
+
+	for( i = 0 ; i < listClient->count; i++)
+	{
+		thisClient = (client_t *) listClient->list[i];
+
+		if( thisClient->socket_udp->sockAddr.sin_port == sock_udp->sockAddr.sin_port )
+		{
+			return thisClient;
+		}
+	}
+
+	return NULL;
+}
+
+static void delZombieCLient()
+{
+	client_t *thisClient;
+	int i;
+
+	for( i = 0 ; i < listClient->count; i++)
+	{
+		thisClient = (client_t *) listClient->list[i];
+
+		if( thisClient->status == NET_STATUS_ZOMBIE )
+		{
+			proto_send_deltux_server(thisClient);
+			delListItem(listClient, i, destroyClient);
+		}
+	}
+}
+
+static void eventClientUdpSelect(sock_udp_t *sock_server)
+{
+	sock_udp_t *sock_client;
+	client_t *client;
+	char buffer[STR_SIZE];
+	int ret;
+
+	assert( sock_server != NULL );
+
+	sock_client = newSockUdp();
+
+	memset(buffer, 0, STR_SIZE);
+	ret = readUdpSocket(sock_server, sock_client, buffer, STR_SIZE-1);
+
+	client = findUdpClient(sock_client);
+
+	if( client == NULL )
+	{
+		eventCreateNewUdpClient(sock_client);
+		client = findUdpClient(sock_client);
+	}
+
+	if( client == NULL )
+	{
+		fprintf(stderr, "Client total not found !\n");
+		return;
+	}
+	
+	if( ret <= 0 )
+	{
+		client->status = NET_STATUS_ZOMBIE;
+		return;
+	}
+
+	if( addBuffer(client->buffer, buffer, ret) != 0 )
+	{
+		client->status = NET_STATUS_ZOMBIE;
+		return;
+	}
+}
+
+void selectServerUdpSocket()
+{
+	fd_set readfds;
+	struct timeval tv;
+	int max_fd;
+
+	tv.tv_sec = 0;
+	tv.tv_usec = 0;
+	
+	FD_ZERO(&readfds);
+	FD_SET(sock_server_udp->sock, &readfds);
+	max_fd = sock_server_udp->sock;
+
+	delZombieCLient();
+
+	select(max_fd+1, &readfds, (fd_set *)NULL, (fd_set *)NULL, &tv);
+
+	if( FD_ISSET(sock_server_udp->sock, &readfds) )
+	{
+		eventClientUdpSelect(sock_server_udp);
+	}
+}
+
+static void quitServer()
+{
+	proto_send_end_server();
+	assert( listClient != NULL );
+	destroyListItem(listClient, destroyClient);
+}
+
 void quitTcpServer()
 {
-	destroyListItem(listClient, destroyClient);
+	quitServer();
+
+	assert( sock_server_tcp != NULL );
 	closeTcpSocket(sock_server_tcp);
+
 	printf("quit port\n");
 }
 
+void quitUdpServer()
+{
+	quitServer();
 
+	assert( sock_server_udp != NULL );
+	closeUdpSocket(sock_server_udp);
+
+	printf("quit port\n");
+}

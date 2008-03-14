@@ -23,13 +23,13 @@ void drawWidgetLabel(widget_label_t *p)
 	switch( p->bind )
 	{
 		case WIDGET_LABEL_RIGHT :
-			drawFont(p->text, p->x+p->w, p->y, COLOR_WHITE);
+			drawFont(p->text, p->x+p->w, p->y + p->h/2, COLOR_WHITE);
 		break;
 		case WIDGET_LABEL_LEFT :
-			drawFont(p->text, p->x, p->y, COLOR_WHITE);
+			drawFont(p->text, p->x, p->y + p->h/2, COLOR_WHITE);
 		break;
 		case WIDGET_LABEL_CENTER :
-			drawFont(p->text, p->x-p->w/2, p->y, COLOR_WHITE);
+			drawFont(p->text, p->x-p->w/2, p->y + p->h/2, COLOR_WHITE);
 		break;
 	}
 }

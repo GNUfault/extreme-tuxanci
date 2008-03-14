@@ -8,6 +8,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <netdb.h>
+#include <assert.h>
 
 #define BUFSIZE 1000
 
@@ -29,6 +30,7 @@ sock_udp_t* newSockUdp()
 
 void destroySockUdp(sock_udp_t *p)
 {
+	assert( p != NULL );
 	free(p);
 }
 
@@ -36,7 +38,11 @@ sock_udp_t* bindUdpSocket(int port)
 {
 	sock_udp_t *new;
 
+	assert( port > 0 && port < 65535 );
+
 	new = newSockUdp();
+
+	assert( new != NULL );
 
 	if( ( new->sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) ) < 0 )
 	{
@@ -65,7 +71,12 @@ sock_udp_t* connectUdpSocket(char *address, int port)
 	struct hostent *host;
 	sock_udp_t *new;
 
+	assert( address != NULL  );
+	assert( port > 0 && port < 65536 );
+
 	new = newSockUdp();
+
+	assert( new != NULL );
 
 	if( ( new->sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP) ) < 0 )
 	{
@@ -87,6 +98,10 @@ int readUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 	int addrlen;
 	int size;
 
+	assert( src != NULL );
+	assert( dst != NULL );
+	assert( address != NULL );
+
         addrlen = sizeof(src->sockAddr);
 
         if( ( size = recvfrom(src->sock, address, len, 0,
@@ -106,7 +121,11 @@ int writeUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 
         addrlen = sizeof(src->sockAddr);
 
-        if( ( size = sendto(src->sock, address, len, 0,
+	assert( src != NULL );
+	assert( dst != NULL );
+	assert( address != NULL );
+
+       if( ( size = sendto(src->sock, address, len, 0,
 		(struct sockaddr *)&dst->sockAddr, (socklen_t)addrlen) ) < 0 )
         {
 		fprintf(stderr, "nemozem nacitat sokcet !\n");
@@ -118,11 +137,16 @@ int writeUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 
 void getSockUdpIp(sock_udp_t *p, char *str_ip)
 {
+	assert( p != NULL  );
+	assert( str_ip != NULL );
+
 	strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));
 }
 
 void closeUdpSocket(sock_udp_t *p)
 {
+	assert( p != NULL  );
+
 	close(p->sock);
 	destroySockUdp(p);
 }
