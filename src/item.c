@@ -13,6 +13,7 @@
 #include "tux.h"
 #include "item.h"
 #include "shot.h"
+#include "proto.h"
 
 static SDL_Surface *g_item[ITEM_COUNT];
 

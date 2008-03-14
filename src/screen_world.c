@@ -30,6 +30,7 @@
 #include "net_multiplayer.h"
 #include "arena.h"
 #include "arenaFile.h"
+#include "proto.h"
 
 static arena_t *arena;
 static int count;
@@ -47,6 +48,8 @@ void setGameType()
 {
 	int ret = 0;
 
+	ret = initNetMuliplayer( getSettingGameType(), getSettingIP(), getSettingPort() );
+/*
 	if( getSettingGameType() == NET_GAME_TYPE_SERVER )
 	{
 		ret = initServer( getSettingPort() );
@@ -56,7 +59,7 @@ void setGameType()
 	{
 		ret = initClient( getSettingPort() , getSettingIP() );
 	}
-
+*/
 	if( ret != 0 )
 	{
 		fprintf(stderr, "Chyba inicalizacie sieti !\n");
@@ -72,7 +75,6 @@ arena_t* getWorldArena()
 void setWorldArena(int id)
 {
 	arena = getArena(id);
-	netSetArena(arena);
 }
 
 void setMaxCountRound(int n)

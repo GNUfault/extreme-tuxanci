@@ -1,5 +1,7 @@
 
 #include "network.h"
+#include "tcp.h"
+#include "udp.h"
 
 #include <stdio.h>
 #include <stdlib.h>

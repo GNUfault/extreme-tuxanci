@@ -20,6 +20,7 @@
 #include "myTimer.h"
 #include "net_multiplayer.h"
 #include "dynamicInt.h"
+#include "proto.h"
 
 static SDL_Surface *g_tux_up;
 static SDL_Surface *g_tux_right;

@@ -1,8 +1,9 @@
 
+#CC = /usr/local/gcc/bin/gcc
 CC = gcc
 
-#CFLAGS = -g -O0 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
-CFLAGS = -O2 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
+CFLAGS = -g -O0 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
+#CFLAGS = -O2 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
 
 LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer
 
@@ -11,7 +12,8 @@ FILES = interface.o font.o list.o image.o layer.o director.o configFile.o tux.o 
 	buffer.o dynamicInt.o arena.o arenaFile.o textFile.o sound.o audio.o music.o gun.o \
 	item.o widget_label.o screen_mainMenu.o widget_button.o screen_analyze.o widget_textfield.o \
 	widget_check.o widget_image.o screen_setting.o screen_gameType.o screen_choiceArena.o \
-	widget_buttonimage.o screen_credits.o teleport.o pipe.o homeDirector.o screen_table.o
+	widget_buttonimage.o screen_credits.o teleport.o pipe.o homeDirector.o screen_table.o \
+	tcp.o udp.o proto.o server.o client.o
  
 tuxanci-ng: $(FILES)
 	$(CC) $(CFLAGS) $(LIBS) -o tuxanci-ng $(FILES)
@@ -64,6 +66,20 @@ panel.o: panel.c ../include/panel.h
 buffer.o: buffer.c ../include/buffer.h
 	$(CC) $(CFLAGS) -o buffer.o -c buffer.c
 
+tcp.o: tcp.c ../include/tcp.h
+	$(CC) $(CFLAGS) -o tcp.o -c tcp.c
+
+udp.o: udp.c ../include/udp.h
+	$(CC) $(CFLAGS) -o udp.o -c udp.c
+
+proto.o: proto.c ../include/proto.h
+	$(CC) $(CFLAGS) -o proto.o -c proto.c
+
+server.o: server.c ../include/server.h
+	$(CC) $(CFLAGS) -o server.o -c server.c
+
+client.o: client.c ../include/client.h
+	$(CC) $(CFLAGS) -o client.o -c client.c
 network.o: network.c ../include/network.h
 	$(CC) $(CFLAGS) -o network.o -c network.c
 
