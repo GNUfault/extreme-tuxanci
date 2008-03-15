@@ -18,10 +18,6 @@
 
 #define SDL_SUBSYSTEMS SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_DOUBLEBUF
 
-//rozlisenie obrazovky
-#define WINDOW_SIZE_X 800
-#define WINDOW_SIZE_Y 600
-
 //napis na okne
 #define WINDOW_TITLE "Tuxanci next generation SVN revision 13"
 #define WIN_BPP 0

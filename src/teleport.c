@@ -2,18 +2,35 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "main.h"
 #include "tux.h"
 #include "teleport.h"
-#include "layer.h"
-#include "screen_world.h"
 #include "shot.h"
 #include "sound.h"
 
+#ifndef BUBLIC_SERVER
+#include "layer.h"
+#include "screen_world.h"
+#include "sound.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
+
+#ifndef BUBLIC_SERVER	
 teleport_t* newTeleport(int x, int y, int w, int h, int layer, SDL_Surface *img)
+#endif
+
+#ifdef BUBLIC_SERVER	
+teleport_t* newTeleport(int x, int y, int w, int h, int layer)
+#endif
 {
 	teleport_t *new;
 	
+#ifndef BUBLIC_SERVER	
 	assert( img != NULL );
+#endif
 
 	new  = malloc( sizeof(teleport_t) );
 	assert( new != NULL );
@@ -23,10 +40,13 @@ teleport_t* newTeleport(int x, int y, int w, int h, int layer, SDL_Surface *img)
 	new->w = w;
 	new->h = h;
 	new->layer = layer;
+#ifndef BUBLIC_SERVER	
 	new->img = img;
-
+#endif
 	return new;
 }
+
+#ifndef BUBLIC_SERVER
 
 void drawTeleport(teleport_t *p)
 {
@@ -49,6 +69,8 @@ void drawListTeleport(list_t *listTeleport)
 		drawTeleport(thisTeleport);
 	}
 }
+
+#endif
 
 teleport_t* isConflictWithListTeleport(list_t *listTeleport, int x, int y, int w, int h)
 {
@@ -185,7 +207,9 @@ void eventTeleportTux(list_t *listTeleport, teleport_t *teleport, tux_t *tux)
 	if( isFreeSpace(dist_x, dist_y, TUX_WIDTH, TUX_HEIGHT) )
 	{
 		setTuxProportion(tux, dist_x, dist_y);
+#ifndef BUBLIC_SERVER
 		playSound("teleport", SOUND_GROUP_BASE);
+#endif
 	}
 }
 

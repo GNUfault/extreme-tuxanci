@@ -1,0 +1,90 @@
+
+#CC = /usr/local/gcc/bin/gcc
+CC = gcc
+
+DISTDIR:=/usr/
+
+CFLAGS = -g -O0 -DBUBLIC_SERVER -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
+#CFLAGS = -O2 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
+
+LIBS =
+
+FILES = list.o director.o configFile.o tux.o main.o wall.o shot.o myTimer.o  \
+	buffer.o dynamicInt.o arena.o arenaFile.o textFile.o gun.o item.o teleport.o pipe.o tcp.o\
+	udp.o proto.o server.o publicServer.o net_multiplayer.o
+
+publicserver: $(FILES)
+	$(CC) $(CFLAGS) $(LIBS) -o publicserver $(FILES)
+
+main.o: main.c 
+	$(CC) $(CFLAGS) -o main.o -c main.c
+
+publicServer.o: publicServer.c 
+	$(CC) $(CFLAGS) -o publicServer.o -c publicServer.c
+
+list.o: list.c ../include/list.h
+	$(CC) $(CFLAGS) -o list.o -c list.c
+
+director.o: director.c ../include/director.h
+	$(CC) $(CFLAGS) -o director.o -c director.c
+
+configFile.o: configFile.c ../include/configFile.h
+	$(CC) $(CFLAGS) -o configFile.o -c configFile.c
+
+tux.o: tux.c ../include/tux.h
+	$(CC) $(CFLAGS) -o tux.o -c tux.c
+
+wall.o: wall.c ../include/wall.h
+	$(CC) $(CFLAGS) -o wall.o -c wall.c
+
+shot.o: shot.c ../include/shot.h
+	$(CC) $(CFLAGS) -o shot.o -c shot.c
+
+myTimer.o: myTimer.c ../include/myTimer.h
+	$(CC) $(CFLAGS) -o myTimer.o -c myTimer.c
+
+buffer.o: buffer.c ../include/buffer.h
+	$(CC) $(CFLAGS) -o buffer.o -c buffer.c
+
+tcp.o: tcp.c ../include/tcp.h
+	$(CC) $(CFLAGS) -o tcp.o -c tcp.c
+
+udp.o: udp.c ../include/udp.h
+	$(CC) $(CFLAGS) -o udp.o -c udp.c
+
+proto.o: proto.c ../include/proto.h
+	$(CC) $(CFLAGS) -o proto.o -c proto.c
+
+server.o: server.c ../include/server.h
+	$(CC) $(CFLAGS) -o server.o -c server.c
+
+net_multiplayer.o: net_multiplayer.c ../include/net_multiplayer.h
+	$(CC) $(CFLAGS) -o net_multiplayer.o -c net_multiplayer.c
+
+dynamicInt.o: dynamicInt.c ../include/dynamicInt.h
+	$(CC) $(CFLAGS) -o dynamicInt.o -c dynamicInt.c
+
+arena.o: arena.c ../include/arena.h
+	$(CC) $(CFLAGS) -o arena.o -c arena.c
+
+textFile.o: textFile.c ../include/textFile.h
+	$(CC) $(CFLAGS) -o textFile.o -c textFile.c
+
+arenaFile.o: arenaFile.c ../include/arenaFile.h
+	$(CC) $(CFLAGS) -o arenaFile.o -c arenaFile.c
+
+gun.o: gun.c ../include/gun.h
+	$(CC) $(CFLAGS) -o gun.o -c gun.c
+
+item.o: item.c ../include/item.h
+	$(CC) $(CFLAGS) -o item.o -c item.c
+
+teleport.o: teleport.c ../include/teleport.h
+	$(CC) $(CFLAGS) -o teleport.o -c teleport.c
+
+pipe.o: pipe.c ../include/pipe.h
+	$(CC) $(CFLAGS) -o pipe.o -c pipe.c
+
+clean:
+	rm -rf *.o *.c~ *.h~ publicserver
+

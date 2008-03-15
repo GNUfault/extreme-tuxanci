@@ -6,10 +6,6 @@
 
 #include "main.h"
 #include "tux.h"
-#include "image.h"
-#include "sound.h"
-#include "layer.h"
-#include "screen_world.h"
 #include "shot.h"
 #include "gun.h"
 #include "wall.h"
@@ -22,11 +18,26 @@
 #include "dynamicInt.h"
 #include "proto.h"
 
+#ifndef BUBLIC_SERVER
+#include "image.h"
+#include "sound.h"
+#include "layer.h"
+#include "screen_world.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
+
+#ifndef BUBLIC_SERVER
+
 static SDL_Surface *g_tux_up;
 static SDL_Surface *g_tux_right;
 static SDL_Surface *g_tux_left;
 static SDL_Surface *g_tux_down;
 static SDL_Surface *g_cross;
+
+#endif
 
 static bool_t isTuxInit = FALSE;
 
@@ -37,13 +48,17 @@ bool_t isTuxInicialized()
 
 void initTux()
 {
+#ifndef BUBLIC_SERVER
 	assert( isImageInicialized() == TRUE );
+#endif
 
+#ifndef BUBLIC_SERVER
 	g_tux_up = addImageData("tux8.png", IMAGE_ALPHA, "tux8", IMAGE_GROUP_BASE);
 	g_tux_right = addImageData("tux6.png", IMAGE_ALPHA, "tux6", IMAGE_GROUP_BASE);
 	g_tux_left = addImageData("tux4.png", IMAGE_ALPHA, "tux4", IMAGE_GROUP_BASE);
 	g_tux_down = addImageData("tux2.png", IMAGE_ALPHA, "tux2", IMAGE_GROUP_BASE);
 	g_cross = addImageData("cross.png", IMAGE_ALPHA, "cross", IMAGE_GROUP_BASE);
+#endif
 
 	isTuxInit = TRUE;
 }
@@ -131,6 +146,8 @@ void getCourse(int n, int *x, int *y)
 	}	
 }
 
+#ifndef BUBLIC_SERVER
+
 void drawTux(tux_t *tux)
 {
 	SDL_Surface *g_image = NULL;
@@ -201,6 +218,8 @@ void drawListTux(list_t *listTux)
 		drawTux(thisTux);
 	}
 }
+
+#endif
 
 tux_t* getTuxID(list_t *listTux, int id)
 {
@@ -346,7 +365,9 @@ void eventTuxIsDead(tux_t *tux)
 		return;
 	}
 
- 	playSound("dead", SOUND_GROUP_BASE);
+#ifndef BUBLIC_SERVER
+	playSound("dead", SOUND_GROUP_BASE);
+#endif
 	printf("tux id %d is dead\n", tux->id);
 
 	tux->status = TUX_STATUS_DEAD;
@@ -389,7 +410,9 @@ void tuxTeleport(tux_t *tux)
 {
 	int x, y;
 
+#ifndef BUBLIC_SERVER
 	playSound("teleport", SOUND_GROUP_BASE);
+#endif
 	printf("tux id %d teleporting\n", tux->id);
 
 	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
@@ -551,8 +574,9 @@ void switchTuxGun(tux_t *tux)
 		return;
 	}
 
+#ifndef BUBLIC_SERVER
 	playSound("switch_gun", SOUND_GROUP_BASE);
-
+#endif
 	for( i = tux->gun+1 ; i < GUN_COUNT ; i++ )
 	{
 		if( tux->shot[i] > 0 )
@@ -599,6 +623,11 @@ void shotTux(tux_t *tux)
 
 void actionTux(tux_t *tux, int action)
 {
+	if( tux->status != TUX_STATUS_ALIVE )
+	{
+		return;
+	}
+
 	switch( action )
 	{
 		case TUX_UP :
@@ -678,7 +707,9 @@ void eventListTux(list_t *listTux)
 		thisTux  = (tux_t *)listTux->list[i];
 		assert( thisTux != NULL );
 
+#ifndef BUBLIC_SERVER
 		tuxControl(thisTux);
+#endif
 		pickUpGun(thisTux);
 		eventBonus(thisTux);
 		eventGiveTuxItem(thisTux, getWorldArena()->listItem);

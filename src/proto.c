@@ -2,19 +2,29 @@
 #include <stdio.h>
 #include <assert.h>
 
+#include "main.h"
 #include "list.h"
 #include "tux.h"
 #include "item.h"
+#include "arenaFile.h"
+#include "myTimer.h"
+#include "server.h"
+#include "proto.h"
+#include "net_multiplayer.h"
+
+#ifndef BUBLIC_SERVER
 #include "network.h"
-#include "string_length.h"
 #include "screen_world.h"
 #include "screen_setting.h"
 #include "screen_choiceArena.h"
-#include "arenaFile.h"
-#include "net_multiplayer.h"
 #include "client.h"
-#include "server.h"
-#include "proto.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
+
+#ifndef BUBLIC_SERVER
 
 void proto_send_hello_client()
 {
@@ -24,18 +34,24 @@ void proto_send_hello_client()
 	sendServer(msg);
 }
 
+#endif
+
 void proto_recv_hello_server(client_t *client, char *msg)
 {
 }
 
+
 void proto_send_init_server(client_t *client)
 {
 	char msg[STR_SIZE];
-	int n;
+	int n = 9999;
 
 	assert( client != NULL );
 
+#ifndef BUBLIC_SERVER
 	getSettingCountRound(&n);
+#endif
+
 
 	sprintf(msg, "init %d %d %d %d %s\n",
 		client->tux->id, client->tux->x, client->tux->y,
@@ -43,6 +59,8 @@ void proto_send_init_server(client_t *client)
 	
 	sendClient(client, msg);
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_recv_init_client(char *msg)
 {
@@ -71,6 +89,8 @@ void proto_recv_init_client(char *msg)
 	addList(getWorldArena()->listTux, tux);
 }
 
+#endif
+
 void proto_send_event_server(tux_t *tux, int action, client_t *client)
 {
 	char msg[STR_SIZE];
@@ -81,6 +101,8 @@ void proto_send_event_server(tux_t *tux, int action, client_t *client)
 	
 	sendAllClientBut(msg, client);
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_recv_event_client(char *msg)
 {
@@ -100,6 +122,10 @@ void proto_recv_event_client(char *msg)
 	}
 }
 
+#endif
+
+#ifndef BUBLIC_SERVER
+
 void proto_send_event_client(int action)
 {
 	char msg[STR_SIZE];
@@ -108,6 +134,8 @@ void proto_send_event_client(int action)
 	
 	sendServer(msg);
 }
+
+#endif
 
 void proto_recv_event_server(client_t *client, char *msg)
 {
@@ -146,6 +174,8 @@ void proto_send_newtux_server(client_t *client, tux_t *tux)
 		sendClient(client, msg);
 	}
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_recv_newtux_client(char *msg)
 {
@@ -193,6 +223,8 @@ void proto_recv_newtux_client(char *msg)
 	tux->status = TUX_STATUS_ALIVE;
 }
 
+#endif
+
 void proto_send_kill_server(tux_t *tux)
 {
 	char msg[STR_SIZE];
@@ -203,6 +235,8 @@ void proto_send_kill_server(tux_t *tux)
 	
 	sendAllClient(msg);
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_recv_kill_client(char *msg)
 {
@@ -222,6 +256,8 @@ void proto_recv_kill_client(char *msg)
 	}
 }
 
+#endif
+
 void proto_send_score_server(tux_t *tux)
 {
 	char msg[STR_SIZE];
@@ -232,6 +268,8 @@ void proto_send_score_server(tux_t *tux)
 	
 	sendAllClient(msg);
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_recv_score_client(char *msg)
 {
@@ -253,6 +291,8 @@ void proto_recv_score_client(char *msg)
 	countRoundInc();
 }
 
+#endif
+
 void proto_send_deltux_server(client_t *client)
 {
 	char msg[STR_SIZE];
@@ -263,6 +303,8 @@ void proto_send_deltux_server(client_t *client)
 
 	sendAllClientBut(msg, client);
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_recv_deltux_client(char *msg)
 {
@@ -285,6 +327,8 @@ void proto_recv_deltux_client(char *msg)
 	}
 }
 
+#endif
+
 void proto_send_additem_server(item_t *p)
 {
 	char msg[STR_SIZE];
@@ -302,6 +346,8 @@ void proto_send_additem_server(item_t *p)
 
 	sendAllClient(msg);
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_recv_additem_client(char *msg)
 {
@@ -327,6 +373,10 @@ void proto_recv_additem_client(char *msg)
 	addList(getWorldArena()->listItem, item);
 }
 
+#endif
+
+#ifndef BUBLIC_SERVER
+
 void proto_send_context_client(tux_t *tux)
 {
 	char msg[STR_SIZE];
@@ -337,6 +387,8 @@ void proto_send_context_client(tux_t *tux)
 
 	sendServer(msg);
 }
+
+#endif
 
 void proto_recv_context_server(client_t *client, char *msg)
 {
@@ -353,6 +405,8 @@ void proto_recv_context_server(client_t *client, char *msg)
 	proto_send_newtux_server(NULL, client->tux);
 }
 
+#ifndef BUBLIC_SERVER
+
 void proto_send_ping_client()
 {
 	char msg[STR_SIZE];
@@ -360,13 +414,17 @@ void proto_send_ping_client()
 	sendServer(msg);
 }
 
+#endif
+
 void proto_recv_ping_server(client_t *client, char *msg)
 {
 	assert( msg != NULL );
 	assert( client != NULL );
 	
-	client->lastPing = SDL_GetTicks();
+	client->lastPing = getMyTime();
 }
+
+#ifndef BUBLIC_SERVER
 
 void proto_send_end_client()
 {
@@ -374,6 +432,8 @@ void proto_send_end_client()
 	strcpy(msg, "end\n");
 	sendServer(msg);
 }
+
+#endif
 
 void proto_recv_end_server(client_t *client, char *msg)
 {
@@ -390,6 +450,9 @@ void proto_send_end_server()
 	sendAllClient(msg);
 }
 
+
+#ifndef BUBLIC_SERVER
+
 void proto_recv_end_client(char *msg)
 {
 	assert( msg != NULL );
@@ -397,3 +460,4 @@ void proto_recv_end_client(char *msg)
 	setWorldEnd();
 }
 
+#endif

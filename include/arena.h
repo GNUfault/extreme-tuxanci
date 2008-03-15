@@ -9,9 +9,11 @@
 
 typedef struct arena_struct
 {
+#ifndef BUBLIC_SERVER
 	char music[STR_SIZE];
 
 	SDL_Surface *background;
+#endif
 
 	list_t *listTux;
 	list_t *listShot;

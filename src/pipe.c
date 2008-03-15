@@ -2,16 +2,33 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "main.h"
 #include "pipe.h"
 #include "layer.h"
-#include "screen_world.h"
 #include "shot.h"
 
+#ifndef BUBLIC_SERVER
+#include "screen_world.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
+
+#ifndef BUBLIC_SERVER	
 pipe_t* newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position, SDL_Surface *img)
+#endif
+
+#ifdef BUBLIC_SERVER	
+pipe_t* newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position)
+#endif
+
 {
 	pipe_t *new;
 	
+#ifndef BUBLIC_SERVER	
 	assert( img != NULL );
+#endif
 
 	new  = malloc( sizeof(pipe_t) );
 	assert( new != NULL );
@@ -24,10 +41,13 @@ pipe_t* newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int p
 	new->id = id;
 	new->id_out = id_out;
 	new->position = position;
+#ifndef BUBLIC_SERVER	
 	new->img = img;
-
+#endif
 	return new;
 }
+
+#ifndef BUBLIC_SERVER	
 
 void drawPipe(pipe_t *p)
 {
@@ -50,6 +70,8 @@ void drawListPipe(list_t *listPipe)
 		drawPipe(thisPipe);
 	}
 }
+
+#endif
 
 pipe_t* isConflictWithListPipe(list_t *listPipe, int x, int y, int w, int h)
 {

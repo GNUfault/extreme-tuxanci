@@ -1,12 +1,15 @@
 
 #include <time.h>
 
-#include "interface.h"
 #include "main.h"
+#include "tux.h"
+
+#ifndef BUBLIC_SERVER
+
 #include "font.h"
 #include "image.h"
 #include "layer.h"
-#include "tux.h"
+#include "interface.h"
 #include "screen.h"
 #include "screen_world.h"
 #include "screen_mainMenu.h"
@@ -17,18 +20,24 @@
 #include "screen_table.h"
 #include "screen_credits.h"
 #include "homeDirector.h"
-#include "wall.h"
-#include "shot.h"
 #include "panel.h"
-#include "myTimer.h"
-#include "arenaFile.h"
 #include "audio.h"
 #include "sound.h"
 #include "music.h"
+
+#endif
+
+#include "wall.h"
+#include "shot.h"
+#include "myTimer.h"
+#include "arenaFile.h"
 #include "item.h"
+#include "publicServer.h"
 
 static int my_argc;
 static char **my_argv;
+
+#ifndef BUBLIC_SERVER
 
 static void init()
 {
@@ -85,6 +94,8 @@ void quit()
 
 	exit(0);
 }
+
+#endif
 
 char* getParam(char *s)
 {
@@ -145,12 +156,26 @@ int main(int argc, char *argv[])
 	my_argc = argc;
 	my_argv = argv;
 
+#ifndef BUBLIC_SERVER
+
 	init();
 
 	setScreen("mainMenu");
 
 	eventSDL();
 	quit();
+#endif
+
+#ifdef BUBLIC_SERVER
+
+	initPublicServer();
+
+	while(1)
+	{
+		eventPublicServer();
+	}
+
+#endif
 
 	return 0;
 }

@@ -8,19 +8,20 @@
 #include "list.h"
 #include "tux.h"
 #include "item.h"
-#include "network.h"
 #include "buffer.h"
 #include "string_length.h"
-#include "screen.h"
-#include "screen_world.h"
-#include "screen_setting.h"
-#include "screen_choiceArena.h"
 #include "arenaFile.h"
 #include "net_multiplayer.h"
 #include "server.h"
-#include "client.h"
 #include "tcp.h"
 #include "udp.h"
+
+#ifndef BUBLIC_SERVER
+#include "screen.h"
+#include "screen_setting.h"
+#include "screen_choiceArena.h"
+#include "client.h"
+#endif
 
 static int netGameType;
 static int netProtoType = NET_PROTOCOL_TYPE_UDP;
@@ -62,6 +63,7 @@ int initNetMuliplayer(int type, char *ip, int port)
 
 		break;
 
+#ifndef BUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
 			switch( netProtoType )
 			{
@@ -83,7 +85,7 @@ int initNetMuliplayer(int type, char *ip, int port)
 				break;
 			}
 		break;
-
+#endif
 		default :
 			assert( ! "Premenna netGameType ma zlu hodnotu !" );
 		break;
@@ -115,6 +117,7 @@ void eventNetMultiplayer()
 			}
 		break;
 
+#ifndef BUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
 			switch( netProtoType )
 			{
@@ -129,7 +132,7 @@ void eventNetMultiplayer()
 				break;
 			}
 		break;
-
+#endif
 		default :
 			assert( ! "Premenna netGameType ma zlu hodnotu !" );
 		break;
@@ -155,6 +158,7 @@ void quitNetMultiplayer()
 			}
 		break;
 
+#ifndef BUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
 			switch( netProtoType )
 			{
@@ -166,6 +170,7 @@ void quitNetMultiplayer()
 				break;
 			}
 		break;
+#endif
 
 		default :
 			assert( ! "Premenna netGameType ma zlu hodnotu !" );

@@ -18,12 +18,12 @@ static int protocolType;
 static sock_tcp_t *sock_server_tcp;
 static sock_udp_t *sock_server_udp;
 static buffer_t *clientBuffer;
-static Uint32 lastPing;
+static my_time_t lastPing;
 
 static void initClient()
 {
 	clientBuffer = newBuffer( LIMIT_BUFFER );
-	lastPing = SDL_GetTicks();
+	lastPing = getMyTime();
 	proto_send_hello_client();
 }
 
@@ -176,14 +176,14 @@ void selectClientTcpSocket()
 
 void eventPingServer()
 {
-	Uint32 currentTime;
+	my_time_t currentTime;
 
- 	currentTime = SDL_GetTicks();
+ 	currentTime = getMyTime();
 
 	if( currentTime - lastPing > CLIENT_TIMEOUT )
 	{
 		proto_send_ping_client();
-		lastPing = SDL_GetTicks();
+		lastPing = getMyTime();
 	}
 }
 

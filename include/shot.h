@@ -25,14 +25,18 @@ typedef struct shot_struct
 	tux_t *author;
 	bool_t isCanKillAuthor;
 
+#ifndef BUBLIC_SERVER	
 	SDL_Surface *img;
+#endif	
 } shot_t; 
 
 extern bool_t isShotInicialized();
 extern void initShot();
 extern shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author);
+#ifndef BUBLIC_SERVER	
 extern void drawShot(shot_t *p);
 extern void drawListShot(list_t *listShot);
+#endif
 extern int isConflictWithListShot(list_t *listShot, int x, int y, int w, int h);
 extern void eventMoveListShot(list_t *listShot);
 

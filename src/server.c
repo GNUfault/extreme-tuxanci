@@ -3,24 +3,32 @@
 #include "tux.h"
 #include "network.h"
 #include "buffer.h"
-#include "net_multiplayer.h"
-#include "screen_world.h"
 #include "tcp.h"
 #include "udp.h"
 #include "proto.h"
 #include "server.h"
 #include "assert.h"
+#include "myTimer.h"
+#include "net_multiplayer.h"
+
+#ifndef BUBLIC_SERVER
+#include "screen_world.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
 
 static int protocolType;
 static sock_tcp_t *sock_server_tcp;
 static sock_udp_t *sock_server_udp;
 static list_t *listClient;
-static Uint32 lastSyncClient;
+static my_time_t lastSyncClient;
 
 void static initServer()
 {
 	listClient = newList();
-	lastSyncClient = SDL_GetTicks();
+ 	lastSyncClient = getMyTime();
 }
 
 int initTcpServer(int port)
@@ -70,7 +78,7 @@ static client_t* newAnyClient()
 	new->buffer = newBuffer(LIMIT_BUFFER);
 	new->tux = newTux();
 	new->tux->control = TUX_CONTROL_NET;
-	new->lastPing = SDL_GetTicks();
+	new->lastPing = getMyTime();
 	addList(getWorldArena()->listTux, new->tux);
 
 	return new;
@@ -199,8 +207,10 @@ static void eventCreateClient(client_t *client)
 
 	proto_send_init_server(client);
 
+#ifndef BUBLIC_SERVER
 	proto_send_newtux_server(client, 
 		(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]) );
+#endif
 
 	for( i = 0 ; i < listClient->count; i++)
 	{
@@ -372,10 +382,10 @@ static client_t* findUdpClient(sock_udp_t *sock_udp)
 static void delZombieCLient()
 {
 	client_t *thisClient;
-	Uint32 currentTime;
+	my_time_t currentTime;
 	int i;
 
- 	currentTime = SDL_GetTicks();
+ 	currentTime = getMyTime();
 
 	for( i = 0 ; i < listClient->count; i++)
 	{
@@ -450,8 +460,15 @@ void selectServerUdpSocket()
 	struct timeval tv;
 	int max_fd;
 
+#ifndef BUBLIC_SERVER
 	tv.tv_sec = 0;
 	tv.tv_usec = 0;
+#endif	
+
+#ifdef BUBLIC_SERVER
+	tv.tv_sec = 0;
+	tv.tv_usec = 50 * 1000;
+#endif	
 	
 	FD_ZERO(&readfds);
 	FD_SET(sock_server_udp->sock, &readfds);
@@ -469,25 +486,26 @@ void selectServerUdpSocket()
 
 void eventPeriodicSyncClient()
 {
-	Uint32 currentTime;
+	my_time_t currentTime;
 
- 	currentTime = SDL_GetTicks();
+ 	currentTime = getMyTime();
 
 	if( currentTime - lastSyncClient > SERVER_TIME_SYNC )
 	{
 		client_t *thisClient;
 		int i;
 	
+#ifndef BUBLIC_SERVER
 		proto_send_newtux_server(NULL,
 			(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]));
-
+#endif
 		for( i = 0 ; i < listClient->count; i++)
 		{
 			thisClient = (client_t *) listClient->list[i];
 			proto_send_newtux_server(NULL, thisClient->tux);
 		}
 
-		lastSyncClient = SDL_GetTicks();
+		lastSyncClient = getMyTime();
 	}
 }
 

@@ -6,21 +6,25 @@
 #include "list.h"
 #include "tux.h"
 #include "buffer.h"
+#include "myTimer.h"
 #include "tcp.h"
 #include "udp.h"
+
+#ifndef BUBLIC_SERVER
+#include "interface.h"
+#endif
 
 #define SERVER_TIMEOUT		5000
 #define SERVER_TIME_SYNC	5000
 
 #define SERVER_INDEX_ROOT_TUX	0
 
-
 typedef struct client_struct
 {
 	sock_tcp_t *socket_tcp;
 	sock_udp_t *socket_udp;
 	int status;
-	Uint32 lastPing;
+	my_time_t lastPing;
 	tux_t *tux;
 	buffer_t *buffer;
 } client_t;

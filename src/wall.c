@@ -2,18 +2,34 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "main.h"
 #include "wall.h"
-#include "layer.h"
-#include "screen_world.h"
 #include "shot.h"
 
+#ifndef BUBLIC_SERVER
+#include "layer.h"
+#include "screen_world.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
+
+#ifndef BUBLIC_SERVER	
 wall_t* newWall(int x, int y, int w, int h,
 	int img_x, int img_y, int layer, SDL_Surface *img)
+#endif
+
+#ifdef BUBLIC_SERVER	
+wall_t* newWall(int x, int y, int w, int h,
+	int img_x, int img_y, int layer)
+#endif
 {
 	wall_t *new;
 	
+#ifndef BUBLIC_SERVER	
 	assert( img != NULL );
-
+#endif
 	new  = malloc( sizeof(wall_t) );
 	assert( new != NULL );
 
@@ -24,10 +40,14 @@ wall_t* newWall(int x, int y, int w, int h,
 	new->img_x = img_x;
 	new->img_y = img_y;
 	new->layer = layer;
+#ifndef BUBLIC_SERVER
 	new->img = img;
+#endif
 
 	return new;
 }
+
+#ifndef BUBLIC_SERVER	
 
 void drawWall(wall_t *p)
 {
@@ -50,6 +70,8 @@ void drawListWall(list_t *listWall)
 		drawWall(thisWall);
 	}
 }
+
+#endif
 
 int isConflictWithListWall(list_t *listWall, int x, int y, int w, int h)
 {

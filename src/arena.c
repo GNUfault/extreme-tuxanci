@@ -15,8 +15,10 @@ arena_t* newArena()
 	arena_t *new;
 	new = malloc( sizeof(arena_t) );
 	
+#ifndef BUBLIC_SERVER
 	new->background = NULL;
 	strcpy(new->music, "");
+#endif
 
 	new->listTux = newList();
 	new->listShot = newList();

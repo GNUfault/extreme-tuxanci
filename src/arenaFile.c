@@ -19,8 +19,11 @@
 #include "director.h"
 #include "path.h"
 #include "string_length.h"
+
+#ifndef BUBLIC_SERVER
 #include "image.h"
 #include "music.h"
+#endif
 
 static list_t *listArenaFile;
 
@@ -30,6 +33,8 @@ bool_t isAreaFileInicialized()
 {
 	return isArenaFileInit;
 }
+
+#ifndef BUBLIC_SERVER
 
 static void cmd_loadImage(char *line)
 {
@@ -73,6 +78,8 @@ static void cmd_playMusic(arena_t *arena, char *line)
 	strcpy(arena->music, str_music);
 }
 
+#endif
+
 static void cmd_wall(arena_t *arena, char *line)
 {
 	char str_x[STR_NUM_SIZE];
@@ -94,10 +101,19 @@ static void cmd_wall(arena_t *arena, char *line)
 	if( getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 )return;
 	if( getValue(line, "image", str_image, STR_SIZE) != 0 )return;
 
+#ifndef BUBLIC_SERVER
 	new = newWall(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_img_x), atoi(str_img_y),
 			atoi(str_layer), getImage(IMAGE_GROUP_USER, str_image) );
+#endif
+
+#ifdef BUBLIC_SERVER
+	new = newWall(atoi(str_x), atoi(str_y),
+			atoi(str_w), atoi(str_h),
+			atoi(str_img_x), atoi(str_img_y),
+			atoi(str_layer) );
+#endif
 
 	addList(arena->listWall, new);
 }
@@ -119,9 +135,17 @@ static void cmd_teleport(arena_t *arena, char *line)
 	if( getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 )return;
 	if( getValue(line, "image", str_image, STR_SIZE) != 0 )return;
 
+#ifndef BUBLIC_SERVER
 	new = newTeleport(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_layer), getImage(IMAGE_GROUP_USER, str_image) );
+#endif
+
+#ifdef BUBLIC_SERVER
+	new = newTeleport(atoi(str_x), atoi(str_y),
+			atoi(str_w), atoi(str_h),
+			atoi(str_layer) );
+#endif
 
 	addList(arena->listTeleport, new);
 }
@@ -149,10 +173,18 @@ static void cmd_pipe(arena_t *arena, char *line)
 	if( getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 )return;
 	if( getValue(line, "image", str_image, STR_SIZE) != 0 )return;
 
+#ifndef BUBLIC_SERVER
 	new = newPipe(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_layer), atoi(str_id), atoi(str_id_out), atoi(str_position),
 			getImage(IMAGE_GROUP_USER, str_image) );
+#endif
+
+#ifdef BUBLIC_SERVER
+	new = newPipe(atoi(str_x), atoi(str_y),
+			atoi(str_w), atoi(str_h),
+			atoi(str_layer), atoi(str_id), atoi(str_id_out), atoi(str_position) );
+#endif
 
 	addList(arena->listPipe, new);
 }
@@ -237,10 +269,13 @@ arena_t* getArena(int id)
 		char *line;
 		line = (char *) (ts->text->list[i]);
 
+#ifndef BUBLIC_SERVER
 		if( strncmp(line, "loadImage", 9) == 0 )cmd_loadImage(line);
 		if( strncmp(line, "loadMusic", 9) == 0 )cmd_loadMusic(line);
 		if( strncmp(line, "background", 10) == 0 )cmd_background(arena, line);
 		if( strncmp(line, "playMusic", 9) == 0 )cmd_playMusic(arena, line);
+#endif
+
 		if( strncmp(line, "wall", 4) == 0 )cmd_wall(arena, line);
 		if( strncmp(line, "teleport", 8) == 0 )cmd_teleport(arena, line);
 		if( strncmp(line, "pipe", 4) == 0 )cmd_pipe(arena, line);
@@ -254,7 +289,9 @@ void initArenaFile()
 	director_t *p;
 	int i;
 
+#ifndef BUBLIC_SERVER
 	assert( isImageInicialized() == TRUE );
+#endif
 
 	isArenaFileInit = TRUE;
 	listArenaFile  = newList();

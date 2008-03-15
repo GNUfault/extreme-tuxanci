@@ -22,8 +22,9 @@ typedef struct item_struct
 	int count; 
 
 	tux_t *author;
+#ifndef BUBLIC_SERVER	
 	SDL_Surface *img; //obrazok
-	
+#endif	
 } item_t;
 
 #define ITEM_MAX_COUNT	2
@@ -52,8 +53,10 @@ extern bool_t isItemInicialized();
 extern void initItem();
 extern item_t* newItem(int x, int y, int type, tux_t *author);
 extern void addNewItem(list_t *listItem, tux_t *author);
+#ifndef BUBLIC_SERVER	
 extern void drawItem(item_t *p);
 extern void drawListItem(list_t *listItem);
+#endif
 extern void eventListItem(list_t *listItem);
 extern void eventConflictShotWithItem(list_t *listItem, list_t *listShot);
 extern int isConflictWithListItem(list_t *listItem, int x, int y, int w, int h);

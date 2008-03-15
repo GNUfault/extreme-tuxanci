@@ -2,11 +2,16 @@
 #include <time.h>
 #include <assert.h>
 #include <stdlib.h>
+#include <sys/time.h>
+#include <signal.h>
 
 #include "main.h"
-#include "interface.h"
 #include "list.h"
 #include "myTimer.h"
+
+#ifndef BUBLIC_SERVER
+#include "interface.h"
+#endif
 
 static list_t *listTime;
 
@@ -19,19 +24,37 @@ bool_t isMyTimerInicialized()
 
 void initTimer()
 {
-	assert( isInterfaceInicialized() == TRUE );
-
 	listTime = newList();
 	isTimerInit = TRUE;
 }
 
-int addTimer(void (*fce)(void *p), void *arg, int my_time)
+my_time_t getMyTime()
+{
+	static struct timeval start;
+	struct timeval now;
+	static char first = '0';
+	my_time_t ticks;
+
+	if(  first == '0' )
+	{
+		gettimeofday(&start, NULL);
+		first = 'x';
+	}
+
+	gettimeofday(&now, NULL);
+
+	ticks = (now.tv_sec-start.tv_sec)*1000+(now.tv_usec-start.tv_usec)/1000;
+
+	return ticks;
+}
+
+int addTimer(void (*fce)(void *p), void *arg, my_time_t my_time)
 {
 	static int new_id = 0;
 	my_timer_t *new;
-	Uint32 currentTime;
+	my_time_t currentTime;
 
- 	currentTime = SDL_GetTicks();
+ 	currentTime = getMyTime();
 
 	new = malloc( sizeof(my_timer_t) );
 	assert( new != NULL );
@@ -50,9 +73,9 @@ void eventTimer()
 {
 	int i;
 	my_timer_t *thisTimer;
-	Uint32 currentTime;
+	my_time_t currentTime;
 
- 	currentTime = SDL_GetTicks();
+ 	currentTime = getMyTime();
 
 	for( i = 0 ; i < listTime->count ; i++ )
 	{

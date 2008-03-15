@@ -4,14 +4,25 @@
 
 #include "main.h"
 #include "shot.h"
-#include "layer.h"
-#include "image.h"
 #include "gun.h"
+
+#ifndef BUBLIC_SERVER
+#include "image.h"
 #include "screen_world.h"
+#include "layer.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
+
+#ifndef BUBLIC_SERVER
 
 static SDL_Surface *g_shot_simple;
 static SDL_Surface *g_shot_lasserX;
 static SDL_Surface *g_shot_lasserY;
+
+#endif
 
 static bool_t isShotInit = FALSE;
 
@@ -22,11 +33,17 @@ bool_t isShotInicialized()
 
 void initShot()
 {
+#ifndef BUBLIC_SERVER
 	assert( isImageInicialized() == TRUE );
+#endif
+
+#ifndef BUBLIC_SERVER
 
 	g_shot_simple = addImageData("shot.png", IMAGE_ALPHA, "shot", IMAGE_GROUP_BASE);
 	g_shot_lasserX = addImageData("lasserX.png", IMAGE_NO_ALPHA, "lasserX", IMAGE_GROUP_BASE);
 	g_shot_lasserY = addImageData("lasserY.png", IMAGE_NO_ALPHA, "lasserY", IMAGE_GROUP_BASE);
+
+#endif
 
 	isShotInit = TRUE;
 }
@@ -56,7 +73,9 @@ shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
 		case GUN_SIMPLE :
 			new->w = GUN_SHOT_WIDTH; 
 			new->h = GUN_SHOT_HEIGHT; 
+#ifndef BUBLIC_SERVER	
 			new->img = g_shot_simple;
+#endif
 		break;
 
 		case GUN_LASSER :
@@ -66,13 +85,17 @@ shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
 				case TUX_LEFT :
 					new->w = GUN_LASSER_HORIZONTAL; 
 					new->h = GUN_SHOT_VERTICAL; 
+#ifndef BUBLIC_SERVER	
 					new->img = g_shot_lasserX;
+#endif
 				break;
 				case TUX_UP :
 				case TUX_DOWN :
 					new->w = GUN_SHOT_VERTICAL; 
 					new->h = GUN_LASSER_HORIZONTAL; 
+#ifndef BUBLIC_SERVER	
 					new->img = g_shot_lasserY;
+#endif
 				break;
 			}
 		break;
@@ -84,6 +107,8 @@ shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
 
 	return new;
 }
+
+#ifndef BUBLIC_SERVER	
 
 void drawShot(shot_t *p)
 {
@@ -105,6 +130,8 @@ void drawListShot(list_t *listShot)
 		drawShot(thisShot);
 	}
 }
+
+#endif
 
 int isConflictWithListShot(list_t *listShot, int x, int y, int w, int h)
 {
@@ -171,13 +198,17 @@ static void eventOnlyLasser(shot_t *shot)
 		case TUX_LEFT :
 			shot->w = GUN_LASSER_HORIZONTAL; 
 			shot->h = GUN_SHOT_VERTICAL; 
+#ifndef BUBLIC_SERVER	
 			shot->img = g_shot_lasserX;
+#endif
 		break;
 		case TUX_UP :
 		case TUX_DOWN :
 			shot->w = GUN_SHOT_VERTICAL; 
 			shot->h = GUN_LASSER_HORIZONTAL; 
+#ifndef BUBLIC_SERVER	
 			shot->img = g_shot_lasserY;
+#endif
 		break;
 	}
 }

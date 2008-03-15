@@ -3,19 +3,29 @@
 #include <assert.h>
 
 #include "main.h"
+#include "arena.h"
+#include "tux.h"
+#include "item.h"
+#include "shot.h"
+#include "proto.h"
+#include "net_multiplayer.h"
+
+#ifndef BUBLIC_SERVER
 #include "interface.h"
 #include "image.h"
 #include "sound.h"
 #include "layer.h"
 #include "screen_world.h"
 #include "screen_setting.h"
-#include "net_multiplayer.h"
-#include "tux.h"
-#include "item.h"
-#include "shot.h"
-#include "proto.h"
+#endif
 
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
+
+#ifndef BUBLIC_SERVER	
 static SDL_Surface *g_item[ITEM_COUNT];
+#endif
 
 static bool_t isItemInit = FALSE;
 
@@ -26,6 +36,7 @@ bool_t isItemInicialized()
 
 void initItem()
 {
+#ifndef BUBLIC_SERVER	
 	g_item[GUN_DUAL_SIMPLE] = addImageData("item.dual.png", IMAGE_ALPHA, "item_dual_simple", IMAGE_GROUP_BASE);
 	g_item[GUN_TOMMY] = addImageData("item.tommy.png", IMAGE_ALPHA, "item_tommy_simple", IMAGE_GROUP_BASE);
 	g_item[GUN_SCATTER] = addImageData("item.scatter.png", IMAGE_ALPHA, "item_scatter_simple", IMAGE_GROUP_BASE);
@@ -41,7 +52,7 @@ void initItem()
 	g_item[BONUS_GHOST] = addImageData("item.bonus.ghost.png", IMAGE_ALPHA, "item_ghost_speed", IMAGE_GROUP_BASE);
 	g_item[BONUS_4X] = addImageData("item.bonus.4x.png", IMAGE_ALPHA, "item_4x_speed", IMAGE_GROUP_BASE);
 	g_item[BONUS_HIDDEN] = addImageData("item.bonus.hidden.png", IMAGE_ALPHA, "item_hidden_speed", IMAGE_GROUP_BASE);
-
+#endif
 	isItemInit = TRUE;
 }
 
@@ -58,7 +69,9 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 	new->y = y;
 	new->frame = 0;
 	new->count = 0;
+#ifndef BUBLIC_SERVER	
 	new->img = g_item[type];
+#endif	
 	new->author = author;
 
 	switch( type )
@@ -78,13 +91,17 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 		break;
 
 		case ITEM_EXPLOSION :
+#ifndef BUBLIC_SERVER	
 			playSound("explozion", SOUND_GROUP_BASE);
+#endif	
 			new->w = ITEM_EXPLOSION_WIDTH;
 			new->h = ITEM_EXPLOSION_HEIGHT;
 		break;
 
 		case ITEM_BIG_EXPLOSION :
+#ifndef BUBLIC_SERVER	
 			playSound("explozion", SOUND_GROUP_BASE);
+#endif	
 			new->w = ITEM_BIG_EXPLOSION_WIDTH;
 			new->h = ITEM_BIG_EXPLOSION_HEIGHT;
 		break;
@@ -110,18 +127,22 @@ void addNewItem(list_t *listItem, tux_t *author)
 	int new_x, new_y;
 	int type;
 
+#ifndef BUBLIC_SERVER	
 	if( isSettingAnyItem() == FALSE ||
 	    getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 	{
 		return;
 	}
+#endif
 
 	arena = getWorldArena();
 	findFreeSpace(&new_x, &new_y, ITEM_GUN_WIDTH, ITEM_GUN_HEIGHT);
 
 	type = GUN_DUAL_SIMPLE;
 
+#ifndef BUBLIC_SERVER
 	do{
+#endif
 		switch( random() % 11 )
 		{
 			case 0 : type = GUN_DUAL_SIMPLE;
@@ -147,7 +168,9 @@ void addNewItem(list_t *listItem, tux_t *author)
 			case 10 : type = BONUS_HIDDEN;
 			break;
 		}
+#ifndef BUBLIC_SERVER
 	}while( isSettingItem(type) == FALSE );
+#endif
 
 	item = newItem(new_x, new_y, type, author);
 	addList(listItem, item);
@@ -157,6 +180,8 @@ void addNewItem(list_t *listItem, tux_t *author)
 		proto_send_additem_server(item);
 	}
 }
+
+#ifndef BUBLIC_SERVER	
 
 void drawItem(item_t *p)
 {
@@ -179,6 +204,8 @@ void drawListItem(list_t *listItem)
 		drawItem(thisItem);
 	}
 }
+
+#endif
 
 void eventListItem(list_t *listItem)
 {
@@ -351,7 +378,9 @@ void eventGiveTuxItem(tux_t *tux, list_t *listItem)
 				case GUN_LASSER :
 				case GUN_MINE :
 					tux->pickup_time = 0;
+#ifndef BUBLIC_SERVER	
 					playSound("item_gun", SOUND_GROUP_BASE);
+#endif
 					tux->shot[ thisItem->type ] += GUN_MAX_SHOT;
 					tux->gun = thisItem->type;
 					delListItem(listItem, i, destroyItem);
@@ -390,7 +419,9 @@ void eventGiveTuxItem(tux_t *tux, list_t *listItem)
 				case BONUS_GHOST :
 				case BONUS_4X :
 				case BONUS_HIDDEN :
+#ifndef BUBLIC_SERVER	
 					playSound("item_bonus", SOUND_GROUP_BASE);
+#endif
 					tux->bonus = thisItem->type;
 					tux->bonus_time = TUX_MAX_BONUS;
 					delListItem(listItem, i, destroyItem);

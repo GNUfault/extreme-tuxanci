@@ -3,7 +3,7 @@
 
 #define WALL_H
 
-#include <interface.h>
+#include "interface.h"
 #include "list.h"
 
 typedef struct wall_struct
@@ -19,11 +19,21 @@ typedef struct wall_struct
 
 	int layer; // vrstva
 
+#ifndef BUBLIC_SERVER	
 	SDL_Surface *img; //obrazok
+#endif
 } wall_t;
 
+#ifndef BUBLIC_SERVER	
 extern wall_t* newWall(int x, int y, int w, int h,
 	int img_x, int img_y, int layer, SDL_Surface *img);
+#endif
+
+#ifdef BUBLIC_SERVER	
+extern wall_t* newWall(int x, int y, int w, int h,
+	int img_x, int img_y, int layer);
+#endif
+
 extern void drawWall(wall_t *p);
 extern void drawListWall(list_t *listWall);
 extern int isConflictWithListWall(list_t *listWall, int x, int y, int w, int h);

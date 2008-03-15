@@ -5,6 +5,7 @@
 
 #include "tux.h"
 #include "server.h"
+#include "item.h"
 
 extern void proto_send_hello_client();
 extern void proto_recv_hello_server(client_t *client, char *msg);

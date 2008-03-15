@@ -10,10 +10,17 @@
 #include "myTimer.h"
 #include "main.h"
 #include "item.h"
+#include "gun.h"
+
+#ifndef BUBLIC_SERVER
 #include "sound.h"
 #include "screen_world.h"
 #include "interface.h"
-#include "gun.h"
+#endif
+
+#ifdef BUBLIC_SERVER
+#include "publicServer.h"
+#endif
 
 static void modificiationCopuse(int courser, int right_x, int right_y, int *dest_x, int *dest_y)
 {
@@ -238,27 +245,39 @@ void shotInGun(tux_t *tux)
 	switch( tux->gun )
 	{
 		case GUN_SIMPLE :
+#ifndef BUBLIC_SERVER
 			playSound("gun_revolver", SOUND_GROUP_BASE);
+#endif
 			shotInGunSimpe(tux);
 		break;
 		case GUN_DUAL_SIMPLE :
+#ifndef BUBLIC_SERVER
 			playSound("gun_revolver", SOUND_GROUP_BASE);
+#endif
 			shotInGunDualSimpe(tux);
 		break;
 		case GUN_SCATTER :
-			playSound("gun_scatter", SOUND_GROUP_BASE);
+#ifndef BUBLIC_SERVER	
+		playSound("gun_scatter", SOUND_GROUP_BASE);
+#endif
 			shotInGunScatter(tux);
 		break;
 		case GUN_TOMMY :
+#ifndef BUBLIC_SERVER	
 			playSound("gun_tommy", SOUND_GROUP_BASE);
+#endif
 			shotInGunTommy(tux);
 		break;
 		case GUN_LASSER :
+#ifndef BUBLIC_SERVER	
 			playSound("gun_lasser", SOUND_GROUP_BASE);
+#endif
 			shotInGunLasser(tux);
 		break;
 		case GUN_MINE :
+#ifndef BUBLIC_SERVER	
 			playSound("put_mine", SOUND_GROUP_BASE);
+#endif
 			putInGunMine(tux);
 		break;
 	}
