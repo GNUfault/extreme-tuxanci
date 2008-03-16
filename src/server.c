@@ -3,8 +3,6 @@
 #include "tux.h"
 #include "network.h"
 #include "buffer.h"
-#include "tcp.h"
-#include "udp.h"
 #include "proto.h"
 #include "server.h"
 #include "assert.h"
@@ -20,8 +18,22 @@
 #endif
 
 static int protocolType;
+
+#ifdef SUPPORT_NET_UNIX_TCP
+#include "tcp.h"
 static sock_tcp_t *sock_server_tcp;
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+#include "udp.h"
 static sock_udp_t *sock_server_udp;
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+#include "sdl_udp.h"
+static sock_sdl_udp_t *sock_server_sdl_udp;
+#endif
+
 static list_t *listClient;
 static my_time_t lastSyncClient;
 
@@ -31,6 +43,7 @@ void static initServer()
  	lastSyncClient = getMyTime();
 }
 
+#ifdef SUPPORT_NET_UNIX_TCP
 int initTcpServer(int port)
 {
 	protocolType = NET_PROTOCOL_TYPE_TCP;
@@ -48,7 +61,9 @@ int initTcpServer(int port)
 
 	return 0;
 }
+#endif
 
+#ifdef SUPPORT_NET_UNIX_UDP
 int initUdpServer(int port)
 {
 	protocolType = NET_PROTOCOL_TYPE_UDP;
@@ -66,6 +81,27 @@ int initUdpServer(int port)
 
 	return 0;
 }
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+int initSdlUdpServer(int port)
+{
+	protocolType = NET_PROTOCOL_TYPE_UDP;
+
+	sock_server_sdl_udp = bindSdlUdpSocket(port);
+
+	if( sock_server_sdl_udp == NULL )
+	{
+		return -1;
+	}
+
+	initServer();
+
+	printf("server listen UDP port %d\n", port);
+
+	return 0;
+}
+#endif
 
 static client_t* newAnyClient()
 {
@@ -78,12 +114,12 @@ static client_t* newAnyClient()
 	new->buffer = newBuffer(LIMIT_BUFFER);
 	new->tux = newTux();
 	new->tux->control = TUX_CONTROL_NET;
-	new->lastPing = getMyTime();
 	addList(getWorldArena()->listTux, new->tux);
 
 	return new;
 }
 
+#ifdef SUPPORT_NET_UNIX_TCP
 client_t* newTcpClient(sock_tcp_t *sock_tcp)
 {
 	client_t *new;
@@ -99,21 +135,39 @@ client_t* newTcpClient(sock_tcp_t *sock_tcp)
 
 	return new;
 }
+#endif
 
+#ifdef SUPPORT_NET_UNIX_UDP
 client_t* newUdpClient(sock_udp_t *sock_udp)
 {
 	client_t *new;
-	char str_ip[STR_IP_SIZE];
 
 	assert( sock_udp != NULL );
 
-	getSockUdpIp(sock_udp, str_ip);
-	printf("new client from %s:%d\n", str_ip, getSockUdpPort(sock_udp));
+	printf("new client from %d\n", getSockUdpPort(sock_udp));
 	new = newAnyClient();
+	new->lastPing = getMyTime();
 	new->socket_udp = sock_udp;
 
 	return new;
 }
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+client_t* newSdlUdpClient(sock_sdl_udp_t *sock_sdl_udp)
+{
+	client_t *new;
+
+	assert( sock_sdl_udp != NULL );
+
+	printf("new client from %d\n", getSockSdlUdpPort(sock_sdl_udp));
+	new = newAnyClient();
+	new->lastPing = getMyTime();
+	new->socket_sdl_udp = sock_sdl_udp;
+
+	return new;
+}
+#endif
 
 void destroyClient(client_t *p)
 {
@@ -121,15 +175,17 @@ void destroyClient(client_t *p)
 
 	assert( p != NULL );
 
-	if( p->socket_tcp != NULL )
-	{
-		closeTcpSocket(p->socket_tcp);
-	}
+#ifdef SUPPORT_NET_UNIX_TCP
+	closeTcpSocket(p->socket_tcp);
+#endif
 
-	if( p->socket_udp != NULL )
-	{
-		closeUdpSocket(p->socket_udp);
-	}
+#ifdef SUPPORT_NET_UNIX_UDP
+	closeUdpSocket(p->socket_udp);
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+	closeSdlUdpSocket(p->socket_sdl_udp);
+#endif
 
 	destroyBuffer(p->buffer);
 	index = searchListItem(getWorldArena()->listTux, p->tux);
@@ -147,15 +203,17 @@ void sendClient(client_t *p, char *msg)
 	{
 		int ret;
 
-		if( protocolType == NET_PROTOCOL_TYPE_TCP )
-		{
-			ret = writeTcpSocket(p->socket_tcp, msg, strlen(msg));	
-		}
-	
-		if( protocolType == NET_PROTOCOL_TYPE_UDP )
-		{
-			ret = writeUdpSocket(sock_server_udp, p->socket_udp, msg, strlen(msg));
-		}
+#ifdef SUPPORT_NET_UNIX_TCP
+		ret = writeTcpSocket(p->socket_tcp, msg, strlen(msg));	
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+		ret = writeUdpSocket(sock_server_udp, p->socket_udp, msg, strlen(msg));
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+		ret = writeSdlUdpSocket(sock_server_sdl_udp, p->socket_sdl_udp, msg, strlen(msg));
+#endif
 
 		if( ret == 0 )
 		{
@@ -231,6 +289,8 @@ static void eventCreateClient(client_t *client)
 	}
 }
 
+#ifdef SUPPORT_NET_UNIX_TCP
+
 static void eventCreateNewTcpClient(sock_tcp_t *socket_tcp)
 {
 	client_t *client;
@@ -243,6 +303,10 @@ static void eventCreateNewTcpClient(sock_tcp_t *socket_tcp)
 	eventCreateClient(client);
 }
 
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+
 static void eventCreateNewUdpClient(sock_udp_t *socket_udp)
 {
 	client_t *client;
@@ -254,6 +318,26 @@ static void eventCreateNewUdpClient(sock_udp_t *socket_udp)
 
 	eventCreateClient(client);
 }
+
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+
+static void eventCreateNewSdlUdpClient(sock_sdl_udp_t *socket_sdl_udp)
+{
+	client_t *client;
+
+	assert( socket_sdl_udp != NULL );
+
+	client = newSdlUdpClient( socket_sdl_udp );
+	addList(listClient, client);
+
+	eventCreateClient(client);
+}
+
+#endif
+
+#ifdef SUPPORT_NET_UNIX_TCP
 
 static void eventClientTcpSelect(client_t *client)
 {
@@ -277,6 +361,8 @@ static void eventClientTcpSelect(client_t *client)
 		return;
 	}
 }
+
+#endif
 
 static void eventClientBuffer(client_t *client)
 {
@@ -309,6 +395,8 @@ void eventClientListBuffer()
 		eventClientBuffer(thisClient);
 	}
 }
+
+#ifdef SUPPORT_NET_UNIX_TCP
 
 void selectServerTcpSocket()
 {
@@ -361,23 +449,9 @@ void selectServerTcpSocket()
 	}
 }
 
-static client_t* findUdpClient(sock_udp_t *sock_udp)
-{
-	int i;
-	client_t *thisClient;
+#endif
 
-	for( i = 0 ; i < listClient->count; i++)
-	{
-		thisClient = (client_t *) listClient->list[i];
-
-		if( getSockUdpPort(thisClient->socket_udp) == getSockUdpPort(sock_udp) )
-		{
-			return thisClient;
-		}
-	}
-
-	return NULL;
-}
+#if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
 
 static void delZombieCLient()
 {
@@ -403,6 +477,66 @@ static void delZombieCLient()
 			delListItem(listClient, i, destroyClient);
 		}
 	}
+}
+
+void eventPeriodicSyncClient()
+{
+	my_time_t currentTime;
+
+ 	currentTime = getMyTime();
+
+	if( currentTime - lastSyncClient > SERVER_TIME_SYNC )
+	{
+		client_t *thisClientInfo;
+		client_t *thisClientSend;
+		tux_t *thisTux;
+		int i, j;
+	
+#ifndef BUBLIC_SERVER
+		proto_send_newtux_server(NULL,
+			(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]));
+#endif
+		for( i = 0 ; i < listClient->count; i++)
+		{
+			thisClientInfo = (client_t *) listClient->list[i];
+
+			for( j = 0 ; j < listClient->count; j++)
+			{
+				thisClientSend = (client_t *) listClient->list[j];
+				thisTux = thisClientInfo->tux;
+
+				if( thisClientSend != thisClientInfo &&
+				    thisTux->status == TUX_STATUS_ALIVE )
+				{
+					proto_send_newtux_server(thisClientSend, thisTux);
+				}
+			}
+		}
+
+		lastSyncClient = getMyTime();
+	}
+}
+
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+
+static client_t* findUdpClient(sock_udp_t *sock_udp)
+{
+	int i;
+	client_t *thisClient;
+
+	for( i = 0 ; i < listClient->count; i++)
+	{
+		thisClient = (client_t *) listClient->list[i];
+
+		if( getSockUdpPort(thisClient->socket_udp) == getSockUdpPort(sock_udp) )
+		{
+			return thisClient;
+		}
+	}
+
+	return NULL;
 }
 
 static void eventClientUdpSelect(sock_udp_t *sock_server)
@@ -484,30 +618,85 @@ void selectServerUdpSocket()
 	}
 }
 
-void eventPeriodicSyncClient()
-{
-	my_time_t currentTime;
-
- 	currentTime = getMyTime();
-
-	if( currentTime - lastSyncClient > SERVER_TIME_SYNC )
-	{
-		client_t *thisClient;
-		int i;
-	
-#ifndef BUBLIC_SERVER
-		proto_send_newtux_server(NULL,
-			(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]));
 #endif
-		for( i = 0 ; i < listClient->count; i++)
-		{
-			thisClient = (client_t *) listClient->list[i];
-			proto_send_newtux_server(NULL, thisClient->tux);
-		}
 
-		lastSyncClient = getMyTime();
+#ifdef SUPPORT_NET_SDL_UDP
+
+static client_t* findSdlUdpClient(sock_sdl_udp_t *sock_sdl_udp)
+{
+	int i;
+	client_t *thisClient;
+
+	for( i = 0 ; i < listClient->count; i++)
+	{
+		thisClient = (client_t *) listClient->list[i];
+
+		if( getSockSdlUdpPort(thisClient->socket_sdl_udp) == getSockSdlUdpPort(sock_sdl_udp) )
+		{
+			return thisClient;
+		}
+	}
+
+	return NULL;
+}
+
+void selectServerSdlUdpSocket()
+{
+	sock_sdl_udp_t *sock_client;
+	client_t *client;
+	char buffer[STR_SIZE];
+	bool_t isCreateNewClient;
+	int ret;
+
+	assert( sock_server_sdl_udp != NULL );
+
+	delZombieCLient();
+
+	sock_client = newSdlSockUdp();
+	isCreateNewClient = FALSE;
+
+	memset(buffer, 0, STR_SIZE);
+	ret = readSdlUdpSocket(sock_server_sdl_udp, sock_client, buffer, STR_SIZE-1);
+
+	if( ret < 0 )
+	{
+		return;
+	}
+
+	client = findSdlUdpClient(sock_client);
+
+	if( client == NULL )
+	{
+		eventCreateNewSdlUdpClient(sock_client);
+		client = findSdlUdpClient(sock_client);
+		isCreateNewClient = TRUE;
+	}
+
+	if( client == NULL )
+	{
+		fprintf(stderr, "Client total not found !\n");
+		return;
+	}
+	
+	if( isCreateNewClient == FALSE )
+	{
+		destroySockSdlUdp(sock_client);
+	}
+
+	if( ret <= 0 )
+	{
+		client->status = NET_STATUS_ZOMBIE;
+		return;
+	}
+
+	if( addBuffer(client->buffer, buffer, ret) != 0 )
+	{
+		client->status = NET_STATUS_ZOMBIE;
+		return;
 	}
 }
+
+#endif
 
 static void quitServer()
 {
@@ -515,6 +704,8 @@ static void quitServer()
 	assert( listClient != NULL );
 	destroyListItem(listClient, destroyClient);
 }
+
+#ifdef SUPPORT_NET_UNIX_TCP
 
 void quitTcpServer()
 {
@@ -526,6 +717,10 @@ void quitTcpServer()
 	printf("quit TCP port\n");
 }
 
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+
 void quitUdpServer()
 {
 	quitServer();
@@ -535,3 +730,19 @@ void quitUdpServer()
 
 	printf("quit UDP port\n");
 }
+
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+
+void quitSdlUdpServer()
+{
+	quitServer();
+
+	assert( sock_server_sdl_udp != NULL );
+	closeSdlUdpSocket(sock_server_sdl_udp);
+
+	printf("quit UDP port\n");
+}
+
+#endif

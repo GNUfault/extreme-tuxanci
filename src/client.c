@@ -9,14 +9,26 @@
 #include "buffer.h"
 #include "net_multiplayer.h"
 #include "screen_world.h"
-#include "tcp.h"
-#include "udp.h"
 #include "proto.h"
 #include "client.h"
 
 static int protocolType;
+
+#ifdef SUPPORT_NET_UNIX_TCP
+#include "tcp.h"
 static sock_tcp_t *sock_server_tcp;
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+#include "udp.h"
 static sock_udp_t *sock_server_udp;
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+#include "sdl_udp.h"
+static sock_sdl_udp_t *sock_server_sdl_udp;
+#endif
+
 static buffer_t *clientBuffer;
 static my_time_t lastPing;
 
@@ -26,6 +38,8 @@ static void initClient()
 	lastPing = getMyTime();
 	proto_send_hello_client();
 }
+
+#ifdef SUPPORT_NET_UNIX_TCP
 
 int initTcpClient(char *ip, int port)
 {
@@ -44,6 +58,10 @@ int initTcpClient(char *ip, int port)
 	return 0;
 }
 
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+
 int initUdpClient(char *ip, int port)
 {
 	sock_server_udp = connectUdpSocket(ip, port);
@@ -61,21 +79,46 @@ int initUdpClient(char *ip, int port)
 	return 0;
 }
 
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+
+int initSdlUdpClient(char *ip, int port)
+{
+	sock_server_sdl_udp = connectSdlUdpSocket(ip, port);
+
+	if( sock_server_sdl_udp == NULL )
+	{
+		return -1;
+	}
+
+	printf("connect UDP %s %d\n", ip, port);
+
+	protocolType = NET_PROTOCOL_TYPE_UDP;
+	initClient();
+
+	return 0;
+}
+
+#endif
+
 void sendServer(char *msg)
 {
 	int ret;
 
 	assert( msg != NULL );
 
-	if( protocolType == NET_PROTOCOL_TYPE_TCP )
-	{
-		ret = writeTcpSocket(sock_server_tcp, msg, strlen(msg));
-	}
+#ifdef SUPPORT_NET_UNIX_TCP
+	ret = writeTcpSocket(sock_server_tcp, msg, strlen(msg));
+#endif
 
-	if( protocolType == NET_PROTOCOL_TYPE_UDP )
-	{
-		ret = writeUdpSocket(sock_server_udp, sock_server_udp, msg, strlen(msg));
-	}
+#ifdef SUPPORT_NET_UNIX_UDP
+	ret = writeUdpSocket(sock_server_udp, sock_server_udp, msg, strlen(msg));
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+	ret = writeSdlUdpSocket(sock_server_sdl_udp, sock_server_sdl_udp, msg, strlen(msg));
+#endif
 
 	if ( ret == 0 )
 	{
@@ -97,16 +140,22 @@ static void eventServerSelect()
 
 	memset(buffer,0 ,STR_SIZE);
 
-	if( protocolType == NET_PROTOCOL_TYPE_TCP )
-	{
-		ret = readTcpSocket(sock_server_tcp, buffer, STR_SIZE-1);
+#ifdef SUPPORT_NET_UNIX_TCP
+	ret = readTcpSocket(sock_server_tcp, buffer, STR_SIZE-1);
+#endif
 	
-	}
+#ifdef SUPPORT_NET_UNIX_UDP
+	ret = readUdpSocket(sock_server_udp, sock_server_udp, buffer, STR_SIZE-1);
+#endif
 
-	if( protocolType == NET_PROTOCOL_TYPE_UDP )
+#ifdef SUPPORT_NET_SDL_UDP
+	ret = readSdlUdpSocket(sock_server_sdl_udp, sock_server_sdl_udp, buffer, STR_SIZE-1);
+
+	if( ret < 0 )
 	{
-		ret = readUdpSocket(sock_server_udp, sock_server_udp, buffer, STR_SIZE-1);
+		return;
 	}
+#endif
 
 	if( ret == 0 )
 	{
@@ -153,6 +202,8 @@ void eventServerBuffer()
 	}
 }
 
+#ifdef SUPPORT_NET_UNIX_TCP
+
 void selectClientTcpSocket()
 {
 	fd_set readfds;
@@ -174,6 +225,10 @@ void selectClientTcpSocket()
 	}
 }
 
+#endif
+
+#if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
+
 void eventPingServer()
 {
 	my_time_t currentTime;
@@ -187,13 +242,15 @@ void eventPingServer()
 	}
 }
 
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+
 void selectClientUdpSocket()
 {
 	fd_set readfds;
 	struct timeval tv;
 	int max_fd;
-
-	eventPingServer();
 
 	tv.tv_sec = 0;
 	tv.tv_usec = 0;
@@ -210,12 +267,25 @@ void selectClientUdpSocket()
 	}
 }
 
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+
+void selectClientSdlUdpSocket()
+{
+	eventServerSelect();
+}
+
+#endif
+
 static void quitClient()
 {
 	proto_send_end_client();
 	assert( clientBuffer != NULL );
 	destroyBuffer(clientBuffer);
 }
+
+#ifdef SUPPORT_NET_UNIX_TCP
 
 void quitTcpClient()
 {
@@ -227,6 +297,10 @@ void quitTcpClient()
 	printf("quit TCP conenct\n");
 }
 
+#endif
+
+#ifdef SUPPORT_NET_UNIX_UDP
+
 void quitUdpClient()
 {
 	quitClient();
@@ -236,3 +310,19 @@ void quitUdpClient()
 
 	printf("quit UDP conenct\n");
 }
+
+#endif
+
+#ifdef SUPPORT_NET_SDL_UDP
+
+void quitSdlUdpClient()
+{
+	quitClient();
+
+	assert( sock_server_sdl_udp != NULL );
+	closeSdlUdpSocket(sock_server_sdl_udp);
+
+	printf("quit UDP conenct\n");
+}
+
+#endif

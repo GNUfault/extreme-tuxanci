@@ -158,8 +158,8 @@ void proto_send_newtux_server(client_t *client, tux_t *tux)
 
 	assert( tux != NULL );
 
-	sprintf(msg, "newtux %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d\n",
-	tux->id ,tux->x, tux->y, tux->position ,tux->frame, tux->score, tux->name,
+	sprintf(msg, "newtux %d %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d\n",
+	tux->id ,tux->x, tux->y, tux->status, tux->position ,tux->frame, tux->score, tux->name,
 	tux->gun, tux->bonus, tux->shot[GUN_SIMPLE], tux->shot[GUN_DUAL_SIMPLE],
 	tux->shot[GUN_SCATTER], tux->shot[GUN_TOMMY], tux->shot[GUN_LASSER],
 	tux->shot[GUN_MINE], tux->shot[GUN_BOMBBALL],
@@ -181,7 +181,7 @@ void proto_recv_newtux_client(char *msg)
 {
 	char cmd[STR_SIZE];
 	char name[STR_NAME_SIZE];
-	int id, x, y, position, frame, score;
+	int id, x, y, status, position, frame, score;
 	int myGun, myBonus;
 	int  gun1, gun2, gun3, gun4, gun5, gun6, gun7;
 	int time1, time2;
@@ -189,8 +189,8 @@ void proto_recv_newtux_client(char *msg)
 
 	assert( msg != NULL );
 
-	sscanf(msg, "%s %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d",
-	cmd, &id, &x, &y, &position, &frame, &score, name,
+	sscanf(msg, "%s %d %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d",
+	cmd, &id, &x, &y, &status, &position, &frame, &score, name,
 	&myGun, &myBonus, &gun1, &gun2, &gun3, &gun4, &gun5, &gun6, &gun7, &time1, &time2);
 
 	tux = getTuxID(getWorldArena()->listTux, id);
@@ -205,6 +205,7 @@ void proto_recv_newtux_client(char *msg)
 	tux->id = id;
 	tux->x = x;
 	tux->y = y;
+	tux->status = status;
 	tux->position = position;
 	tux->frame = frame;
 	tux->score = score;
@@ -220,7 +221,6 @@ void proto_recv_newtux_client(char *msg)
 	tux->shot[GUN_BOMBBALL] = gun7;
 	tux->bonus_time = time1;
 	tux->pickup_time = time2;
-	tux->status = TUX_STATUS_ALIVE;
 }
 
 #endif
@@ -421,7 +421,9 @@ void proto_recv_ping_server(client_t *client, char *msg)
 	assert( msg != NULL );
 	assert( client != NULL );
 	
+#if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
 	client->lastPing = getMyTime();
+#endif
 }
 
 #ifndef BUBLIC_SERVER
