@@ -8,12 +8,12 @@ CFLAGS = -g -O0 -DSUPPORT_NET_SDL_UDP -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cfl
 LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_net
 
 FILES = interface.o font.o list.o image.o layer.o director.o configFile.o tux.o main.o \
-	screen.o screen_world.o wall.o shot.o myTimer.o panel.o net_multiplayer.o network.o \
+	screen.o screen_world.o wall.o shot.o myTimer.o panel.o net_multiplayer.o  \
 	buffer.o dynamicInt.o arena.o arenaFile.o textFile.o sound.o audio.o music.o gun.o \
 	item.o widget_label.o screen_mainMenu.o widget_button.o screen_analyze.o widget_textfield.o \
 	widget_check.o widget_image.o screen_setting.o screen_gameType.o screen_choiceArena.o \
 	widget_buttonimage.o screen_credits.o teleport.o pipe.o homeDirector.o screen_table.o \
-	tcp.o udp.o sdl_udp.o proto.o server.o client.o
+	sdl_udp.o proto.o server.o client.o
  
 tuxanci-ng: $(FILES)
 	$(CC) $(CFLAGS) $(LIBS) -o tuxanci-ng $(FILES)

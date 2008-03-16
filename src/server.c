@@ -374,7 +374,7 @@ static void eventClientBuffer(client_t *client)
 	
 	while( getBufferLine(client->buffer, line, STR_SIZE) >= 0 )
 	{
- 		printf("spracuvavam %s", line);
+ 		//printf("spracuvavam %s", line);
 
 		if( strncmp(line, "hello", 5) == 0 )proto_recv_hello_server(client, line);
 		if( strncmp(line, "event", 5) == 0 )proto_recv_event_server(client, line);
@@ -590,9 +590,10 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 
 void selectServerUdpSocket()
 {
+	static struct timeval tv = { .tv_sec = 0, .tv_usec = 50000 };
 	fd_set readfds;
-	struct timeval tv;
 	int max_fd;
+	unsigned int z;
 
 #ifndef BUBLIC_SERVER
 	tv.tv_sec = 0;
@@ -601,7 +602,7 @@ void selectServerUdpSocket()
 
 #ifdef BUBLIC_SERVER
 	tv.tv_sec = 0;
-	tv.tv_usec = 50 * 1000;
+	tv.tv_usec = 0;
 #endif	
 	
 	FD_ZERO(&readfds);
@@ -612,6 +613,14 @@ void selectServerUdpSocket()
 
 	select(max_fd+1, &readfds, (fd_set *)NULL, (fd_set *)NULL, &tv);
 
+#ifdef BUBLIC_SERVER
+	z = tv.tv_usec;
+	usleep( 50000 - z );
+#endif	
+
+/*
+	printf("%d\n", tv.tv_usec);
+*/
 	if( FD_ISSET(sock_server_udp->sock, &readfds) )
 	{
 		eventClientUdpSelect(sock_server_udp);

@@ -171,7 +171,6 @@ void addNewItem(list_t *listItem, tux_t *author)
 #ifndef BUBLIC_SERVER
 	}while( isSettingItem(type) == FALSE );
 #endif
-
 	item = newItem(new_x, new_y, type, author);
 	addList(listItem, item);
 

@@ -25,7 +25,6 @@
 #endif
 
 static int netGameType;
-static int netProtoType = NET_PROTOCOL_TYPE_UDP;
 
 int getNetTypeGame()
 {

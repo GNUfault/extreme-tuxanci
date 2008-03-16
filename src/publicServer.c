@@ -37,6 +37,7 @@ void initPublicServer()
 	initShot();
 	initTimer();
 
+
 	arena = getArena(arenaId);
 	addNewItem(arena->listItem, NULL);
 
@@ -84,6 +85,17 @@ void findFreeSpace(int *x, int *y, int w, int h)
 
 void eventPublicServer()
 {
+	static my_time_t time = 0;
+
+	if( time == 0 )
+	{
+		time = getMyTime();
+	}
+
+	printf("time %d\n", getMyTime() - time );
+
+	time = getMyTime();
+
 	eventConflictTuxWithTeleport(arena->listTux, arena->listTeleport);
 	eventConflictTuxWithShot(arena->listTux, arena->listShot);
 
@@ -95,9 +107,9 @@ void eventPublicServer()
 	eventMoveListShot(arena->listShot);
 	eventListItem(arena->listItem);
 	eventListTux(arena->listTux);
-	eventNetMultiplayer();
 
 	eventTimer();
+	eventNetMultiplayer();
 }
 
 void quitPublicServer()

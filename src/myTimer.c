@@ -30,15 +30,13 @@ void initTimer()
 
 my_time_t getMyTime()
 {
-	static struct timeval start;
+	static struct timeval start = { .tv_sec = 0, .tv_usec = 0 };
 	struct timeval now;
-	static char first = '0';
 	my_time_t ticks;
 
-	if(  first == '0' )
+	if(  start.tv_sec == 0 && start.tv_usec == 0 )
 	{
 		gettimeofday(&start, NULL);
-		first = 'x';
 	}
 
 	gettimeofday(&now, NULL);
