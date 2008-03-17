@@ -3,6 +3,7 @@
 
 #define MY_PROTO
 
+#include "main.h"
 #include "tux.h"
 #include "server.h"
 #include "item.h"

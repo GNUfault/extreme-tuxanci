@@ -3,6 +3,8 @@
 
 #define STR_LENGTH_H
 
+#include "main.h"
+
 #define STR_SIZE 128
 #define STR_NUM_SIZE 8
 #define STR_NAME_SIZE 32

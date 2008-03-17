@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <unistd.h>
 
+#include "main.h"
 #include "textFile.h"
 #include "string_length.h"
 

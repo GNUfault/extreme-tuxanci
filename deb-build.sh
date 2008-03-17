@@ -16,8 +16,8 @@ cd deb
 
 echo -e "2.0\n" > DEBIAN/debian-binary
 
-cp /usr/bin/tuxanci-ng usr/bin/
-cp -rf /usr/share/tuxanci-ng usr/share/
+cp ../myusr/bin/tuxanci-ng usr/bin/
+cp -rf ../myusr/share/tuxanci-ng usr/share/
 
 md5sum `find ./ -type f | awk '/.\// { print substr($0, 3) }'` > DEBIAN/md5sums
 

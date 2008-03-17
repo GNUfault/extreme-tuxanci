@@ -3,6 +3,7 @@
 
 #define DIRECTOR_H
 
+#include "main.h"
 #include "list.h"
 
 typedef struct director_struct

@@ -2,7 +2,8 @@
 #CC = /usr/local/gcc/bin/gcc
 CC = gcc
 
-CFLAGS = -g -O0 -DSUPPORT_NET_SDL_UDP -DDISTDIR=\"$(DISTDIR)\" -I../include -Wall `sdl-config --cflags`
+#CFLAGS = -O2 -DSUPPORT_NET_SDL_UDP  -I../include -Wall `sdl-config --cflags`
+CFLAGS = -O2  -I../include -Wall `sdl-config --cflags`
 #CFLAGS = -O2 -DDISTDIR=\"$(DISTDIR)\" `sdl-config --cflags` -I../include -Wall
 
 LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_net

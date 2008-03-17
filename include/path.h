@@ -3,7 +3,22 @@
 
 #define PATH_H
 
+#include "main.h"
+
+#ifdef DISTDIR
+
 #define PATH_DIR	"share/tuxanci-ng/"
+
+#endif
+
+#ifndef DISTDIR
+
+#define PATH_DIR "./"
+
+#undef DISTDIR
+#define DISTDIR ""
+
+#endif
 
 #define PATH_IMAGE	DISTDIR PATH_DIR "image/"
 #define PATH_FONT	DISTDIR PATH_DIR "font/"

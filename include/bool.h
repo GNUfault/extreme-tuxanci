@@ -3,6 +3,8 @@
 
 #define BOOL_H
 
+#include "main.h"
+
 #define bool_t int
 
 #define TRUE	1

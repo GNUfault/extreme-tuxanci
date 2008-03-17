@@ -3,6 +3,8 @@
 
 #define BUFFER_H
 
+#include "main.h"
+
 #define BUFFER_LIMIT_ALLOC 1024
 
 typedef struct str_buffer

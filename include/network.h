@@ -1,6 +1,8 @@
 
 #ifndef NETWORK_H
 
+#include "main.h"
+
 #define NETWORK_H
 
 extern int newSocket(int port,const char *ip);

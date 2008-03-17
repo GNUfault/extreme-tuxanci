@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <assert.h>
+
+#include "main.h"
 #include "sdl_udp.h"
 
 #define BUFSIZE 1000

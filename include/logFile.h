@@ -3,6 +3,8 @@
 
 #define LOGFILE_H
 
+#include "main.h"
+
 typedef struct logFile_struct
 {
 	char *name;

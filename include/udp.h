@@ -5,6 +5,8 @@
 
 #define MY_UDP
 
+#include "main.h"
+
 typedef struct struct_sock_udp_t
 {
 	int sock;

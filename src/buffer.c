@@ -4,6 +4,7 @@
 #include <string.h>
 #include <assert.h>
 
+#include "main.h"
 #include "buffer.h"
 
 buffer_t * newBuffer(int n)

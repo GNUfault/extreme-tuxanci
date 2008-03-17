@@ -3,6 +3,7 @@
 
 #define NET_MULTIPLAYER_H
 
+#include "main.h"
 #include "tux.h"
 #include "item.h"
 #include "buffer.h"

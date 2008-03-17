@@ -1,6 +1,8 @@
 
 #ifndef WIDGET_BUTTONIMAGE_H
 
+#include "main.h"
+
 #define WIDGET_BUTTONIMAGE_H
 
 #define WIDGET_BUTTONIMAGE_TIME	10

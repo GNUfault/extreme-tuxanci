@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <unistd.h>
 
+#include "main.h"
 #include "list.h"
 #include "tux.h"
 #include "item.h"

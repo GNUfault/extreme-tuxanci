@@ -3,6 +3,8 @@
 
 #define GUN_H
 
+#include "main.h"
+
 #define GUN_SHOT_WIDTH		5
 #define GUN_SHOT_HEIGHT		5
 

@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include <assert.h>
 
+#include "main.h"
 #include "tcp.h"
 
 #define BUFSIZE 1000

@@ -3,6 +3,7 @@
 
 #define MAIN_H
 
+#include "../config.h"
 #include "bool.h"
 #include "string_length.h"
 #include "path.h"

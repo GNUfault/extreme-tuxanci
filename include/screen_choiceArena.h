@@ -3,6 +3,8 @@
 
 #define SCREEN_GAME_TYPE
 
+#include "main.h"
+
 #define SCREENSHOT_ARENA_WIDTH		160
 #define SCREENSHOT_ARENA_HEIGHT		107
 

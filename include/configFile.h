@@ -3,6 +3,7 @@
 
 #define CONFIGFILE_H
 
+#include "main.h"
 #include "textFile.h"
 
 extern int isYesOrNO(char *s);

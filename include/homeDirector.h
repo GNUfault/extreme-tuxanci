@@ -3,6 +3,8 @@
 
 #define HOMEDIRECTOR_H
 
+#include "main.h"
+
 #define HOMEDIRECTOR_NAME ".tuxanci-ng"
 
 extern void createHomeDirector();

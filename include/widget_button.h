@@ -3,6 +3,8 @@
 
 #define WIDGET_BUTTON_H
 
+#include "main.h"
+
 #define WIDGET_BUTTON_TIME	10
 
 #define WIDGET_BUTTON_WIDTH	125

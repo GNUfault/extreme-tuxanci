@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <assert.h>
 
+#include "main.h"
 #include "list.h"
 #include "string_length.h"
 
@@ -42,7 +43,6 @@ director_t* loadDirector(char *s)
 	}
 
 	new->path = strdup(path);
-	printf("new->path = %s\n", new->path);
 
 	dir = opendir(new->path);
 

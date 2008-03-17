@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <string.h>
 
+#include "main.h"
 #include "arena.h"
 #include "list.h"
 #include "tux.h"

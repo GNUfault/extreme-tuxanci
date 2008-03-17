@@ -3,12 +3,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include "main.h"
 #include "arena.h"
 #include "tux.h"
 #include "shot.h"
 #include "dynamicInt.h"
 #include "myTimer.h"
-#include "main.h"
 #include "item.h"
 #include "gun.h"
 

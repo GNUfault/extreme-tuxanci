@@ -1,12 +1,11 @@
 
 #DISTDIR=/usr/local
-DISTDIR:=/usr/
 
 all:
-	make -C ./src DISTDIR=$(DISTDIR)
+	make -C ./src 
 
 clean:
-	make -C ./src DISTDIR=$(DISTDIR) clean
+	make -C ./src clean
 	make -C ./src -f Makefile-publicServer clean
 
 run:
@@ -17,6 +16,12 @@ srun:
 
 package:
 	./deb-build.sh
+
+tarball:
+	./tarball-build.sh
+
+tarballbin:
+	./tarballbin-build.sh
 
 kill:
 	kill -9 `pidof publicserver`

@@ -3,6 +3,8 @@
 
 #define LIST_H
 
+#include "main.h"
+
 #define LIST_ALLOC_LIMIT 16
 
 typedef struct list_str

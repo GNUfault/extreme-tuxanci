@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <sys/time.h>
 
+#include "main.h"
 #include "list.h"
 #include "tux.h"
 #include "network.h"
