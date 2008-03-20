@@ -1,4 +1,6 @@
 
+#include <stdlib.h>
+
 #include "main.h"
 #include "interface.h"
 #include "image.h"
