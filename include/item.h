@@ -12,6 +12,7 @@
 
 typedef struct item_struct
 {
+	int id;
 	int type; // typ veci
 
 	int x; // poloha veci	
@@ -54,6 +55,7 @@ typedef struct item_struct
 extern bool_t isItemInicialized();
 extern void initItem();
 extern item_t* newItem(int x, int y, int type, tux_t *author);
+extern item_t* getItemID(list_t *listItem, int id);
 extern void addNewItem(list_t *listItem, tux_t *author);
 #ifndef BUBLIC_SERVER	
 extern void drawItem(item_t *p);
@@ -62,7 +64,9 @@ extern void drawListItem(list_t *listItem);
 extern void eventListItem(list_t *listItem);
 extern void eventConflictShotWithItem(list_t *listItem, list_t *listShot);
 extern int isConflictWithListItem(list_t *listItem, int x, int y, int w, int h);
-extern void eventGiveTuxItem(tux_t *tux, list_t *listItem);
+extern void mineExplosion(list_t *listItem, item_t *item);
+extern int eventGiveTuxItem(tux_t *tux, list_t *listItem, item_t *item);
+extern void eventGiveTuxListItem(tux_t *tux, list_t *listItem);
 extern void destroyItem(item_t *p);
 extern void quitItem();
 

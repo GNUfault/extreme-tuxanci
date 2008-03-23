@@ -106,6 +106,7 @@ static void readKey(widget_textfield_t *p)
 		{
 			p->time = WIDGET_TEXTFIELD_TIME_READ_KEY;
 			p->text[len-1]='\0';
+			getTextSize(p->text, &p->w, &p->h);
 		}
 
 		return;

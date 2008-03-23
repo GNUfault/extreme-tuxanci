@@ -261,7 +261,7 @@ void sendAllClientBut(char *msg, client_t *p)
 	{
 		thisClient = (client_t *) listClient->list[i];
 
-		if( thisClient != p )
+		if( thisClient->tux != NULL && thisClient != p )
 		{
 			sendClient(thisClient, msg);
 		}
@@ -390,22 +390,42 @@ static void eventClientBuffer(client_t *client)
 	while( getBufferLine(client->buffer, line, STR_PROTO_SIZE) >= 0 )
 	{
 #ifdef DEBUG_SERVER_RECV
-			printf("recv client msg->%s", line);
+		printf("recv client msg->%s", line);
 #endif
 
-		if( strncmp(line, "hello", 5) == 0 )proto_recv_hello_server(client, line);
+#if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
+		client->lastPing = getMyTime();
+#endif
+		if( strncmp(line, "hello", 5) == 0 )
+		{
+			proto_recv_hello_server(client, line);
+			continue;
+		}
+
 		if( strncmp(line, "status", 6) == 0 )proto_recv_status_server(client, line);
 
 		if( client->tux != NULL )
 		{
-			if( strncmp(line, "event", 5) == 0 )proto_recv_event_server(client, line);
-			if( strncmp(line, "ping", 4) == 0 )proto_recv_ping_server(client, line);
-			if( strncmp(line, "end", 3) == 0 )proto_recv_end_server(client, line);
+			if( strncmp(line, "event", 5) == 0 )
+			{
+				proto_recv_event_server(client, line);
+				continue;
+			}
+
+			if( strncmp(line, "ping", 4) == 0 )
+			{
+				proto_recv_ping_server(client, line);
+				continue;
+			}
+
+			if( strncmp(line, "end", 3) == 0 )
+			{
+				proto_recv_end_server(client, line);
+				continue;
+			}
 		}
 
-#if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
-	client->lastPing = getMyTime();
-#endif
+		proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_COMMAND);
 	}
 }
 
@@ -496,7 +516,7 @@ static void delZombieCLient()
 
 		if( currentTime - thisClient->lastPing > SERVER_TIMEOUT )
 		{
-			printf("client ping timeout\n");
+			proto_send_error_server(PROTO_SEND_ONE, thisClient, PROTO_ERROR_CODE_TIMEOUT);
 			thisClient->status = NET_STATUS_ZOMBIE;
 		}
 

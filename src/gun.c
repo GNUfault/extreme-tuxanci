@@ -11,6 +11,8 @@
 #include "myTimer.h"
 #include "item.h"
 #include "gun.h"
+#include "proto.h"
+#include "net_multiplayer.h"
 
 #ifndef BUBLIC_SERVER
 #include "sound.h"
@@ -231,6 +233,8 @@ static void putInGunMine(tux_t *tux)
 
 	if( isFreeSpace(x, y, ITEM_MINE_WIDTH, ITEM_MINE_HEIGHT) )
 	{
+		item_t *item;
+
 #ifndef BUBLIC_SERVER
 		char msg[STR_SIZE];
 		playSound("put_mine", SOUND_GROUP_BASE);
@@ -238,8 +242,15 @@ static void putInGunMine(tux_t *tux)
 		appendTextInTerm(msg);
 #endif
 
-		addList(arena->listItem, newItem(x, y, ITEM_MINE, tux) );
+
 		tux->shot[tux->gun]--;
+
+		if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+		{
+			item = newItem(x, y, ITEM_MINE, tux);
+			proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
+			addList(arena->listItem, item );
+		}
 	}
 }
 

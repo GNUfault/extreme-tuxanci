@@ -9,10 +9,6 @@
 #include "item.h"
 #include "shot.h"
 
-#define PROTO_SEND_ONE	0
-#define PROTO_SEND_ALL	1
-#define PROTO_SEND_BUT	2
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -41,6 +37,18 @@
 #include "publicServer.h"
 #endif
 
+#define PROTO_SEND_ONE	0
+#define PROTO_SEND_ALL	1
+#define PROTO_SEND_BUT	2
+
+#define PROTO_ERROR_CODE_UNKNOWN	0
+#define PROTO_ERROR_CODE_BAD_VERSION	1
+#define PROTO_ERROR_CODE_BAD_NAME	2
+#define PROTO_ERROR_CODE_BAD_COMMAND	3
+#define PROTO_ERROR_CODE_TIMEOUT	4
+
+extern void proto_send_error_server(int type, client_t *client, int errorcode);
+extern void proto_recv_error_client(char *msg);
 extern void proto_send_hello_client(char *name);
 extern void proto_recv_hello_server(client_t *client, char *msg);
 extern void proto_send_status_server(int type, client_t *client);
@@ -61,6 +69,8 @@ extern void proto_send_deltux_server(int type, client_t *client, client_t *clien
 extern void proto_recv_deltux_client(char *msg);
 extern void proto_send_additem_server(int type, client_t *client, item_t *p);
 extern void proto_recv_additem_client(char *msg);
+extern void proto_send_item_server(int type, client_t *client, tux_t *tux, item_t *item);
+extern void proto_recv_item_client(char *msg);
 extern void proto_send_shot_server(int type, client_t *client, shot_t *p);
 extern void proto_recv_shot_client(char *msg);
 extern void proto_send_ping_client();

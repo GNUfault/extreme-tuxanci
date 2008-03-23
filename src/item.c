@@ -59,6 +59,7 @@ void initItem()
 
 item_t* newItem(int x, int y, int type, tux_t *author)
 {
+	static unsigned int last_id = 0;
 	item_t *new;
 	
 	new  = malloc( sizeof(item_t) );
@@ -66,6 +67,7 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 
 	new->type = type;
 
+	new->id = last_id++;
 	new->x = x;
 	new->y = y;
 	new->frame = 0;
@@ -119,6 +121,27 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 	}
 
 	return new;
+}
+
+item_t* getItemID(list_t *listItem, int id)
+{
+	item_t *thisItem;
+	int i;
+
+	assert( listItem != NULL );
+
+	for( i = 0 ; i < listItem->count ; i++ )
+	{
+		thisItem  = (item_t *)listItem->list[i];
+		assert( thisItem != NULL );
+
+		if( thisItem->id == id )
+		{
+			return thisItem;
+		}
+	}
+
+	return NULL;
 }
 
 void addNewItem(list_t *listItem, tux_t *author)
@@ -175,6 +198,7 @@ void addNewItem(list_t *listItem, tux_t *author)
 #ifndef BUBLIC_SERVER
 	}while( isSettingItem(type) == FALSE );
 #endif
+
 	item = newItem(new_x, new_y, type, author);
 	addList(listItem, item);
 
@@ -302,6 +326,23 @@ int isConflictWithListItem(list_t *listItem, int x, int y, int w, int h)
 	return 0;
 }
 
+void mineExplosion(list_t *listItem, item_t *item)
+{
+	int x, y;
+	int index;
+
+	index = searchListItem(listItem, item);
+
+	assert( index != -1 );
+
+	x = ( item->x + item->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
+	y = ( item->y + item->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
+	addList(listItem, newItem(x, y, ITEM_BIG_EXPLOSION, item->author) );
+
+	delListItem(listItem, index, destroyItem);
+}
+
+
 void eventConflictShotWithItem(list_t *listItem, list_t *listShot)
 {
 	shot_t *thisShot;
@@ -326,16 +367,13 @@ void eventConflictShotWithItem(list_t *listItem, list_t *listShot)
 			switch( thisItem->type )
 			{
 				case ITEM_MINE :
-					if( conflictSpace(thisShot->x, thisShot->y, thisShot->w, thisShot->h,
+
+					if( getNetTypeGame() != NET_GAME_TYPE_CLIENT &&
+				            conflictSpace(thisShot->x, thisShot->y, thisShot->w, thisShot->h,
 					    thisItem->x, thisItem->y, thisItem->w, thisItem->h) )
 					{
-						int x, y;
-		
-						x = ( thisItem->x + thisItem->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
-						y = ( thisItem->y + thisItem->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
- 						addList(listItem, newItem(x, y, ITEM_BIG_EXPLOSION, thisItem->author) );
-
-						delListItem(listItem, j, destroyItem);
+						proto_send_item_server(PROTO_SEND_ALL, NULL, NULL, thisItem);
+						mineExplosion(listItem, thisItem);
 						j--;
 					}
 				break;
@@ -422,11 +460,64 @@ static void tuxGiveGun(tux_t *tux, item_t *item)
 
 }
 
-void eventGiveTuxItem(tux_t *tux, list_t *listItem)
+int eventGiveTuxItem(tux_t *tux, list_t *listItem, item_t *item)
+{
+	int index;
+
+	index = searchListItem(listItem, item);
+
+	assert( index != -1 );
+
+	switch( item->type )
+	{
+		case GUN_TOMMY :
+		case GUN_DUAL_SIMPLE :
+		case GUN_SCATTER :
+		case GUN_LASSER :
+		case GUN_MINE :
+			tuxGiveGun(tux, item);
+			delListItem(listItem, index, destroyItem);
+			return index;
+		break;
+
+		case ITEM_MINE :
+			if( tux->bonus != BONUS_GHOST )
+			{
+				mineExplosion(listItem, item);
+				return index;
+			}
+		break;
+
+		case ITEM_EXPLOSION :
+		case ITEM_BIG_EXPLOSION :
+			eventTuxIsDeadWithItem(tux, item);
+		break;
+
+			case BONUS_SPEED :
+			case BONUS_SHOT :
+			case BONUS_TELEPORT :
+			case BONUS_GHOST :
+			case BONUS_4X :
+			case BONUS_HIDDEN :
+				tuxGiveBonus(tux, item);
+				delListItem(listItem, index, destroyItem);
+				return index;
+			break;
+		}
+
+	return -1;
+}
+
+void eventGiveTuxListItem(tux_t *tux, list_t *listItem)
 {
 	item_t *thisItem;
 	int x, y, w, h;
 	int i;
+
+	if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
+	{
+		return; 
+	}
 
 	assert( listItem != NULL );
 	assert( tux != NULL );
@@ -445,49 +536,13 @@ void eventGiveTuxItem(tux_t *tux, list_t *listItem)
 
 		if( conflictSpace(x, y, w, h, thisItem->x, thisItem->y, thisItem->w, thisItem->h) )
 		{
-			switch( thisItem->type )
+			proto_send_item_server(PROTO_SEND_ALL, NULL, tux, thisItem);
+
+			if( eventGiveTuxItem(tux, listItem, thisItem) >= 0 )
 			{
-				case GUN_TOMMY :
-				case GUN_DUAL_SIMPLE :
-				case GUN_SCATTER :
-				case GUN_LASSER :
-				case GUN_MINE :
-					tuxGiveGun(tux, thisItem);
-					delListItem(listItem, i, destroyItem);
-					i--;
-				break;
-
-				case ITEM_MINE :
-					if( tux->bonus != BONUS_GHOST )
-					{
-						//eventTuxIsDeadWithItem(tux, thisItem);
-						addList(listItem, newItem(x, y,
-							ITEM_EXPLOSION, thisItem->author) );
-
-						delListItem(listItem, i, destroyItem);
-						i--;
-					}
-				break;
-
-				case ITEM_EXPLOSION :
-				case ITEM_BIG_EXPLOSION :
-					eventTuxIsDeadWithItem(tux, thisItem);
-				break;
-
-				case BONUS_SPEED :
-				case BONUS_SHOT :
-				case BONUS_TELEPORT :
-				case BONUS_GHOST :
-				case BONUS_4X :
-				case BONUS_HIDDEN :
-					tuxGiveBonus(tux, thisItem);
-					delListItem(listItem, i, destroyItem);
-					i--;
-				break;
-
+				i--;
 			}
 		}
-
 	}
 }
 

@@ -38,21 +38,21 @@ static void proto_send(int type, client_t *client, char *msg)
 			assert( client != NULL );
 			sendClient(client, msg);
 #ifdef DEBUG_SERVER_SEND
-			printf("send one client msg->%s", msg);
+			printf("send one client msg->%s\n", msg);
 #endif
 		break;
 		case PROTO_SEND_ALL :
 			assert( client == NULL );
 			sendAllClient(msg);
 #ifdef DEBUG_SERVER_SEND
-			printf("send all clients msg->%s", msg);
+			printf("send all clients msg->%s\n", msg);
 #endif
 		break;
 		case PROTO_SEND_BUT :
 			assert( client != NULL );
 			sendAllClientBut(msg, client);
 #ifdef DEBUG_SERVER_SEND
-			printf("send but client msg->%s", msg);
+			printf("send but client msg->%s\n", msg);
 #endif
 		break;
 		default :
@@ -61,13 +61,39 @@ static void proto_send(int type, client_t *client, char *msg)
 	}
 }
 
+void proto_send_error_server(int type, client_t *client, int errorcode)
+{
+	char msg[STR_PROTO_SIZE];
+	
+	sprintf(msg, "error %d\n", errorcode);
+
+	proto_send(type, client, msg);
+}
+
+#ifndef BUBLIC_SERVER
+
+void proto_recv_error_client(char *msg)
+{
+	char cmd[STR_PROTO_SIZE];
+	int errorcode;
+
+	assert( msg != NULL );
+
+	sscanf(msg, "%s %d",
+		cmd, &errorcode);
+
+	printf("proto error code %d\n", errorcode);
+}
+
+#endif
+
 #ifndef BUBLIC_SERVER
 
 void proto_send_hello_client(char *name)
 {
 	char msg[STR_PROTO_SIZE];
 	
-	sprintf(msg, "hello %s\n", name);
+	sprintf(msg, "hello %s %s\n", TUXANCI_NG_VERSION, name);
 	sendServer(msg);
 }
 
@@ -76,12 +102,23 @@ void proto_send_hello_client(char *name)
 void proto_recv_hello_server(client_t *client, char *msg)
 {
 	char cmd[STR_PROTO_SIZE];
+	char version[STR_NAME_SIZE];
 	char name[STR_NAME_SIZE];
 	
 	assert( client != NULL );
-
-	sscanf(msg, "%s %s\n", cmd, name);
 	
+	strcpy(version, "");
+	strcpy(name, "");
+	
+	sscanf(msg, "%s %s %s", cmd, version, name);
+	
+	if( strncmp(version, TUXANCI_NG_VERSION, strlen(TUXANCI_NG_VERSION)) != 0 )
+	{
+		proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_VERSION);
+		client->status = NET_STATUS_ZOMBIE;
+		return;
+	}
+
 	client->tux = newTux();
 	client->tux->control = TUX_CONTROL_NET;
 	addList(getWorldArena()->listTux, client->tux);
@@ -144,7 +181,7 @@ void proto_recv_init_client(char *msg)
 
 	assert( msg != NULL );
 
-	sscanf(msg, "%s %d %d %d %d %s\n",
+	sscanf(msg, "%s %d %d %d %d %s",
 	cmd, &id, &x, &y, &n, arena_name);
 
 	setWorldArena( getArenaIdFormNetName(arena_name) );
@@ -388,7 +425,7 @@ void proto_recv_deltux_client(char *msg)
 
 	assert( msg != NULL );
 
-	sscanf(msg, "%s %d\n", cmd, &id);
+	sscanf(msg, "%s %d", cmd, &id);
 
 	tux = getTuxID(getWorldArena()->listTux, id);
 
@@ -419,8 +456,8 @@ void proto_send_additem_server(int type, client_t *client, item_t *p)
 		id = p->author->id;
 	}
 
-	sprintf(msg, "additem %d %d %d %d %d %d\n",
-		p->type, p->x, p->y, p->count, p->frame, id);
+	sprintf(msg, "additem %d %d %d %d %d %d %d\n",
+		p->id, p->type, p->x, p->y, p->count, p->frame, id);
 
 	proto_send(type, client, msg);
 }
@@ -431,14 +468,14 @@ void proto_recv_additem_client(char *msg)
 {
 	char term_msg[STR_SIZE];
 	char cmd[STR_PROTO_SIZE];
-	int type, x, y, count, frame, id;
+	int id, type, x, y, count, frame, author_id;
 	item_t *item;
 
 	assert( msg != NULL );
 
-	sscanf(msg, "%s %d %d %d %d %d %d\n", cmd, &type, &x, &y, &count, &frame, &id);
+	sscanf(msg, "%s %d %d %d %d %d %d %d", cmd, &id, &type, &x, &y, &count, &frame, &author_id);
 
-	item = newItem(x, y, type, getTuxID(getWorldArena()->listTux, id));
+	item = newItem(x, y, type, getTuxID(getWorldArena()->listTux, author_id));
 
 	if( isConflictWithListItem(getWorldArena()->listItem, item->x, item->y, item->w, item->h) )
 	{
@@ -446,6 +483,7 @@ void proto_recv_additem_client(char *msg)
 		return;
 	}
 
+	item->id = id;
 	item->count = count;
 	item->frame = frame;
 
@@ -454,6 +492,61 @@ void proto_recv_additem_client(char *msg)
 	sprintf(term_msg, "in arena is new item\n");
 	appendTextInTerm(term_msg);
 
+}
+
+#endif
+
+void proto_send_item_server(int type, client_t *client, tux_t *tux, item_t *item)
+{
+	char msg[STR_PROTO_SIZE];
+	int tux_id = -1;
+
+	assert( item != NULL );
+
+	if( tux != NULL )
+	{
+		tux_id = tux->id;
+	}
+
+	sprintf(msg, "item %d %d\n",
+		tux_id, item->id);
+
+	proto_send(type, client, msg);
+}
+
+#ifndef BUBLIC_SERVER
+
+void proto_recv_item_client(char *msg)
+{
+	char cmd[STR_PROTO_SIZE];
+	int tux_id, item_id;
+	arena_t *arena;
+
+	item_t *item;
+	tux_t *tux;
+
+	assert( msg != NULL );
+
+	sscanf(msg, "%s %d %d", cmd, &tux_id, &item_id);
+
+	arena = getWorldArena();
+
+	item = getItemID(arena->listItem, item_id);
+	tux = getTuxID(arena->listTux, tux_id);
+
+	if( item == NULL)
+	{
+		return;
+	}
+
+	if( tux != NULL )
+	{
+		eventGiveTuxItem(tux, arena->listItem, item);
+	}
+	else
+	{
+		mineExplosion(arena->listItem, item);
+	}
 }
 
 #endif
@@ -486,7 +579,7 @@ void proto_recv_shot_client(char *msg)
 
 	assert( msg != NULL );
 
-	sscanf(msg, "%s %d %d %d %d %d %d %d %d\n",
+	sscanf(msg, "%s %d %d %d %d %d %d %d %d",
 		cmd, &x, &y, &px, &py, &position, &gun, &id, &isCanKillAuthor);
 
 	shot = newShot(x, y, px, py, gun, getTuxID(getWorldArena()->listTux, id));
@@ -550,11 +643,6 @@ void proto_send_ping_server(int type, client_t *client)
 
 void proto_recv_ping_client(char *msg)
 {
-	assert( msg != NULL );
-	
-#if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
-	refreshPingServerAlive();
-#endif
 }
 
 #endif

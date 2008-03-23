@@ -181,7 +181,9 @@ void drawWorld()
 	drawListShot(arena->listShot);
 	drawListItem(arena->listItem);
 
-	//tux = getControlTux( TUX_CONTROL_KEYBOARD_RIGHT );
+/*
+	tux = getControlTux( TUX_CONTROL_KEYBOARD_RIGHT );
+*/
 
 	if( tux == NULL )
 	{

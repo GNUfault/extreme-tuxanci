@@ -583,12 +583,10 @@ void moveTux(tux_t *tux, int n)
 	}
 	else
 	{
-		eventGiveTuxItem(tux, getWorldArena()->listItem);
+		eventGiveTuxListItem(tux, getWorldArena()->listItem);
 		tux->frame++;
 		if( tux->frame == TUX_KEY * TUX_MAX_ANIMATION_FRAME ) tux->frame = 0;
 	}
-
-//	printf("move %d %d %d\n", tux->id, tux->x, tux->y);
 }
 
 void switchTuxGun(tux_t *tux)
@@ -771,7 +769,7 @@ void eventListTux(list_t *listTux)
 #endif
 		pickUpGun(thisTux);
 		eventBonus(thisTux);
-		eventGiveTuxItem(thisTux, getWorldArena()->listItem);
+		eventGiveTuxListItem(thisTux, getWorldArena()->listItem);
 	}
 }
 

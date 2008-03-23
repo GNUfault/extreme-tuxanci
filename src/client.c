@@ -203,19 +203,24 @@ void eventServerBuffer()
 	while ( getBufferLine(clientBuffer, line, STR_PROTO_SIZE) >= 0 )
 	{
 #ifdef DEBUG_CLIENT_RECV
-			printf("recv server msg->%s", line);
+		printf("recv server msg->%s", line);
 #endif
-
+		if( strncmp(line, "error", 5) == 0 )proto_recv_error_client(line);
 		if( strncmp(line, "init", 4) == 0 )proto_recv_init_client(line);
 		if( strncmp(line, "event", 5) == 0 )proto_recv_event_client(line);
 		if( strncmp(line, "newtux", 6) == 0 )proto_recv_newtux_client(line);
 		if( strncmp(line, "deltux", 6) == 0 )proto_recv_deltux_client(line);
 		if( strncmp(line, "additem", 7) == 0 )proto_recv_additem_client(line);
+		if( strncmp(line, "item", 4) == 0 )proto_recv_item_client(line);
 		if( strncmp(line, "shot", 4) == 0 )proto_recv_shot_client(line);
 		if( strncmp(line, "kill", 4) == 0 )proto_recv_kill_client(line);
 		if( strncmp(line, "score", 5) == 0 )proto_recv_score_client(line);
 		if( strncmp(line, "ping", 4) == 0 )proto_recv_ping_client(line);
 		if( strncmp(line, "end", 3) == 0 )proto_recv_end_client(line);
+
+#if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
+		lastPingServerAlive = getMyTime();
+#endif
 	}
 }
 
@@ -264,11 +269,6 @@ void eventPingServer()
 		proto_send_ping_client();
 		lastPing = getMyTime();
 	}
-}
-
-void refreshPingServerAlive()
-{
-	lastPingServerAlive = getMyTime();
 }
 
 bool_t isServerAlive()
