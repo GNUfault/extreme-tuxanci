@@ -4,14 +4,14 @@
 #define ARENA_H
 
 #include "main.h"
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "interface.h"
 #endif
 #include "list.h"
 
 typedef struct arena_struct
 {
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	char music[STR_SIZE];
 
 	SDL_Surface *background;

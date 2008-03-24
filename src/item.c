@@ -10,7 +10,7 @@
 #include "proto.h"
 #include "net_multiplayer.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "interface.h"
 #include "image.h"
 #include "sound.h"
@@ -20,11 +20,11 @@
 #include "term.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 static SDL_Surface *g_item[ITEM_COUNT];
 #endif
 
@@ -37,7 +37,7 @@ bool_t isItemInicialized()
 
 void initItem()
 {
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	g_item[GUN_DUAL_SIMPLE] = addImageData("item.dual.png", IMAGE_ALPHA, "item_dual_simple", IMAGE_GROUP_BASE);
 	g_item[GUN_TOMMY] = addImageData("item.tommy.png", IMAGE_ALPHA, "item_tommy_simple", IMAGE_GROUP_BASE);
 	g_item[GUN_SCATTER] = addImageData("item.scatter.png", IMAGE_ALPHA, "item_scatter_simple", IMAGE_GROUP_BASE);
@@ -72,7 +72,7 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 	new->y = y;
 	new->frame = 0;
 	new->count = 0;
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	new->img = g_item[type];
 #endif	
 	new->author = author;
@@ -94,7 +94,7 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 		break;
 
 		case ITEM_EXPLOSION :
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 			playSound("explozion", SOUND_GROUP_BASE);
 #endif	
 			new->w = ITEM_EXPLOSION_WIDTH;
@@ -102,7 +102,7 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 		break;
 
 		case ITEM_BIG_EXPLOSION :
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 			playSound("explozion", SOUND_GROUP_BASE);
 #endif	
 			new->w = ITEM_BIG_EXPLOSION_WIDTH;
@@ -146,7 +146,7 @@ item_t* getItemID(list_t *listItem, int id)
 
 void addNewItem(list_t *listItem, tux_t *author)
 {
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	char msg[STR_SIZE];
 #endif
 	arena_t *arena;
@@ -154,7 +154,7 @@ void addNewItem(list_t *listItem, tux_t *author)
 	int new_x, new_y;
 	int type;
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	if( isSettingAnyItem() == FALSE ||
 	    getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 	{
@@ -167,7 +167,7 @@ void addNewItem(list_t *listItem, tux_t *author)
 
 	type = GUN_DUAL_SIMPLE;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	do{
 #endif
 		switch( random() % 11 )
@@ -195,7 +195,7 @@ void addNewItem(list_t *listItem, tux_t *author)
 			case 10 : type = BONUS_HIDDEN;
 			break;
 		}
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	}while( isSettingItem(type) == FALSE );
 #endif
 
@@ -207,14 +207,14 @@ void addNewItem(list_t *listItem, tux_t *author)
 		proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
 	}
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	sprintf(msg, "in arena is new item\n");
 	appendTextInTerm(msg);
 #endif
 
 }
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 
 void drawItem(item_t *p)
 {
@@ -407,7 +407,7 @@ static void eventTuxIsDeadWithItem(tux_t *tux, item_t *item)
 
 	if( item->author != NULL && item->author != tux )
 	{
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 		char term_msg[STR_SIZE];
 
 		sprintf(term_msg, "tux with id %d set score to %d\n",
@@ -429,14 +429,14 @@ static void eventTuxIsDeadWithItem(tux_t *tux, item_t *item)
 
 static void tuxGiveBonus(tux_t *tux, item_t *item)
 {
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	char msg[STR_SIZE];
 	playSound("item_bonus", SOUND_GROUP_BASE);
 #endif
 	tux->bonus = item->type;
 	tux->bonus_time = TUX_MAX_BONUS;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	sprintf(msg, "tux with id %d bonus enabled\n", tux->id);
 	appendTextInTerm(msg);
 #endif
@@ -444,7 +444,7 @@ static void tuxGiveBonus(tux_t *tux, item_t *item)
 
 static void tuxGiveGun(tux_t *tux, item_t *item)
 {
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	char msg[STR_SIZE];
 	playSound("item_gun", SOUND_GROUP_BASE);
 #endif
@@ -453,7 +453,7 @@ static void tuxGiveGun(tux_t *tux, item_t *item)
 	tux->shot[ item->type ] += GUN_MAX_SHOT;
 	tux->gun = item->type;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	sprintf(msg, "tux with id %d has new gun\n", tux->id);
 	appendTextInTerm(msg);
 #endif

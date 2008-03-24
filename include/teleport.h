@@ -3,7 +3,7 @@
 
 #define TELEPORT_H
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "interface.h"
 #endif
 #include "main.h"
@@ -19,20 +19,20 @@ typedef struct teleport_struct
 
 	int layer; // vrstva
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	SDL_Surface *img; //obrazok
 #endif
 } teleport_t;
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 extern teleport_t* newTeleport(int x, int y, int w, int h, int layer, SDL_Surface *img);
 #endif
 
-#ifdef BUBLIC_SERVER	
+#ifdef PUBLIC_SERVER	
 extern teleport_t* newTeleport(int x, int y, int w, int h, int layer);
 #endif
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 extern void drawTeleport(teleport_t *p);
 extern void drawListTeleport(list_t *listTeleport);
 #endif

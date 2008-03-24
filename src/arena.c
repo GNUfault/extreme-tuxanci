@@ -16,7 +16,7 @@ arena_t* newArena()
 	arena_t *new;
 	new = malloc( sizeof(arena_t) );
 	
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	new->background = NULL;
 	strcpy(new->music, "");
 #endif

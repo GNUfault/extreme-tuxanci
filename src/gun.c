@@ -14,14 +14,14 @@
 #include "proto.h"
 #include "net_multiplayer.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "sound.h"
 #include "screen_world.h"
 #include "interface.h"
 #include "term.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
@@ -235,7 +235,7 @@ static void putInGunMine(tux_t *tux)
 	{
 		item_t *item;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 		char msg[STR_SIZE];
 		playSound("put_mine", SOUND_GROUP_BASE);
 		sprintf(msg, "tux with id %d pu mine\n", tux->id);
@@ -264,31 +264,31 @@ void shotInGun(tux_t *tux)
 	switch( tux->gun )
 	{
 		case GUN_SIMPLE :
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			playSound("gun_revolver", SOUND_GROUP_BASE);
 #endif
 			shotInGunSimpe(tux);
 		break;
 		case GUN_DUAL_SIMPLE :
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			playSound("gun_revolver", SOUND_GROUP_BASE);
 #endif
 			shotInGunDualSimpe(tux);
 		break;
 		case GUN_SCATTER :
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 		playSound("gun_scatter", SOUND_GROUP_BASE);
 #endif
 			shotInGunScatter(tux);
 		break;
 		case GUN_TOMMY :
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 			playSound("gun_tommy", SOUND_GROUP_BASE);
 #endif
 			shotInGunTommy(tux);
 		break;
 		case GUN_LASSER :
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 			playSound("gun_lasser", SOUND_GROUP_BASE);
 #endif
 			shotInGunLasser(tux);

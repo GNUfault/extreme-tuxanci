@@ -4,7 +4,7 @@
 #define SHOT_H
 
 #include "main.h"
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 #include "interface.h"
 #endif	
 #include "list.h"
@@ -29,7 +29,7 @@ typedef struct shot_struct
 	tux_t *author;
 	bool_t isCanKillAuthor;
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	SDL_Surface *img;
 #endif	
 } shot_t; 
@@ -37,7 +37,7 @@ typedef struct shot_struct
 extern bool_t isShotInicialized();
 extern void initShot();
 extern shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author);
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 extern void drawShot(shot_t *p);
 extern void drawListShot(list_t *listShot);
 #endif

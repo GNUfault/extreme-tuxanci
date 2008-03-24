@@ -20,11 +20,11 @@
 #include "myTimer.h"
 #include "net_multiplayer.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "screen_world.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
@@ -286,7 +286,7 @@ void sendInfoCreateClient(client_t *client)
 
 	proto_send_init_server(PROTO_SEND_ONE, client, client);
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	proto_send_newtux_server(PROTO_SEND_ONE, client,
 		(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]) );
 #endif
@@ -553,7 +553,7 @@ void eventPeriodicSyncClient()
 			{
 				proto_send_ping_server(PROTO_SEND_ONE, thisClientSend);
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 				proto_send_newtux_server(PROTO_SEND_ONE, thisClientSend,
 				(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]));
 #endif
@@ -664,12 +664,12 @@ void selectServerUdpSocket()
 	int max_fd;
 	int ret;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	tv.tv_sec = 0;
 	tv.tv_usec = 0;
 #endif	
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 	tv.tv_sec = 0;
 	tv.tv_usec = 5000;
 #endif	

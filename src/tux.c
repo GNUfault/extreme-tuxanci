@@ -18,7 +18,7 @@
 #include "dynamicInt.h"
 #include "proto.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "image.h"
 #include "sound.h"
 #include "layer.h"
@@ -26,11 +26,11 @@
 #include "term.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 static SDL_Surface *g_tux_up;
 static SDL_Surface *g_tux_right;
@@ -49,11 +49,11 @@ bool_t isTuxInicialized()
 
 void initTux()
 {
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	assert( isImageInicialized() == TRUE );
 #endif
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	g_tux_up = addImageData("tux8.png", IMAGE_ALPHA, "tux8", IMAGE_GROUP_BASE);
 	g_tux_right = addImageData("tux6.png", IMAGE_ALPHA, "tux6", IMAGE_GROUP_BASE);
 	g_tux_left = addImageData("tux4.png", IMAGE_ALPHA, "tux4", IMAGE_GROUP_BASE);
@@ -147,7 +147,7 @@ void getCourse(int n, int *x, int *y)
 	}	
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void drawTux(tux_t *tux)
 {
@@ -361,7 +361,7 @@ static void timer_tuxCanSwitchGun(void *p)
 
 void eventTuxIsDead(tux_t *tux)
 {
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	char msg[STR_SIZE];
 #endif
 
@@ -370,7 +370,7 @@ void eventTuxIsDead(tux_t *tux)
 		return;
 	}
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	sprintf(msg, "tux with id %d is dead\n", tux->id);
 	playSound("dead", SOUND_GROUP_BASE);
 	appendTextInTerm(msg);
@@ -403,7 +403,7 @@ static void eventTuxIsDeadWIthShot(tux_t *tux, shot_t *shot)
 {
 	if( shot->author != NULL && shot->author != tux )
 	{
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 		char term_msg[STR_SIZE];
 
 		sprintf(term_msg, "tux with id %d set score to %d\n",
@@ -426,11 +426,11 @@ static void eventTuxIsDeadWIthShot(tux_t *tux, shot_t *shot)
 void tuxTeleport(tux_t *tux)
 {
 	int x, y;
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	char msg[STR_SIZE];
 #endif
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	sprintf(msg, "tux with id %d teleporting\n", tux->id);
 	playSound("teleport", SOUND_GROUP_BASE);
 	appendTextInTerm(msg);
@@ -592,7 +592,7 @@ void moveTux(tux_t *tux, int n)
 void switchTuxGun(tux_t *tux)
 {
 	int i;
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	char msg[STR_SIZE];
 #endif
 
@@ -609,7 +609,7 @@ void switchTuxGun(tux_t *tux)
 			tux->gun = i;
 			tux->isCanSwitchGun = FALSE;
 			addTimer(timer_tuxCanSwitchGun, newInt(tux->id), TUX_TIME_CAN_SWITCH_GUN );
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			playSound("switch_gun", SOUND_GROUP_BASE);
 			sprintf(msg, "tux with id %d switch gun\n", tux->id);
 			appendTextInTerm(msg);
@@ -626,7 +626,7 @@ void switchTuxGun(tux_t *tux)
 			tux->isCanSwitchGun = FALSE;
 			addTimer(timer_tuxCanSwitchGun, newInt(tux->id), TUX_TIME_CAN_SWITCH_GUN );
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			playSound("switch_gun", SOUND_GROUP_BASE);
 			sprintf(msg, "tux with id %d switch gun\n", tux->id);
 			appendTextInTerm(msg);
@@ -647,7 +647,7 @@ void shotTux(tux_t *tux)
 		return;
 	}
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	playSound("switch_gun", SOUND_GROUP_BASE);
 #endif
 
@@ -697,7 +697,7 @@ static void pickUpGun(tux_t *tux)
 
 		if( tux->pickup_time == TUX_MAX_PICKUP )
 		{
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			char msg[STR_SIZE];
 			playSound("switch_gun", SOUND_GROUP_BASE);
 			sprintf(msg, "tux with id %d pickup\n", tux->id);
@@ -722,7 +722,7 @@ static void eventBonus(tux_t *tux)
 
 		if( tux->bonus_time == 0  && getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 		{
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			char msg[STR_SIZE];
 #endif
 
@@ -739,7 +739,7 @@ static void eventBonus(tux_t *tux)
 
 			tux->bonus = BONUS_NONE;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			sprintf(msg, "tux with id %d bonus disabled\n", tux->id);
 			appendTextInTerm(msg);
 #endif
@@ -764,7 +764,7 @@ void eventListTux(list_t *listTux)
 		thisTux  = (tux_t *)listTux->list[i];
 		assert( thisTux != NULL );
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 		tuxControl(thisTux);
 #endif
 		pickUpGun(thisTux);

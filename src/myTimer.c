@@ -9,7 +9,7 @@
 #include "list.h"
 #include "myTimer.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "interface.h"
 #endif
 

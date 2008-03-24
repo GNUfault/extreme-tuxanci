@@ -20,7 +20,7 @@
 #include "path.h"
 #include "string_length.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "image.h"
 #include "music.h"
 #endif
@@ -34,7 +34,7 @@ bool_t isAreaFileInicialized()
 	return isArenaFileInit;
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 static void cmd_loadImage(char *line)
 {
@@ -101,14 +101,14 @@ static void cmd_wall(arena_t *arena, char *line)
 	if( getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 )return;
 	if( getValue(line, "image", str_image, STR_SIZE) != 0 )return;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	new = newWall(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_img_x), atoi(str_img_y),
 			atoi(str_layer), getImage(IMAGE_GROUP_USER, str_image) );
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 	new = newWall(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_img_x), atoi(str_img_y),
@@ -135,13 +135,13 @@ static void cmd_teleport(arena_t *arena, char *line)
 	if( getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 )return;
 	if( getValue(line, "image", str_image, STR_SIZE) != 0 )return;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	new = newTeleport(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_layer), getImage(IMAGE_GROUP_USER, str_image) );
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 	new = newTeleport(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_layer) );
@@ -173,14 +173,14 @@ static void cmd_pipe(arena_t *arena, char *line)
 	if( getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 )return;
 	if( getValue(line, "image", str_image, STR_SIZE) != 0 )return;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	new = newPipe(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_layer), atoi(str_id), atoi(str_id_out), atoi(str_position),
 			getImage(IMAGE_GROUP_USER, str_image) );
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 	new = newPipe(atoi(str_x), atoi(str_y),
 			atoi(str_w), atoi(str_h),
 			atoi(str_layer), atoi(str_id), atoi(str_id_out), atoi(str_position) );
@@ -269,7 +269,7 @@ arena_t* getArena(int id)
 		char *line;
 		line = (char *) (ts->text->list[i]);
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 		if( strncmp(line, "loadImage", 9) == 0 )cmd_loadImage(line);
 		if( strncmp(line, "loadMusic", 9) == 0 )cmd_loadMusic(line);
 		if( strncmp(line, "background", 10) == 0 )cmd_background(arena, line);
@@ -289,18 +289,18 @@ void initArenaFile()
 	director_t *p;
 	int i;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	assert( isImageInicialized() == TRUE );
 #endif
 
 	isArenaFileInit = TRUE;
 	listArenaFile  = newList();
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	p = loadDirector(PATH_ARENA);
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 	p = loadDirector(PUBLIC_SERVER_PATH_ARENA);
 #endif
 
@@ -314,10 +314,10 @@ void initArenaFile()
 		{
 			char path[STR_PATH_SIZE];
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 			sprintf(path, PATH_ARENA "%s", line);
 #endif
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 			sprintf(path, PUBLIC_SERVER_PATH_ARENA "%s", line);
 #endif
 			printf("load map %s\n", line);

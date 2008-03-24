@@ -15,7 +15,7 @@
 #include "proto.h"
 #include "net_multiplayer.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "network.h"
 #include "screen_world.h"
 #include "screen_setting.h"
@@ -24,7 +24,7 @@
 #include "term.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
@@ -70,7 +70,7 @@ void proto_send_error_server(int type, client_t *client, int errorcode)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_error_client(char *msg)
 {
@@ -87,7 +87,7 @@ void proto_recv_error_client(char *msg)
 
 #endif
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_send_hello_client(char *name)
 {
@@ -158,7 +158,7 @@ void proto_send_init_server(int type, client_t *client, client_t *client2)
 
 	assert( client2 != NULL );
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	getSettingCountRound(&n);
 #endif
 
@@ -169,7 +169,7 @@ void proto_send_init_server(int type, client_t *client, client_t *client2)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_init_client(char *msg)
 {
@@ -211,7 +211,7 @@ void proto_send_event_server(int type, client_t *client, tux_t *tux, int action)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_event_client(char *msg)
 {
@@ -233,7 +233,7 @@ void proto_recv_event_client(char *msg)
 
 #endif
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_send_event_client(int action)
 {
@@ -278,7 +278,7 @@ void proto_send_newtux_server(int type, client_t *client, tux_t *tux)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_newtux_client(char *msg)
 {
@@ -343,7 +343,7 @@ void proto_send_kill_server(int type, client_t *client, tux_t *tux)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_kill_client(char *msg)
 {
@@ -376,7 +376,7 @@ void proto_send_score_server(int type, client_t *client, tux_t *tux)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_score_client(char *msg)
 {
@@ -415,7 +415,7 @@ void proto_send_deltux_server(int type, client_t *client, client_t *client2)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_deltux_client(char *msg)
 {
@@ -462,7 +462,7 @@ void proto_send_additem_server(int type, client_t *client, item_t *p)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_additem_client(char *msg)
 {
@@ -514,7 +514,7 @@ void proto_send_item_server(int type, client_t *client, tux_t *tux, item_t *item
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_item_client(char *msg)
 {
@@ -569,7 +569,7 @@ void proto_send_shot_server(int type, client_t *client, shot_t *p)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_shot_client(char *msg)
 {
@@ -598,7 +598,7 @@ void proto_recv_shot_client(char *msg)
 
 #endif
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_send_ping_client()
 {
@@ -613,7 +613,7 @@ void proto_recv_ping_server(client_t *client, char *msg)
 {
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_send_end_client()
 {
@@ -639,7 +639,7 @@ void proto_send_ping_server(int type, client_t *client)
 	proto_send(type, client, msg);
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_ping_client(char *msg)
 {
@@ -655,7 +655,7 @@ void proto_send_end_server(int type, client_t *client)
 }
 
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void proto_recv_end_client(char *msg)
 {

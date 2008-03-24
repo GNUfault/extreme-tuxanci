@@ -9,27 +9,27 @@
 #include "net_multiplayer.h"
 #include "proto.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "layer.h"
 #include "screen_world.h"
 #include "sound.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 teleport_t* newTeleport(int x, int y, int w, int h, int layer, SDL_Surface *img)
 #endif
 
-#ifdef BUBLIC_SERVER	
+#ifdef PUBLIC_SERVER	
 teleport_t* newTeleport(int x, int y, int w, int h, int layer)
 #endif
 {
 	teleport_t *new;
 	
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	assert( img != NULL );
 #endif
 
@@ -41,13 +41,13 @@ teleport_t* newTeleport(int x, int y, int w, int h, int layer)
 	new->w = w;
 	new->h = h;
 	new->layer = layer;
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	new->img = img;
 #endif
 	return new;
 }
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 void drawTeleport(teleport_t *p)
 {
@@ -217,7 +217,7 @@ void eventTeleportTux(list_t *listTeleport, teleport_t *teleport, tux_t *tux)
 	if( isFreeSpace(dist_x, dist_y, TUX_WIDTH, TUX_HEIGHT) )
 	{
 		setTuxProportion(tux, dist_x, dist_y);
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 		playSound("teleport", SOUND_GROUP_BASE);
 #endif
 		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )

@@ -25,7 +25,7 @@
 #include "proto.h"
 #include "net_multiplayer.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "network.h"
 #include "screen_world.h"
 #include "screen_setting.h"
@@ -33,7 +33,7 @@
 #include "client.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 

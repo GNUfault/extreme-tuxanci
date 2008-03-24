@@ -4,7 +4,7 @@
 #define ITEM_H
 
 #include "main.h"
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "interface.h"
 #endif
 #include "list.h"
@@ -25,7 +25,7 @@ typedef struct item_struct
 	int count; 
 
 	tux_t *author;
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	SDL_Surface *img; //obrazok
 #endif	
 } item_t;
@@ -57,7 +57,7 @@ extern void initItem();
 extern item_t* newItem(int x, int y, int type, tux_t *author);
 extern item_t* getItemID(list_t *listItem, int id);
 extern void addNewItem(list_t *listItem, tux_t *author);
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 extern void drawItem(item_t *p);
 extern void drawListItem(list_t *listItem);
 #endif

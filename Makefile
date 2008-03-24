@@ -1,5 +1,5 @@
 
-DESTDIR:=/usr/local/
+DESTDIR:=/usr/local
 
 all:
 	make -C ./src 
@@ -48,24 +48,17 @@ server:
 	make -C ./src -f Makefile-publicServer
 
 install:
-	cp  ./src/tuxanci-ng $(DESTDIR)bin/
-	mkdir $(DESTDIR)share/tuxanci-ng
-	mkdir $(DESTDIR)share/tuxanci-ng/arena
-	mkdir $(DESTDIR)share/tuxanci-ng/font
-	mkdir $(DESTDIR)share/tuxanci-ng/image
-	mkdir $(DESTDIR)share/tuxanci-ng/lang
-	mkdir $(DESTDIR)share/tuxanci-ng/music
-	mkdir $(DESTDIR)share/tuxanci-ng/sound
-	mkdir $(DESTDIR)share/tuxanci-ng/data
+	mkdir -p $(DESTDIR)/bin
+	mkdir -p $(DESTDIR)/share/tuxanci-ng/{arena,data,font,image,lang,music,sound}
+	cp  ./src/tuxanci-ng $(DESTDIR)/bin/
 
-	cp  -rf ./arena/* $(DESTDIR)share/tuxanci-ng/arena
-	cp  -rf ./font/* $(DESTDIR)share/tuxanci-ng/font
-	cp  -rf ./image/* $(DESTDIR)share/tuxanci-ng/image
-	cp  -rf ./lang/* $(DESTDIR)share/tuxanci-ng/lang
-	cp  -rf ./music/* $(DESTDIR)share/tuxanci-ng/music
-	cp  -rf ./sound/* $(DESTDIR)share/tuxanci-ng/sound
-	cp  -rf ./data/* $(DESTDIR)share/tuxanci-ng/data
+        cp  -rf ./arena/* $(DESTDIR)/share/tuxanci-ng/arena/
+	cp  -rf ./font/* $(DESTDIR)/share/tuxanci-ng/font/
+	cp  -rf ./image/* $(DESTDIR)/share/tuxanci-ng/image/
+	cp  -rf ./lang/* $(DESTDIR)/share/tuxanci-ng/lang/
+	cp  -rf ./music/* $(DESTDIR)/share/tuxanci-ng/music/
+	cp  -rf ./sound/* $(DESTDIR)/share/tuxanci-ng/sound/
+	cp  -rf ./data/* $(DESTDIR)/share/tuxanci-ng/data/
 
 uninstall:
-	rm -rf $(DESTDIR)bin/tuxanci-ng
-	rm -rf $(DESTDIR)share/tuxanci-ng
+	rm -rf $(DESTDIR)/{bin,share}/tuxanci-ng

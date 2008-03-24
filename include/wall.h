@@ -5,7 +5,7 @@
 
 #include "main.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "interface.h"
 #endif
 
@@ -24,17 +24,17 @@ typedef struct wall_struct
 
 	int layer; // vrstva
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	SDL_Surface *img; //obrazok
 #endif
 } wall_t;
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 extern wall_t* newWall(int x, int y, int w, int h,
 	int img_x, int img_y, int layer, SDL_Surface *img);
 #endif
 
-#ifdef BUBLIC_SERVER	
+#ifdef PUBLIC_SERVER	
 extern wall_t* newWall(int x, int y, int w, int h,
 	int img_x, int img_y, int layer);
 #endif

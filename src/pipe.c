@@ -8,27 +8,27 @@
 #include "shot.h"
 #include "net_multiplayer.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "screen_world.h"
 #include "layer.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 pipe_t* newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position, SDL_Surface *img)
 #endif
 
-#ifdef BUBLIC_SERVER	
+#ifdef PUBLIC_SERVER	
 pipe_t* newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position)
 #endif
 
 {
 	pipe_t *new;
 	
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	assert( img != NULL );
 #endif
 
@@ -43,13 +43,13 @@ pipe_t* newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int p
 	new->id = id;
 	new->id_out = id_out;
 	new->position = position;
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	new->img = img;
 #endif
 	return new;
 }
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 
 void drawPipe(pipe_t *p)
 {

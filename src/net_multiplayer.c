@@ -16,7 +16,7 @@
 #include "server.h"
 #include "udp.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "sdl_udp.h"
 #include "tcp.h"
 #include "screen.h"
@@ -68,7 +68,7 @@ int initNetMuliplayer(int type, char *ip, int port)
 #endif
 		break;
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
 #ifdef SUPPORT_NET_UNIX_TCP
 			if( initTcpClient(ip, port) != 0 )
@@ -128,7 +128,7 @@ void eventNetMultiplayer()
 #endif
 		break;
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
 #ifdef SUPPORT_NET_UNIX_TCP
 			selectClientTcpSocket();
@@ -171,7 +171,7 @@ void quitNetMultiplayer()
 #endif
 		break;
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
 #ifdef SUPPORT_NET_UNIX_TCP
 			quitTcpClient();

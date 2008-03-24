@@ -8,7 +8,7 @@
 #include "main.h"
 #include "tux.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 #include "font.h"
 #include "image.h"
@@ -37,7 +37,7 @@
 static int my_argc;
 static char **my_argv;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 static void init()
 {
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
 	my_argc = argc;
 	my_argv = argv;
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 
 	init();
 
@@ -164,7 +164,7 @@ int main(int argc, char *argv[])
 	quit();
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 
 	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, my_handler_quit);

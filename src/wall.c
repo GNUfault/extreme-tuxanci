@@ -6,28 +6,28 @@
 #include "wall.h"
 #include "shot.h"
 
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 #include "layer.h"
 #include "screen_world.h"
 #endif
 
-#ifdef BUBLIC_SERVER
+#ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #endif
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 wall_t* newWall(int x, int y, int w, int h,
 	int img_x, int img_y, int layer, SDL_Surface *img)
 #endif
 
-#ifdef BUBLIC_SERVER	
+#ifdef PUBLIC_SERVER	
 wall_t* newWall(int x, int y, int w, int h,
 	int img_x, int img_y, int layer)
 #endif
 {
 	wall_t *new;
 	
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 	assert( img != NULL );
 #endif
 	new  = malloc( sizeof(wall_t) );
@@ -40,14 +40,14 @@ wall_t* newWall(int x, int y, int w, int h,
 	new->img_x = img_x;
 	new->img_y = img_y;
 	new->layer = layer;
-#ifndef BUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	new->img = img;
 #endif
 
 	return new;
 }
 
-#ifndef BUBLIC_SERVER	
+#ifndef PUBLIC_SERVER	
 
 void drawWall(wall_t *p)
 {
