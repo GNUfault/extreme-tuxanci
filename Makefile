@@ -52,7 +52,7 @@ install:
 	mkdir -p $(DESTDIR)/share/tuxanci-ng/{arena,data,font,image,lang,music,sound}
 	cp  ./src/tuxanci-ng $(DESTDIR)/bin/
 
-        cp  -rf ./arena/* $(DESTDIR)/share/tuxanci-ng/arena/
+	cp  -rf ./arena/* $(DESTDIR)/share/tuxanci-ng/arena/
 	cp  -rf ./font/* $(DESTDIR)/share/tuxanci-ng/font/
 	cp  -rf ./image/* $(DESTDIR)/share/tuxanci-ng/image/
 	cp  -rf ./lang/* $(DESTDIR)/share/tuxanci-ng/lang/
