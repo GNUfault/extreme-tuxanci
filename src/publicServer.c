@@ -28,11 +28,6 @@ static bool_t isSignalEnd;
 static int my_argc;
 static char **my_argv;
 
-arena_t* getWorldArena()
-{
-	return arena;
-}
-
 void countRoundInc()
 {
 }
@@ -47,6 +42,8 @@ int initPublicServer()
 
 	arenaId = getArenaIdFormNetName( getParamElse("--arena", "FAGN") );
 	arena = getArena(arenaId);
+	setCurrentArena(arena);
+
 	addNewItem(arena->listItem, NULL);
 	isSignalEnd = FALSE;
 
@@ -66,45 +63,10 @@ int getChoiceArenaId()
 	return arenaId;
 }
 
-int conflictSpace(int x1,int y1,int w1,int h1,int x2,int y2,int w2,int h2)
-{
-	return (x1<x2+w2 && x2<x1+w1 && y1<y2+h2 && y2<y1+h1);
-}
-
-int isFreeSpace(int x, int y, int w, int h)
-{
-	if ( isConflictWithListTux(arena->listTux, x, y, w, h) )return 0;
-	if ( isConflictWithListWall(arena->listWall, x, y, w, h) )return 0;
-	if ( isConflictWithListShot(arena->listShot, x, y, w, h) )return 0;
-	if ( isConflictWithListItem(arena->listItem, x, y, w, h) )return 0;
-	if ( isConflictWithListTeleport(arena->listTeleport, x, y, w, h) )return 0;
-	if ( isConflictWithListPipe(arena->listPipe, x, y, w, h) )return 0;
-
-	return 1;
-}
-
-void findFreeSpace(int *x, int *y, int w, int h)
-{
-	int z_x;
-	int z_y;
-
-	assert( x != NULL );
-	assert( y != NULL );
-
-	do{
-		z_x = random() % WINDOW_SIZE_X;
-		z_y = random() % (WINDOW_SIZE_Y-200);
-	}while( isFreeSpace(z_x, z_y ,w ,h) == 0 );
-
-	*x = z_x;
-	*y = z_y;
-}
-
 void eventPublicServer()
 {
 	static my_time_t lastActive = 0;
 	my_time_t interval;
-	int i;
 
 	eventNetMultiplayer();
 
@@ -130,21 +92,7 @@ void eventPublicServer()
 */
 	lastActive = getMyTime();
 
-	eventConflictTuxWithTeleport(arena->listTux, arena->listTeleport);
-	eventConflictTuxWithShot(arena->listTux, arena->listShot);
-
-	for( i = 0 ; i < 4 ; i++)
-	{
-		eventMoveListShot(arena->listShot);
-		eventConflictShotWithWall(arena->listWall, arena->listShot);
-		eventConflictShotWithTeleport(arena->listTeleport, arena->listShot);
-		eventConflictShotWithPipe(arena->listPipe, arena->listShot);
-		eventConflictShotWithItem(arena->listItem, arena->listShot);
-	}
-
-	eventListItem(arena->listItem);
-	eventListTux(arena->listTux);
-
+	eventArena(arena);
 	eventTimer();
 }
 

@@ -58,10 +58,7 @@ static void addShotTrivial(tux_t *tux, int x, int y, int px, int py, int gun)
 {
 	int dest_x = 0, dest_y = 0;
 	int dest_px = 0, dest_py = 0;
-	arena_t *arena;
 	shot_t *shot;
-
-	arena = getWorldArena();
 
 	modificiationCopuse(tux->position, px, py, &dest_px, &dest_py);
 	modificiationCopuse(tux->position, x, y, &dest_x, &dest_y);
@@ -81,7 +78,7 @@ static void addShotTrivial(tux_t *tux, int x, int y, int px, int py, int gun)
 	}
 
 	shot = newShot(tux->x + dest_x, tux->y + dest_y, dest_px, dest_py, gun, tux);
-	addList( arena->listShot, shot );
+	addList( getCurrentArena()->listShot, shot );
 }
 
 static void addShot(tux_t *tux,int x, int y, int px, int py)
@@ -155,7 +152,7 @@ static void timer_addShotTimer(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux == NULL )return;
 
@@ -184,7 +181,7 @@ static void timer_addLaserTimer(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux == NULL )return;
 
@@ -229,9 +226,9 @@ static void putInGunMine(tux_t *tux)
 		break;
 	}
 
-	arena = getWorldArena();
+	arena = getCurrentArena();
 
-	if( isFreeSpace(x, y, ITEM_MINE_WIDTH, ITEM_MINE_HEIGHT) )
+	if( isFreeSpace(getCurrentArena(), x, y, ITEM_MINE_WIDTH, ITEM_MINE_HEIGHT) )
 	{
 		item_t *item;
 

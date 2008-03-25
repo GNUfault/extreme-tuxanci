@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "tux.h"
+#include "arena.h"
 #include "shot.h"
 #include "gun.h"
 #include "wall.h"
@@ -79,7 +80,7 @@ tux_t* newTux()
 	new->status = TUX_STATUS_ALIVE;
 	new->control = TUX_CONTROL_NONE;
 
-	findFreeSpace(&x, &y, TUX_WIDTH, TUX_HEIGHT);
+	findFreeSpace(getCurrentArena(), &x, &y, TUX_WIDTH, TUX_HEIGHT);
 	setTuxProportion(new, x, y);
 
 	new->position = TUX_DOWN;
@@ -311,13 +312,13 @@ static void timer_spawnTux(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	arena = getWorldArena();
+	arena = getCurrentArena();
 	tux = getTuxID(arena->listTux, id);
 
 	if( tux == NULL )return;
 
 	tux->status = TUX_STATUS_ALIVE;
-	findFreeSpace(&x, &y, TUX_WIDTH, TUX_HEIGHT);
+	findFreeSpace(getCurrentArena(), &x, &y, TUX_WIDTH, TUX_HEIGHT);
 	setTuxProportion(tux, x, y);
 	tux->gun = GUN_SIMPLE;
 	
@@ -337,7 +338,7 @@ static void timer_tuxCanShot(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux == NULL )return;
 
@@ -352,7 +353,7 @@ static void timer_tuxCanSwitchGun(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux == NULL )return;
 
@@ -438,7 +439,7 @@ void tuxTeleport(tux_t *tux)
 
 	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 	{
-		findFreeSpace(&x, &y, TUX_WIDTH, TUX_HEIGHT);
+		findFreeSpace(getCurrentArena(), &x, &y, TUX_WIDTH, TUX_HEIGHT);
 		setTuxProportion(tux, x, y);
 	}
 
@@ -555,7 +556,7 @@ void moveTux(tux_t *tux, int n)
 		return;
 	}
 
-	arena = getWorldArena();
+	arena = getCurrentArena();
 	getCourse(tux->position, &px, &py);
 	
 	zal_x = tux->x;
@@ -583,7 +584,7 @@ void moveTux(tux_t *tux, int n)
 	}
 	else
 	{
-		eventGiveTuxListItem(tux, getWorldArena()->listItem);
+		eventGiveTuxListItem(tux, getCurrentArena()->listItem);
 		tux->frame++;
 		if( tux->frame == TUX_KEY * TUX_MAX_ANIMATION_FRAME ) tux->frame = 0;
 	}
@@ -731,7 +732,7 @@ static void eventBonus(tux_t *tux)
 				int x, y, w, h;
 				getTuxProportion(tux, &x, &y, &w, &h);
 
-				if ( isConflictWithListWall(getWorldArena()->listWall, x, y, w, h) )
+				if ( isConflictWithListWall(getCurrentArena()->listWall, x, y, w, h) )
 				{
 					return;
 				}
@@ -755,9 +756,11 @@ static void eventBonus(tux_t *tux)
 void eventListTux(list_t *listTux)
 {
 	tux_t *thisTux;
+	arena_t *arena;
 	int i;
 
 	assert( listTux != NULL );
+	arena = getCurrentArena();
 
 	for( i = 0 ; i < listTux->count ; i++ )
 	{
@@ -769,7 +772,7 @@ void eventListTux(list_t *listTux)
 #endif
 		pickUpGun(thisTux);
 		eventBonus(thisTux);
-		eventGiveTuxListItem(thisTux, getWorldArena()->listItem);
+		eventGiveTuxListItem(thisTux, arena->listItem);
 	}
 }
 

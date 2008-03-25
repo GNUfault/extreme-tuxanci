@@ -162,8 +162,8 @@ void addNewItem(list_t *listItem, tux_t *author)
 	}
 #endif
 
-	arena = getWorldArena();
-	findFreeSpace(&new_x, &new_y, ITEM_GUN_WIDTH, ITEM_GUN_HEIGHT);
+	arena = getCurrentArena();
+	findFreeSpace(getCurrentArena(), &new_x, &new_y, ITEM_GUN_WIDTH, ITEM_GUN_HEIGHT);
 
 	type = GUN_DUAL_SIMPLE;
 

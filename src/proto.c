@@ -121,7 +121,7 @@ void proto_recv_hello_server(client_t *client, char *msg)
 
 	client->tux = newTux();
 	client->tux->control = TUX_CONTROL_NET;
-	addList(getWorldArena()->listTux, client->tux);
+	addList(getCurrentArena()->listTux, client->tux);
 
 	if( strlen(name) > STR_NAME_SIZE-1 )
 	{
@@ -140,7 +140,7 @@ void proto_send_status_server(int type, client_t *client)
 			"clients: %d\n"
 			"maxclients: %d\n"
 			"uptime: %d\n",
-	TUXANCI_NG_VERSION, getWorldArena()->listTux->count,
+	TUXANCI_NG_VERSION, getCurrentArena()->listTux->count,
 	getServerMaxClients(), getMyTime() );
 
 	proto_send(type, client, msg);
@@ -195,7 +195,7 @@ void proto_recv_init_client(char *msg)
 
 	getSettingNameRight(tux->name);
 
-	addList(getWorldArena()->listTux, tux);
+	addList(getCurrentArena()->listTux, tux);
 }
 
 #endif
@@ -223,7 +223,7 @@ void proto_recv_event_client(char *msg)
 
 	sscanf(msg, "%s %d %d", cmd, &id, &action);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux != NULL )
 	{
@@ -296,7 +296,7 @@ void proto_recv_newtux_client(char *msg)
 	cmd, &id, &x, &y, &status, &position, &frame, &score, name,
 	&myGun, &myBonus, &gun1, &gun2, &gun3, &gun4, &gun5, &gun6, &gun7, &time1, &time2);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux == NULL )
 	{
@@ -306,7 +306,7 @@ void proto_recv_newtux_client(char *msg)
 
 		tux = newTux();
 		tux->control = TUX_CONTROL_NET;
-		addList(getWorldArena()->listTux, tux);
+		addList(getCurrentArena()->listTux, tux);
 	}
 
 	tux->id = id;
@@ -355,7 +355,7 @@ void proto_recv_kill_client(char *msg)
 
 	sscanf(msg, "%s %d", cmd, &id);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux != NULL )
 	{
@@ -388,7 +388,7 @@ void proto_recv_score_client(char *msg)
 
 	sscanf(msg, "%s %d %d", cmd, &id, &score);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux != NULL )
 	{
@@ -427,7 +427,7 @@ void proto_recv_deltux_client(char *msg)
 
 	sscanf(msg, "%s %d", cmd, &id);
 
-	tux = getTuxID(getWorldArena()->listTux, id);
+	tux = getTuxID(getCurrentArena()->listTux, id);
 
 	if( tux != NULL )
 	{
@@ -437,8 +437,8 @@ void proto_recv_deltux_client(char *msg)
 		sprintf(term_msg, "tux with id %d is disconnect\n", tux->id);
 		appendTextInTerm(term_msg);
 
-		index = searchListItem(getWorldArena()->listTux, tux);
-		delListItem(getWorldArena()->listTux, index, destroyTux);
+		index = searchListItem(getCurrentArena()->listTux, tux);
+		delListItem(getCurrentArena()->listTux, index, destroyTux);
 	}
 }
 
@@ -475,19 +475,24 @@ void proto_recv_additem_client(char *msg)
 
 	sscanf(msg, "%s %d %d %d %d %d %d %d", cmd, &id, &type, &x, &y, &count, &frame, &author_id);
 
-	item = newItem(x, y, type, getTuxID(getWorldArena()->listTux, author_id));
+	if( getItemID(getCurrentArena()->listItem, id) != NULL )
+	{
+		return;
+	}
 
-	if( isConflictWithListItem(getWorldArena()->listItem, item->x, item->y, item->w, item->h) )
+	item = newItem(x, y, type, getTuxID(getCurrentArena()->listTux, author_id));
+/*
+	if( isConflictWithListItem(getCurrentArena()->listItem, item->x, item->y, item->w, item->h) )
 	{
 		destroyItem(item);
 		return;
 	}
-
+*/
 	item->id = id;
 	item->count = count;
 	item->frame = frame;
 
-	addList(getWorldArena()->listItem, item);
+	addList(getCurrentArena()->listItem, item);
 
 	sprintf(term_msg, "in arena is new item\n");
 	appendTextInTerm(term_msg);
@@ -529,7 +534,7 @@ void proto_recv_item_client(char *msg)
 
 	sscanf(msg, "%s %d %d", cmd, &tux_id, &item_id);
 
-	arena = getWorldArena();
+	arena = getCurrentArena();
 
 	item = getItemID(arena->listItem, item_id);
 	tux = getTuxID(arena->listTux, tux_id);
@@ -582,7 +587,7 @@ void proto_recv_shot_client(char *msg)
 	sscanf(msg, "%s %d %d %d %d %d %d %d %d",
 		cmd, &x, &y, &px, &py, &position, &gun, &id, &isCanKillAuthor);
 
-	shot = newShot(x, y, px, py, gun, getTuxID(getWorldArena()->listTux, id));
+	shot = newShot(x, y, px, py, gun, getTuxID(getCurrentArena()->listTux, id));
 
 	shot->isCanKillAuthor = isCanKillAuthor;
 	shot->position = position;
@@ -593,7 +598,7 @@ void proto_recv_shot_client(char *msg)
 		transformOnlyLasser(shot);
 	}
 
-	addList(getWorldArena()->listShot, shot);
+	addList(getCurrentArena()->listShot, shot);
 }
 
 #endif

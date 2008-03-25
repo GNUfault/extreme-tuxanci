@@ -124,6 +124,10 @@ int writeSdlUdpSocket(sock_sdl_udp_t *src, sock_sdl_udp_t *dst, void *address, i
 	assert( src != NULL );
 	assert( address != NULL );
 
+#ifdef DEBUG_LOST_PACKET
+	if( rand() % DEBUG_LOST_PACKET == 0 )return size;
+#endif
+
 	memcpy(dst->packet->data, address, len);
 	dst->packet->len = len;
 

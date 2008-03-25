@@ -8,6 +8,7 @@
 #include "shot.h"
 #include "net_multiplayer.h"
 #include "proto.h"
+#include "arena.h"
 
 #ifndef PUBLIC_SERVER
 #include "layer.h"
@@ -214,7 +215,7 @@ void eventTeleportTux(list_t *listTeleport, teleport_t *teleport, tux_t *tux)
 		break;
 	}
 
-	if( isFreeSpace(dist_x, dist_y, TUX_WIDTH, TUX_HEIGHT) )
+	if( isFreeSpace(getCurrentArena(), dist_x, dist_y, TUX_WIDTH, TUX_HEIGHT) )
 	{
 		setTuxProportion(tux, dist_x, dist_y);
 #ifndef PUBLIC_SERVER

@@ -121,6 +121,10 @@ int writeUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 	int addrlen;
 	int size;
 
+#ifdef DEBUG_LOST_PACKET
+	if( rand() % DEBUG_LOST_PACKET == 0 )return size;
+#endif
+
         addrlen = sizeof(src->sockAddr);
 
 	assert( src != NULL );

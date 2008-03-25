@@ -18,6 +18,7 @@
 #include "server.h"
 #include "assert.h"
 #include "myTimer.h"
+#include "arena.h"
 #include "net_multiplayer.h"
 
 #ifndef PUBLIC_SERVER
@@ -193,8 +194,8 @@ void destroyClient(client_t *p)
 
 	if( p->tux != NULL )
 	{
-		index = searchListItem(getWorldArena()->listTux, p->tux);
-		delListItem(getWorldArena()->listTux, index, destroyTux);
+		index = searchListItem(getCurrentArena()->listTux, p->tux);
+		delListItem(getCurrentArena()->listTux, index, destroyTux);
 	}
 
 	free(p);
@@ -288,7 +289,7 @@ void sendInfoCreateClient(client_t *client)
 
 #ifndef PUBLIC_SERVER
 	proto_send_newtux_server(PROTO_SEND_ONE, client,
-		(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]) );
+		(tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]) );
 #endif
 
 	for( i = 0 ; i < listClient->count; i++)
@@ -303,9 +304,9 @@ void sendInfoCreateClient(client_t *client)
 		}
 	}
 
-	for( i = 0 ; i < getWorldArena()->listItem->count; i++)
+	for( i = 0 ; i < getCurrentArena()->listItem->count; i++)
 	{
-		thisItem = (item_t *) getWorldArena()->listItem->list[i];
+		thisItem = (item_t *) getCurrentArena()->listItem->list[i];
 		proto_send_additem_server(PROTO_SEND_ONE, client, thisItem);
 	}
 }
@@ -402,7 +403,11 @@ static void eventClientBuffer(client_t *client)
 			continue;
 		}
 
-		if( strncmp(line, "status", 6) == 0 )proto_recv_status_server(client, line);
+		if( strncmp(line, "status", 6) == 0 )
+		{
+			proto_recv_status_server(client, line);
+			continue;
+		}
 
 		if( client->tux != NULL )
 		{
@@ -425,7 +430,10 @@ static void eventClientBuffer(client_t *client)
 			}
 		}
 
-		proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_COMMAND);
+		if( client->tux != NULL )
+		{
+			proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_COMMAND);
+		}
 	}
 }
 
@@ -555,7 +563,7 @@ void eventPeriodicSyncClient()
 
 #ifndef PUBLIC_SERVER
 				proto_send_newtux_server(PROTO_SEND_ONE, thisClientSend,
-				(tux_t *)(getWorldArena()->listTux->list[SERVER_INDEX_ROOT_TUX]));
+				(tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]));
 #endif
 			}
 
@@ -622,7 +630,7 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 
 	if( client == NULL )
 	{
-		if( getWorldArena()->listTux->count+1 > maxClients )
+		if( getCurrentArena()->listTux->count+1 > maxClients )
 		{
 			destroySockUdp(sock_client);
 			return;
