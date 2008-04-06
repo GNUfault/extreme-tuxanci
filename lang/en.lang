@@ -1,0 +1,35 @@
+###
+# Englis translation file
+# Author: Oroborus <dusan.d@centrum.sk>
+###
+
+# about the author of this translation
+AUTHOR Oroborus
+AUTHOR_EMAIL dusan.d@centrum.sk
+AUTHOR_JABBER oroborus@jabbim.sk
+
+# general
+OK Ok
+BACK Back
+NEXT Next
+
+# main menu
+PLAY Play
+SETTING Settings
+TABLE Top Score
+CREDITS Credits
+END End
+
+# settings - menu
+COUNT_ROUND Count Round:
+NAME_PLAYER1 Player 1:
+NAME_PLAYER2 Player 2:
+MUSIC Music:
+SOUND Sound:
+
+# settings - game type
+NONE Local game
+SERVER Set up a server
+CLIENT Network game
+IP_ADDR IP address:
+NET_PORT Network port:

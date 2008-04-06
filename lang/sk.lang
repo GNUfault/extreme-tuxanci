@@ -1,0 +1,35 @@
+###
+# Slovak translation file
+# Author: Oroborus <dusan.d@centrum.sk>
+###
+
+# about the author of this translation
+AUTHOR Oroborus
+AUTHOR_EMAIL dusan.d@centrum.sk
+AUTHOR_JABBER oroborus@jabbim.sk
+
+# general
+OK Ok
+BACK Späť
+NEXT Ďalej
+
+# main menu
+PLAY Hrať
+SETTING Nastavenia
+TABLE Tabuľka
+CREDITS Autori
+END Koniec
+
+# settings - menu
+COUNT_ROUND Počet kôl:
+NAME_PLAYER1 Meno Hraca 1:
+NAME_PLAYER2 Meno Hraca 2:
+MUSIC Hudba:
+SOUND Zvuk:
+
+# settings - game type
+NONE žiadne
+SERVER server
+CLIENT client
+IP_ADDR IP adresa:
+NET_PORT Sieotvy port:

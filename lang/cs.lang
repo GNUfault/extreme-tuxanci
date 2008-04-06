@@ -1,0 +1,35 @@
+###
+# Czech translation file
+# Author: xHire <xhire@tuxportal.cz>
+###
+
+# about the author of this translation
+AUTHOR xHire
+AUTHOR_EMAIL xhire@tuxportal.cz
+AUTHOR_JABBER Miczek@gmail.com
+
+# general
+OK Ok
+BACK Zpět
+NEXT Další
+
+# main menu
+PLAY Hraj
+SETTING Nastavení
+TABLE Top Skóre
+CREDITS Autoři
+END Konec
+
+# settings - menu
+COUNT_ROUND Počet kol
+NAME_PLAYER1 Hráč 1:
+NAME_PLAYER2 Hráč 2:
+MUSIC Hudba:
+SOUND Zvuky:
+
+# settings - game type
+NONE Lokální hra
+SERVER Vytvoření serveru
+CLIENT Síťová hra
+IP_ADDR IP adresa serveru:
+NET_PORT Síťový port:
