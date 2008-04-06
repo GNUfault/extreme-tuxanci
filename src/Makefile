@@ -174,5 +174,6 @@ keytable.o: keytable.c ../include/keytable.h
 
 language.o: language.c ../include/language.h
 	$(CC) $(CFLAGS) -o language.o -c language.c
+
 clean:
 	rm -rf *.o *.c~ ../include/*.h~ Makefile~ tuxanci-ng
