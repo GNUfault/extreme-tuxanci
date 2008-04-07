@@ -60,7 +60,8 @@ static void drawText(widget_textfield_t *p)
 	if( p->timeBlick > WIDGET_TEXTFIELD_TIME_BLICK_CURSOR/2 &&
 	    p->active == TRUE )
 	{
-		strcat(str, ">");
+		//strcat(str, ">");
+		strcat(str, "\f");
 	}
 
 	p->timeBlick++;
@@ -70,7 +71,9 @@ static void drawText(widget_textfield_t *p)
 		p->timeBlick = 0;
 	}
 
-	drawFont(str, p->x+WIDGET_TEXTFIELD_TEXT_OFFSET_X, p->y+p->h/2, COLOR_WHITE);
+	//drawFont(str, p->x+WIDGET_TEXTFIELD_TEXT_OFFSET_X, p->y+p->h/2, COLOR_WHITE);
+	drawFont(str, p->x+WIDGET_TEXTFIELD_TEXT_OFFSET_X, p->y+WIDGET_TEXTFIELD_HEIGHT/2-p->h/2, COLOR_WHITE);
+	//printf("p->y: %d\nheight: %d\n p->h: %d\n", p->y, WIDGET_TEXTFIELD_HEIGHT, p->h);
 }
 
 void drawWidgetTextfield(widget_textfield_t *p)
@@ -99,7 +102,7 @@ static void readKey(widget_textfield_t *p)
 	mapa = SDL_GetKeyState(NULL);
 	len = strlen(p->text);
 
-	//mazanie posledneho klavesu
+	// mazanie posledneho klavesu
 	if( mapa[SDLK_BACKSPACE] == SDL_PRESSED )
 	{
 		if( len > 0 )
@@ -117,7 +120,7 @@ static void readKey(widget_textfield_t *p)
 		return;
 	}
 
-	//klavesy abecedy
+	// klavesy abecedy
 	for(i=SDLK_SPACE /*SDLK_a*/;i<=SDLK_z;i++)
 	{
 		//if(width<TEXTFIELD_SIZE_X-20 && mapa[i]==SDL_PRESSED)
@@ -143,7 +146,7 @@ static void readKey(widget_textfield_t *p)
 	{
 		if( mapa[i] == SDL_PRESSED && len < STR_SIZE )
 		{
-			 p->time = WIDGET_TEXTFIELD_TIME_READ_KEY;
+			p->time = WIDGET_TEXTFIELD_TIME_READ_KEY;
 			strcat( p->text, SDL_GetKeyName(i) );
 			getTextSize(p->text, &p->w, &p->h);
 			return;

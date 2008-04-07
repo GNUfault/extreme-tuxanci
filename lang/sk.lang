@@ -8,6 +8,7 @@ AUTHOR Oroborus
 AUTHOR_EMAIL dusan.d@centrum.sk
 AUTHOR_JABBER oroborus@jabbim.sk
 
+# specify font for this language
 HEAD fontfile="DejaVuSans.ttf" fontsize="16"
 
 # general

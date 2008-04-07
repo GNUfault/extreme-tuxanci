@@ -8,6 +8,7 @@ AUTHOR xHire
 AUTHOR_EMAIL xhire@tuxportal.cz
 AUTHOR_JABBER Miczek@gmail.com
 
+# specify font for this language
 HEAD fontfile="DejaVuSans.ttf" fontsize="16"
 
 # general
@@ -23,7 +24,7 @@ CREDITS Autoři
 END Konec
 
 # settings - menu
-COUNT_ROUND Počet kol
+COUNT_ROUND Počet kol:
 NAME_PLAYER1 Hráč 1:
 NAME_PLAYER2 Hráč 2:
 MUSIC Hudba:

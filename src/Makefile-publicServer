@@ -10,7 +10,7 @@ CFLAGS = -g -O0 -DPUBLIC_SERVER -DSUPPORT_NET_UNIX_UDP -I../include -Wall
 BUILD_DIR = ../build-server
 LIBS =
 
-FILES = list.o director.o configFile.o tux.o wall.o shot.o myTimer.o  \
+FILES = list.o director.o configFile.o tux.o wall.o shot.o myTimer.o \
 	buffer.o dynamicInt.o arena.o arenaFile.o textFile.o gun.o item.o teleport.o pipe.o \
 	udp.o proto.o server.o publicServer.o net_multiplayer.o serverConfigFile.o
 
