@@ -5,7 +5,7 @@
 
 #include "main.h"
 
-#define WIDGET_TEXTFIELD_WIDTH		125
+#define WIDGET_TEXTFIELD_WIDTH		188
 #define WIDGET_TEXTFIELD_HEIGHT		36
 
 #define WIDGET_TEXTFIELD_TEXT_OFFSET_X	10
@@ -17,7 +17,7 @@ typedef struct widget_textfield
 {
 	int x, y;
 	int w, h;
-	int time;
+	int canWrite;
 	int timeBlick;
 	char text[STR_SIZE];
 	bool_t active;

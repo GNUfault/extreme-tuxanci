@@ -332,7 +332,7 @@ void initScreenSetting()
 	image_gun_tommy = newWidgetImage(110 + WIDGET_CHECK_WIDTH, 300, getImage(IMAGE_GROUP_BASE, "panel_tommy"));
 	image_gun_lasser = newWidgetImage(260 + WIDGET_CHECK_WIDTH, 200, getImage(IMAGE_GROUP_BASE, "panel_lasser"));
 	image_gun_mine = newWidgetImage(260 + WIDGET_CHECK_WIDTH, 250, getImage(IMAGE_GROUP_BASE, "panel_mine"));
-	image_gun_bombball = newWidgetImage(260 + WIDGET_CHECK_WIDTH, 300, getImage(IMAGE_GROUP_BASE, "panel_dual"));
+	image_gun_bombball = newWidgetImage(260 + WIDGET_CHECK_WIDTH, 300, getImage(IMAGE_GROUP_BASE, "panel_bombball"));
 
 	image_bonus_speed = newWidgetImage(430 + WIDGET_CHECK_WIDTH, 200, getImage(IMAGE_GROUP_BASE, "panel_speed"));;
 	image_bonus_shot = newWidgetImage(430 + WIDGET_CHECK_WIDTH, 250, getImage(IMAGE_GROUP_BASE, "panel_shot"));;

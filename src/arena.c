@@ -139,6 +139,17 @@ void eventArena(arena_t *arena)
 	eventTimer(arena->listTimer);
 }
 
+int isConflictWithObjectInArena(arena_t *arena, int x, int y, int w, int h)
+{
+	if( isConflictWithListWall(arena->listWall, x, y, w, h) ||
+	    isConflictWithListPipe(arena->listPipe, x, y, w, h) )
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
 void destroyArena(arena_t *p)
 {
 	destroyListItem(p->listTux, destroyTux);

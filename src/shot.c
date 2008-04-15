@@ -6,6 +6,8 @@
 #include "main.h"
 #include "shot.h"
 #include "gun.h"
+#include "wall.h"
+#include "pipe.h"
 #include "net_multiplayer.h"
 #include "proto.h"
 
@@ -24,6 +26,7 @@
 static SDL_Surface *g_shot_simple;
 static SDL_Surface *g_shot_lasserX;
 static SDL_Surface *g_shot_lasserY;
+static SDL_Surface *g_shot_bombball;
 
 #endif
 
@@ -45,6 +48,7 @@ void initShot()
 	g_shot_simple = addImageData("shot.png", IMAGE_ALPHA, "shot", IMAGE_GROUP_BASE);
 	g_shot_lasserX = addImageData("lasserX.png", IMAGE_NO_ALPHA, "lasserX", IMAGE_GROUP_BASE);
 	g_shot_lasserY = addImageData("lasserY.png", IMAGE_NO_ALPHA, "lasserY", IMAGE_GROUP_BASE);
+	g_shot_bombball = addImageData("bombball.png", IMAGE_ALPHA, "bombball", IMAGE_GROUP_BASE);
 
 #endif
 
@@ -103,6 +107,15 @@ shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
 			}
 		break;
 
+		case GUN_BOMBBALL :
+			new->w = GUN_BOMBBALL_WIDTH; 
+			new->h = GUN_BOMBBALL_HEIGHT; 
+
+#ifndef PUBLIC_SERVER	
+			new->img = g_shot_bombball;
+#endif
+		break;
+
 		default :
 			assert( ! "Premenna weapon ma zlu hodnotu !" );
 		break;
@@ -110,6 +123,28 @@ shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
 
 	return new;
 }
+
+shot_t* getShotID(list_t *listShot, int id)
+{
+	shot_t *thisShot;
+	int i;
+
+	assert( listShot != NULL );
+
+	for( i = 0 ; i < listShot->count ; i++ )
+	{
+		thisShot  = (shot_t *)listShot->list[i];
+		assert( thisShot != NULL );
+
+		if( thisShot->id == id )
+		{
+			return thisShot;
+		}
+	}
+
+	return NULL;
+}
+
 
 #ifndef PUBLIC_SERVER	
 
@@ -158,6 +193,51 @@ int isConflictWithListShot(list_t *listShot, int x, int y, int w, int h)
 	return 0;
 }
 
+static int myAbs(int n)
+{
+	return ( n > 0 ? n : -n );
+}
+
+
+static int getRandomCourse(int x, int y)
+{
+	int ret;
+
+	do{
+		switch( random() % 3 )
+		{
+			case 0 :
+				ret = y;
+			break;
+			case 1 :
+				ret = -y;
+			break;
+			case 2 :
+				ret = 0;
+			break;
+		}
+	}while( ret == x );
+
+	return ret;
+}
+
+void boundBombBall(shot_t *shot)
+{
+	if( shot->gun != GUN_BOMBBALL )
+	{
+		return;
+	}
+
+	shot->px  = getRandomCourse(shot->px, +10);
+	shot->py  = getRandomCourse(shot->py, +10);
+	shot->isCanKillAuthor = 1;
+
+	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+	{
+		proto_send_shot_server(PROTO_SEND_ALL, NULL, shot);
+	}
+}
+
 void eventMoveListShot(list_t *listShot)
 {
 	shot_t *thisShot;
@@ -172,7 +252,23 @@ void eventMoveListShot(list_t *listShot)
 
 		thisShot->x += thisShot->px;
 		thisShot->y += thisShot->py;
-
+/*
+		if( thisShot->gun == GUN_BOMBBALL && (
+		    isConflictWithListWall(getCurrentArena()->listWall, thisShot->x, thisShot->y, thisShot->w, thisShot->h) ||
+		    isConflictWithListPipe(getCurrentArena()->listPipe, thisShot->x, thisShot->y, thisShot->w, thisShot->h) ) )
+		{
+			if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+			{
+				boundBombBall(thisShot);
+			}
+			else
+			{
+				delListItem(listShot, i, destroyShot);
+				i--;
+				continue;
+			}
+		}
+*/
 		if( thisShot->x+thisShot->w < 0 || thisShot->x > WINDOW_SIZE_X ||
 		    thisShot->y+thisShot->h < 0 || thisShot->y > WINDOW_SIZE_Y )
 		{
@@ -181,11 +277,6 @@ void eventMoveListShot(list_t *listShot)
 			continue;
 		}
 	}
-}
-
-static int myAbs(int n)
-{
-	return ( n > 0 ? n : -n );
 }
 
 static int getSppedShot(shot_t *shot)

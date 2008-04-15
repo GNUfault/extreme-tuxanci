@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -g -O0 -I../include -Wall `sdl-config --cflags`
 #CFLAGS = -O2 -DDESTDIR=\"$(DESTDIR)\" `sdl-config --cflags` -I../include -Wall
 
-BUILD_DIR = ../build
+BUILD_DIR = .
 LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_net
 
 FILES = interface.o font.o list.o image.o layer.o director.o configFile.o tux.o main.o \
@@ -17,11 +17,9 @@ FILES = interface.o font.o list.o image.o layer.o director.o configFile.o tux.o 
 	widget_buttonimage.o screen_credits.o teleport.o pipe.o homeDirector.o screen_table.o \
 	sdl_udp.o proto.o server.o client.o term.o keytable.o language.o
  
-tuxanci-ng: mkdir_build $(FILES)
+tuxanci-ng: $(FILES)
 	$(CC) $(CFLAGS) $(LIBS) -o $(BUILD_DIR)/tuxanci-ng $(BUILD_DIR)/*.o
 
-mkdir_build:
-	mkdir -p $(BUILD_DIR)
 
 main.o: main.c 
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/main.o -c main.c
@@ -180,4 +178,4 @@ language.o: language.c ../include/language.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/language.o -c language.c
 
 clean:
-	rm -rf $(BUILD_DIR) *.c~ ../include/*.h~ Makefile~
+	rm -rf *.o *.c~ ../include/*.h~ Makefile~

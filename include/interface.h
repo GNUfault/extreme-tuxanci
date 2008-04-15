@@ -31,6 +31,7 @@ extern int initSDL();
 extern SDL_Surface* getSDL_Screen();
 extern void getMousePosition(int *x, int *y);
 extern int isMouseClicked();
+extern int isPessAnyKey();
 extern void interfaceRefresh();
 extern void eventSDL();
 extern void quitSDL();

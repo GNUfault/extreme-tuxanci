@@ -72,6 +72,8 @@ extern void proto_recv_additem_client(char *msg);
 extern void proto_send_item_server(int type, client_t *client, tux_t *tux, item_t *item);
 extern void proto_recv_item_client(char *msg);
 extern void proto_send_shot_server(int type, client_t *client, shot_t *p);
+extern void proto_send_delshot_server(int type, client_t *client, shot_t *p);
+extern void proto_recv_delshot_client(char *msg);
 extern void proto_recv_shot_client(char *msg);
 extern void proto_send_ping_client();
 extern void proto_recv_ping_server(client_t *client, char *msg);

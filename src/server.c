@@ -121,6 +121,18 @@ static void eventPeriodicSyncClient(void *p_nothink)
 	}
 }
 
+static void eventPeriodicSyncSelfClient(void *p_nothink)
+{
+	client_t *thisClient;
+	int i;
+
+	for( i = 0 ; i < listClient->count; i++)
+	{
+		thisClient = (client_t *) listClient->list[i];
+		proto_send_newtux_server(PROTO_SEND_ONE, thisClient, thisClient->tux);
+	}
+}
+
 static void eventSendPingClients(void *p_nothink)
 {
 	proto_send_ping_server(PROTO_SEND_ALL, NULL);
@@ -136,6 +148,7 @@ void static initServer()
 
 	addTaskToTimer(listServerTimer, TIMER_PERIODIC, delZombieCLient, NULL, SERVER_TIMEOUT);
 	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventPeriodicSyncClient, NULL, SERVER_TIME_SYNC);
+	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventPeriodicSyncSelfClient, NULL, 5000);
 	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventSendPingClients, NULL, SERVER_TIME_PING);
 }
 

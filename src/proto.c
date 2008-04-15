@@ -584,8 +584,8 @@ void proto_send_shot_server(int type, client_t *client, shot_t *p)
 		id = p->author->id;
 	}
 
-	sprintf(msg, "shot %d %d %d %d %d %d %d %d\n",
-		p->x, p->y, p->px, p->py, p->position, p->gun, id, p->isCanKillAuthor);
+	sprintf(msg, "shot %d %d %d %d %d %d %d %d %d\n",
+		p->id, p->x, p->y, p->px, p->py, p->position, p->gun, id, p->isCanKillAuthor);
 
 	proto_send(type, client, msg);
 }
@@ -595,15 +595,21 @@ void proto_send_shot_server(int type, client_t *client, shot_t *p)
 void proto_recv_shot_client(char *msg)
 {
 	char cmd[STR_PROTO_SIZE];
-	int x, y, px, py, position, gun, id, isCanKillAuthor;
+	int x, y, px, py, position, gun, shot_id, author_id, isCanKillAuthor;
 	shot_t *shot;
 
 	assert( msg != NULL );
 
-	sscanf(msg, "%s %d %d %d %d %d %d %d %d",
-		cmd, &x, &y, &px, &py, &position, &gun, &id, &isCanKillAuthor);
+	sscanf(msg, "%s %d %d %d %d %d %d %d %d %d",
+		cmd, &shot_id, &x, &y, &px, &py, &position, &gun, &author_id, &isCanKillAuthor);
 
-	shot = newShot(x, y, px, py, gun, getTuxID(getCurrentArena()->listTux, id));
+/*
+	if( getShotID(getCurrentArena()->listShot, shot_id) != NULL )
+	{
+		return;
+	}
+*/
+	shot = newShot(x, y, px, py, gun, getTuxID(getCurrentArena()->listTux, author_id));
 
 	shot->isCanKillAuthor = isCanKillAuthor;
 	shot->position = position;
@@ -614,6 +620,47 @@ void proto_recv_shot_client(char *msg)
 	}
 
 	addList(getCurrentArena()->listShot, shot);
+}
+
+#endif
+
+void proto_send_delshot_server(int type, client_t *client, shot_t *shot)
+{
+	char msg[STR_PROTO_SIZE];
+
+	assert( shot != NULL );
+
+	sprintf(msg, "delshot %d\n", shot->id);
+
+	proto_send(type, client, msg);
+}
+
+#ifndef PUBLIC_SERVER
+
+void proto_recv_delshot_client(char *msg)
+{
+	char cmd[STR_PROTO_SIZE];
+	shot_t *shot;
+	int id;
+
+	assert( msg != NULL );
+
+	sscanf(msg, "%s %d",
+		cmd, &id);
+
+	shot = getShotID(getCurrentArena()->listShot, id);
+
+	if( shot != NULL )
+	{
+		int index;
+
+		index = searchListItem(getCurrentArena()->listShot, shot);
+
+		if( index >= 0 )
+		{
+			delListItem(getCurrentArena()->listShot, index, destroyShot);
+		}
+	}
 }
 
 #endif

@@ -37,6 +37,7 @@ typedef struct shot_struct
 extern bool_t isShotInicialized();
 extern void initShot();
 extern shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author);
+extern shot_t* getShotID(list_t *listShot, int id);
 #ifndef PUBLIC_SERVER	
 extern void drawShot(shot_t *p);
 extern void drawListShot(list_t *listShot);
@@ -45,6 +46,7 @@ extern int isConflictWithListShot(list_t *listShot, int x, int y, int w, int h);
 extern void eventMoveListShot(list_t *listShot);
 
 extern void transformOnlyLasser(shot_t *shot);
+extern void boundBombBall(shot_t *shot);
 
 extern void moveShot(shot_t *shot, int position, int src_x, int src_y,
 	int dist_x, int dist_y, int dist_w, int dist_h);

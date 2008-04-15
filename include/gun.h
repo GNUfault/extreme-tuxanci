@@ -11,6 +11,9 @@
 #define GUN_LASSER_HORIZONTAL		20
 #define GUN_SHOT_VERTICAL		5
 
+#define GUN_BOMBBALL_WIDTH		20
+#define GUN_BOMBBALL_HEIGHT		20
+
 #include "tux.h"
 
 extern void shotInGun(tux_t *p);

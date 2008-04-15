@@ -38,6 +38,7 @@ void initPanel()
 	g_icon[GUN_SCATTER] = addImageData("icon.gun.scatter.png", IMAGE_ALPHA, "panel_scatter", IMAGE_GROUP_BASE);
 	g_icon[GUN_LASSER] = addImageData("icon.gun.lasser.png", IMAGE_ALPHA, "panel_lasser", IMAGE_GROUP_BASE);
 	g_icon[GUN_MINE] = addImageData("icon.gun.mine.png", IMAGE_ALPHA, "panel_mine", IMAGE_GROUP_BASE);
+	g_icon[GUN_BOMBBALL] = addImageData("icon.gun.bombball.png", IMAGE_ALPHA, "panel_bombball", IMAGE_GROUP_BASE);
 
 	g_icon[BONUS_SPEED] = addImageData("icon.bonus.speed.png", IMAGE_ALPHA, "panel_speed", IMAGE_GROUP_BASE);
 	g_icon[BONUS_SHOT] = addImageData("icon.bonus.shot.png", IMAGE_ALPHA, "panel_shot", IMAGE_GROUP_BASE);

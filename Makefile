@@ -1,4 +1,3 @@
-
 DESTDIR:=/usr/local
 
 all:

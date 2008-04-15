@@ -169,7 +169,7 @@ void eventConflictShotWithPipe(list_t *listPipe, list_t *listShot)
 		assert( thisShot != NULL );
 
 		if( ( thisPipe = isConflictWithListPipe(listPipe, thisShot->x, thisShot->y,
-			thisShot->w, thisShot->h) ) != NULL )
+		    thisShot->w, thisShot->h) ) != NULL )
 		{
 			if( thisShot->author->bonus == BONUS_GHOST &&
 			    thisShot->author->bonus_time > 0 )
@@ -181,8 +181,11 @@ void eventConflictShotWithPipe(list_t *listPipe, list_t *listShot)
 			{
 				if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 				{
-					delListItem(listShot, i, destroyShot);
-					i--;
+					if( thisShot->gun != GUN_BOMBBALL )
+					{
+						delListItem(listShot, i, destroyShot);
+						i--;
+					}
 				}
 				else
 				{
@@ -191,8 +194,16 @@ void eventConflictShotWithPipe(list_t *listPipe, list_t *listShot)
 			}
 			else
 			{
-				delListItem(listShot, i, destroyShot);
-				i--;
+				if( thisShot->gun == GUN_BOMBBALL && getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+				{
+					boundBombBall(thisShot);
+					continue;
+				}
+				else
+				{
+					delListItem(listShot, i, destroyShot);
+					i--;
+				}
 			}
 		}
 	}

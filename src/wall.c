@@ -5,6 +5,8 @@
 #include "main.h"
 #include "wall.h"
 #include "shot.h"
+#include "net_multiplayer.h"
+#include "proto.h"
 
 #ifndef PUBLIC_SERVER
 #include "layer.h"
@@ -113,6 +115,12 @@ void eventConflictShotWithWall(list_t *listWall, list_t *listShot)
 			if( thisShot->author->bonus == BONUS_GHOST &&
 			    thisShot->author->bonus_time > 0 )
 			{
+				continue;
+			}
+
+			if( thisShot->gun == GUN_BOMBBALL && getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+			{
+				boundBombBall(thisShot);
 				continue;
 			}
 

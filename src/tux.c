@@ -292,7 +292,7 @@ int isConflictTuxWithListTux(tux_t *tux, list_t *listTux)
 
 		getTuxProportion(thisTux, &thisTux_x, &thisTux_y, &thisTux_w, &thisTux_h);
 		
-		if( conflictSpace(tux_x, tux_y, tux_w, tux_h,
+		if( thisTux->bonus != BONUS_GHOST && conflictSpace(tux_x, tux_y, tux_w, tux_h,
 		    thisTux_x, thisTux_y, thisTux_w, thisTux_h) )
 		{
 			return 1;
@@ -449,6 +449,24 @@ void tuxTeleport(tux_t *tux)
 	}
 }
 
+static void bombBallExplosion(shot_t *shot)
+{
+	item_t *item;
+	int x, y;
+	
+	x = ( shot->x + shot->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
+	y = ( shot->y + shot->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
+	
+	item = newItem(x, y, ITEM_BIG_EXPLOSION, shot->author);
+	addList(getCurrentArena()->listItem, item );
+
+	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+	{
+		proto_send_delshot_server(PROTO_SEND_ALL, NULL, shot);
+		proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
+	}
+}
+
 void eventConflictTuxWithShot(list_t *listTux, list_t *listShot)
 {
 	shot_t *thisShot;
@@ -478,6 +496,18 @@ void eventConflictTuxWithShot(list_t *listTux, list_t *listShot)
 				if( thisTux->bonus == BONUS_TELEPORT )
 				{
 					tuxTeleport(thisTux);
+					continue;
+				}
+
+				if( thisShot->gun == GUN_BOMBBALL )
+				{
+					if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+					{
+						bombBallExplosion(thisShot);
+						delListItem(listShot, i, destroyShot);
+						i--;
+					}
+
 					continue;
 				}
 
@@ -552,22 +582,22 @@ void moveTux(tux_t *tux, int n)
 		return;
 	}
 
-	if( n == TUX_LEFT && tux->x < 0 )
+	if( n == TUX_LEFT && tux->x-TUX_STEP <= 0 )
 	{
 		return;
 	}
 
-	if( n == TUX_RIGHT && tux->x > WINDOW_SIZE_X )
+	if( n == TUX_RIGHT && tux->x+TUX_STEP >= WINDOW_SIZE_X )
 	{
 		return;
 	}
 
-	if( n == TUX_UP && tux->y < 0 )
+	if( n == TUX_UP && tux->y-TUX_STEP <= 0 )
 	{
 		return;
 	}
 
-	if( n == TUX_DOWN && tux->y > WINDOW_SIZE_Y )
+	if( n == TUX_DOWN && tux->y+TUX_STEP >= WINDOW_SIZE_Y )
 	{
 		return;
 	}
@@ -673,6 +703,7 @@ void shotTux(tux_t *tux)
 	shotInGun(tux);
 
 	tux->isCanShot = FALSE;
+
 	addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE, timer_tuxCanShot,
 		newInt(tux->id), TUX_TIME_CAN_SHOT );
 
@@ -713,9 +744,13 @@ static void pickUpGun(tux_t *tux)
 	if( isTuxAnyGun(tux) == FALSE )
 	{
 		tux->gun = GUN_SIMPLE;
-		tux->pickup_time++;
+		
+		if( tux->pickup_time < TUX_MAX_PICKUP )
+		{
+			tux->pickup_time++;
+		}
 
-		if( tux->pickup_time == TUX_MAX_PICKUP )
+		if( tux->pickup_time == TUX_MAX_PICKUP && getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 		{
 #ifndef PUBLIC_SERVER
 			char msg[STR_SIZE];
@@ -727,6 +762,11 @@ static void pickUpGun(tux_t *tux)
 			tux->gun = GUN_SIMPLE;
 			tux->shot[ tux->gun ] = GUN_MAX_SHOT;
 			tux->pickup_time = 0;
+
+			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+			{
+				proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
+			}
 		}
 	}
 }
@@ -751,8 +791,13 @@ static void eventBonus(tux_t *tux)
 				int x, y, w, h;
 				getTuxProportion(tux, &x, &y, &w, &h);
 
-				if ( isConflictWithListWall(getCurrentArena()->listWall, x, y, w, h) )
+				tux->bonus = BONUS_NONE;
+
+				if ( isConflictWithListWall(getCurrentArena()->listWall, x, y, w, h) ||
+				     isConflictWithListPipe(getCurrentArena()->listPipe, x, y, w, h) ||
+                                     isConflictTuxWithListTux(tux, getCurrentArena()->listTux) )
 				{
+					tux->bonus = BONUS_GHOST;
 					return;
 				}
 			}

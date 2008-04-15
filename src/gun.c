@@ -96,7 +96,11 @@ static void addShot(tux_t *tux,int x, int y, int px, int py)
 		return;
 	}
 
-	if( tux->gun == GUN_LASSER )
+	if( tux->gun == GUN_BOMBBALL )
+	{
+		gun = GUN_BOMBBALL;
+	}
+	else if( tux->gun == GUN_LASSER )
 	{
 		gun = GUN_LASSER;
 	}
@@ -269,6 +273,11 @@ static void putInGunMine(tux_t *tux)
 	}
 }
 
+static void shotInGunBombball(tux_t *tux)
+{
+	addShot(tux, 0, 0, +10, 0);
+}
+
 void shotInGun(tux_t *tux)
 {
 	if( tux->bonus != BONUS_SHOT && tux->gun != GUN_MINE )
@@ -307,6 +316,9 @@ void shotInGun(tux_t *tux)
 			playSound("gun_lasser", SOUND_GROUP_BASE);
 #endif
 			shotInGunLasser(tux);
+		break;
+		case GUN_BOMBBALL :
+			shotInGunBombball(tux);
 		break;
 		case GUN_MINE :
 			putInGunMine(tux);

@@ -122,6 +122,22 @@ int isMouseClicked()
 	return SDL_GetMouseState(NULL,NULL) & SDL_BUTTON(SDL_BUTTON_LEFT);
 }
 
+int isPessAnyKey()
+{
+	Uint8 *mapa;
+	int i;
+
+	mapa = SDL_GetKeyState(NULL);
+
+	for( i = SDLK_BACKSPACE ; i < SDLK_KP9 ; i++ )
+		if( mapa[i] == SDL_PRESSED )
+		{
+			return 1;
+		}
+
+	return 0;
+}
+
 /*
 static void action_esc()
 {

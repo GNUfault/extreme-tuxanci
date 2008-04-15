@@ -43,6 +43,8 @@ void initItem()
 	g_item[GUN_SCATTER] = addImageData("item.scatter.png", IMAGE_ALPHA, "item_scatter_simple", IMAGE_GROUP_BASE);
 	g_item[GUN_LASSER] = addImageData("item.lasser.png", IMAGE_ALPHA, "item_lasser_simple", IMAGE_GROUP_BASE);
 	g_item[GUN_MINE] = addImageData("item.mine.png", IMAGE_ALPHA, "item_mines_simple", IMAGE_GROUP_BASE);
+	g_item[GUN_BOMBBALL] = addImageData("item.bombball.png", IMAGE_ALPHA, "item_bombball_simple", IMAGE_GROUP_BASE);
+
 	g_item[ITEM_MINE] = addImageData("mine.png", IMAGE_ALPHA, "item_mine_simple", IMAGE_GROUP_BASE);
 	g_item[ITEM_EXPLOSION] = addImageData("explosion.png", IMAGE_ALPHA, "item_explosion_simple", IMAGE_GROUP_BASE);
 	g_item[ITEM_BIG_EXPLOSION] = addImageData("big-explosion.png", IMAGE_ALPHA, "item_big-explosion_simple", IMAGE_GROUP_BASE);
@@ -85,6 +87,7 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 		case GUN_TOMMY :
 		case GUN_LASSER :
 		case GUN_MINE :
+		case GUN_BOMBBALL :
 			new->w = ITEM_GUN_WIDTH;
 			new->h = ITEM_GUN_HEIGHT;
 		break;
@@ -171,7 +174,7 @@ void addNewItem(list_t *listItem, tux_t *author)
 #ifndef PUBLIC_SERVER
 	do{
 #endif
-		switch( random() % 11 )
+		switch( random() % 12 )
 		{
 			case 0 : type = GUN_DUAL_SIMPLE;
 			break;
@@ -183,21 +186,24 @@ void addNewItem(list_t *listItem, tux_t *author)
 			break;
 			case 4 : type = GUN_LASSER;
 			break;
-			case 5 : type = BONUS_SPEED;
+			case 5 : type = GUN_BOMBBALL;
 			break;
-			case 6 : type = BONUS_SHOT;
+			case 6 : type = BONUS_SPEED;
 			break;
-			case 7 : type = BONUS_TELEPORT;
+			case 7 : type = BONUS_SHOT;
 			break;
-			case 8 : type = BONUS_GHOST;
+			case 8 : type = BONUS_TELEPORT;
 			break;
-			case 9 : type = BONUS_4X;
+			case 9 : type = BONUS_GHOST;
 			break;
-			case 10 : type = BONUS_HIDDEN;
+			case 10 : type = BONUS_4X;
+			break;
+			case 11 : type = BONUS_HIDDEN;
 			break;
 		}
 #ifndef PUBLIC_SERVER
-	}while( isSettingItem(type) == FALSE );
+	}while( isSettingItem(type) == FALSE ||
+	        (getNetTypeGame() == NET_GAME_TYPE_NONE && type == BONUS_HIDDEN) );
 #endif
 
 	item = newItem(new_x, new_y, type, author);
@@ -281,6 +287,7 @@ void eventListItem(list_t *listItem)
 			case GUN_SCATTER  :
 			case GUN_LASSER :
 			case GUN_MINE :
+			case GUN_BOMBBALL :
 				if( thisItem->frame == ITEM_GUN_MAX_FRAME )
 				{
 					thisItem->frame = 0;
@@ -494,6 +501,7 @@ int eventGiveTuxItem(tux_t *tux, list_t *listItem, item_t *item)
 		case GUN_SCATTER :
 		case GUN_LASSER :
 		case GUN_MINE :
+		case GUN_BOMBBALL :
 			tuxGiveGun(tux, item);
 			delListItem(listItem, index, destroyItem);
 			return index;
