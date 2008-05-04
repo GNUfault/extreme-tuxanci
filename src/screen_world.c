@@ -69,6 +69,7 @@ void setWorldArena(int id)
 
 void setMaxCountRound(int n)
 {
+	printf("max_count = %d\n", n);
 	max_count = n;
 }
 
@@ -135,7 +136,7 @@ void prepareArena()
 	{
 		case NET_GAME_TYPE_NONE :
 			setWorldArena( getChoiceArenaId() );
-			addNewItem(arena->listItem, NULL);
+			addNewItem(arena->listItem, ID_UNKNOWN);
 			getSettingCountRound(&max_count);
 
 			tux = newTux();
@@ -151,7 +152,7 @@ void prepareArena()
 
 		case NET_GAME_TYPE_SERVER :
 			setWorldArena( getChoiceArenaId() );
-			addNewItem(arena->listItem, NULL);
+			addNewItem(arena->listItem, ID_UNKNOWN);
 			getSettingCountRound(&max_count);
 
 			tux = newTux();

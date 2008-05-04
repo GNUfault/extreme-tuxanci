@@ -171,8 +171,13 @@ void eventConflictShotWithPipe(list_t *listPipe, list_t *listShot)
 		if( ( thisPipe = isConflictWithListPipe(listPipe, thisShot->x, thisShot->y,
 		    thisShot->w, thisShot->h) ) != NULL )
 		{
-			if( thisShot->author->bonus == BONUS_GHOST &&
-			    thisShot->author->bonus_time > 0 )
+			tux_t *author;
+
+			author = getTuxID(getCurrentArena()->listTux, thisShot->author_id);
+			
+			if( author != NULL &&
+			    author->bonus == BONUS_GHOST &&
+			    author->bonus_time > 0 )
 			{
 				continue;
 			}

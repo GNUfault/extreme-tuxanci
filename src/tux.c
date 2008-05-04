@@ -322,7 +322,7 @@ static void timer_spawnTux(void *p)
 	setTuxProportion(tux, x, y);
 	tux->gun = GUN_SIMPLE;
 	
-	addNewItem(arena->listItem, NULL);
+	addNewItem(arena->listItem, ID_UNKNOWN);
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
@@ -402,22 +402,22 @@ void eventTuxIsDead(tux_t *tux)
 
 static void eventTuxIsDeadWIthShot(tux_t *tux, shot_t *shot)
 {
-	if( shot->author != NULL && shot->author != tux )
+	if( shot->author_id != tux->id )
 	{
-#ifndef PUBLIC_SERVER
-		char term_msg[STR_SIZE];
+		tux_t *author;
 
-		sprintf(term_msg, "tux with id %d set score to %d\n",
-			shot->author->id, shot->author->score+1);
+		author = getTuxID(getCurrentArena()->listTux, shot->author_id);
 		
-		appendTextInTerm(term_msg);
-#endif
-		shot->author->score++;
-
-		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+		if( author != NULL )
 		{
-			proto_send_score_server(PROTO_SEND_ALL, NULL, shot->author);
+			author->score++;
+
+			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+			{
+				proto_send_score_server(PROTO_SEND_ALL, NULL, author);
+			}
 		}
+
 	}
 
 	countRoundInc();
@@ -457,7 +457,7 @@ static void bombBallExplosion(shot_t *shot)
 	x = ( shot->x + shot->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
 	y = ( shot->y + shot->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
 	
-	item = newItem(x, y, ITEM_BIG_EXPLOSION, shot->author);
+	item = newItem(x, y, ITEM_BIG_EXPLOSION, shot->author_id );
 	addList(getCurrentArena()->listItem, item );
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
@@ -487,7 +487,7 @@ void eventConflictTuxWithShot(list_t *listTux, list_t *listShot)
 		{
 			if(  thisTux->status == TUX_STATUS_ALIVE )
 			{
-				if( thisShot->author == thisTux &&
+				if( thisShot->author_id == thisTux->id &&
 				    thisShot->isCanKillAuthor == FALSE )
 				{
 					continue;

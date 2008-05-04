@@ -47,7 +47,7 @@ int initPublicServer()
 	arena = getArena(arenaId);
 	setCurrentArena(arena);
 
-	addNewItem(arena->listItem, NULL);
+	addNewItem(arena->listItem, ID_UNKNOWN);
 	isSignalEnd = FALSE;
 
 	if( initNetMuliplayer(NET_GAME_TYPE_SERVER,

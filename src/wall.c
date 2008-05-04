@@ -100,6 +100,7 @@ int isConflictWithListWall(list_t *listWall, int x, int y, int w, int h)
 void eventConflictShotWithWall(list_t *listWall, list_t *listShot)
 {
 	shot_t *thisShot;
+	tux_t *author;
 	int i;
 
 	assert( listWall != NULL );
@@ -112,8 +113,11 @@ void eventConflictShotWithWall(list_t *listWall, list_t *listShot)
 
 		if( isConflictWithListWall(listWall, thisShot->x, thisShot->y, thisShot->w, thisShot->h) )
 		{
-			if( thisShot->author->bonus == BONUS_GHOST &&
-			    thisShot->author->bonus_time > 0 )
+			author = getTuxID( getCurrentArena()->listShot, thisShot->author_id );
+			
+			if( author != NULL &&
+			    author->bonus == BONUS_GHOST &&
+			    author->bonus_time > 0 )
 			{
 				continue;
 			}

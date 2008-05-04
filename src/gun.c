@@ -77,7 +77,7 @@ static void addShotTrivial(tux_t *tux, int x, int y, int px, int py, int gun)
 		break;
 	}
 
-	shot = newShot(tux->x + dest_x, tux->y + dest_y, dest_px, dest_py, gun, tux);
+	shot = newShot(tux->x + dest_x, tux->y + dest_y, dest_px, dest_py, gun, tux->id);
 	addList( getCurrentArena()->listShot, shot );
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
@@ -261,7 +261,7 @@ static void putInGunMine(tux_t *tux)
 
 		if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 		{
-			item = newItem(x, y, ITEM_MINE, tux);
+			item = newItem(x, y, ITEM_MINE, tux->id);
 
 			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 			{

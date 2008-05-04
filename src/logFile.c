@@ -4,7 +4,6 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <assert.h>
-#include "main.h"
 
 typedef struct logFile_struct
 {

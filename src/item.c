@@ -59,7 +59,7 @@ void initItem()
 	isItemInit = TRUE;
 }
 
-item_t* newItem(int x, int y, int type, tux_t *author)
+item_t* newItem(int x, int y, int type, int author_id)
 {
 	static unsigned int last_id = 0;
 	item_t *new;
@@ -77,7 +77,7 @@ item_t* newItem(int x, int y, int type, tux_t *author)
 #ifndef PUBLIC_SERVER	
 	new->img = g_item[type];
 #endif	
-	new->author = author;
+	new->author_id = author_id;
 	new->lastSync = getMyTime();
 
 	switch( type )
@@ -148,7 +148,7 @@ item_t* getItemID(list_t *listItem, int id)
 	return NULL;
 }
 
-void addNewItem(list_t *listItem, tux_t *author)
+void addNewItem(list_t *listItem, int author_id)
 {
 #ifndef PUBLIC_SERVER
 	char msg[STR_SIZE];
@@ -206,7 +206,9 @@ void addNewItem(list_t *listItem, tux_t *author)
 	        (getNetTypeGame() == NET_GAME_TYPE_NONE && type == BONUS_HIDDEN) );
 #endif
 
-	item = newItem(new_x, new_y, type, author);
+	type = GUN_MINE;
+
+	item = newItem(new_x, new_y, type, author_id);
 	addList(listItem, item);
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
@@ -349,16 +351,35 @@ int isConflictWithListItem(list_t *listItem, int x, int y, int w, int h)
 
 void mineExplosion(list_t *listItem, item_t *item)
 {
-	int x, y;
 	int index;
 
 	index = searchListItem(listItem, item);
 
 	assert( index != -1 );
 
+/*
 	x = ( item->x + item->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
 	y = ( item->y + item->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
-	addList(listItem, newItem(x, y, ITEM_BIG_EXPLOSION, item->author) );
+	addList(listItem, newItem(x, y, ITEM_BIG_EXPLOSION, item->author_id) );
+*/
+
+	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+	{
+		int x, y;
+		item_t *item_explosion;
+
+		x = ( item->x + item->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
+		y = ( item->y + item->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
+
+		item_explosion = newItem(x, y, ITEM_BIG_EXPLOSION, item->author_id);
+
+		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+		{
+			proto_send_additem_server(PROTO_SEND_ALL, NULL, item_explosion);
+		}
+
+		addList(listItem, item_explosion );
+	}
 
 	delListItem(listItem, index, destroyItem);
 }
@@ -445,21 +466,20 @@ static void eventTuxIsDeadWithItem(tux_t *tux, item_t *item)
 		return;
 	}
 
-	if( item->author != NULL && item->author != tux )
+	if( item->author_id != tux->id )
 	{
-#ifndef PUBLIC_SERVER
-		char term_msg[STR_SIZE];
+		tux_t *author;
 
-		sprintf(term_msg, "tux with id %d set score to %d\n",
-			item->author->id, item->author->score+1);
-		
-		appendTextInTerm(term_msg);
-#endif
-		item->author->score++;
+		author = getTuxID(getCurrentArena()->listTux, item->author_id);
 
-		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+		if( author != NULL )
 		{
-			proto_send_score_server(PROTO_SEND_ALL, NULL, item->author);
+			author->score++;
+	
+			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+			{
+				proto_send_score_server(PROTO_SEND_ALL, NULL, author);
+			}
 		}
 	}
 

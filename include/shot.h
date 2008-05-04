@@ -26,7 +26,7 @@ typedef struct shot_struct
 	int position;
 	int gun;
 
-	tux_t *author;
+	int author_id;
 	bool_t isCanKillAuthor;
 
 #ifndef PUBLIC_SERVER	
@@ -36,7 +36,7 @@ typedef struct shot_struct
 
 extern bool_t isShotInicialized();
 extern void initShot();
-extern shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author);
+extern shot_t* newShot(int x,int y, int px, int py, int gun, int author_id);
 extern shot_t* getShotID(list_t *listShot, int id);
 #ifndef PUBLIC_SERVER	
 extern void drawShot(shot_t *p);

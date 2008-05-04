@@ -6,6 +6,7 @@
 #include "screen.h"
 #include "myTimer.h"
 
+
 //povrch okna
 static SDL_Surface *screen;
 static SDL_Surface *fake_screen;

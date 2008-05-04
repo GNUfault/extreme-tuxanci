@@ -6,6 +6,8 @@
 #include "main.h"
 #include "list.h"
 
+#define ID_UNKNOWN	-1
+
 #define TUX_STEP 6
 #define TUX_LAYER 0
 
@@ -37,10 +39,11 @@
 #define TUX_IMG_WIDTH	40
 #define TUX_IMG_HEIGHT	54
 
-#define TUX_UP		8
-#define TUX_LEFT	4
-#define TUX_RIGHT	6
-#define TUX_DOWN	2
+#define TUX_UP			8
+#define TUX_LEFT		4
+#define TUX_RIGHT		6
+#define TUX_DOWN		2
+#define POSITION_UNKNOWN	-1
 
 #define TUX_SHOT	5
 #define TUX_SWITCH_GUN	0

@@ -55,12 +55,11 @@ void initShot()
 	isShotInit = TRUE;
 }
 
-shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
+shot_t* newShot(int x,int y, int px, int py, int gun, int author_id)
 {
 	shot_t *new;
+	tux_t *author;
 	static int last_id = 0;
-
-	assert( author != NULL );
 
 	new = malloc( sizeof(shot_t) );
 	memset(new, 0, sizeof(shot_t) );
@@ -71,8 +70,17 @@ shot_t* newShot(int x,int y, int px, int py, int gun, tux_t *author)
 	new->px = px;
 	new->py = py;
 	new->gun = gun;
-	new->author = author;
-	new->position = author->position;
+	new->author_id = author_id;
+
+	new->position = POSITION_UNKNOWN;
+
+	author = getTuxID(getCurrentArena()->listTux, author_id);
+
+	if( author != NULL )
+	{
+		new->position = author->position;
+	}
+
 	new->isCanKillAuthor = FALSE;
 
 	switch( gun )

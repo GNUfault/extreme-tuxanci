@@ -109,11 +109,8 @@ char* getScreen()
 
 void drawScreen()
 {
-	static SDL_Surface *p_screen = NULL;
-
- 	if(  p_screen == NULL ) p_screen = getSDL_Screen();
-
 	assert( currentScreen != NULL );
+
 	currentScreen->fce_draw();
 
 	interfaceRefresh();

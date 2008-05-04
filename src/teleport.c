@@ -153,8 +153,13 @@ void eventConflictShotWithTeleport(list_t *listTeleport, list_t *listShot)
 
 		if( ( thisTeleport = isConflictWithListTeleport(listTeleport, thisShot->x, thisShot->y, thisShot->w, thisShot->h) ) != NULL )
 		{
-			if( thisShot->author->bonus == BONUS_GHOST &&
-			    thisShot->author->bonus_time > 0 )
+			tux_t *author;
+
+			author = getTuxID(getCurrentArena()->listTux, thisShot->author_id);
+			
+			if( author != NULL && 
+			    author->bonus == BONUS_GHOST &&
+			    author->bonus_time > 0 )
 			{
 				continue;
 			}

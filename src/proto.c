@@ -307,6 +307,11 @@ void proto_recv_newtux_client(char *msg)
 
 	assert( msg != NULL );
 
+	if( getCurrentArena() == NULL )
+	{
+		return;
+	}
+
 	sscanf(msg, "%s %d %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d",
 	cmd, &id, &x, &y, &status, &position, &frame, &score, name,
 	&myGun, &myBonus, &gun1, &gun2, &gun3, &gun4, &gun5, &gun6, &gun7, &time1, &time2);
@@ -463,17 +468,11 @@ void proto_recv_deltux_client(char *msg)
 void proto_send_additem_server(int type, client_t *client, item_t *p)
 {
 	char msg[STR_PROTO_SIZE];
-	int id = -1;
 
 	assert( p != NULL );
 
-	if( p->author != NULL )
-	{
-		id = p->author->id;
-	}
-
 	sprintf(msg, "additem %d %d %d %d %d %d %d\n",
-		p->id, p->type, p->x, p->y, p->count, p->frame, id);
+		p->id, p->type, p->x, p->y, p->count, p->frame, p->author_id);
 
 	proto_send(type, client, msg);
 }
@@ -482,12 +481,16 @@ void proto_send_additem_server(int type, client_t *client, item_t *p)
 
 void proto_recv_additem_client(char *msg)
 {
-	char term_msg[STR_SIZE];
 	char cmd[STR_PROTO_SIZE];
 	int id, type, x, y, count, frame, author_id;
 	item_t *item;
 
 	assert( msg != NULL );
+
+	if( getCurrentArena() == NULL )
+	{
+		return;
+	}
 
 	sscanf(msg, "%s %d %d %d %d %d %d %d", cmd, &id, &type, &x, &y, &count, &frame, &author_id);
 
@@ -497,7 +500,7 @@ void proto_recv_additem_client(char *msg)
 		return;
 	}
 
-	item = newItem(x, y, type, getTuxID(getCurrentArena()->listTux, author_id));
+	item = newItem(x, y, type, author_id);
 /*
 	if( isConflictWithListItem(getCurrentArena()->listItem, item->x, item->y, item->w, item->h) )
 	{
@@ -511,10 +514,6 @@ void proto_recv_additem_client(char *msg)
 	item->lastSync = getMyTime();
 
 	addList(getCurrentArena()->listItem, item);
-
-	sprintf(term_msg, "in arena is new item\n");
-	appendTextInTerm(term_msg);
-
 }
 
 #endif
@@ -577,17 +576,11 @@ void proto_recv_item_client(char *msg)
 void proto_send_shot_server(int type, client_t *client, shot_t *p)
 {
 	char msg[STR_PROTO_SIZE];
-	int id = -1;
 
 	assert( p != NULL );
 
-	if( p->author != NULL )
-	{
-		id = p->author->id;
-	}
-
 	sprintf(msg, "shot %d %d %d %d %d %d %d %d %d\n",
-		p->id, p->x, p->y, p->px, p->py, p->position, p->gun, id, p->isCanKillAuthor);
+		p->id, p->x, p->y, p->px, p->py, p->position, p->gun, p->author_id, p->isCanKillAuthor);
 
 	proto_send(type, client, msg);
 }
@@ -611,8 +604,9 @@ void proto_recv_shot_client(char *msg)
 		return;
 	}
 */
-	shot = newShot(x, y, px, py, gun, getTuxID(getCurrentArena()->listTux, author_id));
+	shot = newShot(x, y, px, py, gun, author_id);
 
+	shot->id = shot_id;
 	shot->isCanKillAuthor = isCanKillAuthor;
 	shot->position = position;
 

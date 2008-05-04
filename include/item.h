@@ -30,7 +30,7 @@ typedef struct item_struct
 	int count; 
 	my_time_t lastSync; 
 
-	tux_t *author;
+	int author_id;
 #ifndef PUBLIC_SERVER	
 	SDL_Surface *img; //obrazok
 #endif	
@@ -60,9 +60,9 @@ typedef struct item_struct
 
 extern bool_t isItemInicialized();
 extern void initItem();
-extern item_t* newItem(int x, int y, int type, tux_t *author);
+extern item_t* newItem(int x, int y, int type, int author_id);
 extern item_t* getItemID(list_t *listItem, int id);
-extern void addNewItem(list_t *listItem, tux_t *author);
+extern void addNewItem(list_t *listItem, int author_id);
 #ifndef PUBLIC_SERVER	
 extern void drawItem(item_t *p);
 extern void drawListItem(list_t *listItem);

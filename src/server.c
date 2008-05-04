@@ -82,6 +82,7 @@ static void delZombieCLient(void *p_nothink)
 			delListItem(listClient, i, destroyClient);
 		}
 	}
+
 }
 
 static void eventPeriodicSyncClient(void *p_nothink)
