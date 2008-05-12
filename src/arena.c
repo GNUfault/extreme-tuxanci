@@ -13,6 +13,7 @@
 #include "teleport.h"
 #include "pipe.h"
 #include "myTimer.h"
+#include "modules.h"
 
 #ifndef PUBLIC_SERVER
 #include "layer.h"
@@ -62,8 +63,8 @@ int isFreeSpace(arena_t *arena, int x, int y, int w, int h)
 	if ( isConflictWithListWall(arena->listWall, x, y, w, h) )return 0;
 	if ( isConflictWithListShot(arena->listShot, x, y, w, h) )return 0;
 	if ( isConflictWithListItem(arena->listItem, x, y, w, h) )return 0;
-	if ( isConflictWithListTeleport(arena->listTeleport, x, y, w, h) )return 0;
-	if ( isConflictWithListPipe(arena->listPipe, x, y, w, h) )return 0;
+	//if ( isConflictWithListTeleport(arena->listTeleport, x, y, w, h) )return 0;
+	//if ( isConflictWithListPipe(arena->listPipe, x, y, w, h) )return 0;
 
 	return 1;
 }
@@ -95,8 +96,8 @@ void drawArena(arena_t *arena)
 
 	drawListTux(arena->listTux);
 	drawListWall(arena->listWall);
-	drawListTeleport(arena->listTeleport);
-	drawListPipe(arena->listPipe);
+	//drawListTeleport(arena->listTeleport);
+	//drawListPipe(arena->listPipe);
 	drawListShot(arena->listShot);
 	drawListItem(arena->listItem);
 
@@ -120,15 +121,15 @@ void eventArena(arena_t *arena)
 {
 	int i;
 
-	eventConflictTuxWithTeleport(arena->listTux, arena->listTeleport);
+	//eventConflictTuxWithTeleport(arena->listTux, arena->listTeleport);
 	eventConflictTuxWithShot(arena->listTux, arena->listShot);
 
 	for( i = 0 ; i < 4 ; i++)
 	{
 		eventMoveListShot(arena->listShot);
 		eventConflictShotWithWall(arena->listWall, arena->listShot);
-		eventConflictShotWithTeleport(arena->listTeleport, arena->listShot);
-		eventConflictShotWithPipe(arena->listPipe, arena->listShot);
+		//eventConflictShotWithTeleport(arena->listTeleport, arena->listShot);
+		//eventConflictShotWithPipe(arena->listPipe, arena->listShot);
 		eventConflictShotWithItem(arena->listItem, arena->listShot);
 	}
 
@@ -142,7 +143,7 @@ void eventArena(arena_t *arena)
 int isConflictWithObjectInArena(arena_t *arena, int x, int y, int w, int h)
 {
 	if( isConflictWithListWall(arena->listWall, x, y, w, h) ||
-	    isConflictWithListPipe(arena->listPipe, x, y, w, h) )
+	    isConflictModule(x, y, w, h) )
 	{
 		return 1;
 	}

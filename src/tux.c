@@ -18,6 +18,7 @@
 #include "net_multiplayer.h"
 #include "dynamicInt.h"
 #include "proto.h"
+#include "modules.h"
 
 #ifndef PUBLIC_SERVER
 #include "image.h"
@@ -526,6 +527,7 @@ void eventConflictTuxWithShot(list_t *listTux, list_t *listShot)
 	}
 }
 
+/*
 void eventConflictTuxWithTeleport(list_t *listTux, list_t *listTeleport)
 {
 	teleport_t *thisTeleport;
@@ -551,6 +553,7 @@ void eventConflictTuxWithTeleport(list_t *listTux, list_t *listTeleport)
 		}
 	}
 }
+*/
 
 void moveTux(tux_t *tux, int n)
 {
@@ -623,8 +626,8 @@ void moveTux(tux_t *tux, int n)
 
 	if( tux->bonus != BONUS_GHOST && (
 	    isConflictTuxWithListTux(tux, arena->listTux) ||
-	    isConflictWithListWall(arena->listWall, x, y, w, h) ||
-	    isConflictWithListPipe(arena->listPipe, x, y, w, h) ) )
+	    isConflictWithListWall(arena->listWall, x, y, w, h)  ||
+	    isConflictModule(x, y, w, h) ) )
 	{
 		tux->x = zal_x;
 		tux->y = zal_y;
@@ -795,7 +798,7 @@ static void eventBonus(tux_t *tux)
 				tux->bonus = BONUS_NONE;
 
 				if ( isConflictWithListWall(getCurrentArena()->listWall, x, y, w, h) ||
-				     isConflictWithListPipe(getCurrentArena()->listPipe, x, y, w, h) ||
+				     isConflictModule(x, y, w, h) ||
                                      isConflictTuxWithListTux(tux, getCurrentArena()->listTux) )
 				{
 					tux->bonus = BONUS_GHOST;

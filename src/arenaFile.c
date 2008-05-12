@@ -18,6 +18,7 @@
 #include "item.h"
 #include "director.h"
 #include "path.h"
+#include "modules.h"
 #include "string_length.h"
 
 #ifndef PUBLIC_SERVER
@@ -33,6 +34,15 @@ static bool_t isArenaFileInit = FALSE;
 bool_t isAreaFileInicialized()
 {
 	return isArenaFileInit;
+}
+
+static void cmd_loadModule(char *line)
+{
+	char str_file[STR_SIZE];
+
+	if( getValue(line, "file", str_file, STR_SIZE) != 0 )return;
+
+	loadModule(str_file);
 }
 
 #ifndef PUBLIC_SERVER
@@ -119,38 +129,7 @@ static void cmd_wall(arena_t *arena, char *line)
 	addList(arena->listWall, new);
 }
 
-static void cmd_teleport(arena_t *arena, char *line)
-{
-	char str_x[STR_NUM_SIZE];
-	char str_y[STR_NUM_SIZE];
-	char str_w[STR_NUM_SIZE];
-	char str_h[STR_NUM_SIZE];
-	char str_layer[STR_NUM_SIZE];
-	char str_image[STR_SIZE];
-	teleport_t *new;
-
-	if( getValue(line, "x", str_x, STR_NUM_SIZE) != 0 )return;
-	if( getValue(line, "y", str_y, STR_NUM_SIZE) != 0 )return;
-	if( getValue(line, "w", str_w, STR_NUM_SIZE) != 0 )return;
-	if( getValue(line, "h", str_h, STR_NUM_SIZE) != 0 )return;
-	if( getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 )return;
-	if( getValue(line, "image", str_image, STR_SIZE) != 0 )return;
-
-#ifndef PUBLIC_SERVER
-	new = newTeleport(atoi(str_x), atoi(str_y),
-			atoi(str_w), atoi(str_h),
-			atoi(str_layer), getImage(IMAGE_GROUP_USER, str_image) );
-#endif
-
-#ifdef PUBLIC_SERVER
-	new = newTeleport(atoi(str_x), atoi(str_y),
-			atoi(str_w), atoi(str_h),
-			atoi(str_layer) );
-#endif
-
-	addList(arena->listTeleport, new);
-}
-
+/*
 static void cmd_pipe(arena_t *arena, char *line)
 {
 	char str_x[STR_NUM_SIZE];
@@ -189,6 +168,7 @@ static void cmd_pipe(arena_t *arena, char *line)
 
 	addList(arena->listPipe, new);
 }
+*/
 
 int getArenaCount()
 {
@@ -270,6 +250,8 @@ arena_t* getArena(int id)
 		char *line;
 		line = (char *) (ts->text->list[i]);
 
+		cmdModule(line);
+
 #ifndef PUBLIC_SERVER
 		if( strncmp(line, "loadImage", 9) == 0 )cmd_loadImage(line);
 		if( strncmp(line, "loadMusic", 9) == 0 )cmd_loadMusic(line);
@@ -277,9 +259,10 @@ arena_t* getArena(int id)
 		if( strncmp(line, "playMusic", 9) == 0 )cmd_playMusic(arena, line);
 #endif
 
+		if( strncmp(line, "loadModule", 10) == 0 )cmd_loadModule(line);
 		if( strncmp(line, "wall", 4) == 0 )cmd_wall(arena, line);
-		if( strncmp(line, "teleport", 8) == 0 )cmd_teleport(arena, line);
-		if( strncmp(line, "pipe", 4) == 0 )cmd_pipe(arena, line);
+		//if( strncmp(line, "teleport", 8) == 0 )cmd_teleport(arena, line);
+		//if( strncmp(line, "pipe", 4) == 0 )cmd_pipe(arena, line);
 	}
 
 	return arena;

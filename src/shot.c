@@ -201,12 +201,6 @@ int isConflictWithListShot(list_t *listShot, int x, int y, int w, int h)
 	return 0;
 }
 
-static int myAbs(int n)
-{
-	return ( n > 0 ? n : -n );
-}
-
-
 static int getRandomCourse(int x, int y)
 {
 	int ret;
@@ -287,6 +281,7 @@ void eventMoveListShot(list_t *listShot)
 	}
 }
 
+/*
 static int getSppedShot(shot_t *shot)
 {
 	return ( myAbs(shot->px) > myAbs(shot->py) ? myAbs(shot->px) : myAbs(shot->py) );
@@ -405,7 +400,7 @@ void moveShot(shot_t *shot, int position, int src_x, int src_y,
 	}
 
 }
-
+*/
 void destroyShot(shot_t *p)
 {
 	assert( p != NULL );

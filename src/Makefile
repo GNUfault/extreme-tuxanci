@@ -9,12 +9,12 @@ CFLAGS = -g -O0 -std=c99 -I../include -Wall `sdl-config --cflags`
 BUILD_DIR = .
 LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_net
 
-FILES = interface.o font.o list.o image.o layer.o director.o configFile.o tux.o main.o \
+FILES = interface.o font.o list.o modules.o image.o layer.o director.o configFile.o tux.o main.o \
 	screen.o screen_world.o wall.o shot.o myTimer.o panel.o net_multiplayer.o \
 	buffer.o dynamicInt.o arena.o arenaFile.o textFile.o audio.o sound.o music.o gun.o \
 	item.o widget_label.o screen_mainMenu.o widget_button.o screen_analyze.o widget_textfield.o \
 	widget_check.o widget_image.o screen_setting.o screen_gameType.o screen_choiceArena.o \
-	widget_buttonimage.o screen_credits.o teleport.o pipe.o homeDirector.o screen_table.o \
+	widget_buttonimage.o screen_credits.o homeDirector.o screen_table.o \
 	sdl_udp.o proto.o server.o client.o term.o keytable.o language.o game.o
  
 tuxanci-ng: $(FILES)
@@ -25,6 +25,9 @@ main.o: main.c
 
 interface.o: interface.c ../include/interface.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/interface.o -c interface.c
+
+modules.o: modules.c ../include/modules.h
+	$(CC) $(CFLAGS) -o $(BUILD_DIR)/modules.o -c modules.c
 
 font.o: font.c ../include/font.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/font.o -c font.c
@@ -155,11 +158,11 @@ widget_check.o: widget_check.c ../include/widget_check.h
 widget_image.o: widget_image.c ../include/widget_image.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/widget_image.o -c widget_image.c
 
-teleport.o: teleport.c ../include/teleport.h
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/teleport.o -c teleport.c
+#teleport.o: teleport.c ../include/teleport.h
+#	$(CC) $(CFLAGS) -o $(BUILD_DIR)/teleport.o -c teleport.c
 
-pipe.o: pipe.c ../include/pipe.h
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/pipe.o -c pipe.c
+#pipe.o: pipe.c ../include/pipe.h
+#	$(CC) $(CFLAGS) -o $(BUILD_DIR)/pipe.o -c pipe.c
 
 homeDirector.o: homeDirector.c ../include/homeDirector.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/homeDirector.o -c homeDirector.c

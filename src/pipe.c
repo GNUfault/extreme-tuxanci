@@ -149,9 +149,10 @@ static void moveShotFromPipe(shot_t *shot, pipe_t *pipe, list_t *listPipe)
 		fprintf(stderr, "Pipe %d ID not found\n", pipe->id);
 		return;
 	}
-
+/*
 	moveShot(shot, distPipe->position, pipe->x, pipe->y,
 		distPipe->x, distPipe->y, distPipe->w, distPipe->h);
+*/
 }
 
 void eventConflictShotWithPipe(list_t *listPipe, list_t *listShot)

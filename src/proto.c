@@ -610,11 +610,12 @@ void proto_recv_shot_client(char *msg)
 	shot->isCanKillAuthor = isCanKillAuthor;
 	shot->position = position;
 
+/*
 	if( shot->gun == GUN_LASSER )
 	{
 		transformOnlyLasser(shot);
 	}
-
+*/
 	addList(getCurrentArena()->listShot, shot);
 }
 

@@ -35,6 +35,8 @@
 #include "proto.h"
 #include "term.h"
 #include "font.h"
+#include "music.h"
+#include "modules.h"
 
 static arena_t *arena;
 static int count;
@@ -193,6 +195,7 @@ void drawWorld()
 		drawPanel(arena->listTux);
 	}
 
+	drawModule();
 	drawTerm();
 }
 
@@ -358,6 +361,7 @@ void eventWorld()
 	eventNetMultiplayer();
 
 	eventArena(arena);
+	eventModule();
 
 	eventTerm();
 	eventEnd();
@@ -372,6 +376,7 @@ void startWorld()
 	count = 0;
 	lastServerLag = LAG_SERVER_UNKNOWN;
 
+	initModule();
 	setGameType();
 	initTerm();
 	prepareArena();
@@ -435,6 +440,7 @@ void stoptWorld()
 	stopMusic();
 	delAllImageInGroup(IMAGE_GROUP_USER);
 	delAllMusicInGroup(MUSIC_GROUP_USER);
+	quitModule();
 }
 
 void initWorld()

@@ -21,6 +21,7 @@
 #include "publicServer.h"
 #include "net_multiplayer.h"
 #include "serverConfigFile.h"
+#include "modules.h"
 
 static int arenaId;
 static arena_t *arena;
@@ -37,6 +38,7 @@ static char *getSetting(char *env, char *param, char *default_val)
 
 int initPublicServer()
 {
+	initModule();
 	initArenaFile();
 	initTux();
 	initItem();
@@ -97,6 +99,7 @@ void eventPublicServer()
 	lastActive = getMyTime();
 
 	eventArena(arena);
+	eventModule();
 }
 
 void my_handler_quit(int n)
@@ -112,6 +115,7 @@ void quitPublicServer()
 	destroyArena(arena);
 	quitArenaFile();
 	quitServerConfigFile();
+	quitModule();
 
 	exit(0);
 }

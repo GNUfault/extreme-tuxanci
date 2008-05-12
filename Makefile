@@ -6,6 +6,7 @@ all:
 clean:
 	make -C ./src clean
 	make -C ./src -f Makefile-publicServer clean
+	make -C ./modules -f Makefile clean
 
 run:
 	./tuxanci-ng.sh
@@ -49,9 +50,13 @@ server:
 nosound:
 	make -C ./src -f Makefile-nosound
 
+mod:
+	make -C ./modules -f Makefile modTeleport
+	make -C ./modules -f Makefile modPipe
+
 install:
 	mkdir -p $(DESTDIR)/bin
-	mkdir -p $(DESTDIR)/share/tuxanci-ng/{arena,data,font,image,lang,music,sound,conf}
+	mkdir -p $(DESTDIR)/share/tuxanci-ng/{arena,data,font,image,lang,music,sound,conf,modules}
 	cp  ./src/tuxanci-ng $(DESTDIR)/bin/
 
 	cp  -rf ./arena/* $(DESTDIR)/share/tuxanci-ng/arena/
@@ -62,6 +67,7 @@ install:
 	cp  -rf ./sound/* $(DESTDIR)/share/tuxanci-ng/sound/
 	cp  -rf ./data/* $(DESTDIR)/share/tuxanci-ng/data/
 	cp  -rf ./conf/* $(DESTDIR)/share/tuxanci-ng/conf/
+	cp  -rf ./modules/*.so $(DESTDIR)/share/tuxanci-ng/modules/
 
 uninstall:
 	rm -rf $(DESTDIR)/{bin,share}/tuxanci-ng

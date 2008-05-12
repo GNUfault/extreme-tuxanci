@@ -28,5 +28,6 @@
 #define PATH_CONFIG	DESTDIR PATH_DIR "conf/"
 #define PATH_LANG	DESTDIR PATH_DIR "lang/"
 #define PATH_DATA	DESTDIR PATH_DIR "data/"
+#define PATH_MODULES	DESTDIR PATH_DIR "modules/"
 
 #endif 
