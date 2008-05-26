@@ -9,7 +9,7 @@
 
 //povrch okna
 static SDL_Surface *screen;
-static SDL_Surface *fake_screen;
+//static SDL_Surface *my_surface;
 
 //casovac
 static SDL_TimerID timer;
@@ -53,11 +53,14 @@ int initSDL()
 	//screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 	screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 
-        fake_screen = SDL_CreateRGBSurface(screen->flags, WINDOW_SIZE_X, WINDOW_SIZE_Y,
+/*
+        my_surface = SDL_CreateRGBSurface(screen->flags, WINDOW_SIZE_X, WINDOW_SIZE_Y,
 		screen->format->BitsPerPixel,
 		screen->format->Rmask,	screen->format->Gmask,
 		screen->format->Bmask,	screen->format->Amask);
 
+	memset(my_surface->pixels, 128, 200);
+*/
 	if (screen == NULL )
 	{
 		fprintf(stderr, "%s\n", SDL_GetError());
@@ -86,6 +89,8 @@ void interfaceRefresh()
 {
 	//SDL_BlitSurface(fake_screen, NULL, screen, NULL);
 	//SDL_UpdateRect(screen, 0, 0, screen->w, screen->h);
+
+	//drawImage(my_surface, 200, 100, 0, 0, 200, 200);
 	SDL_Flip(screen);
 }
 

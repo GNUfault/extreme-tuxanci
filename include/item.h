@@ -62,6 +62,7 @@ extern bool_t isItemInicialized();
 extern void initItem();
 extern item_t* newItem(int x, int y, int type, int author_id);
 extern item_t* getItemID(list_t *listItem, int id);
+extern void replaceItemID(item_t *item, int id);
 extern void addNewItem(list_t *listItem, int author_id);
 #ifndef PUBLIC_SERVER	
 extern void drawItem(item_t *p);

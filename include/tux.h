@@ -6,8 +6,6 @@
 #include "main.h"
 #include "list.h"
 
-#define ID_UNKNOWN	-1
-
 #define TUX_STEP 6
 #define TUX_LAYER 0
 
@@ -123,6 +121,7 @@ extern void actionTux(tux_t *tux, int action);
 extern void eventListTux(list_t *listTux);
 extern tux_t* getTuxID(list_t *listTux, int id);
 extern void getTuxProportion(tux_t *tux, int *x,int *y, int *w, int *h);
+extern void replaceTuxID(tux_t *tux, int id);
 extern void setTuxProportion(tux_t *tux, int x, int y);
 extern void destroyTux(tux_t *tux);
 extern void quitTux();

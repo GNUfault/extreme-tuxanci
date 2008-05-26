@@ -6,6 +6,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "list.h"
+#include "layer.h"
 
 static screen_t *currentScreen;
 static list_t *listScreen;

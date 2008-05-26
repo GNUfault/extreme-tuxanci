@@ -577,7 +577,7 @@ void proto_send_shot_server(int type, client_t *client, shot_t *p)
 	char msg[STR_PROTO_SIZE];
 
 	assert( p != NULL );
-
+                      
 	sprintf(msg, "shot %d %d %d %d %d %d %d %d %d\n",
 		p->id, p->x, p->y, p->px, p->py, p->position, p->gun, p->author_id, p->isCanKillAuthor);
 
@@ -597,12 +597,15 @@ void proto_recv_shot_client(char *msg)
 	sscanf(msg, "%s %d %d %d %d %d %d %d %d %d",
 		cmd, &shot_id, &x, &y, &px, &py, &position, &gun, &author_id, &isCanKillAuthor);
 
-/*
-	if( getShotID(getCurrentArena()->listShot, shot_id) != NULL )
+
+	if( ( shot = getShotID(getCurrentArena()->listShot, shot_id) )  != NULL )
 	{
-		return;
+		delListItem(getCurrentArena()->listShot,
+			searchListItem(getCurrentArena()->listShot, shot), destroyShot);
+
+		//return;
 	}
-*/
+
 	shot = newShot(x, y, px, py, gun, author_id);
 
 	replaceShotID(shot, shot_id);

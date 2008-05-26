@@ -21,9 +21,6 @@
 #include "sound.h"
 #include "fake_audio.h"
 #include "tux.h"
-#include "wall.h"
-#include "teleport.h"
-#include "pipe.h"
 #include "item.h"
 #include "shot.h"
 #include "gun.h"
@@ -37,6 +34,7 @@
 #include "font.h"
 #include "music.h"
 #include "modules.h"
+#include "idManager.h"
 
 static arena_t *arena;
 static int count;

@@ -7,7 +7,6 @@
 #include "arena.h"
 #include "tux.h"
 #include "shot.h"
-#include "dynamicInt.h"
 #include "myTimer.h"
 #include "item.h"
 #include "gun.h"

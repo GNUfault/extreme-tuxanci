@@ -1,0 +1,96 @@
+
+	***
+
+	Navod ako skompilovat zdrojove kody
+
+	***
+
+	Projekt sa da kompilovat ako hra ( client ) s GUI, alebo ako herny server
+
+	************************************************
+
+	kompilacia hry s GUI
+
+	Pri kompilacii, hry ako grafickeho klienta sa potrebuju kniznice :
+	(g)libc, SDL, SDL_Image, SDL_Mixer, SDL_ttf, SDL_Net
+	v ratatne hlavickovych suborov a konfiguracnych striptov ( sdl-config )
+
+	ldd -u `which tuxanci`
+	Unused direct dependencies:
+        /usr/lib/libSDL_image-1.2.so.0
+        /usr/lib/libSDL_mixer-1.2.so.0
+        /usr/lib/libSDL_ttf-2.0.so.0
+        /usr/lib/libSDL_net-1.2.so.0
+        /usr/lib/libSDL-1.2.so.0
+
+	make clean
+	----------
+
+	pre istotu vymazame subory z predchadzajucej kompilacie
+
+	v subore config.h do makra DESTDIR ulozime nas prefix-path,
+	ktory sa natvrdo skompiluje do programu 
+	#define DESTDIR "/usr/local/"
+
+	Ak toto maro nebude existovat, program bude pouzivat svoje podaresare :)
+	( vhodne pri vyvoji, ked sa casto menia subory )
+
+	make mod
+	--------
+
+	skompilujeme moduly hry
+
+	su
+	--
+
+	prepneme sa na roota
+
+	make install DESTDIR=/usr/local
+	nainstalujeme subory, DESTDIR urcuje kam sa budu subory kopirovat.
+	bolo by dobre, keby sa rovnala hodnoty makru  DESTDIR, ale nie je to podmienka.
+	Ak bude hodnota makra DESTDIR a premennej DESTDIR v Makefile rozdielna, program
+	si nenajde svoje subory.
+
+	tuxanci-ng
+	----------
+	Program spustime tymto prikazom.
+	Hra si vytvara domovsky adresar v domovskom adresari uzivatela ~/.tuxanci-ng
+
+	make uninstall DESTDIR=/usr/local
+	---------------------------------
+
+	Program sa odinstaluje
+
+	************************************************
+
+	kompilacia herneho servera
+
+	Pri kompilacii, herneho servera musi existovat makro PUBLIC_SERVER v config.h
+	Je automaticky zakomentovane, tak ho pls. odkomentujte
+
+	Makro DESTDIR, nehra pri kompilacii herneho server ziadnu rolu. Server pouziva
+	svoje podadresare a ani sa neinstaluje
+
+	make clean
+	----------
+
+	pre istotu vymazame subory z predchadzajucej kompilacie.
+
+	make server
+	-----------
+
+	kompilujeme server
+
+	./build-server/publicserver
+	--------------
+
+	Spustame server
+
+	konfiguracia servera je v server.conf, dufam, ze je jasna
+
+	************************************************
+
+	Dušan Ďurech
+	email: Dusan.D@Centrum.Sk
+	jabber IM: Oroborus@Jabbim.sk 
+	//fakt narychlo napisane

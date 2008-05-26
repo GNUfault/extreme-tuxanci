@@ -80,16 +80,16 @@ void drawWall(wall_t *p)
 	export_fce->fce_addLayer(p->img, p->img_x, p->img_y, 0, 0, p->img->w, p->img->h, p->layer);
 }
 
-void drawListWall(list_t *listWall)
+void drawListWall(list_t *list)
 {
 	wall_t *thisWall;
 	int i;
 
-	assert( listWall != NULL );
+	assert( list != NULL );
 
-	for( i = 0 ; i < listWall->count ; i++ )
+	for( i = 0 ; i < list->count ; i++ )
 	{
-		thisWall  = (wall_t *)listWall->list[i];
+		thisWall  = (wall_t *)list->list[i];
 		assert( thisWall != NULL );
 		drawWall(thisWall);
 	}
@@ -97,16 +97,16 @@ void drawListWall(list_t *listWall)
 
 #endif
 
-wall_t* isConflictWithListWall(list_t *listWall, int x, int y, int w, int h)
+wall_t* isConflictWithListWall(list_t *list, int x, int y, int w, int h)
 {
 	wall_t *thisWall;
 	int i;
 
-	assert( listWall != NULL );
+	assert( list != NULL );
 
-	for( i = 0 ; i < listWall->count ; i++ )
+	for( i = 0 ; i < list->count ; i++ )
 	{
-		thisWall  = (wall_t *)listWall->list[i];
+		thisWall  = (wall_t *)list->list[i];
 		assert( thisWall != NULL );
 
 		if( export_fce->fce_conflictSpace(x, y, w, h,

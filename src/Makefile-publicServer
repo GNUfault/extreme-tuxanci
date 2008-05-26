@@ -10,8 +10,8 @@ CFLAGS = -g -O0 -I../include -Wall
 BUILD_DIR = ../build-server
 LIBS = -ldl
 
-FILES = list.o modules.o director.o configFile.o tux.o wall.o shot.o myTimer.o \
-	buffer.o dynamicInt.o arena.o arenaFile.o textFile.o gun.o item.o\
+FILES = list.o modules.o director.o configFile.o tux.o shot.o myTimer.o \
+	buffer.o arena.o arenaFile.o textFile.o gun.o item.o idManager.o\
 	udp.o proto.o server.o publicServer.o net_multiplayer.o serverConfigFile.o main.o
 
 $(BUILD_DIR)/publicserver: mkdir_build $(FILES)
@@ -22,6 +22,9 @@ mkdir_build:
 
 main.o: main.c 
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/main.o -c main.c
+
+idManager.o: idManager.c ../include/idManager.h
+	$(CC) $(CFLAGS) -o $(BUILD_DIR)/idManager.o -c idManager.c
 
 modules.o: modules.c 
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/modules.o -c modules.c
@@ -40,9 +43,6 @@ configFile.o: configFile.c ../include/configFile.h
 
 tux.o: tux.c ../include/tux.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/tux.o -c tux.c
-
-wall.o: wall.c ../include/wall.h
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/wall.o -c wall.c
 
 shot.o: shot.c ../include/shot.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/shot.o -c shot.c
@@ -67,9 +67,6 @@ server.o: server.c ../include/server.h
 
 net_multiplayer.o: net_multiplayer.c ../include/net_multiplayer.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/net_multiplayer.o -c net_multiplayer.c
-
-dynamicInt.o: dynamicInt.c ../include/dynamicInt.h
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/dynamicInt.o -c dynamicInt.c
 
 arena.o: arena.c ../include/arena.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/arena.o -c arena.c

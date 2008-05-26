@@ -9,9 +9,7 @@
 #include "main.h"
 #include "list.h"
 #include "tux.h"
-#include "wall.h"
-#include "teleport.h"
-#include "pipe.h"
+#include "idManager.h"
 #include "myTimer.h"
 #include "arena.h"
 #include "item.h"
@@ -111,8 +109,14 @@ void my_handler_quit(int n)
 void quitPublicServer()
 {
 	printf("quit public server\n");
+	
 	quitNetMultiplayer();
 	destroyArena(arena);
+	
+	quitTux();
+	quitItem();
+	quitShot();
+
 	quitArenaFile();
 	quitServerConfigFile();
 	quitModule();

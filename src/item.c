@@ -215,8 +215,6 @@ void addNewItem(list_t *listItem, int author_id)
 	        (getNetTypeGame() == NET_GAME_TYPE_NONE && type == BONUS_HIDDEN) );
 #endif
 
-	type = GUN_MINE;
-
 	item = newItem(new_x, new_y, type, author_id);
 	addList(listItem, item);
 

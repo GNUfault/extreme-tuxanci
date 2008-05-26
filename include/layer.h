@@ -47,6 +47,7 @@ extern void addLayer(SDL_Surface *img,
  */
 extern void drawLayer();
 extern void drawLayerCenter(int x, int y);
+extern void flushLayer();
 extern void quitLayer();
 
 #endif

@@ -6,8 +6,6 @@
 #include "main.h"
 #include "shot.h"
 #include "gun.h"
-#include "wall.h"
-#include "pipe.h"
 #include "net_multiplayer.h"
 #include "proto.h"
 #include "idManager.h"

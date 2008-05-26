@@ -38,6 +38,7 @@ extern bool_t isShotInicialized();
 extern void initShot();
 extern shot_t* newShot(int x,int y, int px, int py, int gun, int author_id);
 extern shot_t* getShotID(list_t *listShot, int id);
+extern void replaceShotID(shot_t *shot, int id);
 #ifndef PUBLIC_SERVER	
 extern void drawShot(shot_t *p);
 extern void drawListShot(list_t *listShot);

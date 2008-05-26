@@ -8,10 +8,7 @@
 #include "list.h"
 #include "tux.h"
 #include "shot.h"
-#include "wall.h"
 #include "item.h"
-#include "teleport.h"
-#include "pipe.h"
 #include "myTimer.h"
 #include "modules.h"
 

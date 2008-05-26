@@ -83,16 +83,16 @@ static void drawPipe(pipe_t *p)
 
 #endif
 
-static pipe_t* isConflictWithListPipe(list_t *listPipe, int x, int y, int w, int h)
+static pipe_t* isConflictWithListPipe(list_t *list, int x, int y, int w, int h)
 {
 	pipe_t *thisPipe;
 	int i;
 
-	assert( listPipe != NULL );
+	assert( list != NULL );
 
-	for( i = 0 ; i < listPipe->count ; i++ )
+	for( i = 0 ; i < list->count ; i++ )
 	{
-		thisPipe  = (pipe_t *)listPipe->list[i];
+		thisPipe  = (pipe_t *)list->list[i];
 		assert( thisPipe != NULL );
 
 		if( export_fce->fce_conflictSpace(x, y, w, h,
@@ -248,15 +248,15 @@ static void moveShot(shot_t *shot, int position, int src_x, int src_y,
 
 }
 
-static pipe_t* getPipeId(list_t *listPipe, int id)
+static pipe_t* getPipeId(list_t *list, int id)
 {
 	int i;
 
-	for( i = 0 ; i < listPipe->count ; i++ )
+	for( i = 0 ; i < list->count ; i++ )
 	{
 		pipe_t *thisPipe;
 
-		thisPipe = (pipe_t *) listPipe->list[i];
+		thisPipe = (pipe_t *) list->list[i];
 
 		if( thisPipe->id == id )
 		{
@@ -267,11 +267,11 @@ static pipe_t* getPipeId(list_t *listPipe, int id)
 	return NULL;
 }
 
-static void moveShotFromPipe(shot_t *shot, pipe_t *pipe, list_t *listPipe)
+static void moveShotFromPipe(shot_t *shot, pipe_t *pipe, list_t *list)
 {
 	pipe_t *distPipe;
 
-	distPipe = getPipeId(listPipe, pipe->id_out);
+	distPipe = getPipeId(list, pipe->id_out);
 
 	if( distPipe == NULL )
 	{
@@ -339,7 +339,12 @@ int event()
 	pipe_t *thisPipe;
 	arena_t *arena;
 	int i;
-
+/*
+	if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_CLIENT )
+	{
+		return;
+	}
+*/
 	arena = export_fce->fce_getCurrentArena();
 
 	for( i = 0 ; i < arena->listShot->count ; i++ )
@@ -365,6 +370,8 @@ int event()
 
 			if( negPosition( thisShot->position ) == thisPipe->position )
 			{
+				//moveShotFromPipe(thisShot, thisPipe, listPipe);
+
 				if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 				{
 					if( thisShot->gun != GUN_BOMBBALL )
@@ -377,11 +384,12 @@ int event()
 				{
 					moveShotFromPipe(thisShot, thisPipe, listPipe);
 				}
+
 			}
 			else
 			{
 				if( thisShot->gun == GUN_BOMBBALL && 
-				    export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+				    export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT  )
 				{
 					export_fce->fce_boundBombBall(thisShot);
 					continue;

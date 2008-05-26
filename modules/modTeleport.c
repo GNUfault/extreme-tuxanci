@@ -62,7 +62,6 @@ teleport_t* newTeleport(int x, int y, int w, int h, int layer)
 	new->img = img;
 #endif
 
-	printf("new teleport\n");
 	return new;
 }
 
@@ -77,16 +76,16 @@ static void drawTeleport(teleport_t *p)
 
 #endif
 
-static teleport_t* isConflictWithListTeleport(list_t *listTeleport, int x, int y, int w, int h)
+static teleport_t* isConflictWithListTeleport(list_t *list, int x, int y, int w, int h)
 {
 	teleport_t *thisTeleport;
 	int i;
 
-	assert( listTeleport != NULL );
+	assert( list != NULL );
 
-	for( i = 0 ; i < listTeleport->count ; i++ )
+	for( i = 0 ; i < list->count ; i++ )
 	{
-		thisTeleport  = (teleport_t *)listTeleport->list[i];
+		thisTeleport  = (teleport_t *)list->list[i];
 		assert( thisTeleport != NULL );
 
 		if( export_fce->fce_conflictSpace(x, y, w, h,
@@ -138,15 +137,15 @@ static void cmd_teleport(char *line)
 	addList(listTeleport, new);
 }
 
-static teleport_t* getRandomTeleportBut(list_t *listTeleport, teleport_t *teleport)
+static teleport_t* getRandomTeleportBut(list_t *list, teleport_t *teleport)
 {
 	int x;
 
 	do{
-		x = random() % listTeleport->count;
-	}while( listTeleport->list[x] == teleport );
+		x = random() % list->count;
+	}while( list->list[x] == teleport );
 
-	return (teleport_t *) listTeleport->list[x];
+	return (teleport_t *) list->list[x];
 }
 
 static int getRandomPosition()
@@ -353,11 +352,11 @@ static void moveShot(shot_t *shot, int position, int src_x, int src_y,
 
 }
 
-static void moveShotFromTeleport(shot_t *shot, teleport_t *teleport, list_t *listTeleport)
+static void moveShotFromTeleport(shot_t *shot, teleport_t *teleport, list_t *list)
 {
 	teleport_t *distTeleport;
 
-	distTeleport = getRandomTeleportBut(listTeleport, teleport);
+	distTeleport = getRandomTeleportBut(list, teleport);
 
 	moveShot(shot, getRandomPosition(), teleport->x, teleport->y,
 		distTeleport->x, distTeleport->y, distTeleport->w, distTeleport->h);
@@ -396,6 +395,11 @@ int event()
 	teleport_t *thisTeleport;
 	arena_t *arena;
 	int i;
+
+	if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_CLIENT )
+	{
+		return 0;
+	}
 
 	arena = export_fce->fce_getCurrentArena();
 
@@ -439,6 +443,8 @@ int event()
 				continue;
 			}
 
+			moveShotFromTeleport(thisShot, thisTeleport, listTeleport);
+/*			
 			if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 			{
 				delListItem(arena->listShot, i, export_fce->fce_destroyShot);
@@ -448,6 +454,7 @@ int event()
 			{
 				moveShotFromTeleport(thisShot, thisTeleport, listTeleport);
 			}
+*/
 		}
 	}
 
