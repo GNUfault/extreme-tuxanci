@@ -193,6 +193,11 @@ static void transformShot(shot_t *shot, int position)
 
 	shot->position = position;	
 	shot->isCanKillAuthor = TRUE;
+
+	if( shot->gun == GUN_LASSER )
+	{
+		export_fce->fce_transformOnlyLasser(shot);
+	}
 }
 
 static void moveShot(shot_t *shot, int position, int src_x, int src_y,

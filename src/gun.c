@@ -63,21 +63,32 @@ static void addShotTrivial(tux_t *tux, int x, int y, int px, int py, int gun)
 	modificiationCopuse(tux->position, px, py, &dest_px, &dest_py);
 	modificiationCopuse(tux->position, x, y, &dest_x, &dest_y);
 
-	switch( tux->position )
+	if( gun == GUN_LASSER )
 	{
-		case TUX_UP :
-			dest_y -= TUX_WIDTH;
-		break;
-		case TUX_RIGHT :
+		switch( tux->position )
+		{
+			case TUX_UP :
+				dest_y -= GUN_LASSER_HORIZONTAL;
 			break;
-		case TUX_LEFT :
-			dest_x -= TUX_WIDTH;
-		break;
-			case TUX_DOWN :
-		break;
+			case TUX_RIGHT :
+				break;
+			case TUX_LEFT :
+				dest_x -= GUN_LASSER_HORIZONTAL;
+			break;
+				case TUX_DOWN :
+			break;
+		}
 	}
 
 	shot = newShot(tux->x + dest_x, tux->y + dest_y, dest_px, dest_py, gun, tux->id);
+
+/*
+	if( isFreeSpace( getCurrentArena(), shot->x, shot->y, shot->w, shot->h ) == 0 )
+	{
+		destroyShot(shot);
+		return;
+	}
+*/
 	addList( getCurrentArena()->listShot, shot );
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
@@ -206,7 +217,9 @@ static void timer_addLaserTimer(void *p)
 
 	gun = tux->gun;
 	tux->gun = GUN_LASSER;
+
 	addShot(tux, 0, 0, +10, 0);
+
 	tux->gun = gun;
 }
 

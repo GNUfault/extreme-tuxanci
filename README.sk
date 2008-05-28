@@ -13,9 +13,9 @@
 
 	Pri kompilacii, hry ako grafickeho klienta sa potrebuju kniznice :
 	(g)libc, SDL, SDL_Image, SDL_Mixer, SDL_ttf, SDL_Net
-	v ratatne hlavickovych suborov a konfiguracnych striptov ( sdl-config )
+	v ratane hlavickovych suborov a konfiguracnych striptov ( sdl-config )
 
-	ldd -u `which tuxanci`
+	ldd -u `which tuxanci-ng`
 	Unused direct dependencies:
         /usr/lib/libSDL_image-1.2.so.0
         /usr/lib/libSDL_mixer-1.2.so.0
@@ -26,13 +26,13 @@
 	make clean
 	----------
 
-	pre istotu vymazame subory z predchadzajucej kompilacie
+	pre istotu vymazeme subory z predchadzajucej kompilacie
 
 	v subore config.h do makra DESTDIR ulozime nas prefix-path,
 	ktory sa natvrdo skompiluje do programu 
 	#define DESTDIR "/usr/local/"
 
-	Ak toto maro nebude existovat, program bude pouzivat svoje podaresare :)
+	Ak toto makro nebude existovat, program bude pouzivat svoje podaresare :)
 	( vhodne pri vyvoji, ked sa casto menia subory )
 
 	make mod

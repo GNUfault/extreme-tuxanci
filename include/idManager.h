@@ -9,11 +9,11 @@
 
 #include "list.h"
 
-extern list_t * newListID();
-extern int getNewID(list_t *p);
-extern int isRegisterID(list_t *p, int id);
-extern void delID(list_t *p, int id);
-extern void replaceID(list_t *p, int old_id, int new_id);
-extern void destroyListID(list_t *p);
+extern void initListID();
+extern int getNewID();
+extern int isRegisterID(int id);
+extern void delID(int id);
+extern void replaceID(int old_id, int new_id);
+extern void quitListID();
 
 #endif

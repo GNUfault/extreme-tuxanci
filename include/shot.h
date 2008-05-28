@@ -47,6 +47,7 @@ extern int isConflictWithListShot(list_t *listShot, int x, int y, int w, int h);
 extern void eventMoveListShot(list_t *listShot);
 
 extern void boundBombBall(shot_t *shot);
+extern void transformOnlyLasser(shot_t *shot);
 
 extern void destroyShot(shot_t *p);
 extern void quitShot();

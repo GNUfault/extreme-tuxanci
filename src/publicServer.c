@@ -36,6 +36,7 @@ static char *getSetting(char *env, char *param, char *default_val)
 
 int initPublicServer()
 {
+	initListID();
 	initModule();
 	initArenaFile();
 	initTux();
@@ -120,6 +121,7 @@ void quitPublicServer()
 	quitArenaFile();
 	quitServerConfigFile();
 	quitModule();
+	quitListID();
 
 	exit(0);
 }

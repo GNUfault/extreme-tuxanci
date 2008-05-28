@@ -39,6 +39,7 @@ typedef struct export_fce_s
 
 	void (*fce_destroyShot)(shot_t *p);
 	void (*fce_boundBombBall)(shot_t *shot);
+	void (*fce_transformOnlyLasser)(shot_t *shot);
 
 	int (*fce_pokus)(char *s);
 

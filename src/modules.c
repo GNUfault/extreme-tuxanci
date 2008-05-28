@@ -47,7 +47,8 @@ static export_fce_t export_fce =
 		.fce_proto_send_newtux_server = proto_send_newtux_server,
 		.fce_proto_send_shot_server = proto_send_shot_server,
 		.fce_destroyShot = destroyShot,
-		.fce_boundBombBall = boundBombBall
+		.fce_boundBombBall = boundBombBall,
+		.fce_transformOnlyLasser = transformOnlyLasser
 	};
 
 static list_t *listModule;

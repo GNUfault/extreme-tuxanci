@@ -40,8 +40,6 @@ static SDL_Surface *g_cross;
 
 #endif
 
-static list_t *listID;
-
 static bool_t isTuxInit = FALSE;
 
 bool_t isTuxInicialized()
@@ -63,8 +61,6 @@ void initTux()
 	g_cross = addImageData("cross.png", IMAGE_ALPHA, "cross", IMAGE_GROUP_BASE);
 #endif
 
-	listID = newListID();
-
 	isTuxInit = TRUE;
 }
 
@@ -78,7 +74,7 @@ tux_t* newTux()
 
 	memset(new, 0, sizeof(tux_t) );
 	
-	new->id = getNewID(listID);
+	new->id = getNewID();
 	new->status = TUX_STATUS_ALIVE;
 	new->control = TUX_CONTROL_NONE;
 
@@ -248,7 +244,7 @@ tux_t* getTuxID(list_t *listTux, int id)
 
 void replaceTuxID(tux_t *tux, int id)
 {
-	replaceID(listID, tux->id, id);
+	replaceID(tux->id, id);
 	tux->id = id;
 }
 
@@ -869,12 +865,11 @@ void setTuxProportion(tux_t *tux, int x, int y)
 void destroyTux(tux_t *tux)
 {
 	assert( tux != NULL );
-	delID(listID, tux->id);
+	delID(tux->id);
 	free(tux);
 }
 
 void quitTux()
 {
-	destroyListID(listID);
 	isTuxInit = FALSE;
 }

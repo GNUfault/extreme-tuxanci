@@ -36,7 +36,7 @@ typedef struct item_struct
 #endif	
 } item_t;
 
-#define ITEM_MAX_COUNT	2
+#define ITEM_MAX_COUNT	1
 
 #define ITEM_GUN_MAX_FRAME		8
 #define ITEM_MINE_MAX_FRAME		1

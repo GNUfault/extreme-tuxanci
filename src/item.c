@@ -31,7 +31,6 @@ static SDL_Surface *g_item[ITEM_COUNT];
 #endif
 
 static bool_t isItemInit = FALSE;
-static list_t *listID;
 
 bool_t isItemInicialized()
 {
@@ -59,7 +58,7 @@ void initItem()
 	g_item[BONUS_4X] = addImageData("item.bonus.4x.png", IMAGE_ALPHA, "item_4x_speed", IMAGE_GROUP_BASE);
 	g_item[BONUS_HIDDEN] = addImageData("item.bonus.hidden.png", IMAGE_ALPHA, "item_hidden_speed", IMAGE_GROUP_BASE);
 #endif
-	listID = newListID();
+
 	isItemInit = TRUE;
 }
 
@@ -72,7 +71,7 @@ item_t* newItem(int x, int y, int type, int author_id)
 
 	new->type = type;
 
-	new->id = getNewID(listID);
+	new->id = getNewID();
 	new->x = x;
 	new->y = y;
 	new->frame = 0;
@@ -153,7 +152,7 @@ item_t* getItemID(list_t *listItem, int id)
 
 void replaceItemID(item_t *item, int id)
 {
-	replaceID(listID, item->id, id);
+	replaceID(item->id, id);
 	item->id = id;
 }
 
@@ -620,12 +619,11 @@ void eventGiveTuxListItem(tux_t *tux, list_t *listItem)
 void destroyItem(item_t *p)
 {
 	assert( p != NULL );
-	delID(listID, p->id);
+	delID(p->id);
 	free(p);
 }
 
 void quitItem()
 {
-	destroyListID(listID);
 	isItemInit = FALSE;
 }

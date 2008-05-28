@@ -341,7 +341,7 @@ void eventWorld()
 	eventNetMultiplayer();
 
 	eventArena(arena);
-	eventModule();
+	//eventModule();
 
 	eventTerm();
 	eventEnd();
@@ -356,6 +356,7 @@ void startWorld()
 	count = 0;
 	lastServerLag = LAG_SERVER_UNKNOWN;
 
+	initListID();
 	initModule();
 	setGameType();
 	initTerm();
@@ -421,6 +422,7 @@ void stoptWorld()
 	delAllImageInGroup(IMAGE_GROUP_USER);
 	delAllMusicInGroup(MUSIC_GROUP_USER);
 	quitModule();
+	quitListID();
 }
 
 void initWorld()

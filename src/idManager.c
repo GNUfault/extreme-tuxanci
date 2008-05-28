@@ -7,49 +7,25 @@
 #include "list.h"
 #include "idManager.h"
 
-list_t * newListID()
+static list_t *listID;
+
+void initListID()
 {
-	return newList();
+	listID = newList();
+	printf("init ID manger..\n");
 }
 
-int getNewID(list_t *p)
-{
-	int ret;
-	int i;
-
-	assert( p != NULL );
-
-	do{
-		ret = random() % MAX_ID + 1;
-
-		for( i = 0 ; i < p->count ; i++ )
-		{
-			int *z;
-
-			z = (int *) p->list[i];
-
-			if( *z == ret )continue;
-		}
-
-	}while(0);
-
-	addList(p, newInt(ret) );
-
-	//printf("new ID -> %d\n", ret);
-	return ret;
-}
-
-int isRegisterID(list_t *p, int id)
+int isRegisterID(int id)
 {
 	int i;
 
-	assert( p != NULL );
+	assert( listID != NULL );
 
-	for( i = 0 ; i < p->count ; i++ )
+	for( i = 0 ; i < listID->count ; i++ )
 	{
 		int *z;
 
-		z = (int *) p->list[i];
+		z = (int *) listID->list[i];
 
 		if( *z == id )
 		{
@@ -60,13 +36,29 @@ int isRegisterID(list_t *p, int id)
 	return -1;
 }
 
-void delID(list_t *p, int id)
+int getNewID()
+{
+	int ret;
+
+	assert( listID != NULL );
+
+	do{
+		ret = random() % MAX_ID + 1;
+	}while( isRegisterID(ret) != -1 );
+
+	addList(listID, newInt(ret) );
+
+	//printf("new ID -> %d\n", ret);
+	return ret;
+}
+
+void delID(int id)
 {
 	int index;
 
-	assert( p != NULL );
+	assert( listID != NULL );
 
-	index = isRegisterID(p, id);
+	index = isRegisterID(id);
 
 	if( index == -1 )
 	{
@@ -74,24 +66,27 @@ void delID(list_t *p, int id)
 		return; // ha ha ha
 	}
 
-	delListItem(p, index, free);
+	delListItem(listID, index, free);
 
 	return;
 }
 
-void replaceID(list_t *p, int old_id, int new_id)
+void replaceID(int old_id, int new_id)
 {
-	delID(p, old_id);
+	delID(old_id);
 
 	if( new_id != -1 )
 	{
-		assert( isRegisterID(p, new_id) == -1 );
-		addList(p, newInt(new_id) );
+		assert( isRegisterID(new_id) == -1 );
+		addList(listID, newInt(new_id) );
 	}
 }
 
-void destroyListID(list_t *p)
+void quitListID()
 {
-	assert( p != NULL );
-	destroyListItem(p, free);
+	printf("quit ID manger..\n");
+
+	assert( listID != NULL );
+	destroyListItem(listID, free);
 }
+

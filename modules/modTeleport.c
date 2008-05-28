@@ -291,12 +291,10 @@ static void transformShot(shot_t *shot, int position)
 	shot->position = position;	
 	shot->isCanKillAuthor = TRUE;
 
-/*
 	if( shot->gun == GUN_LASSER )
 	{
-		transformOnlyLasser(shot);
+		export_fce->fce_transformOnlyLasser(shot);
 	}
-*/
 }
 
 static void moveShot(shot_t *shot, int position, int src_x, int src_y,
@@ -423,12 +421,12 @@ int event()
 	
 		thisShot  = (shot_t *)arena->listShot->list[i];
 		assert( thisShot != NULL );
-
+/*
 		if( thisShot->gun == GUN_LASSER )
 		{
 			continue;
 		}
-
+*/
 		if( ( thisTeleport = isConflictWithListTeleport(listTeleport,
 			thisShot->x, thisShot->y, thisShot->w, thisShot->h) ) != NULL )
 		{

@@ -81,13 +81,13 @@ int initSDL()
 
 SDL_Surface* getSDL_Screen()
 {
-	//return fake_screen;
+	//return my_surface;
 	return screen;
 }
 
 void interfaceRefresh()
 {
-	//SDL_BlitSurface(fake_screen, NULL, screen, NULL);
+	//SDL_BlitSurface(my_surface, NULL, screen, NULL);
 	//SDL_UpdateRect(screen, 0, 0, screen->w, screen->h);
 
 	//drawImage(my_surface, 200, 100, 0, 0, 200, 200);

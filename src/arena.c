@@ -74,7 +74,7 @@ void findFreeSpace(arena_t *arena, int *x, int *y, int w, int h)
 
 	do{
 		z_x = random() % WINDOW_SIZE_X;
-		z_y = random() % (WINDOW_SIZE_Y-200);
+		z_y = random() % (WINDOW_SIZE_Y);
 	}while( isFreeSpace(arena, z_x, z_y ,w ,h) == 0 );
 
 	*x = z_x;
@@ -119,13 +119,15 @@ void eventArena(arena_t *arena)
 	//eventConflictTuxWithTeleport(arena->listTux, arena->listTeleport);
 	eventConflictTuxWithShot(arena->listTux, arena->listShot);
 
-	for( i = 0 ; i < 4 ; i++)
+	for( i = 0 ; i < 8 ; i++)
 	{
 		eventMoveListShot(arena->listShot);
 		//eventConflictShotWithWall(arena->listWall, arena->listShot);
 		//eventConflictShotWithTeleport(arena->listTeleport, arena->listShot);
 		//eventConflictShotWithPipe(arena->listPipe, arena->listShot);
 		eventConflictShotWithItem(arena->listItem, arena->listShot);
+		eventConflictTuxWithShot(arena->listTux, arena->listShot);
+		eventModule();
 	}
 
 	eventListItem(arena->listItem);

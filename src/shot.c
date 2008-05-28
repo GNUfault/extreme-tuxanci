@@ -30,7 +30,6 @@ static SDL_Surface *g_shot_bombball;
 #endif
 
 static bool_t isShotInit = FALSE;
-static list_t *listID;
 
 bool_t isShotInicialized()
 {
@@ -52,8 +51,6 @@ void initShot()
 
 #endif
 
-	listID = newListID();
-	
 	isShotInit = TRUE;
 }
 
@@ -65,7 +62,7 @@ shot_t* newShot(int x,int y, int px, int py, int gun, int author_id)
 	new = malloc( sizeof(shot_t) );
 	memset(new, 0, sizeof(shot_t) );
 
-	new->id = getNewID(listID);
+	new->id = getNewID();
 	new->x = x;
 	new->y = y;
 	new->px = px;
@@ -156,7 +153,7 @@ shot_t* getShotID(list_t *listShot, int id)
 
 void replaceShotID(shot_t *shot, int id)
 {
-	replaceID(listID, shot->id, id);
+	replaceID(shot->id, id);
 	shot->id = id;
 }
 
@@ -244,6 +241,29 @@ void boundBombBall(shot_t *shot)
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
 		proto_send_shot_server(PROTO_SEND_ALL, NULL, shot);
+	}
+}
+
+void transformOnlyLasser(shot_t *shot)
+{
+	switch( shot->position )
+	{
+		case TUX_RIGHT :
+		case TUX_LEFT :
+			shot->w = GUN_LASSER_HORIZONTAL; 
+			shot->h = GUN_SHOT_VERTICAL; 
+#ifndef PUBLIC_SERVER	
+			shot->img = g_shot_lasserX;
+#endif
+		break;
+		case TUX_UP :
+		case TUX_DOWN :
+			shot->w = GUN_SHOT_VERTICAL; 
+			shot->h = GUN_LASSER_HORIZONTAL; 
+#ifndef PUBLIC_SERVER	
+			shot->img = g_shot_lasserY;
+#endif
+		break;
 	}
 }
 
@@ -411,13 +431,11 @@ void moveShot(shot_t *shot, int position, int src_x, int src_y,
 void destroyShot(shot_t *p)
 {
 	assert( p != NULL );
-	delID(listID, p->id);
+	delID(p->id);
 	free(p);
 }
 
 void quitShot()
 {
-	destroyListID(listID);
 	isShotInit = FALSE;
 }
-
