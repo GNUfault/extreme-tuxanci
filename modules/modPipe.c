@@ -5,13 +5,16 @@
 #include <assert.h>
 
 #include "main.h"
-#include "interface.h"
 #include "modules.h"
 #include "tux.h"
 #include "shot.h"
 #include "list.h"
 #include "gun.h"
+
+#ifndef PUBLIC_SERVER
+#include "interface.h"
 #include "image.h"
+#endif
 
 #ifdef PUBLIC_SERVER
 #include "publicServer.h"

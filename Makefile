@@ -55,6 +55,11 @@ mod:
 	make -C ./modules -f Makefile modPipe
 	make -C ./modules -f Makefile modWall
 
+servermod:
+	make -C ./modules -f Makefile-publicserver modTeleport
+	make -C ./modules -f Makefile-publicserver modPipe
+	make -C ./modules -f Makefile-publicserver modWall
+
 install:
 	mkdir -p $(DESTDIR)/bin
 	mkdir -p $(DESTDIR)/share/tuxanci-ng/{arena,data,font,image,lang,music,sound,conf,modules}

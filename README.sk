@@ -17,11 +17,11 @@
 
 	ldd -u `which tuxanci-ng`
 	Unused direct dependencies:
-        /usr/lib/libSDL_image-1.2.so.0
-        /usr/lib/libSDL_mixer-1.2.so.0
-        /usr/lib/libSDL_ttf-2.0.so.0
-        /usr/lib/libSDL_net-1.2.so.0
         /usr/lib/libSDL-1.2.so.0
+        /usr/lib/libSDL_image-1.2.so.0
+        /usr/lib/libSDL_ttf-2.0.so.0
+        /usr/lib/libSDL_mixer-1.2.so.0
+        /usr/lib/libSDL_net-1.2.so.0
 
 	make clean
 	----------
@@ -80,6 +80,11 @@
 	-----------
 
 	kompilujeme server
+
+	make servermod
+	--------------
+
+	skompilumjeme moduly pre server
 
 	./build-server/publicserver
 	--------------
