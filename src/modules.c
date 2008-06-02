@@ -125,7 +125,6 @@ static int destroyModule(module_t *p)
 	dlclose(p->image);
 	free(p);
 
-	
 	printf("destroy module..\n");
 
 	return 0;

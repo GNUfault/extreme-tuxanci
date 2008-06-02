@@ -10,12 +10,13 @@
 #include "string_length.h"
 #include "audio.h"
 #include "music.h"
+#include "storage.h"
 
-static list_t *listMusic;
+static list_t *listStorage;
 
 static bool_t isMusicInit = FALSE;
 static bool_t var_isMusicActive = TRUE;
-static music_t *currentMusic;
+static Mix_Music *currentMusic;
 
 bool_t isMusicInicialized()
 {
@@ -30,7 +31,7 @@ void initMusic()
 		return;
 	}
 
-	listMusic = newList();
+	listStorage = newStorage();
 	currentMusic = NULL;
 
 	isMusicInit = TRUE;
@@ -71,42 +72,35 @@ static Mix_Music* loadMixMusic(char *file)
 	return new;
 }
 
-static music_t *newMusic(char *file, char *name, int group)
-{
-	music_t *new;
-
-	new = malloc( sizeof(music_t) );
-	new->name = strdup(name);
-	new->group = group;
-	new->music = loadMixMusic(file);
-
-	return new;
-}
-
 static void playMixMusic()
 {
 	if( currentMusic != NULL )
 	{
-		printf("play music %s..\n", currentMusic->name);
-		Mix_PlayMusic(currentMusic->music, 1000);
+		Mix_PlayMusic(currentMusic, 1000);
 	}
 }
 
-static void destroyMusic(music_t *p)
+static void destroyMusic(void *p)
 {
-	free(p->name);
-	Mix_FreeMusic(p->music);
-	free(p);
+	Mix_FreeMusic((Mix_Music *)p);
 }
 
-void addMusic(char *file, char *name, int group)
+void addMusic(char *file, char *name, char *group)
 {
+	Mix_Music *new;
+
 	if( isMusicInit == FALSE )
 	{
 		return;
 	}
 
-	addList( listMusic, newMusic(file, name, group) );
+	assert( file != NULL );
+	assert( name != NULL );
+	assert( group != NULL );
+
+	new = loadMixMusic(file);
+
+	addItemToStorage(listStorage, group, name, new );
 }
 
 void stopMusic()
@@ -119,16 +113,24 @@ void stopMusic()
 
 	if( currentMusic != NULL )
 	{
-		printf("stop music %s..\n", currentMusic->name);
+		printf("stop music..\n");
 		Mix_HaltMusic();
 		currentMusic = NULL;
 	}
 }
 
-void playMusic(char *name, int group)
+void playMusic(char *name, char *group)
 {
-	int i;
-	music_t *this;
+	static char currentMusic_group[STR_SIZE];
+	static char currentMusic_name[STR_SIZE];
+	static int isStrInit = 0;
+
+	if( isStrInit == 0 )
+	{
+		strcpy(currentMusic_group, "none");
+		strcpy(currentMusic_name, "none");
+		isStrInit = 1;	
+	}
 
 	if( isMusicInit == FALSE ||
 	    var_isMusicActive == FALSE )
@@ -137,8 +139,8 @@ void playMusic(char *name, int group)
 	}
 
 	if( currentMusic != NULL &&
-	    currentMusic->group == group &&
-	    strcmp(currentMusic->name, name) == 0 )
+	    strcmp(currentMusic_group, group) == 0 &&
+	    strcmp(currentMusic_name, name) == 0 )
 	{
 		return;
 	}
@@ -148,26 +150,20 @@ void playMusic(char *name, int group)
 		stopMusic();
 	}
 
-	for( i = 0 ; i < listMusic->count ; i++ )
-	{
-		this = (music_t *)listMusic->list[i];
-
-		if( this->group == group && strcmp(this->name, name) == 0 )
-		{
-			currentMusic = this;
-			break;
-		}
-	}
+	currentMusic = getItemFromStorage(listStorage, group, name);
+	strcpy(currentMusic_group, group);
+	strcpy(currentMusic_name, name);
 
 	if( currentMusic != NULL )
 	{
+		printf("play music %s\n", name);
 		playMixMusic();
 	}
 }
 
 void setMusicActive(bool_t n)
 {
-	static music_t *music = NULL;
+	static Mix_Music *music = NULL;
 
 	if( n == FALSE )
 	{
@@ -191,29 +187,12 @@ bool_t isMusicActive()
 
 char* getCurrentMusic()
 {
-	return currentMusic->name;
+	return "unknown";
 }
 
-void delAllMusicInGroup(int group)
+void delAllMusicInGroup(char *group)
 {
-	int i;
-	music_t *this;
-
-	if( isMusicInit == FALSE )
-	{
-		return;
-	}
-
-	for( i = 0 ; i < listMusic->count ; i++ )
-	{
-		this = (music_t *)listMusic->list[i];
-
-		if( this->group == group )
-		{
-			delListItem(listMusic, i, destroyMusic);
-			i--;
-		}
-	}
+	delAllItemFromStorage(listStorage, group, destroyMusic);
 }
 
 void quitMusic()
@@ -224,9 +203,8 @@ void quitMusic()
 	}
 
 	stopMusic();
-	destroyListItem(listMusic, destroyMusic);
+	destroyStorage(listStorage, destroyMusic);
 	isMusicInit = FALSE;
 
 	printf("quit music..\n");
 }
-

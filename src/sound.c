@@ -10,8 +10,9 @@
 #include "string_length.h"
 #include "audio.h"
 #include "sound.h"
+#include "storage.h"
 
-static list_t *listSound;
+static list_t *listStorage;
 
 static bool_t isSoundInit = FALSE;
 static bool_t var_isSoundActive = TRUE;
@@ -29,7 +30,7 @@ void initSound()
 		return;
 	}
 
-	listSound = newList();
+	listStorage = newStorage();
 	isSoundInit = TRUE;
 	var_isSoundActive = TRUE;
 
@@ -68,65 +69,48 @@ static Mix_Chunk* loadMixSound(char *file)
 	return new;
 }
 
-static sound_t *newSound(char *file, char *name, int group)
+
+static void playMixSound(Mix_Chunk *p)
 {
-	sound_t *new;
-
-	new = malloc( sizeof(sound_t) );
-	new->name = strdup(name);
-	new->group = group;
-	new->sound = loadMixSound(file);
-
-	return new;
-}
-
-static void playMixSound(sound_t *p)
-{
-	if( Mix_PlayChannel(-1, p->sound, 0) == -1 )
+	if( Mix_PlayChannel(-1, p, 0) == -1 )
 	{
 		fprintf(stderr, "Nelze prehrat zvuk : %s\n", Mix_GetError());
 		return;
 	}
 }
 
-static void destroySound(sound_t *p)
+static void destroySound(void *p)
 {
-	free(p->name);
-	Mix_FreeChunk(p->sound);
-	free(p);
+	Mix_FreeChunk((Mix_Chunk *)p);
 }
 
-void addSound(char *file, char *name, int group)
+void addSound(char *file, char *name, char *group)
 {
+	Mix_Chunk *new;
+
 	if( isSoundInit == FALSE )
 	{
 		return;
 	}
 
-	addList( listSound, newSound(file, name, group) );
+	assert( file != NULL );
+	assert( name != NULL );
+	assert( group != NULL );
+
+	new = loadMixSound(file);
+
+	addItemToStorage(listStorage, group, name, new );
 }
 
-void playSound(char *name, int group)
+void playSound(char *name, char *group)
 {
-	int i;
-	sound_t *this;
-
 	if( isSoundInit == FALSE ||
 	    var_isSoundActive == FALSE )
 	{
 		return;
 	}
 
-	for( i = 0 ; i < listSound->count ; i++ )
-	{
-		this = (sound_t *)listSound->list[i];
-
-		if( this->group == group && strcmp(this->name, name) == 0 )
-		{
-			playMixSound(this);
-			return;
-		}
-	}
+	playMixSound( getItemFromStorage(listStorage, group, name) );
 }
 
 void setSoundActive(bool_t n)
@@ -146,7 +130,7 @@ void quitSound()
 		return;
 	}
 
-	destroyListItem(listSound, destroySound);
+	destroyStorage(listStorage, destroySound);
 	isSoundInit = FALSE;
 	printf("quit sound..\n");
 }

@@ -8,9 +8,10 @@
 #include "image.h"
 #include "list.h"
 #include "path.h"
+#include "storage.h"
 #include "string_length.h"
 
-static list_t *listImageData;
+static list_t *listStorage;
 
 static bool_t isImageDataInit = FALSE;
 
@@ -27,7 +28,7 @@ void initImageData()
 	assert( isInterfaceInicialized() == TRUE );
 
 	printf("init image database..\n");
-	listImageData = newList();
+	listStorage = newStorage();
 	isImageDataInit = TRUE;
 }
 
@@ -60,6 +61,12 @@ static SDL_Surface *loadImage(const char *filename, int alpha)
 	return ret;
 }
 
+static void destroySDLSurface(void *p)
+{
+	assert( p != NULL );
+	SDL_FreeSurface((SDL_Surface *)p);
+}
+
 /*
  * Prida obrazok do globalneho zoznamu obrazkov
  * *file - nazov suboru v ktorom je obrazok ulozeny
@@ -68,33 +75,19 @@ static SDL_Surface *loadImage(const char *filename, int alpha)
  */
 SDL_Surface* addImageData(char *file, int alpha, char *name, char *group)
 {
-	image_data_t *new;
+	SDL_Surface *new;
 
 	assert( file != NULL );
 	assert( name != NULL );
 	assert( group != NULL );
 
-	new = malloc(sizeof(image_data_t));
+	new = loadImage(file, alpha);
 
-	new->image = loadImage(file, alpha);
-	//if(strstr(file,"BMP")!=NULL)SDL_SetColorKey(new->image, SDL_SRCCOLORKEY, SDL_MapRGB(new->image->format, 255, 255, 255));
-	new->name = strdup(name);
-	new->group = strdup(group);
-
-	addList(listImageData, new);
+	addItemToStorage(listStorage, group, name, new );
 
 	printf("load image %s\n", file);
-	return new->image;
-}
 
-static void destroyImageData(image_data_t *p)
-{
-	assert( p != NULL );
-
-	free(p->name);
-	free(p->group);
-	SDL_FreeSurface(p->image);
-	free(p);
+	return new;
 }
 
 /*
@@ -103,74 +96,36 @@ static void destroyImageData(image_data_t *p)
  */
 SDL_Surface* getImage(char *group, char *name)
 {
-	image_data_t *this;
-
 	assert( group != NULL );
 	assert( name != NULL );
 
-	int i;
-	
-	for(i = 0 ; i < listImageData->count; i++)
-	{
-		this = (image_data_t *) listImageData->list[i];
-	
-		if( strcmp(group, this->group) == 0 && strcmp(name, this->name) == 0 )
-		{
-			return this->image;
-		}
-	}
-
-	return NULL;
+	return getItemFromStorage(listStorage, group, name);
 }
 
 void delImage(char *group, char *name)
 {
-	image_data_t *this;
-	int i;
-
 	assert( group != NULL );
 	assert( name != NULL );
 	
-	for(i = 0 ; i < listImageData->count; i++)
-	{
-		this = (image_data_t *) listImageData->list[i];
-	
-		if( strcmp(group, this->group) == 0 && strcmp(name, this->name) == 0 )
-		{
-			delListItem(listImageData, i, destroyImageData);
-			break;
-		}
-
-	}
+	delItemFromStorage(listStorage, group, name, destroySDLSurface);
 }
 
 void delAllImageInGroup(char *group)
 {
-	image_data_t *this;
-	int i;
-
 	assert( group != NULL );
-	printf("del all image in group %s\n", group);
-	
-	for(i = 0 ; i < listImageData->count; i++)
-	{
-		this = (image_data_t *) listImageData->list[i];
 
-		if( strcmp(group, this->group) == 0 )
-		{
-			delListItem(listImageData, i, destroyImageData);
-			i--;
-		}
-
-	}
+	delAllItemFromStorage(listStorage, group, destroySDLSurface);
 }
 
 void drawImage(SDL_Surface *p, int x,int y, int px, int py, int w, int h)
 {
+	static SDL_Surface *screen = NULL;
 	SDL_Rect dst_rect, src_rect;
-	SDL_Surface *screen;
 
-	screen = getSDL_Screen();
+	if( screen == NULL )
+	{
+		screen = getSDL_Screen();
+	}
 
 	dst_rect.x = x;
 	dst_rect.y = y;
@@ -189,7 +144,7 @@ void drawImage(SDL_Surface *p, int x,int y, int px, int py, int w, int h)
 void quitImageData()
 {
 	printf("quit image database..\n");
-	destroyListItem(listImageData, destroyImageData);
+	destroyStorage(listStorage, destroySDLSurface);
 	isImageDataInit = FALSE;
 }
  

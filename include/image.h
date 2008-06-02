@@ -14,12 +14,14 @@
 #define IMAGE_GROUP_USER	"user"
 #define IMAGE_GROUP_OTHER	"other"
 
+/*
 typedef struct image_struct
 {
 	char *name;
 	char *group;
 	SDL_Surface *image;
 } image_data_t;
+*/
 
 extern bool_t isImageInicialized();
 extern void initImageData();
