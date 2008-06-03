@@ -35,7 +35,7 @@ static storage_item_t* newStorageItem(char *group, char *name, void *data)
 	return new;
 }
 
-static void destroyStorageItem(storage_item_t  *p, void(*f)(void *))
+static void destroyStorageItem(storage_item_t *p, void(*f)(void *))
 {
 	assert( p != NULL );
 	assert( f != NULL );

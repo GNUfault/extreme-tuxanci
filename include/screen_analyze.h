@@ -17,6 +17,7 @@ extern void eventScreenAnalyze();
 extern void stopScreenAnalyze();
 extern void restartAnalyze();
 extern void addAnalyze(char *name, int score);
+extern void setMsgToAnalyze(char *msg);
 extern void endAnalyze();
 extern void initScreenAnalyze();
 extern void quitScreenAnalyze();

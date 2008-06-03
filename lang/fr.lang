@@ -1,0 +1,35 @@
+###
+# Englis translation file
+# Author: Oroborus <dusan.d@centrum.sk>
+###
+
+# about the author of this translation
+AUTHOR MeV
+AUTHOR_EMAIL chrystalyst@free.fr
+AUTHOR_JABBER unknown
+
+
+# specify font for this language
+HEAD fontfile="DejaVuSans.ttf" fontsize="16"
+
+# general
+OK Ok
+BACK Précédent
+NEXT Suivant
+
+# error message
+ERROR_BAD_VERSION Version of your client isn't supported by the server.
+
+# main menu
+PLAY Jouer
+SETTING Paramètres
+TABLE Meilleur Score
+CREDITS Auteurs
+END Quitter
+
+# settings - menu
+COUNT_ROUND Count Round:
+NAME_PLAYER1 Joueur de droite :
+NAME_PLAYER2 Joueur de gauche :
+MUSIC Musique :
+SOUND Son :

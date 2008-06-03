@@ -11,6 +11,8 @@
 #include "screen_world.h"
 #include "proto.h"
 #include "client.h"
+#include "language.h"
+#include "screen_analyze.h"
 
 static int protocolType;
 
@@ -243,7 +245,7 @@ void selectClientSdlUdpSocket()
 
 	if( isServerAlive() == FALSE )
 	{
-		fprintf(stderr, "server neodpoveda !\n");
+		setMsgToAnalyze(getMyText("ERROR_SERVER_DONT_ALIVE"));
 		setWorldEnd();
 		return;
 	}

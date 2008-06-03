@@ -27,6 +27,7 @@
 
 #ifdef PUBLIC_SERVER
 #include "publicServer.h"
+#include "heightScore.h"
 #endif
 
 #ifdef SUPPORT_NET_UNIX_UDP
@@ -282,8 +283,12 @@ void destroyClient(client_t *p)
 	destroyBuffer(p->buffer);
 	destroyCheckFront(p->listCheck);
 
+
 	if( p->tux != NULL )
 	{
+#ifdef PUBLIC_SERVER
+		addPlayerInHighScore(p->tux->name, p->tux->score);
+#endif
 		index = searchListItem(getCurrentArena()->listTux, p->tux);
 		delListItem(getCurrentArena()->listTux, index, destroyTux);
 	}
@@ -485,6 +490,14 @@ static void eventClientBuffer(client_t *client)
 			proto_recv_status_server(client, line);
 			continue;
 		}
+
+#ifdef PUBLIC_SERVER
+		if( strncmp(line, "list", 4) == 0 )
+		{
+			proto_recv_listscore_server(client, line);
+			continue;
+		}
+#endif
 
 		if( client->tux != NULL )
 		{

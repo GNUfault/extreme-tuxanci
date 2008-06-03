@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <assert.h>
 
@@ -35,6 +34,7 @@
 #include "music.h"
 #include "modules.h"
 #include "idManager.h"
+#include "heightScore.h"
 
 static arena_t *arena;
 static int count;
@@ -457,4 +457,3 @@ void quitWorld()
 	printf("quit world\n");
 	isScreenWorldInit = FALSE;
 }
-

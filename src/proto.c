@@ -18,15 +18,18 @@
 #include "idManager.h"
 
 #ifndef PUBLIC_SERVER
+#include "language.h"
 #include "network.h"
 #include "screen_world.h"
 #include "screen_setting.h"
 #include "screen_choiceArena.h"
+#include "screen_analyze.h"
 #include "client.h"
 #include "term.h"
 #endif
 
 #ifdef PUBLIC_SERVER
+#include "heightScore.h"
 #include "publicServer.h"
 #endif
 
@@ -100,6 +103,14 @@ void proto_recv_error_client(char *msg)
 		cmd, &errorcode);
 
 	printf("proto error code %d\n", errorcode);
+
+	switch(errorcode)
+	{
+		case PROTO_ERROR_CODE_BAD_VERSION :
+			setMsgToAnalyze(getMyText("ERROR_BAD_VERSION"));
+			setWorldEnd();
+		break;
+	}
 }
 
 #endif
@@ -169,6 +180,55 @@ void proto_recv_status_server(client_t *client, char *msg)
 {
 	proto_send_status_server(PROTO_SEND_ONE, client);
 }
+
+#ifdef PUBLIC_SERVER
+
+void proto_send_listscore_server(int type, client_t *client, int max)
+{
+	char *str;
+	char *msg;
+	int i;
+
+	msg = malloc( (max * 24) * sizeof(char) );
+	strcpy(msg, "");
+
+	for( i = 0 ; i < max ; i++ )
+	{
+		str  = getTableItem(i);
+
+		if( str == NULL )
+		{
+			break;
+		}
+
+		strcat(msg, str);
+		strcat(msg, "\n");
+	}
+
+	proto_send(type, client, msg);
+	free(msg);
+}
+
+void proto_recv_listscore_server(client_t *client, char *msg)
+{
+	char cmd[STR_PROTO_SIZE];
+	int max;
+	int ret;
+
+	assert( msg != NULL );
+
+	ret = sscanf(msg, "%s %d",
+		cmd, &max);
+
+	if( ret != 2 )
+	{
+		max = HEIGHTSCORE_MAX_PLAYERS;
+	}
+
+	proto_send_listscore_server(PROTO_SEND_ONE, client, max);
+}
+
+#endif
 
 #ifndef PUBLIC_SERVER
 

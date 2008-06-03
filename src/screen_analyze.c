@@ -22,6 +22,7 @@ static widget_image_t *image_backgorund;
 static list_t *listWidgetLabelName;
 static list_t *listWidgetLabelScore;
 static list_t *listAnalyze;
+static widget_label_t *widgetLabelMsg;
 
 static widget_button_t *button_ok;
 
@@ -66,6 +67,7 @@ void drawScreenAnalyze()
 		drawWidgetLabel(this);
 	}
 
+	drawWidgetLabel(widgetLabelMsg);
 	drawWidgetButton(button_ok);
 }
 
@@ -76,6 +78,8 @@ void eventScreenAnalyze()
 
 void stopScreenAnalyze()
 {
+	destroyWidgetLabel(widgetLabelMsg);
+	widgetLabelMsg = newWidgetLabel("", WINDOW_SIZE_X / 2 , 250, WIDGET_LABEL_CENTER);
 }
 
 static void eventWidget(void *p)
@@ -104,6 +108,12 @@ void restartAnalyze()
 void addAnalyze(char *name, int score)
 {
 	addList(listAnalyze, newAnalyze(name, score) );
+}
+
+void setMsgToAnalyze(char *msg)
+{
+	destroyWidgetLabel(widgetLabelMsg);
+	widgetLabelMsg = newWidgetLabel(msg, WINDOW_SIZE_X / 2 , 250, WIDGET_LABEL_CENTER);
 }
 
 void endAnalyze()
@@ -145,6 +155,8 @@ void initScreenAnalyze()
 
 	registerScreen( newScreen("analyze", startScreenAnalyze, eventScreenAnalyze,
 		drawScreenAnalyze, stopScreenAnalyze) );
+
+	widgetLabelMsg = newWidgetLabel("", WINDOW_SIZE_X / 2 , 250, WIDGET_LABEL_CENTER);
 }
 
 void quitScreenAnalyze()
@@ -156,5 +168,6 @@ void quitScreenAnalyze()
 	destroyListItem(listAnalyze, destroyAnalyze);
 
 	destroyWidgetButton(button_ok);
+	destroyWidgetLabel(widgetLabelMsg);
 }
 

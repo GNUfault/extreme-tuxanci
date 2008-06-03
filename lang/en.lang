@@ -16,6 +16,10 @@ OK Ok
 BACK Back
 NEXT Next
 
+# error message
+ERROR_BAD_VERSION Version of your client isn't supported by the server.
+ERROR_SERVER_DONT_ALIVE Server's not responding, connection was closed.
+
 # main menu
 PLAY Play
 SETTING Settings

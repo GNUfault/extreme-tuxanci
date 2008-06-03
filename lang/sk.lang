@@ -16,6 +16,10 @@ OK Ok
 BACK Späť
 NEXT Ďalej
 
+# error message
+ERROR_BAD_VERSION Mate verziu clienta, ktoru server nepodporuje.
+ERROR_SERVER_DONT_ALIVE Server neodpoveda.
+
 # main menu
 PLAY Hrať
 SETTING Nastavenia

@@ -19,6 +19,7 @@
 #include "publicServer.h"
 #include "net_multiplayer.h"
 #include "serverConfigFile.h"
+#include "heightScore.h"
 #include "modules.h"
 
 static int arenaId;
@@ -43,6 +44,7 @@ int initPublicServer()
 	initItem();
 	initShot();
 	initServerConfigFile();
+	initHeightScore( getSetting("SCOREFILE", "--scorefile", "./heightscore") );
 
 	arenaId = getArenaIdFormNetName( getSetting("ARENA", "--arena", "FAGN") );
 	arena = getArena(arenaId);
@@ -122,6 +124,7 @@ void quitPublicServer()
 	quitServerConfigFile();
 	quitModule();
 	quitListID();
+	quitHeightScore();
 
 	exit(0);
 }

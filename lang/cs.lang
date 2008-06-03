@@ -16,6 +16,10 @@ OK Ok
 BACK Zpět
 NEXT Další
 
+# error message
+ERROR_BAD_VERSION Máte verzi klienta, kterou server nepodporuje.
+ERROR_SERVER_DONT_ALIVE Server neodpovida.
+
 # main menu
 PLAY Hraj
 SETTING Nastavení
