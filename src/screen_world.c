@@ -212,40 +212,75 @@ static void netAction(tux_t *tux, int action)
 
 static void control_keyboard_right(tux_t *tux)
 {
+	static int lastKey = 0;
+	int countKey;
 	Uint8 *mapa;
 	mapa = SDL_GetKeyState(NULL);
 
 	assert( tux != NULL );
 	assert( mapa != NULL );
 
+	countKey = 0;
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_UP)] == SDL_PRESSED )countKey++;
+	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_RIGHT)] == SDL_PRESSED )countKey++;
+	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_LEFT)] == SDL_PRESSED )countKey++;
+	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_DOWN)] == SDL_PRESSED )countKey++;
+
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_UP)] == SDL_PRESSED )
 	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_RIGHT_MOVE_UP) )goto tuUp;
+
+ 		if( countKey == 1 )lastKey = getKey(KEY_TUX_RIGHT_MOVE_UP);
 		netAction(tux, TUX_UP);
 		actionTux(tux, TUX_UP);
+		return;
+
+		tuUp:;
 	}
 
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_RIGHT)] == SDL_PRESSED )
 	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_RIGHT_MOVE_RIGHT) )goto tuRight;
+ 		
+		if( countKey == 1 )lastKey = getKey(KEY_TUX_RIGHT_MOVE_RIGHT);
 		netAction(tux, TUX_RIGHT);
 		actionTux(tux, TUX_RIGHT);
+		return;
+
+		tuRight:;
+
 	}
 
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_LEFT)] == SDL_PRESSED )
 	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_RIGHT_MOVE_LEFT) )goto tuLeft;
+
+ 		if( countKey == 1 )lastKey = getKey(KEY_TUX_RIGHT_MOVE_LEFT);
 		netAction(tux, TUX_LEFT);
 		actionTux(tux, TUX_LEFT);
+		return;
+
+		tuLeft:;
 	}
 
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_DOWN)] == SDL_PRESSED )
 	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_RIGHT_MOVE_DOWN) )goto tuDown;
+
+		if( countKey == 1 )lastKey = getKey(KEY_TUX_RIGHT_MOVE_DOWN);
 		netAction(tux, TUX_DOWN);
 		actionTux(tux, TUX_DOWN);
+		return;
+
+		tuDown:;
 	}
 
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_SHOOT)] == SDL_PRESSED && tux->isCanShot == TRUE )
 	{
 		netAction(tux, TUX_SHOT);
 		actionTux(tux, TUX_SHOT);
+		return;
 	}
 
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_SWITCH_WEAPON)] == SDL_PRESSED )
@@ -254,18 +289,88 @@ static void control_keyboard_right(tux_t *tux)
 		{
 			netAction(tux, TUX_SWITCH_GUN);
 			actionTux(tux, TUX_SWITCH_GUN);
+			return;
 		}
 	}
 }
 
 static void control_keyboard_left(tux_t *tux)
 {
+	static int lastKey = 0;
+	int countKey;
 	Uint8 *mapa;
 	mapa = SDL_GetKeyState(NULL);
 
 	assert( tux != NULL );
 	assert( mapa != NULL );
 
+	countKey = 0;
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_UP)] == SDL_PRESSED )countKey++;
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_RIGHT)] == SDL_PRESSED )countKey++;
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_LEFT)] == SDL_PRESSED )countKey++;
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_DOWN)] == SDL_PRESSED )countKey++;
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_UP)] == SDL_PRESSED )
+	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_LEFT_MOVE_UP) )goto tuUp;
+
+ 		if( countKey == 1 )lastKey = getKey(KEY_TUX_LEFT_MOVE_UP);
+		actionTux(tux, TUX_UP);
+		return;
+
+		tuUp:;
+	}
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_RIGHT)] == SDL_PRESSED )
+	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_LEFT_MOVE_RIGHT) )goto tuRight;
+ 		
+		if( countKey == 1 )lastKey = getKey(KEY_TUX_LEFT_MOVE_RIGHT);
+		actionTux(tux, TUX_RIGHT);
+		return;
+
+		tuRight:;
+
+	}
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_LEFT)] == SDL_PRESSED )
+	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_LEFT_MOVE_LEFT) )goto tuLeft;
+
+ 		if( countKey == 1 )lastKey = getKey(KEY_TUX_LEFT_MOVE_LEFT);
+		actionTux(tux, TUX_LEFT);
+		return;
+
+		tuLeft:;
+	}
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_DOWN)] == SDL_PRESSED )
+	{
+		if(countKey > 1 && lastKey == getKey(KEY_TUX_LEFT_MOVE_DOWN) )goto tuDown;
+
+		if( countKey == 1 )lastKey = getKey(KEY_TUX_LEFT_MOVE_DOWN);
+		actionTux(tux, TUX_DOWN);
+		return;
+
+		tuDown:;
+	}
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_SHOOT)] == SDL_PRESSED && tux->isCanShot == TRUE )
+	{
+		actionTux(tux, TUX_SHOT);
+		return;
+	}
+
+	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_SWITCH_WEAPON)] == SDL_PRESSED )
+	{
+		if( tux->isCanSwitchGun == TRUE )
+		{
+			actionTux(tux, TUX_SWITCH_GUN);
+			return;
+		}
+	}
+/*
 	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_UP)] == SDL_PRESSED )actionTux(tux, TUX_UP);
 	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_RIGHT)] == SDL_PRESSED )actionTux(tux, TUX_RIGHT);
 	if( mapa[(SDLKey)getKey(KEY_TUX_LEFT_MOVE_LEFT)] == SDL_PRESSED )actionTux(tux, TUX_LEFT);
@@ -279,6 +384,7 @@ static void control_keyboard_left(tux_t *tux)
 			actionTux(tux, TUX_SWITCH_GUN);
 		}
 	}
+*/
 }
 
 static void eventEsc()

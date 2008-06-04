@@ -6,8 +6,8 @@
 #define DEBUG_CLIENT_RECV
 */
 
-#define TUXANCI_NG_VERSION "svn58"
+#define TUXANCI_NG_VERSION "svn60"
 
 #define DESTDIR "/usr/local/"
 #define SUPPORT_NET_SDL_UDP
-#define PUBLIC_SERVER
+//#define PUBLIC_SERVER
