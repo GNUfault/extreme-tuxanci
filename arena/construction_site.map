@@ -14,7 +14,8 @@ loadImage file="l4.tvarnice.png" name="tvarnice" alpha="yes"
 loadImage file="l4.palety.png" name="palety" alpha="yes"
 loadImage file="l4.overlay.png" name="overlay" alpha="yes"
 
-background image="pozadi"
+arena background="pozadi" w="800" h="600"
+
 playMusic music="night_workshift"
 
 wall x="96" y="423" w="162" h="96" img_x="86" img_y="235" layer="0" image="bagr"

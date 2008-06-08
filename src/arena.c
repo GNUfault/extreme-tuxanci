@@ -13,6 +13,7 @@
 #include "modules.h"
 
 #ifndef PUBLIC_SERVER
+#include "screen_world.h"
 #include "layer.h"
 #endif
 
@@ -73,21 +74,74 @@ void findFreeSpace(arena_t *arena, int *x, int *y, int w, int h)
 	assert( y != NULL );
 
 	do{
-		z_x = random() % WINDOW_SIZE_X;
-		z_y = random() % (WINDOW_SIZE_Y);
+		z_x = random() % arena->w;
+		z_y = random() % arena->h;
 	}while( isFreeSpace(arena, z_x, z_y ,w ,h) == 0 );
 
 	*x = z_x;
 	*y = z_y;
 }
 
+void getCenterScreen(int *screen_x, int *screen_y, int x, int y)
+{
+	arena_t *arena;
+
+	arena = getCurrentArena();
+
+	*screen_x = x - WINDOW_SIZE_X/2;
+	*screen_y = y - WINDOW_SIZE_Y/2;
+
+	if( *screen_x < 0 )
+	{
+		*screen_x = 0;
+	}
+
+	if( *screen_y < 0 )
+	{
+		*screen_y = 0;
+	}
+
+	if( *screen_x + WINDOW_SIZE_X >= arena->w )
+	{
+		*screen_x = arena->w - WINDOW_SIZE_X;
+	}
+
+	if( *screen_y + WINDOW_SIZE_Y >= arena->h )
+	{
+		*screen_y = arena->h - WINDOW_SIZE_Y;
+	}
+}
+
 #ifndef PUBLIC_SERVER
 
 void drawArena(arena_t *arena)
 {
+	int screen_x, screen_y;
 	tux_t *tux = NULL;
+	int i, j;
 
-	addLayer(arena->background, 0, 0, 0, 0, WINDOW_SIZE_X, WINDOW_SIZE_Y, -100);
+	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
+
+/*
+	screen_x = tux->x - WINDOW_SIZE_X/2;
+	screen_y = tux->y - WINDOW_SIZE_Y/2;
+*/
+
+	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y);
+
+	for( i = screen_y/arena->background->h ;
+	     i <= screen_y/arena->background->h + WINDOW_SIZE_Y/arena->background->h ; i++ )
+	{
+		for( j = screen_x/arena->background->w ;
+		     j <= screen_x/arena->background->w + WINDOW_SIZE_X/arena->background->w ; j++ )
+		{
+			addLayer(arena->background,
+				j * arena->background->w,
+				i * arena->background->h,
+				0, 0, arena->background->w, arena->background->h, -100);
+		}
+
+	}
 
 	drawListTux(arena->listTux);
 	//drawListWall(arena->listWall);
@@ -96,9 +150,6 @@ void drawArena(arena_t *arena)
 	drawListShot(arena->listShot);
 	drawListItem(arena->listItem);
 
-/*
-	tux = getControlTux( TUX_CONTROL_KEYBOARD_RIGHT );
-*/
 
 	if( tux == NULL )
 	{

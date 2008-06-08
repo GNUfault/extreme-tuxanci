@@ -248,6 +248,21 @@ void replaceTuxID(tux_t *tux, int id)
 	tux->id = id;
 }
 
+int isTuxSeesTux(tux_t *tux, tux_t *thisTux)
+{
+	int tux_x, tux_y, tux_w, tux_h;
+	int thisTux_x, thisTux_y, thisTux_w, thisTux_h;
+	int screen_x, screen_y;
+
+	getTuxProportion(tux, &tux_x, &tux_y, &tux_w, &tux_h);
+	getTuxProportion(thisTux, &thisTux_x, &thisTux_y, &thisTux_w, &thisTux_h);
+
+	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y);
+
+	return conflictSpace(screen_x, screen_y,
+			     WINDOW_SIZE_X, WINDOW_SIZE_Y, thisTux_x, thisTux_y, thisTux_w, thisTux_h);
+}
+
 tux_t* isConflictWithListTux(list_t *listTux, int x, int y, int w, int h)
 {
 	tux_t *thisTux;
@@ -565,6 +580,9 @@ void moveTux(tux_t *tux, int n)
 	arena_t *arena;
 
 /*
+	printf("%d %d\n", tux->x, tux->y);
+*/
+/*
 	static my_time_t lastTime = 0;
 	my_time_t currentTime;
 
@@ -582,6 +600,8 @@ void moveTux(tux_t *tux, int n)
 
 	assert( tux != NULL );
 
+	arena = getCurrentArena();
+
 	if( tux->position != n )
 	{
 		tux->position = n;
@@ -593,7 +613,7 @@ void moveTux(tux_t *tux, int n)
 		return;
 	}
 
-	if( n == TUX_RIGHT && tux->x+TUX_STEP >= WINDOW_SIZE_X )
+	if( n == TUX_RIGHT && tux->x+TUX_STEP >= arena->w )
 	{
 		return;
 	}
@@ -603,12 +623,11 @@ void moveTux(tux_t *tux, int n)
 		return;
 	}
 
-	if( n == TUX_DOWN && tux->y+TUX_STEP >= WINDOW_SIZE_Y )
+	if( n == TUX_DOWN && tux->y+TUX_STEP >= arena->h )
 	{
 		return;
 	}
 
-	arena = getCurrentArena();
 	getCourse(tux->position, &px, &py);
 	
 	zal_x = tux->x;

@@ -269,10 +269,13 @@ void transformOnlyLasser(shot_t *shot)
 
 void eventMoveListShot(list_t *listShot)
 {
+	arena_t *arena;
 	shot_t *thisShot;
 	int i;
 
 	assert( listShot != NULL );
+
+	arena = getCurrentArena();
 
 	for( i = 0 ; i < listShot->count ; i++ )
 	{
@@ -298,8 +301,8 @@ void eventMoveListShot(list_t *listShot)
 			}
 		}
 */
-		if( thisShot->x+thisShot->w < 0 || thisShot->x > WINDOW_SIZE_X ||
-		    thisShot->y+thisShot->h < 0 || thisShot->y > WINDOW_SIZE_Y )
+		if( thisShot->x+thisShot->w < 0 || thisShot->x > arena->w ||
+		    thisShot->y+thisShot->h < 0 || thisShot->y > arena->h )
 		{
 			delListItem(listShot, i, destroyShot);
 			i--;

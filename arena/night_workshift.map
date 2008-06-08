@@ -19,7 +19,7 @@ loadImage file="l2.trubka6.png" name="trubka6" alpha="yes"
 loadImage file="l2.trubka4.png" name="trubka4" alpha="yes"
 loadImage file="l2.trubka8.png" name="trubka8" alpha="yes"
 
-background image="pitch"
+arena background="pitch" w="800" h="600"
 
 playMusic music="night_workshift"
 

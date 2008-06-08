@@ -110,24 +110,6 @@ void countRoundInc()
 	}
 }
 
-static tux_t* getControlTux(int control_type)
-{
-	tux_t *thisTux;
-	int i;
-
-	for( i = 0 ; i < arena->listTux->count ; i++ )
-	{
-		thisTux = (tux_t *)(arena->listTux->list[i]);
-
-		if( thisTux->control == control_type )
-		{
-			return thisTux;
-		}
-	}
-
-	return NULL;
-}
-
 void prepareArena()
 {
 	tux_t *tux;
@@ -201,7 +183,7 @@ static void netAction(tux_t *tux, int action)
 {
 	if( getSettingGameType() == NET_GAME_TYPE_SERVER )
 	{
-		proto_send_event_server(PROTO_SEND_ALL, NULL, tux , action);
+		proto_send_event_server(PROTO_SEND_ALL_SEES_TUX, NULL, tux , action);
 	}
 
 	if( getSettingGameType() == NET_GAME_TYPE_CLIENT )
@@ -407,6 +389,27 @@ static void eventEnd()
 		setScreen("analyze");
 		return;
 	}
+}
+
+tux_t* getControlTux(int control_type)
+{
+	arena_t *arena;
+	tux_t *thisTux;
+	int i;
+
+	arena = getCurrentArena();
+
+	for( i = 0 ; i < arena->listTux->count ; i++ )
+	{
+		thisTux = (tux_t *)(arena->listTux->list[i]);
+
+		if( thisTux->control == control_type )
+		{
+			return thisTux;
+		}
+	}
+
+	return NULL;
 }
 
 void tuxControl(tux_t *p)

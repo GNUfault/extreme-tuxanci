@@ -51,6 +51,16 @@ static void proto_send(int type, client_t *client, char *msg)
 			assert( client != NULL );
 			sendAllClientBut(msg, client);
 		break;
+		case PROTO_SEND_ALL_SEES_TUX :
+			if( client != NULL )
+			{
+				sendAllClientSeesTux(msg, client->tux);
+			}
+			else
+			{
+				sendAllClientSeesTux(msg, getServerTux());
+			}
+		break;
 		default :
 			assert( ! "Premenna type ma zlu hodnotu !" );
 		break;
@@ -358,13 +368,11 @@ void proto_recv_event_server(client_t *client, char *msg)
 	assert( client != NULL );
 	assert( msg != NULL );
 
-
 	sscanf(msg, "%s %d", cmd, &action);
 
-	proto_send_event_server(PROTO_SEND_BUT, client, client->tux, action);
+	proto_send_event_server(PROTO_SEND_ALL_SEES_TUX, client, client->tux, action);
 
 	actionTux(client->tux, action);
-
 }
 
 void proto_send_newtux_server(int type, client_t *client, tux_t *tux)

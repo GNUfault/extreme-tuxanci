@@ -92,28 +92,22 @@ static void eventPeriodicSyncClient(void *p_nothink)
 	client_t *thisClientSend;
 	tux_t *thisTux;
 	int i, j;
-/*
-	for( i = 0 ; i < getCurrentArena()->listItem->count; i++)
-	{
-		thisItem = (item_t *) getCurrentArena()->listItem->list[i];
-		
-		if( thisItem->type != ITEM_EXPLOSION || thisItem->type != ITEM_BIG_EXPLOSION )
-		{
-			proto_send_additem_server(PROTO_SEND_ALL, NULL, thisItem);
-		}
-	}
-*/	
+
 	for( i = 0 ; i < listClient->count; i++)
 	{
 		thisClientSend = (client_t *) listClient->list[i];
 
-		if( thisClientSend->tux != NULL )
+		if( thisClientSend->tux == NULL )
 		{
-#ifndef PUBLIC_SERVER
-			proto_send_newtux_server(PROTO_SEND_ONE, thisClientSend,
-			(tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]));
-#endif
+			continue;
 		}
+
+#ifndef PUBLIC_SERVER
+		thisTux = (tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]);
+
+		if( isTuxSeesTux(thisClientSend->tux, thisTux)  )
+		proto_send_newtux_server(PROTO_SEND_ONE, thisClientSend, thisTux);
+#endif
 
 		for( j = 0 ; j < listClient->count; j++)
 		{
@@ -121,9 +115,8 @@ static void eventPeriodicSyncClient(void *p_nothink)
 			thisTux = thisClientInfo->tux;
 
 			if( thisTux != NULL &&
-			    thisClientSend->tux != NULL &&
-			    thisClientSend != thisClientInfo /*&&
-			    thisTux->status == TUX_STATUS_ALIVE*/ )
+			    thisClientSend != thisClientInfo &&
+			    isTuxSeesTux(thisClientSend->tux, thisTux) )
 			{
 				proto_send_newtux_server(PROTO_SEND_ONE,
 					thisClientSend, thisTux);
@@ -362,6 +355,28 @@ void sendAllClient(char *msg)
 	sendAllClientBut(msg, NULL);
 }
 
+void sendAllClientSeesTux(char *msg, tux_t *tux)
+{
+	int i;
+
+	assert( msg != NULL );
+
+	for( i = 0 ; i < listClient->count ; i++ )
+	{
+		client_t *thisClient;
+		tux_t *thisTux;
+
+		thisClient = (client_t *)listClient->list[i];
+		thisTux = (tux_t *)thisClient->tux;
+
+		if( tux != thisTux &&
+		    isTuxSeesTux(thisTux, tux) )
+		{
+			sendClient(thisClient, msg);
+		}
+	}
+}
+
 void addMsgClient(client_t *p, char *msg, int id)
 {
 	assert( p != NULL );
@@ -396,6 +411,11 @@ void addMsgAllClient(char *msg,  int id)
 	assert( msg != NULL );
 
 	addMsgAllClientBut(msg, NULL, id);
+}
+
+tux_t *getServerTux()
+{
+	return (tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]);
 }
 
 void sendInfoCreateClient(client_t *client)

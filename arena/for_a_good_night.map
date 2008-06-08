@@ -13,7 +13,7 @@ loadImage file="l1.peduncle.png" name="peduncle" alpha="yes"
 loadImage file="l1.tree.png" name="tree" alpha="yes"
 loadImage file="l1.wood.png" name="wood" alpha="yes"
 
-background image="grow"
+arena background="grow" w="800" h="600"
 
 playMusic music="for_a_good_night"
 

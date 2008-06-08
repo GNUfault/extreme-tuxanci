@@ -37,9 +37,10 @@
 #include "publicServer.h"
 #endif
 
-#define PROTO_SEND_ONE	0
-#define PROTO_SEND_ALL	1
-#define PROTO_SEND_BUT	2
+#define PROTO_SEND_ONE			0
+#define PROTO_SEND_ALL			1
+#define PROTO_SEND_BUT			3
+#define PROTO_SEND_ALL_SEES_TUX		4
 
 #define PROTO_ERROR_CODE_UNKNOWN	0
 #define PROTO_ERROR_CODE_BAD_VERSION	1

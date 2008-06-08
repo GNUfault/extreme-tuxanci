@@ -14,7 +14,7 @@ loadImage file="l3.kvader1.png" name="kvader1" alpha="yes"
 loadImage file="l3.kvader2.png" name="kvader2" alpha="yes"
 loadImage file="l3.teleport.png" name="teleport" alpha="yes"
 
-background image="nic"
+arena background="nic" w="800" h="600"
 
 playMusic music="in_a_captivity_of_8-bit"
 

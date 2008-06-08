@@ -109,20 +109,27 @@ void drawLayer()
 void drawLayerCenter(int x, int y)
 {
 	layer_t *this;
-	int offset_x, offset_y;
+	int screen_x, screen_y;
 	int i;
 
-	offset_x = x - WINDOW_SIZE_X/2;
-	offset_y = y - WINDOW_SIZE_Y/2;
+	getCenterScreen(&screen_x, &screen_y, x, y);
 
 	for( i = 0 ; i < listLayer->count ; i++ )
 	{
 		this = (layer_t *)listLayer->list[i];
 
+		if( (this->x - screen_x) + this->w < 0 || (this->x - screen_x) > WINDOW_SIZE_X ||
+		    (this->y - screen_y) + this->h < 0 || (this->y - screen_y) > WINDOW_SIZE_Y )
+		{
+			continue;
+		}
+
 		drawImage(this->image,
-			this->x - offset_x, this->y - offset_y,
+			this->x - screen_x, this->y - screen_y,
 			this->px, this->py,
 			this->w, this->h);
+
+		//printf("%d %d\n", this->x - screen_x, this->y - screen_y);
 	}
 
 	destroyListItem(listLayer, free);

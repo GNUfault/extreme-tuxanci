@@ -76,11 +76,13 @@ extern void setServerMaxClients(int n);
 extern void sendClient(client_t *p, char *msg);
 extern void sendAllClientBut(char *msg, client_t *p);
 extern void sendAllClient(char *msg);
+extern void sendAllClientSeesTux(char *msg, tux_t *tux);
 
 extern void addMsgClient(client_t *p, char *msg, int id);
 extern void addMsgAllClientBut(char *msg, client_t *p, int id);
 extern void addMsgAllClient(char *msg,  int id);
 
+extern tux_t *getServerTux();
 extern void eventClientListBuffer();
 extern void sendInfoCreateClient(client_t *client);
 extern void eventServer();
