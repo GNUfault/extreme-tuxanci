@@ -81,8 +81,10 @@ extern void sendAllClientSeesTux(char *msg, tux_t *tux);
 extern void addMsgClient(client_t *p, char *msg, int id);
 extern void addMsgAllClientBut(char *msg, client_t *p, int id);
 extern void addMsgAllClient(char *msg,  int id);
+extern void addMsgAllClientSeesTux(char *msg, tux_t *tux, int id);
 
 extern tux_t *getServerTux();
+extern client_t *getClientFromTux(tux_t *tux);
 extern void eventClientListBuffer();
 extern void sendInfoCreateClient(client_t *client);
 extern void eventServer();

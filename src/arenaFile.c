@@ -68,7 +68,7 @@ static void cmd_loadMusic(char *line)
 	addMusic(str_file, str_name, MUSIC_GROUP_USER);
 }
 
-static void cmd_arena(arena_t *arena, char *line)
+static void cmd_arena(arena_t **arena, char *line)
 {
 	char str_image[STR_SIZE];
 	char str_w[STR_SIZE];
@@ -78,9 +78,12 @@ static void cmd_arena(arena_t *arena, char *line)
 	if( getValue(line, "w", str_w, STR_SIZE) != 0 )return;
 	if( getValue(line, "h", str_h, STR_SIZE) != 0 )return;
 
-	arena->background = getImage(IMAGE_GROUP_USER, str_image);
-	arena->w = atoi(str_w);
-	arena->h = atoi(str_h);
+	(*arena) = newArena(atoi(str_w), atoi(str_h));
+	(*arena)->background = getImage(IMAGE_GROUP_USER, str_image);
+	//(*arena)->w = atoi(str_w);
+	//(*arena)->h = atoi(str_h);
+	setCurrentArena(*arena);
+	printf("new arena\n");
 }
 
 static void cmd_playMusic(arena_t *arena, char *line)
@@ -167,7 +170,6 @@ arena_t* getArena(int id)
 	int i;
 
 	ts = (textFile_t *) listArenaFile->list[id];
-	arena = newArena();
 
 	for( i = 0 ; i < ts->text->count ; i++ )
 	{
@@ -179,7 +181,7 @@ arena_t* getArena(int id)
 #ifndef PUBLIC_SERVER
 		if( strncmp(line, "loadImage", 9) == 0 )cmd_loadImage(line);
 		if( strncmp(line, "loadMusic", 9) == 0 )cmd_loadMusic(line);
-		if( strncmp(line, "arena", 5) == 0 )cmd_arena(arena, line);
+		if( strncmp(line, "arena", 5) == 0 )cmd_arena(&arena, line);
 		if( strncmp(line, "playMusic", 9) == 0 )cmd_playMusic(arena, line);
 #endif
 

@@ -168,6 +168,11 @@ void delListItem(list_t *p, int n, void *f)
 	delList(p, n);
 }
 
+void listDoEmpty(list_t *p)
+{
+	p->count = 0;
+}
+
 void destroyList(list_t *p)
 {
 	assert( p != NULL );

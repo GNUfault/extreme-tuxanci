@@ -60,19 +60,18 @@ typedef struct item_struct
 extern bool_t isItemInicialized();
 extern void initItem();
 extern item_t* newItem(int x, int y, int type, int author_id);
-extern item_t* getItemID(list_t *listItem, int id);
+extern void getStatusItem(void *p, int *id, int *x, int *y ,int *w, int *h);
+extern void setStatusItem(void *p, int x, int y, int w, int h);
 extern void replaceItemID(item_t *item, int id);
-extern void addNewItem(list_t *listItem, int author_id);
+extern void addNewItem(space_t *spaceItem, int author_id);
 #ifndef PUBLIC_SERVER	
-extern void drawItem(item_t *p);
 extern void drawListItem(list_t *listItem);
+extern void eventListItem(space_t *listSpace);
 #endif
-extern void eventListItem(list_t *listItem);
-extern void eventConflictShotWithItem(list_t *listItem, list_t *listShot);
-extern int isConflictWithListItem(list_t *listItem, int x, int y, int w, int h);
-extern void mineExplosion(list_t *listItem, item_t *item);
-extern int eventGiveTuxItem(tux_t *tux, list_t *listItem, item_t *item);
-extern void eventGiveTuxListItem(tux_t *tux, list_t *listItem);
+extern void mineExplosion(space_t *spaceItem, item_t *item);
+extern void eventConflictShotWithItem(arena_t *arena);
+extern void eventGiveTuxItem(tux_t *tux, item_t *item, space_t *spaceItem);
+extern void eventGiveTuxListItem(tux_t *tux, space_t *spaceItem);
 extern void destroyItem(item_t *p);
 extern void quitItem();
 

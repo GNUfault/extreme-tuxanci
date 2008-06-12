@@ -25,6 +25,7 @@ extern int searchListItem(list_t *p, void *n);
 
 extern void delList(list_t *p,int n);
 extern void delListItem(list_t *p,int n,void *f);
+extern void listDoEmpty(list_t *p);
 
 extern void destroyList(list_t *p);
 extern void destroyListItem(list_t *p,void *f);

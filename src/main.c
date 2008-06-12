@@ -21,6 +21,8 @@
 static int my_argc;
 static char **my_argv;
 
+list_t *listHelp;
+
 char* getParam(char *s)
 {
 	int i;
@@ -100,11 +102,16 @@ void accessExistFile(const char *s)
 
 int main(int argc, char *argv[])
 {
+	listHelp = newList();
+
 	srand( (unsigned) time(NULL) );
 
 	my_argc = argc;
 	my_argv = argv;
-
+/*
+	test_space();
+	exit(0);
+*/
 #ifndef PUBLIC_SERVER
 	startGame();
 #endif

@@ -93,7 +93,16 @@ static void addShotTrivial(tux_t *tux, int x, int y, int px, int py, int gun)
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
-		proto_send_shot_server(PROTO_SEND_ALL, NULL, shot);
+		client_t *thisClient;
+
+		thisClient = getClientFromTux(tux);
+
+		if( thisClient != NULL )
+		{
+			proto_send_shot_server(PROTO_SEND_ONE, thisClient, shot);
+		}
+
+		proto_send_shot_server(PROTO_SEND_ALL_SEES_TUX, thisClient, shot);
 	}
 
 }
@@ -178,7 +187,7 @@ static void timer_addShotTimer(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux == NULL )return;
 
@@ -209,7 +218,7 @@ static void timer_addLaserTimer(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux == NULL )return;
 
@@ -281,7 +290,7 @@ static void putInGunMine(tux_t *tux)
 				proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
 			}
 
-			addList(arena->listItem, item );
+			addObjectToSpace(arena->spaceItem, item );
 		}
 	}
 }

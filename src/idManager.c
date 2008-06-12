@@ -81,6 +81,11 @@ void delID(int id)
 
 void replaceID(int old_id, int new_id)
 {
+	if( old_id == new_id )
+	{
+		return;
+	}
+
 	delID(old_id);
 
 	if( new_id != -1 )

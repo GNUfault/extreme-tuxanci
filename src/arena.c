@@ -29,7 +29,7 @@ arena_t* getCurrentArena()
 	return currentArena;
 }
 
-arena_t* newArena()
+arena_t* newArena(int w, int h)
 {
 	arena_t *new;
 	new = malloc( sizeof(arena_t) );
@@ -39,10 +39,17 @@ arena_t* newArena()
 	strcpy(new->music, "");
 #endif
 
+	new->w = w;
+	new->h = h;
+
 	new->listTimer = newList();
-	new->listTux = newList();
+	
+	//new->listTux = newList();
+	//new->listItem = newList();
+	new->spaceTux = newSpace(w, h, 320, 240, getStatusTux, setStatusTux);
+	new->spaceItem = newSpace(w, h, 320, 240, getStatusItem, setStatusItem);
+	
 	new->listShot = newList();
-	new->listItem = newList();
 
 	return new;
 }
@@ -54,9 +61,9 @@ int conflictSpace(int x1,int y1,int w1,int h1,int x2,int y2,int w2,int h2)
 
 int isFreeSpace(arena_t *arena, int x, int y, int w, int h)
 {
-	if( isConflictWithListTux(arena->listTux, x, y, w, h) )return 0;
+	if( isConflictWithObjectFromSpace(arena->spaceTux, x, y, w, h) )return 0;
 	if( isConflictWithListShot(arena->listShot, x, y, w, h) )return 0;
-	if( isConflictWithListItem(arena->listItem, x, y, w, h) )return 0;
+	if( isConflictWithObjectFromSpace(arena->spaceItem, x, y, w, h) )return 0;
 	if( isConflictModule(x, y, w, h) )return 0;
 	//if( isConflictWithListWall(arena->listWall, x, y, w, h) )return 0;
 	//if( isConflictWithListTeleport(arena->listTeleport, x, y, w, h) )return 0;
@@ -74,8 +81,8 @@ void findFreeSpace(arena_t *arena, int *x, int *y, int w, int h)
 	assert( y != NULL );
 
 	do{
-		z_x = random() % arena->w;
-		z_y = random() % arena->h;
+		z_x = random() % WINDOW_SIZE_X;//arena->w;
+		z_y = random() % WINDOW_SIZE_Y;//arena->h;
 	}while( isFreeSpace(arena, z_x, z_y ,w ,h) == 0 );
 
 	*x = z_x;
@@ -122,6 +129,10 @@ void drawArena(arena_t *arena)
 
 	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
 
+	if( tux == NULL )
+	{
+		return;
+	}
 /*
 	screen_x = tux->x - WINDOW_SIZE_X/2;
 	screen_y = tux->y - WINDOW_SIZE_Y/2;
@@ -143,14 +154,29 @@ void drawArena(arena_t *arena)
 
 	}
 
-	drawListTux(arena->listTux);
+	listDoEmpty(listHelp);
+	getObjectFromSpace(arena->spaceTux, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y, listHelp);
+	drawListTux(listHelp);
+
+	listDoEmpty(listHelp);
+	getObjectFromSpace(arena->spaceItem, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y, listHelp);
+	drawListItem(listHelp);
+
+	printSpace(arena->spaceItem);
+
+	//drawListTux(arena->listTux);
 	//drawListWall(arena->listWall);
 	//drawListTeleport(arena->listTeleport);
 	//drawListPipe(arena->listPipe);
 	drawListShot(arena->listShot);
-	drawListItem(arena->listItem);
+	//drawListItem(arena->listItem);
 
+	drawModule(screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+/*
+	my_time_t t;
 
+	t = getMyTime();
+*/
 	if( tux == NULL )
 	{
 		drawLayerCenter(WINDOW_SIZE_X/2, WINDOW_SIZE_Y/2);
@@ -159,6 +185,8 @@ void drawArena(arena_t *arena)
 	{
 		drawLayerCenter(tux->x, tux->y);
 	}
+
+//	printf("time = %d\n", getMyTime() - t );
 }
 
 #endif
@@ -168,31 +196,32 @@ void eventArena(arena_t *arena)
 	int i;
 
 	//eventConflictTuxWithTeleport(arena->listTux, arena->listTeleport);
-	eventConflictTuxWithShot(arena->listTux, arena->listShot);
+	//eventConflictTuxWithShot(arena);
 
 	for( i = 0 ; i < 8 ; i++)
 	{
 		eventMoveListShot(arena->listShot);
+		checkShotIsInTuxScreen(arena);
 		//eventConflictShotWithWall(arena->listWall, arena->listShot);
 		//eventConflictShotWithTeleport(arena->listTeleport, arena->listShot);
 		//eventConflictShotWithPipe(arena->listPipe, arena->listShot);
-		eventConflictShotWithItem(arena->listItem, arena->listShot);
-		eventConflictTuxWithShot(arena->listTux, arena->listShot);
+		eventConflictShotWithItem(arena);
+		eventConflictTuxWithShot(arena);
 		eventModule();
 	}
 
-	eventListItem(arena->listItem);
+	eventListItem(arena->spaceItem);
 	
-	eventListTux(arena->listTux);
+	eventListTux(arena->spaceTux->list);
 
 	eventTimer(arena->listTimer);
 }
 
 void destroyArena(arena_t *p)
 {
-	destroyListItem(p->listTux, destroyTux);
+	destroySpace(p->spaceTux, destroyTux);
+	destroySpace(p->spaceItem, destroyItem);
 	destroyListItem(p->listShot, destroyShot);
-	destroyListItem(p->listItem, destroyItem);
 	destroyTimer(p->listTimer);
 	free(p);
 }

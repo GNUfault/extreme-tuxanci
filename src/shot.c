@@ -72,7 +72,7 @@ shot_t* newShot(int x,int y, int px, int py, int gun, int author_id)
 
 	new->position = POSITION_UNKNOWN;
 
-	author = getTuxID(getCurrentArena()->listTux, author_id);
+	author = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, author_id);
 
 	if( author != NULL )
 	{
@@ -309,6 +309,86 @@ void eventMoveListShot(list_t *listShot)
 			continue;
 		}
 	}
+}
+
+static int myAbs(int n)
+{
+	return ( n > 0 ? n : -n );
+}
+
+
+static int getSppedShot(shot_t *shot)
+{
+	return ( myAbs(shot->px) > myAbs(shot->py) ? myAbs(shot->px) : myAbs(shot->py) );
+}
+
+
+void checkShotIsInTuxScreen(arena_t *arena)
+{
+	return;
+/*
+	int screen_x, screen_y;
+	shot_t *thisShot;
+	tux_t *thisTux;
+	int speed;
+	int i, j;
+
+	if( getNetTypeGame() != NET_GAME_TYPE_SERVER )
+	{
+		return;
+	}
+
+	for( i = 0 ; i < arena->listTux->count ; i++ )
+	{
+		thisTux = (tux_t *)arena->listTux->list[i];
+
+		if( thisTux->control != TUX_CONTROL_NET )
+		{
+			continue;
+		}
+
+		getCenterScreen(&screen_x, &screen_y, thisTux->x, thisTux->y);
+
+		for( j = 0 ; j < arena->listShot->count ; j++ )
+		{
+			thisShot = (shot_t *)arena->listShot->list[j];
+	
+			speed = getSppedShot(thisShot);
+
+			if( conflictSpace(thisShot->x, thisShot->y, thisShot->w, thisShot->h,
+			    screen_x-speed, screen_y,  speed, WINDOW_SIZE_Y) )
+			{
+				client_t *thisClient;
+				thisClient = getClientFromTux(thisTux);
+				proto_send_shot_server(PROTO_SEND_ONE, thisClient, thisShot);
+			}
+		
+			if( conflictSpace(thisShot->x, thisShot->y, thisShot->w, thisShot->h,
+			    screen_x+WINDOW_SIZE_X, screen_y,  speed, WINDOW_SIZE_Y) )
+			{
+				client_t *thisClient;
+				thisClient = getClientFromTux(thisTux);
+				proto_send_shot_server(PROTO_SEND_ONE, thisClient, thisShot);
+			}
+		
+			if( conflictSpace(thisShot->x, thisShot->y, thisShot->w, thisShot->h,
+			    screen_x, screen_y-speed, WINDOW_SIZE_X, speed) )
+			{
+				client_t *thisClient;
+				thisClient = getClientFromTux(thisTux);
+				proto_send_shot_server(PROTO_SEND_ONE, thisClient, thisShot);
+			}
+		
+			if( conflictSpace(thisShot->x, thisShot->y, thisShot->w, thisShot->h,
+			    screen_x, screen_y+WINDOW_SIZE_Y, WINDOW_SIZE_X, speed) )
+			{
+				client_t *thisClient;
+				thisClient = getClientFromTux(thisTux);
+				proto_send_shot_server(PROTO_SEND_ONE, thisClient, thisShot);
+			}
+		}
+	}
+*/
 }
 
 /*

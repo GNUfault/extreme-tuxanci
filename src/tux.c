@@ -221,6 +221,7 @@ void drawListTux(list_t *listTux)
 
 #endif
 
+/*
 tux_t* getTuxID(list_t *listTux, int id)
 {
 	tux_t *thisTux;
@@ -241,6 +242,7 @@ tux_t* getTuxID(list_t *listTux, int id)
 
 	return NULL;
 }
+*/
 
 void replaceTuxID(tux_t *tux, int id)
 {
@@ -259,10 +261,11 @@ int isTuxSeesTux(tux_t *tux, tux_t *thisTux)
 
 	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y);
 
-	return conflictSpace(screen_x, screen_y,
-			     WINDOW_SIZE_X, WINDOW_SIZE_Y, thisTux_x, thisTux_y, thisTux_w, thisTux_h);
+	return conflictSpace(screen_x-WINDOW_SIZE_X/4, screen_y-WINDOW_SIZE_Y/4,
+			     WINDOW_SIZE_X*1.25, WINDOW_SIZE_Y*1.25, thisTux_x, thisTux_y, thisTux_w, thisTux_h);
 }
 
+/*
 tux_t* isConflictWithListTux(list_t *listTux, int x, int y, int w, int h)
 {
 	tux_t *thisTux;
@@ -286,7 +289,9 @@ tux_t* isConflictWithListTux(list_t *listTux, int x, int y, int w, int h)
 
 	return NULL;
 }
+*/
 
+/*
 int isConflictTuxWithListTux(tux_t *tux, list_t *listTux)
 {
 	tux_t *thisTux;
@@ -320,6 +325,7 @@ int isConflictTuxWithListTux(tux_t *tux, list_t *listTux)
 
 	return 0;
 }
+*/
 
 static void timer_spawnTux(void *p)
 {
@@ -332,16 +338,16 @@ static void timer_spawnTux(void *p)
 	free(p);
 
 	arena = getCurrentArena();
-	tux = getTuxID(arena->listTux, id);
+	tux = getObjectFromSpaceWithID(arena->spaceTux, id);
 
 	if( tux == NULL )return;
 
 	tux->status = TUX_STATUS_ALIVE;
 	findFreeSpace(getCurrentArena(), &x, &y, TUX_WIDTH, TUX_HEIGHT);
-	setTuxProportion(tux, x, y);
+	moveObjectInSpace(getCurrentArena()->spaceTux, tux, x, y);
 	tux->gun = GUN_SIMPLE;
 	
-	addNewItem(arena->listItem, ID_UNKNOWN);
+	addNewItem(arena->spaceItem, ID_UNKNOWN);
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
@@ -357,7 +363,7 @@ static void timer_tuxCanShot(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux == NULL )return;
 
@@ -372,7 +378,7 @@ static void timer_tuxCanSwitchGun(void *p)
 	id =  * ((int *)p);
 	free(p);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux == NULL )return;
 
@@ -425,7 +431,7 @@ static void eventTuxIsDeadWIthShot(tux_t *tux, shot_t *shot)
 	{
 		tux_t *author;
 
-		author = getTuxID(getCurrentArena()->listTux, shot->author_id);
+		author = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, shot->author_id);
 		
 		if( author != NULL )
 		{
@@ -477,7 +483,7 @@ static void bombBallExplosion(shot_t *shot)
 	y = ( shot->y + shot->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
 	
 	item = newItem(x, y, ITEM_BIG_EXPLOSION, shot->author_id );
-	addList(getCurrentArena()->listItem, item );
+	addObjectToSpace(getCurrentArena()->spaceItem, item );
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
@@ -486,6 +492,7 @@ static void bombBallExplosion(shot_t *shot)
 	}
 }
 
+/*
 void eventConflictTuxWithShot(list_t *listTux, list_t *listShot)
 {
 	shot_t *thisShot;
@@ -543,6 +550,66 @@ void eventConflictTuxWithShot(list_t *listTux, list_t *listShot)
 		}
 	}
 }
+*/
+
+void eventConflictTuxWithShot(arena_t *arena)
+{
+	shot_t *thisShot;
+	tux_t *thisTux;
+	int i, j;
+
+	for( i = 0 ; i < arena->listShot->count ; i++ )
+	{
+		thisShot = (shot_t *)arena->listShot->list[i];
+		assert( thisShot != NULL );
+
+		listDoEmpty(listHelp);
+		getObjectFromSpace(arena->spaceTux, thisShot->x, thisShot->y,
+			thisShot->w, thisShot->h, listHelp);
+
+		for( j = 0 ; j < listHelp->count ; j++ )
+		{
+			thisTux = listHelp->list[j];
+
+			if(  thisTux->status == TUX_STATUS_ALIVE )
+			{
+				if( thisShot->author_id == thisTux->id &&
+				    thisShot->isCanKillAuthor == FALSE )
+				{
+					continue;
+				}
+
+				if( thisTux->bonus == BONUS_TELEPORT )
+				{
+					tuxTeleport(thisTux);
+					continue;
+				}
+
+				if( thisShot->gun == GUN_BOMBBALL )
+				{
+					if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+					{
+						bombBallExplosion(thisShot);
+						delListItem(arena->listShot, i, destroyShot);
+						i--;
+					}
+
+					continue;
+				}
+
+				if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+				{
+					eventTuxIsDeadWIthShot(thisTux, thisShot);
+				}
+			}
+
+			delListItem(arena->listShot, i, destroyShot);
+			i--;
+
+			continue;
+		}
+	}
+}
 
 /*
 void eventConflictTuxWithTeleport(list_t *listTux, list_t *listTeleport)
@@ -576,6 +643,7 @@ void moveTux(tux_t *tux, int n)
 {
 	int px, py;
 	int zal_x, zal_y;
+	int new_x, new_y;
 	int x, y, w, h;
 	arena_t *arena;
 
@@ -628,36 +696,46 @@ void moveTux(tux_t *tux, int n)
 		return;
 	}
 
+	getTuxProportion(tux, &zal_x, &zal_y, &w, &h);
+
 	getCourse(tux->position, &px, &py);
 	
-	zal_x = tux->x;
-	zal_y = tux->y;
+	new_x = zal_x;
+	new_y = zal_y;
 
-	tux->x += px * TUX_STEP;
-	tux->y += py * TUX_STEP;
+	new_x += px * TUX_STEP;
+	new_y += py * TUX_STEP;
 
 	if( tux->bonus == BONUS_SPEED )
 	{
-		tux->x += px * TUX_STEP;
-		tux->y += py * TUX_STEP;
+		new_x += px * TUX_STEP;
+		new_y += py * TUX_STEP;
 	}
-
-	getTuxProportion(tux, &x, &y, &w, &h);
-
+/*
+	setTuxProportion(tux, new_x, new_y);
 
 	if( tux->bonus != BONUS_GHOST && (
-	    isConflictTuxWithListTux(tux, arena->listTux) ||
+	    isConflictWithObjectFromSpace(arena->spaceTux, x, y, w, h) ||
 	    isConflictModule(x, y, w, h) ) )
 	{
-		tux->x = zal_x;
-		tux->y = zal_y;
+		setTuxProportion(tux, zal_x, zal_y);
+		return;
 	}
-	else
+*/
+
+	if( tux->bonus != BONUS_GHOST && (
+	    /*isConflictWithObjectFromSpace(arena->spaceTux, x, y, w, h) ||*/
+	    isConflictModule(new_x, new_y, w, h) ) )
 	{
-		eventGiveTuxListItem(tux, getCurrentArena()->listItem);
-		tux->frame++;
-		if( tux->frame == TUX_KEY * TUX_MAX_ANIMATION_FRAME ) tux->frame = 0;
+		setTuxProportion(tux, zal_x, zal_y);
+		return;
 	}
+
+	setTuxProportion(tux, zal_x, zal_y);
+	moveObjectInSpace(arena->spaceTux, tux, new_x, new_y);
+	eventGiveTuxListItem(tux, getCurrentArena()->spaceItem);
+	tux->frame++;
+	if( tux->frame == TUX_KEY * TUX_MAX_ANIMATION_FRAME ) tux->frame = 0;
 }
 
 void switchTuxGun(tux_t *tux)
@@ -817,7 +895,7 @@ static void eventBonus(tux_t *tux)
 
 				tux->bonus = BONUS_NONE;
 
-				if( isConflictTuxWithListTux(tux, getCurrentArena()->listTux) ||
+				if( /*isConflictTuxWithListTux(tux, getCurrentArena()->listTux) || */
 				    isConflictModule(x, y, w, h) )
 				{
 					tux->bonus = BONUS_GHOST;
@@ -859,7 +937,7 @@ void eventListTux(list_t *listTux)
 #endif
 		pickUpGun(thisTux);
 		eventBonus(thisTux);
-		eventGiveTuxListItem(thisTux, arena->listItem);
+		eventGiveTuxListItem(thisTux, arena->spaceItem);
 	}
 }
 
@@ -879,6 +957,23 @@ void setTuxProportion(tux_t *tux, int x, int y)
 
 	tux->x = x + TUX_WIDTH / 2;
 	tux->y = y + TUX_WIDTH / 2;
+}
+
+void getStatusTux(void *p, int *id, int *x,int *y, int *w, int *h)
+{
+	tux_t *tux;
+
+	tux = p;
+	*id = tux->id;
+	getTuxProportion(tux, x, y, w, h);
+}
+
+void setStatusTux(void *p, int x, int y, int w, int h)
+{
+	tux_t *tux;
+
+	tux = p;
+	setTuxProportion(tux, x, y);
 }
 
 void destroyTux(tux_t *tux)

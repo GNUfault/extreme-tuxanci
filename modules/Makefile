@@ -13,8 +13,9 @@ modPipe:
 
 modWall:
 	gcc $(CFLAGS) -fPIC -I../include `sdl-config --cflags` -c list.c -o list.o
+	gcc $(CFLAGS) -fPIC -I../include `sdl-config --cflags` -c space.c -o space.o
 	gcc $(CFLAGS) -fPIC -I../include `sdl-config --cflags` -c modWall.c -o modWall.o
-	gcc $(CFLAGS) -I../include -shared -fPIC -o modWall.so modWall.o list.o
+	gcc $(CFLAGS) -I../include -shared -fPIC -o modWall.so modWall.o list.o space.o
 
 clean:
 	rm -rf *.o 

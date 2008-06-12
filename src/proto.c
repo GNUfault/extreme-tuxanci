@@ -58,7 +58,7 @@ static void proto_send(int type, client_t *client, char *msg)
 			}
 			else
 			{
-				sendAllClientSeesTux(msg, getServerTux());
+				sendAllClientSeesTux(msg, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT));
 			}
 		break;
 		default :
@@ -84,6 +84,16 @@ static void proto_check(int type, client_t *client, char *msg, int id)
 		case PROTO_SEND_BUT :
 			assert( client != NULL );
 			addMsgAllClientBut(msg, client, id);
+		break;
+		case PROTO_SEND_ALL_SEES_TUX :
+			if( client != NULL )
+			{
+				addMsgAllClientSeesTux(msg, client->tux, id);
+			}
+			else
+			{
+				addMsgAllClientSeesTux(msg, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT), id);
+			}
 		break;
 		default :
 			assert( ! "Premenna type ma zlu hodnotu !" );
@@ -159,7 +169,7 @@ void proto_recv_hello_server(client_t *client, char *msg)
 
 	client->tux = newTux();
 	client->tux->control = TUX_CONTROL_NET;
-	addList(getCurrentArena()->listTux, client->tux);
+	addObjectToSpace(getCurrentArena()->spaceTux, client->tux);
 
 	if( strlen(name) > STR_NAME_SIZE-1 )
 	{
@@ -179,7 +189,7 @@ void proto_send_status_server(int type, client_t *client)
 			"maxclients: %d\n"
 			"uptime: %d\n"
 			"arena: %s\n",
-	TUXANCI_NG_VERSION, getCurrentArena()->listTux->count,
+	TUXANCI_NG_VERSION, getCurrentArena()->spaceTux->list->count,
 	getServerMaxClients(), (unsigned int)getUpdateServer(),
 	getArenaNetName( getChoiceArenaId() ) );
 
@@ -306,10 +316,11 @@ void proto_recv_init_client(char *msg)
 	tux->x = x;
 	tux->y = y;
 	tux->control = TUX_CONTROL_KEYBOARD_RIGHT;
+	setControlTux(tux, TUX_CONTROL_KEYBOARD_RIGHT);
 
 	getSettingNameRight(tux->name);
 
-	addList(getCurrentArena()->listTux, tux);
+	addObjectToSpace(getCurrentArena()->spaceTux, tux);
 }
 
 #endif
@@ -337,7 +348,7 @@ void proto_recv_event_client(char *msg)
 
 	sscanf(msg, "%s %d %d", cmd, &id, &action);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux != NULL )
 	{
@@ -393,6 +404,8 @@ void proto_send_newtux_server(int type, client_t *client, tux_t *tux)
 		y = tux->y;
 	}
 
+	getTuxProportion(tux, &x, &y, NULL, NULL);
+
 	sprintf(msg, "newtux %d %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d\n",
 	tux->id ,x, y, tux->status, tux->position ,tux->frame, tux->score, tux->name,
 	tux->gun, tux->bonus, tux->shot[GUN_SIMPLE], tux->shot[GUN_DUAL_SIMPLE],
@@ -426,7 +439,7 @@ void proto_recv_newtux_client(char *msg)
 	cmd, &id, &x, &y, &status, &position, &frame, &score, name,
 	&myGun, &myBonus, &gun1, &gun2, &gun3, &gun4, &gun5, &gun6, &gun7, &time1, &time2);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux == NULL )
 	{
@@ -436,12 +449,11 @@ void proto_recv_newtux_client(char *msg)
 
 		tux = newTux();
 		tux->control = TUX_CONTROL_NET;
-		addList(getCurrentArena()->listTux, tux);
+		addObjectToSpace(getCurrentArena()->spaceTux, tux);
 	}
 
 	replaceTuxID(tux, id);
-	tux->x = x;
-	tux->y = y;
+	moveObjectInSpace(getCurrentArena()->spaceTux, tux, x, y);
 	tux->status = status;
 	tux->position = position;
 	tux->frame = frame;
@@ -485,7 +497,7 @@ void proto_recv_kill_client(char *msg)
 
 	sscanf(msg, "%s %d", cmd, &id);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux != NULL )
 	{
@@ -518,7 +530,7 @@ void proto_recv_score_client(char *msg)
 
 	sscanf(msg, "%s %d %d", cmd, &id, &score);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux != NULL )
 	{
@@ -557,18 +569,18 @@ void proto_recv_deltux_client(char *msg)
 
 	sscanf(msg, "%s %d", cmd, &id);
 
-	tux = getTuxID(getCurrentArena()->listTux, id);
+	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
 	if( tux != NULL )
 	{
 		char term_msg[STR_SIZE];
-		int index;
+		//int index;
 	
 		sprintf(term_msg, "tux with id %d is disconnect\n", tux->id);
 		appendTextInTerm(term_msg);
 
-		index = searchListItem(getCurrentArena()->listTux, tux);
-		delListItem(getCurrentArena()->listTux, index, destroyTux);
+		//index = searchListItem(getCurrentArena()->listTux, tux);
+		delObjectFromSpaceWithMem(getCurrentArena()->spaceTux, tux, destroyTux);
 	}
 }
 
@@ -610,7 +622,7 @@ void proto_recv_additem_client(char *msg)
 
 	proto_send_check_client(check_id);
 
-	if( ( item = getItemID(getCurrentArena()->listItem, id) ) != NULL )
+	if( ( item = getObjectFromSpaceWithID(getCurrentArena()->spaceItem, id) ) != NULL )
 	{
 		return;
 	}
@@ -627,7 +639,7 @@ void proto_recv_additem_client(char *msg)
 	item->count = count;
 	item->frame = frame;
 
-	addList(getCurrentArena()->listItem, item);
+	addObjectToSpace(getCurrentArena()->spaceItem, item);
 }
 
 #endif
@@ -674,8 +686,8 @@ void proto_recv_item_client(char *msg)
 
 	arena = getCurrentArena();
 
-	item = getItemID(arena->listItem, item_id);
-	tux = getTuxID(arena->listTux, tux_id);
+	item = getObjectFromSpaceWithID(arena->spaceItem, item_id);
+	tux = getObjectFromSpaceWithID(arena->spaceTux, tux_id);
 
 	if( item == NULL)
 	{
@@ -684,11 +696,11 @@ void proto_recv_item_client(char *msg)
 
 	if( tux != NULL )
 	{
-		eventGiveTuxItem(tux, arena->listItem, item);
+		eventGiveTuxItem(tux, item, arena->spaceItem);
 	}
 	else
 	{
-		mineExplosion(arena->listItem, item);
+		mineExplosion(arena->spaceItem, item);
 	}
 }
 

@@ -128,6 +128,7 @@ item_t* newItem(int x, int y, int type, int author_id)
 	return new;
 }
 
+/*
 item_t* getItemID(list_t *listItem, int id)
 {
 	item_t *thisItem;
@@ -148,6 +149,31 @@ item_t* getItemID(list_t *listItem, int id)
 
 	return NULL;
 }
+*/
+
+void getStatusItem(void *p, int *id, int *x, int *y ,int *w, int *h)
+{
+	item_t *item;
+
+	item = p;
+
+	*id = item->id;
+	*x = item->x;
+	*y = item->y;
+	*w = item->w;
+	*h = item->h;
+}
+
+void setStatusItem(void *p, int x, int y, int w, int h)
+{
+	item_t *item;
+
+	item = p;
+	item->x = x;
+	item->y = y;
+	item->w = w;
+	item->h = h;
+}
 
 void replaceItemID(item_t *item, int id)
 {
@@ -155,7 +181,7 @@ void replaceItemID(item_t *item, int id)
 	item->id = id;
 }
 
-void addNewItem(list_t *listItem, int author_id)
+void addNewItem(space_t *spaceItem, int author_id)
 {
 #ifndef PUBLIC_SERVER
 	char msg[STR_SIZE];
@@ -214,7 +240,7 @@ void addNewItem(list_t *listItem, int author_id)
 #endif
 
 	item = newItem(new_x, new_y, type, author_id);
-	addList(listItem, item);
+	addObjectToSpace(spaceItem, item);
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
@@ -254,7 +280,7 @@ void drawListItem(list_t *listItem)
 
 #endif
 
-void eventListItem(list_t *listItem)
+void eventListItem(space_t *spaceItem)
 {
 	my_time_t currentTime;
 	item_t *thisItem;
@@ -262,11 +288,11 @@ void eventListItem(list_t *listItem)
 
 	currentTime = getMyTime();
 
-	assert( listItem != NULL );
+	assert( spaceItem != NULL );
 
-	for( i = 0 ; i < listItem->count ; i++ )
+	for( i = 0 ; i < spaceItem->list->count ; i++ )
 	{
-		thisItem  = (item_t *)listItem->list[i];
+		thisItem  = (item_t *)spaceItem->list->list[i];
 		assert( thisItem != NULL );
 
 		thisItem->count++;
@@ -302,7 +328,7 @@ void eventListItem(list_t *listItem)
 			case ITEM_BIG_EXPLOSION :
 				if( thisItem->frame == ITEM_EXPLOSION_MAX_FRAME )
 				{
-					delListItem(listItem, i, destroyItem);
+					delObjectFromSpaceWithMem(spaceItem, thisItem, destroyItem);
 					i--;
 				}
 			break;
@@ -322,6 +348,7 @@ void eventListItem(list_t *listItem)
 	}
 }
 
+/*
 int isConflictWithListItem(list_t *listItem, int x, int y, int w, int h)
 {
 	item_t *thisItem;
@@ -343,15 +370,10 @@ int isConflictWithListItem(list_t *listItem, int x, int y, int w, int h)
 
 	return 0;
 }
+*/
 
-void mineExplosion(list_t *listItem, item_t *item)
+void mineExplosion(space_t *spaceItem, item_t *item)
 {
-	int index;
-
-	index = searchListItem(listItem, item);
-
-	if( index == -1 )return;
-
 /*
 	x = ( item->x + item->w/2 ) - ITEM_BIG_EXPLOSION_WIDTH/2;
 	y = ( item->y + item->h/2 ) - ITEM_BIG_EXPLOSION_HEIGHT/2;
@@ -373,12 +395,13 @@ void mineExplosion(list_t *listItem, item_t *item)
 			proto_send_additem_server(PROTO_SEND_ALL, NULL, item_explosion);
 		}
 
-		addList(listItem, item_explosion );
+		addObjectToSpace(spaceItem, item_explosion );
 	}
 
-	delListItem(listItem, index, destroyItem);
+	delObjectFromSpaceWithMem(spaceItem, item, destroyItem);
 }
 
+/*
 void eventConflictShotWithItem(list_t *listItem, list_t *listShot)
 {
 	shot_t *thisShot;
@@ -446,6 +469,68 @@ void eventConflictShotWithItem(list_t *listItem, list_t *listShot)
 		}
 	}
 }
+*/
+
+void eventConflictShotWithItem(arena_t *arena)
+{
+	shot_t *thisShot;
+	item_t *thisItem;
+	int i, j;
+
+	if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
+	{
+		return; 
+	}
+
+	for( i = 0 ; i < arena->listShot->count ; i++ )
+	{
+		bool_t isDelShot;
+
+		isDelShot = FALSE;
+		thisShot  = (shot_t *)arena->listShot->list[i];
+		assert( thisShot != NULL );
+
+		listDoEmpty(listHelp);
+		getObjectFromSpace(arena->spaceItem, thisShot->x, thisShot->y, thisShot->w, thisShot->h, listHelp);
+
+		for( j = 0 ; j < listHelp->count ; j++ )
+		{
+			thisItem  = (item_t *)listHelp->list[j];
+			assert( thisItem != NULL );
+
+			switch( thisItem->type )
+			{
+				case ITEM_MINE :
+					if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+					{
+						if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+						{
+							proto_send_item_server(PROTO_SEND_ALL, NULL, NULL, thisItem);
+						}
+	
+						mineExplosion(arena->spaceItem, thisItem);
+					}
+				break;
+	
+				case ITEM_EXPLOSION :
+				case ITEM_BIG_EXPLOSION :
+					isDelShot = TRUE;	
+				break;
+			}
+		}
+
+		if( isDelShot )
+		{
+			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+			{
+				proto_send_delshot_server(PROTO_SEND_ALL, NULL, thisShot);
+			}
+	
+			delListItem(arena->listShot, i, destroyShot);
+			i--;
+		}
+	}
+}
 
 static void eventTuxIsDeadWithItem(tux_t *tux, item_t *item)
 {
@@ -464,7 +549,7 @@ static void eventTuxIsDeadWithItem(tux_t *tux, item_t *item)
 	{
 		tux_t *author;
 
-		author = getTuxID(getCurrentArena()->listTux, item->author_id);
+		author = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, item->author_id);
 
 		if( author != NULL )
 		{
@@ -514,14 +599,8 @@ static void tuxGiveGun(tux_t *tux, item_t *item)
 
 }
 
-int eventGiveTuxItem(tux_t *tux, list_t *listItem, item_t *item)
+void eventGiveTuxItem(tux_t *tux, item_t *item, space_t *spaceItem)
 {
-	int index;
-
-	index = searchListItem(listItem, item);
-
-	if( index == -1 ) return -1;
-
 	switch( item->type )
 	{
 		case GUN_TOMMY :
@@ -531,15 +610,13 @@ int eventGiveTuxItem(tux_t *tux, list_t *listItem, item_t *item)
 		case GUN_MINE :
 		case GUN_BOMBBALL :
 			tuxGiveGun(tux, item);
-			delListItem(listItem, index, destroyItem);
-			return index;
+			delObjectFromSpace(spaceItem, item);
 		break;
 
 		case ITEM_MINE :
 			if( tux->bonus != BONUS_GHOST )
 			{
-				mineExplosion(listItem, item);
-				return index;
+				mineExplosion(spaceItem, item);
 			}
 		break;
 
@@ -548,22 +625,19 @@ int eventGiveTuxItem(tux_t *tux, list_t *listItem, item_t *item)
 			eventTuxIsDeadWithItem(tux, item);
 		break;
 
-			case BONUS_SPEED :
-			case BONUS_SHOT :
-			case BONUS_TELEPORT :
-			case BONUS_GHOST :
-			case BONUS_4X :
-			case BONUS_HIDDEN :
-				tuxGiveBonus(tux, item);
-				delListItem(listItem, index, destroyItem);
-				return index;
-			break;
-		}
-
-	return -1;
+		case BONUS_SPEED :
+		case BONUS_SHOT :
+		case BONUS_TELEPORT :
+		case BONUS_GHOST :
+		case BONUS_4X :
+		case BONUS_HIDDEN :
+			tuxGiveBonus(tux, item);
+			delObjectFromSpace(spaceItem, item);
+		break;
+	}
 }
 
-void eventGiveTuxListItem(tux_t *tux, list_t *listItem)
+void eventGiveTuxListItem(tux_t *tux, space_t *spaceItem)
 {
 	item_t *thisItem;
 	int x, y, w, h;
@@ -574,7 +648,7 @@ void eventGiveTuxListItem(tux_t *tux, list_t *listItem)
 		return; 
 	}
 
-	assert( listItem != NULL );
+	assert( spaceItem != NULL );
 	assert( tux != NULL );
 
 	if( tux->status == TUX_STATUS_DEAD )
@@ -584,23 +658,20 @@ void eventGiveTuxListItem(tux_t *tux, list_t *listItem)
 
 	getTuxProportion(tux, &x, &y, &w, &h);
 	
-	for( i = 0 ; i < listItem->count ; i++ )
+	listDoEmpty(listHelp);
+	getObjectFromSpace(spaceItem, x, y, w, h, listHelp);
+
+	for( i = 0 ; i < listHelp->count ; i++ )
 	{
-		thisItem  = (item_t *)listItem->list[i];
+		thisItem  = (item_t *)listHelp->list[i];
 		assert( thisItem != NULL );
 
-		if( conflictSpace(x, y, w, h, thisItem->x, thisItem->y, thisItem->w, thisItem->h) )
+		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 		{
-			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
-			{
-				proto_send_item_server(PROTO_SEND_ALL, NULL, tux, thisItem);
-			}
-
-			if( eventGiveTuxItem(tux, listItem, thisItem) >= 0 )
-			{
-				i--;
-			}
+			proto_send_item_server(PROTO_SEND_ALL, NULL, tux, thisItem);
 		}
+
+		eventGiveTuxItem(tux, thisItem, spaceItem);
 	}
 }
 

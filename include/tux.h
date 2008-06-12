@@ -5,6 +5,7 @@
 
 #include "main.h"
 #include "list.h"
+#include "arena.h"
 
 #define TUX_STEP 7
 #define TUX_LAYER 0
@@ -55,6 +56,8 @@
 #define BONUS_COUNT	6
 #define ITEM_COUNT	16
 
+
+#define SHOT_CHECK_AREA	25
 
 #define GUN_SIMPLE		0
 #define GUN_DUAL_SIMPLE		1
@@ -114,7 +117,7 @@ extern void drawListTux(list_t *listTux);
 extern void eventTuxIsDead(tux_t *tux);
 extern tux_t* isConflictWithListTux(list_t *listTux, int x, int y, int w, int h);
 extern int isConflictTuxWithListTux(tux_t *tux, list_t *listTux);
-extern void eventConflictTuxWithShot(list_t *listTux, list_t *listShot);
+extern void eventConflictTuxWithShot(arena_t *arena);
 extern void eventConflictTuxWithTeleport(list_t *listTux, list_t *listTeleport);
 extern void tuxTeleport(tux_t *tux);
 extern void actionTux(tux_t *tux, int action);
@@ -124,6 +127,8 @@ extern void getTuxProportion(tux_t *tux, int *x,int *y, int *w, int *h);
 extern void replaceTuxID(tux_t *tux, int id);
 extern int isTuxSeesTux(tux_t *tux, tux_t *thisTux);
 extern void setTuxProportion(tux_t *tux, int x, int y);
+extern void getStatusTux(void *p, int *id, int *x,int *y, int *w, int *h);
+extern void setStatusTux(void *p, int x, int y, int w, int h);
 extern void destroyTux(tux_t *tux);
 extern void quitTux();
 

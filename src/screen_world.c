@@ -43,6 +43,9 @@ static my_time_t lastServerLag;
 static bool_t isScreenWorldInit = FALSE;
 static bool_t isEndWorld;
 
+static tux_t *tuxWithControlRightKeyboard;
+static tux_t *tuxWithControlLeftKeyboard;
+
 bool_t isScreenWorldInicialized()
 {
 	return isScreenWorldInit;
@@ -65,7 +68,6 @@ void setWorldArena(int id)
 {
 	arena = getArena(id);
 	playMusic(arena->music, MUSIC_GROUP_USER);
-	setCurrentArena(arena);
 }
 
 void setMaxCountRound(int n)
@@ -118,29 +120,32 @@ void prepareArena()
 	{
 		case NET_GAME_TYPE_NONE :
 			setWorldArena( getChoiceArenaId() );
-			addNewItem(arena->listItem, ID_UNKNOWN);
+			addNewItem(arena->spaceItem, ID_UNKNOWN);
 			getSettingCountRound(&max_count);
 
 			tux = newTux();
 			tux->control = TUX_CONTROL_KEYBOARD_RIGHT;
+			tuxWithControlRightKeyboard = tux;
 			getSettingNameRight(tux->name);
-			addList(arena->listTux, tux);
+			addObjectToSpace(arena->spaceTux, tux);
 		
 			tux = newTux();
 			tux->control = TUX_CONTROL_KEYBOARD_LEFT;
+			tuxWithControlLeftKeyboard = tux;
 			getSettingNameLeft(tux->name);
-			addList(arena->listTux, tux);
+			addObjectToSpace(arena->spaceTux, tux);
 		break;
 
 		case NET_GAME_TYPE_SERVER :
 			setWorldArena( getChoiceArenaId() );
-			addNewItem(arena->listItem, ID_UNKNOWN);
+			addNewItem(arena->spaceItem, ID_UNKNOWN);
 			getSettingCountRound(&max_count);
 
 			tux = newTux();
 			tux->control = TUX_CONTROL_KEYBOARD_RIGHT;
+			tuxWithControlRightKeyboard = tux;
 			getSettingNameRight(tux->name);
-			addList(arena->listTux, tux);
+			addObjectToSpace(arena->spaceTux, tux);
 		break;
 
 		case NET_GAME_TYPE_CLIENT :
@@ -172,10 +177,9 @@ void drawWorld()
 	if( arena != NULL )
 	{
 		drawArena(arena);
-		drawPanel(arena->listTux);
+		drawPanel(arena->spaceTux->list);
 	}
 
-	drawModule();
 	drawTerm();
 }
 
@@ -393,23 +397,30 @@ static void eventEnd()
 
 tux_t* getControlTux(int control_type)
 {
-	arena_t *arena;
-	tux_t *thisTux;
-	int i;
-
-	arena = getCurrentArena();
-
-	for( i = 0 ; i < arena->listTux->count ; i++ )
+	switch(control_type)
 	{
-		thisTux = (tux_t *)(arena->listTux->list[i]);
-
-		if( thisTux->control == control_type )
-		{
-			return thisTux;
-		}
+		case TUX_CONTROL_KEYBOARD_RIGHT :
+			return tuxWithControlRightKeyboard;
+		break;
+		case TUX_CONTROL_KEYBOARD_LEFT :
+			return tuxWithControlLeftKeyboard;
+		break;
 	}
 
 	return NULL;
+}
+
+void setControlTux(tux_t *tux, int control_type)
+{
+	switch(control_type)
+	{
+		case TUX_CONTROL_KEYBOARD_RIGHT :
+			tuxWithControlRightKeyboard = tux;
+		break;
+		case TUX_CONTROL_KEYBOARD_LEFT :
+			tuxWithControlLeftKeyboard = tux;
+		break;
+	}
 }
 
 void tuxControl(tux_t *p)
@@ -479,9 +490,9 @@ static void setAnalyze()
 
 	restartAnalyze();
 
-	for( i = 0 ; i < arena->listTux->count ; i++ )
+	for( i = 0 ; i < arena->spaceTux->list->count ; i++ )
 	{
-		tux = (tux_t *)(arena->listTux->list[i]);
+		tux = (tux_t *)(arena->spaceTux->list->list[i]);
 		addAnalyze(tux->name, tux->score);
 	}
 

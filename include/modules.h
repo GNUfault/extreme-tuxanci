@@ -52,7 +52,7 @@ typedef struct module_s
 
 	int (*fce_init)(export_fce_t *p);
 #ifndef PUBLIC_SERVER
-	int (*fce_draw)();
+	int (*fce_draw)(int x, int y,int w, int h);
 #endif
 	int (*fce_event)();
 	int (*fce_isConflict)(int x, int y, int w, int h);
@@ -64,7 +64,7 @@ typedef struct module_s
 extern void initModule();
 extern int loadModule(char *name);
 #ifndef PUBLIC_SERVER
-extern void drawModule();
+extern void drawModule(int x, int y, int w, int h);
 #endif
 extern void eventModule();
 extern void cmdModule(char *s);

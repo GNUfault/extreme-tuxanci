@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -42,6 +41,7 @@ int initLanguage()
 	char *head;
 
 	sprintf(path, "%s/lang.conf", getHomeDirector());
+	printf("open %s\n", path);
 	languageTypeFile = loadTextFile(path);
 
 	if( languageTypeFile == NULL )

@@ -103,10 +103,10 @@ static void eventPeriodicSyncClient(void *p_nothink)
 		}
 
 #ifndef PUBLIC_SERVER
-		thisTux = (tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]);
-
+		thisTux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
 		if( isTuxSeesTux(thisClientSend->tux, thisTux)  )
 		proto_send_newtux_server(PROTO_SEND_ONE, thisClientSend, thisTux);
+
 #endif
 
 		for( j = 0 ; j < listClient->count; j++)
@@ -261,7 +261,7 @@ client_t* newSdlUdpClient(sock_sdl_udp_t *sock_sdl_udp)
 
 void destroyClient(client_t *p)
 {
-	int index;
+//	int index;
 
 	assert( p != NULL );
 
@@ -282,8 +282,11 @@ void destroyClient(client_t *p)
 #ifdef PUBLIC_SERVER
 		addPlayerInHighScore(p->tux->name, p->tux->score);
 #endif
+/*
 		index = searchListItem(getCurrentArena()->listTux, p->tux);
 		delListItem(getCurrentArena()->listTux, index, destroyTux);
+*/
+		delObjectFromSpaceWithMem(getCurrentArena()->spaceTux, p->tux, destroyTux);
 	}
 
 	free(p);
@@ -413,9 +416,49 @@ void addMsgAllClient(char *msg,  int id)
 	addMsgAllClientBut(msg, NULL, id);
 }
 
+void addMsgAllClientSeesTux(char *msg, tux_t *tux, int id)
+{
+	int i;
+
+	assert( msg != NULL );
+
+	for( i = 0 ; i < listClient->count ; i++ )
+	{
+		client_t *thisClient;
+		tux_t *thisTux;
+
+		thisClient = (client_t *)listClient->list[i];
+		thisTux = (tux_t *)thisClient->tux;
+
+		if( tux != thisTux &&
+		    isTuxSeesTux(thisTux, tux) )
+		{
+			addMsgClient(thisClient, msg, id);
+		}
+	}
+}
+
 tux_t *getServerTux()
 {
-	return (tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]);
+	return NULL;
+}
+
+client_t *getClientFromTux(tux_t *tux)
+{
+	client_t *thisClient;
+	int i;
+
+	for( i = 0 ; i < listClient->count; i++)
+	{
+		thisClient = (client_t *) listClient->list[i];
+
+		if( thisClient->tux == tux )
+		{
+			return thisClient;
+		}
+	}
+
+	return NULL;
 }
 
 void sendInfoCreateClient(client_t *client)
@@ -430,8 +473,7 @@ void sendInfoCreateClient(client_t *client)
 	proto_send_init_server(PROTO_SEND_ONE, client, client);
 
 #ifndef PUBLIC_SERVER
-	proto_send_newtux_server(PROTO_SEND_ONE, client,
-		(tux_t *)(getCurrentArena()->listTux->list[SERVER_INDEX_ROOT_TUX]) );
+	proto_send_newtux_server(PROTO_SEND_ONE, client, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT) );
 #endif
 
 	for( i = 0 ; i < listClient->count; i++)
@@ -446,9 +488,9 @@ void sendInfoCreateClient(client_t *client)
 		}
 	}
 
-	for( i = 0 ; i < getCurrentArena()->listItem->count; i++)
+	for( i = 0 ; i < getCurrentArena()->spaceItem->list->count; i++)
 	{
-		thisItem = (item_t *) getCurrentArena()->listItem->list[i];
+		thisItem = (item_t *) getCurrentArena()->spaceItem->list->list[i];
 		proto_send_additem_server(PROTO_SEND_ONE, client, thisItem);
 	}
 }

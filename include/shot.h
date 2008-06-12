@@ -9,6 +9,7 @@
 #endif	
 #include "list.h"
 #include "tux.h"
+#include "arena.h"
 
 typedef struct shot_struct
 {
@@ -45,6 +46,7 @@ extern void drawListShot(list_t *listShot);
 #endif
 extern int isConflictWithListShot(list_t *listShot, int x, int y, int w, int h);
 extern void eventMoveListShot(list_t *listShot);
+extern void checkShotIsInTuxScreen(arena_t *arena);
 
 extern void boundBombBall(shot_t *shot);
 extern void transformOnlyLasser(shot_t *shot);

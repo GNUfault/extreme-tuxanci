@@ -38,7 +38,7 @@ static export_fce_t export_fce =
 		.fce_getNetTypeGame = getNetTypeGame,
 		.fce_getTuxProportion = getTuxProportion,
 		.fce_setTuxProportion = setTuxProportion,
-		.fce_getTuxID = getTuxID,
+		//.fce_getTuxID = getTuxID,
 
 		.fce_getCurrentArena = getCurrentArena,
 		.fce_conflictSpace = conflictSpace,
@@ -170,7 +170,7 @@ void cmdModule(char *s)
 
 #ifndef PUBLIC_SERVER
 
-void drawModule()
+void drawModule(int x, int y, int w, int h)
 {
 	int i;
 
@@ -178,7 +178,7 @@ void drawModule()
 	{
 		module_t *this;
 		this = (module_t *)listModule->list[i];
-		this->fce_draw();
+		this->fce_draw(x, y, w, h);
 	}
 }
 

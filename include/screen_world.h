@@ -20,6 +20,7 @@ extern void countRoundInc();
 extern void setWorldEnd();
 extern void setMaxCountRound(int n);
 extern tux_t* getControlTux(int control_type);
+extern void setControlTux(tux_t *tux, int control_type);
 extern void tuxControl(tux_t *p);
 extern void drawWorld();
 extern void eventWorld();

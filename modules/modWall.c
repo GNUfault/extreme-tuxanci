@@ -10,6 +10,7 @@
 #include "shot.h"
 #include "list.h"
 #include "gun.h"
+#include "space.h"
 
 #ifndef PUBLIC_SERVER
 #include "interface.h"
@@ -40,6 +41,8 @@ typedef struct wall_struct
 
 static export_fce_t *export_fce;
 
+static space_t *spaceWall;
+static space_t *spaceImgWall;
 static list_t *listWall;
 
 #ifndef PUBLIC_SERVER	
@@ -128,17 +131,15 @@ void eventConflictShotWithWall(list_t *listShot)
 	tux_t *author;
 	int i;
 
-	assert( listWall != NULL );
-	assert( listShot != NULL );
-	
 	for( i = 0 ; i < listShot->count ; i++ )
 	{
 		thisShot  = (shot_t *)listShot->list[i];
 		assert( thisShot != NULL );
 
-		if( isConflictWithListWall(listWall, thisShot->x, thisShot->y, thisShot->w, thisShot->h) != NULL )
+		if( isConflictWithObjectFromSpace(spaceWall, thisShot->x, thisShot->y, thisShot->w, thisShot->h) )
 		{
-			author = export_fce->fce_getTuxID( listShot, thisShot->author_id );
+			author = getObjectFromSpaceWithID(
+				export_fce->fce_getCurrentArena()->spaceTux, thisShot->author_id );
 			
 			if( author != NULL &&
 			    author->bonus == BONUS_GHOST &&
@@ -163,6 +164,48 @@ void destroyWall(wall_t *p)
 {
 	assert( p != NULL );
 	free(p);
+}
+
+static void getStatusWall(void *p, int *id, int *x, int *y, int *w, int *h)
+{
+	wall_t *wall;
+
+	wall = p;
+
+	*id = -1;
+	*x = wall->x;
+	*y = wall->y;
+	*w = wall->w;
+	*h = wall->h;
+}
+
+static void setStatusWall(void *p, int x, int y, int w, int h)
+{
+	wall_t *wall;
+
+	wall = p;
+
+	wall->x = x;
+	wall->y = y;
+	wall->w = w;
+	wall->h = h;
+}
+
+static void getStatusImgWall(void *p, int *id, int *x, int *y, int *w, int *h)
+{
+	wall_t *wall;
+
+	wall = p;
+
+	*id = -1;
+	*x = wall->img_x;
+	*y = wall->img_y;
+	*w = wall->img->w;
+	*h = wall->img->h;
+}
+
+static void setStatusImgWall(void *p, int x, int y, int w, int h)
+{
 }
 
 static void cmd_wall(char *line)
@@ -200,13 +243,22 @@ static void cmd_wall(char *line)
 			atoi(str_layer) );
 #endif
 
-	addList(listWall, new);
+	if( spaceWall == NULL )
+	{
+		spaceWall  = newSpace(export_fce->fce_getCurrentArena()->w, export_fce->fce_getCurrentArena()->h,
+				320, 240, getStatusWall, setStatusWall);
+
+		spaceImgWall  = newSpace(export_fce->fce_getCurrentArena()->w, export_fce->fce_getCurrentArena()->h,
+				320, 240, getStatusImgWall, setStatusImgWall);
+	}
+
+	addObjectToSpace(spaceWall, new);
+	addObjectToSpace(spaceImgWall, new);
 }
 
 int init(export_fce_t *p)
 {
 	export_fce = p;
-
 	listWall = newList();
 
 	return 0;
@@ -214,12 +266,15 @@ int init(export_fce_t *p)
 
 #ifndef PUBLIC_SERVER
 
-int draw()
+int draw(int x, int y, int w, int h)
 {
 	wall_t *thisWall;
 	int i;
 
-	assert( listWall != NULL );
+	assert( spaceWall != NULL );
+
+	listDoEmpty(listWall);
+	getObjectFromSpace(spaceImgWall, x, y, w, h, listWall);
 
 	for( i = 0 ; i < listWall->count ; i++ )
 	{
@@ -227,6 +282,8 @@ int draw()
 		assert( thisWall != NULL );
 		drawWall(thisWall);
 	}
+
+	//printSpace(spaceWall);
 
 	return 0;
 }
@@ -241,14 +298,7 @@ int event()
 
 int isConflict(int x, int y, int w, int h)
 {
-	if( isConflictWithListWall(listWall, x, y, w, h) != NULL )
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
+	return isConflictWithObjectFromSpace(spaceWall, x, y, w, h);
 }
 
 void cmd(char *line)
@@ -258,7 +308,7 @@ void cmd(char *line)
 
 int destroy()
 {
-	destroyListItem(listWall, destroyWall);
+	destroyList(listWall);
 
 	return 0;
 }
