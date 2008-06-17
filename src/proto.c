@@ -179,6 +179,8 @@ void proto_recv_hello_server(client_t *client, char *msg)
 
 	client->tux = newTux();
 	client->tux->control = TUX_CONTROL_NET;
+	client->tux->client = client;
+
 	addObjectToSpace(getCurrentArena()->spaceTux, client->tux);
 
 	if( strlen(name) > STR_NAME_SIZE-1 )
@@ -451,6 +453,11 @@ void proto_recv_newtux_client(char *msg)
 
 	tux = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, id);
 
+	if( tux != NULL )
+	{
+		assert( tux->id == id );
+	}
+
 	if( tux == NULL )
 	{
 		char term_msg[STR_SIZE];
@@ -458,11 +465,11 @@ void proto_recv_newtux_client(char *msg)
 		appendTextInTerm(term_msg);
 
 		tux = newTux();
+		replaceTuxID(tux, id);
 		tux->control = TUX_CONTROL_NET;
 		addObjectToSpace(getCurrentArena()->spaceTux, tux);
 	}
 
-	replaceTuxID(tux, id);
 	moveObjectInSpace(getCurrentArena()->spaceTux, tux, x, y);
 	tux->status = status;
 	tux->position = position;
@@ -590,7 +597,7 @@ void proto_recv_deltux_client(char *msg)
 		appendTextInTerm(term_msg);
 
 		//index = searchListItem(getCurrentArena()->listTux, tux);
-		delObjectFromSpaceWithMem(getCurrentArena()->spaceTux, tux, destroyTux);
+		delObjectFromSpaceWithObject(getCurrentArena()->spaceTux, tux, destroyTux);
 	}
 }
 

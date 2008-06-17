@@ -28,10 +28,11 @@ extern void* getObjectFromSpaceWithID(space_t *p, int id);
 extern int isConflictWithObjectFromSpace(space_t *p, int x, int y, int w, int h);
 extern int isConflictWithObjectFromSpaceBut(space_t *p, int x, int y, int w, int h, void *but);
 extern void delObjectFromSpace(space_t *p, void *item);
-extern void delObjectFromSpaceWithMem(space_t *p, void *item, void *f);
+extern void delObjectFromSpaceWithObject(space_t *p, void *item, void *f);
 extern void moveObjectInSpace(space_t *p, void *item, int move_x, int move_y);
 extern void printSpace(space_t *p);
-extern void destroySpace(space_t *p, void *f);
+extern void destroySpace(space_t *p);
+extern void destroySpaceWithObject(space_t *p, void *f);
 
 #endif
  

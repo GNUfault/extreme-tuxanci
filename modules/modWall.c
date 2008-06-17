@@ -312,8 +312,9 @@ void cmd(char *line)
 
 int destroy()
 {
-	destroySpace(spaceWall, destroyWall);
-	destroyList(listWall);
+	destroySpace(spaceWall);
+	destroySpace(spaceImgWall);
+	destroyListItem(listWall, destroyWall);
 
 	return 0;
 }

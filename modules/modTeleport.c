@@ -495,7 +495,7 @@ void cmd(char *line)
 
 int destroy()
 {
-	destroySpace(spaceTeleport, destroyTeleport);
+	destroySpaceWithObject(spaceTeleport, destroyTeleport);
 	destroyList(listTeleport);
 	return 0;
 }

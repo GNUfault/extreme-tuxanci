@@ -112,6 +112,7 @@ int main(int argc, char *argv[])
 	test_space();
 	exit(0);
 */
+
 #ifndef PUBLIC_SERVER
 	startGame();
 #endif

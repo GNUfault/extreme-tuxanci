@@ -441,7 +441,7 @@ void cmd(char *line)
 
 int destroy()
 {
-	destroySpace(spacePipe, destroyPipe);
+	destroySpaceWithObject(spacePipe, destroyPipe);
 	destroyList(listPipe);
 
 	return 0;

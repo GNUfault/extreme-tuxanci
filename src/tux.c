@@ -84,7 +84,7 @@ tux_t* newTux()
 	new->position = TUX_DOWN;
 	new->gun = GUN_SIMPLE;
 	new->shot[ new->gun ] = GUN_MAX_SHOT;
-	
+
 	sprintf(new->name, "no_name_id_%d", new->id);
 	new->score = 0;
 	new->frame = 0;
@@ -94,6 +94,8 @@ tux_t* newTux()
 
 	new->isCanShot = TRUE;
 	new->isCanSwitchGun = TRUE;
+
+	new->client = NULL;
 
 	return new;
 }

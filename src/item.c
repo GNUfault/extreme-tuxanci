@@ -328,7 +328,7 @@ void eventListItem(space_t *spaceItem)
 			case ITEM_BIG_EXPLOSION :
 				if( thisItem->frame == ITEM_EXPLOSION_MAX_FRAME )
 				{
-					delObjectFromSpaceWithMem(spaceItem, thisItem, destroyItem);
+					delObjectFromSpaceWithObject(spaceItem, thisItem, destroyItem);
 					i--;
 				}
 			break;
@@ -398,7 +398,7 @@ void mineExplosion(space_t *spaceItem, item_t *item)
 		addObjectToSpace(spaceItem, item_explosion );
 	}
 
-	delObjectFromSpaceWithMem(spaceItem, item, destroyItem);
+	delObjectFromSpaceWithObject(spaceItem, item, destroyItem);
 }
 
 /*

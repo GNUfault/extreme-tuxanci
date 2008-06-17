@@ -97,6 +97,8 @@ void quitGame()
 	quitScreenCredits();
 	quitScreenTable();
 
+	destroyList(listHelp);
+
 	printf("quit..\n");
 
 	exit(0);

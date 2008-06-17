@@ -219,8 +219,8 @@ void eventArena(arena_t *arena)
 
 void destroyArena(arena_t *p)
 {
-	destroySpace(p->spaceTux, destroyTux);
-	destroySpace(p->spaceItem, destroyItem);
+	destroySpaceWithObject(p->spaceTux, destroyTux);
+	destroySpaceWithObject(p->spaceItem, destroyItem);
 	destroyListItem(p->listShot, destroyShot);
 	destroyTimer(p->listTimer);
 	free(p);

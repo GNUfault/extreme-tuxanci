@@ -106,7 +106,6 @@ static void eventPeriodicSyncClient(void *p_nothink)
 		thisTux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
 		if( isTuxSeesTux(thisClientSend->tux, thisTux)  )
 		proto_send_newtux_server(PROTO_SEND_ONE, thisClientSend, thisTux);
-
 #endif
 
 		for( j = 0 ; j < listClient->count; j++)
@@ -286,7 +285,7 @@ void destroyClient(client_t *p)
 		index = searchListItem(getCurrentArena()->listTux, p->tux);
 		delListItem(getCurrentArena()->listTux, index, destroyTux);
 */
-		delObjectFromSpaceWithMem(getCurrentArena()->spaceTux, p->tux, destroyTux);
+		delObjectFromSpaceWithObject(getCurrentArena()->spaceTux, p->tux, destroyTux);
 	}
 
 	free(p);

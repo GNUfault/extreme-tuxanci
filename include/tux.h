@@ -105,6 +105,8 @@ typedef struct tux_struct
 	bool_t isCanSwitchGun;
 
 	int frame;
+
+	void *client;
 } tux_t;
 
 extern bool_t isTuxInicialized();
