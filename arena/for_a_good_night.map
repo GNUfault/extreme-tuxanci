@@ -7,13 +7,13 @@ loadModule file="modWall.so"
 
 loadMusic file="for_a_good_night.ogg" name="for_a_good_night"
 
-loadImage file="tl1.grow.png" name="grow" alpha="no"
+loadImage file="l1.grow.png" name="grow" alpha="no"
 loadImage file="l1.hut.png" name="hut" alpha="yes"
 loadImage file="l1.peduncle.png" name="peduncle" alpha="yes"
 loadImage file="l1.tree.png" name="tree" alpha="yes"
 loadImage file="l1.wood.png" name="wood" alpha="yes"
 
-arena background="grow" w="2000" h="2000"
+arena background="grow" w="800" h="600"
 
 playMusic music="for_a_good_night"
 
