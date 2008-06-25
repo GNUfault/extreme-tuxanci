@@ -6,7 +6,7 @@
 #define DEBUG_CLIENT_RECV
 */
 
-#define TUXANCI_NG_VERSION "svn71"
+#define TUXANCI_NG_VERSION "svn72"
 
 #define DESTDIR "/usr/local/"
 #define SUPPORT_NET_UNIX_UDP

@@ -258,7 +258,7 @@ static client_t* newAnyClient()
 	memset(new, 0, sizeof(client_t));
 	
 	new->status = NET_STATUS_OK;
-	new->buffer = newBuffer(LIMIT_BUFFER);
+	new->buffer = newList();
 	new->lastPing = getMyTime();
 	new->listCheck = newCheckFront();
 
@@ -317,7 +317,7 @@ void destroyClient(client_t *p)
 	closeSdlUdpSocket(p->socket_sdl_udp);
 #endif
 
-	destroyBuffer(p->buffer);
+	destroyListItem(p->buffer, free);
 	destroyCheckFront(p->listCheck);
 
 	if( p->tux != NULL )
@@ -583,14 +583,18 @@ static void eventCreateNewSdlUdpClient(sock_sdl_udp_t *socket_sdl_udp)
 
 static void eventClientBuffer(client_t *client)
 {
-	char line[STR_PROTO_SIZE];
+	char *line;
+	int i;
 
 	assert( client != NULL );
 
 	/* obsluha udalosti od clientov */
 	
-	while( getBufferLine(client->buffer, line, STR_PROTO_SIZE) >= 0 )
+	//while( getBufferLine(client->buffer, line, STR_PROTO_SIZE) >= 0 )
+	for( i = 0 ; i < client->buffer->count ; i++ )
 	{
+		line = (char *)client->buffer->list[i];
+
 #ifndef PUBLIC_SERVER
 		if( isParamFlag("--recv") )
 		{
@@ -651,6 +655,9 @@ static void eventClientBuffer(client_t *client)
 			proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_COMMAND);
 		}
 	}
+
+	destroyListItem(client->buffer, free);
+	client->buffer = newList();
 }
 
 void eventClientListBuffer()
@@ -735,11 +742,8 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 		return;
 	}
 
-	if( addBuffer(client->buffer, buffer, ret) != 0 )
-	{
-		client->status = NET_STATUS_ZOMBIE;
-		return;
-	}
+	//printf("add packet >>%s<<\n", buffer);
+	addList(client->buffer, strdup(buffer) );
 }
 
 void selectServerUdpSocket()
@@ -904,12 +908,7 @@ void selectServerSdlUdpSocket()
 			return;
 		}
 	
-		if( addBuffer(client->buffer, buffer, ret) != 0 )
-		{
-			client->status = NET_STATUS_ZOMBIE;
-			return;
-		}
-
+		addList(client->buffer, strdup(buffer) );
 	}while( ret > 0 );
 }
 

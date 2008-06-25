@@ -32,7 +32,6 @@ static widget_button_t *button_play;
 static widget_label_t *label_none;
 static widget_label_t *label_server;
 static widget_label_t *label_client;
-static widget_label_t *label_ipv6;
 
 static widget_label_t *label_ip;
 static widget_label_t *label_port;
@@ -40,8 +39,6 @@ static widget_label_t *label_port;
 static widget_check_t *check_none;
 static widget_check_t *check_server;
 static widget_check_t *check_client;
-
-static widget_check_t *check_ipv6;
 
 static widget_textfield_t *textfield_ip;
 static widget_textfield_t *textfield_port;
@@ -65,8 +62,6 @@ void drawScreenGameType()
 		drawWidgetTextfield(textfield_port);
 		drawWidgetLabel(label_ip);
 		drawWidgetTextfield(textfield_ip);
-		drawWidgetCheck(check_ipv6);
-		drawWidgetLabel(label_ipv6);
 	}
 
 	drawWidgetCheck(check_none);
@@ -82,7 +77,6 @@ void eventScreenGameType()
 	eventWidgetCheck(check_none);
 	eventWidgetCheck(check_server);
 	eventWidgetCheck(check_client);
-	eventWidgetCheck(check_ipv6);
 
 	eventWidgetTextfield(textfield_ip);
 	eventWidgetTextfield(textfield_port);
@@ -182,9 +176,6 @@ void initScreenGameType()
 	textfield_ip = newWidgetTextfield(getParamElse("--ip", "127.0.0.1"), 300, 180);
 	textfield_port = newWidgetTextfield(getParamElse("--port", "2200"), 300, 280);
 
-	check_ipv6 = newWidgetCheck(300, 330, FALSE, eventWidget);
-	label_ipv6 = newWidgetLabel("support IPv6", 330, 325, WIDGET_LABEL_LEFT);
-
 	registerScreen( newScreen("gameType", startScreenGameType, eventScreenGameType,
 		drawScreenGameType, stopScreenGameType) );
 }
@@ -223,7 +214,18 @@ int getSettingPort()
 
 int getSettingProto()
 {
-	return ( check_ipv6->status == TRUE ? PROTO_UDPv6 : PROTO_UDPv4 );
+	if( strstr(textfield_ip->text, ".") != NULL )
+	{
+		return PROTO_UDPv4;
+	}
+
+	if( strstr(textfield_ip->text, ":") != NULL )
+	{
+		return PROTO_UDPv6;
+	}
+
+	printf("IP protokol unknown !\n");
+	return -1;
 }
 
 void quitScreenGameType()

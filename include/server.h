@@ -48,7 +48,7 @@ typedef struct client_struct
 	tux_t *tux;
 	my_time_t lastPing;
 	list_t *listCheck;
-	buffer_t *buffer;
+	list_t *buffer;
 } client_t;
 
 #ifdef PUBLIC_SERVER

@@ -26,7 +26,7 @@ static sock_udp_t *sock_server_udp;
 static sock_sdl_udp_t *sock_server_sdl_udp;
 #endif
 
-static buffer_t *clientBuffer;
+static list_t *clientBuffer;
 static my_time_t lastPing;
 static my_time_t lastPingServerAlive;
 
@@ -34,7 +34,7 @@ static void initClient()
 {
 	char name[STR_NAME_SIZE];
 
-	clientBuffer = newBuffer( LIMIT_BUFFER );
+	clientBuffer = newList();
 	lastPing = getMyTime();
 	lastPingServerAlive = getMyTime();
 
@@ -126,26 +126,31 @@ static int eventServerSelect()
 	}
 #endif
 
+	addList(clientBuffer, strdup(buffer) );
+/*
 	if( addBuffer(clientBuffer, buffer, ret) != 0 )
 	{
 		fprintf(stderr, "chyba, nemozem zapisovat do mojho buffera !\n");
 		setWorldEnd();
 		return ret;
 	}
-
+*/
 	return ret;
 }
 
 void eventServerBuffer()
 {
-	char line[STR_PROTO_SIZE];
+	char *line;
+	int i;
 
 	/* obsluha udalosti od servera */
 	
 	assert( clientBuffer != NULL );
 
-	while ( getBufferLine(clientBuffer, line, STR_PROTO_SIZE) >= 0 )
+	for( i = 0 ; i < clientBuffer->count ; i++ )
 	{
+		line = (char *)clientBuffer->list[i];
+
 #ifndef PUBLIC_SERVER
 		if( isParamFlag("--recv") )
 		{
@@ -165,6 +170,9 @@ void eventServerBuffer()
 
 		lastPingServerAlive = getMyTime();
 	}
+
+	destroyListItem(clientBuffer, free);
+	clientBuffer = newList();
 }
 
 void eventPingServer()
@@ -258,7 +266,7 @@ static void quitClient()
 {
 	proto_send_end_client();
 	assert( clientBuffer != NULL );
-	destroyBuffer(clientBuffer);
+	destroyListItem(clientBuffer, free);
 }
 
 #ifdef SUPPORT_NET_UNIX_UDP

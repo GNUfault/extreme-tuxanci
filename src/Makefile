@@ -12,7 +12,7 @@ LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_net
 FILES = interface.o space.o idManager.o storage.o font.o list.o modules.o\
 	image.o layer.o director.o configFile.o tux.o main.o checkFront.o\
 	screen.o screen_world.o shot.o myTimer.o panel.o net_multiplayer.o \
-	buffer.o arena.o arenaFile.o textFile.o audio.o sound.o music.o gun.o \
+	arena.o arenaFile.o textFile.o audio.o sound.o music.o gun.o \
 	item.o widget_label.o screen_mainMenu.o widget_button.o screen_analyze.o widget_textfield.o \
 	widget_check.o widget_image.o widget_select.o screen_setting.o screen_gameType.o screen_choiceArena.o \
 	widget_buttonimage.o screen_credits.o homeDirector.o screen_table.o \
@@ -83,9 +83,6 @@ myTimer.o: myTimer.c ../include/myTimer.h
 
 panel.o: panel.c ../include/panel.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/panel.o -c panel.c
-
-buffer.o: buffer.c ../include/buffer.h
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/buffer.o -c buffer.c
 
 tcp.o: tcp.c ../include/tcp.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/tcp.o -c tcp.c
