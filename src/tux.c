@@ -382,7 +382,8 @@ void tuxTeleport(tux_t *tux)
 	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 	{
 		findFreeSpace(getCurrentArena(), &x, &y, TUX_WIDTH, TUX_HEIGHT);
-		setTuxProportion(tux, x, y);
+		moveObjectInSpace(getCurrentArena()->spaceTux, tux, x, y);
+		//setTuxProportion(tux, x, y);
 	}
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )

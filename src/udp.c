@@ -4,6 +4,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,7 +12,7 @@
 #include <netdb.h>
 #include <string.h>
 #include <assert.h>
-#include <netdb.h>
+
 
 #define BUFSIZE 1000
 #include "udp.h"

@@ -15,7 +15,9 @@ typedef struct struct_sock_udp_t
 	int sock;
 	int proto;
 
+#ifdef SUPPORT_IPv6
 	struct sockaddr_in6 sockAddr6;
+#endif
 	struct sockaddr_in sockAddr;
 } sock_udp_t;
 
