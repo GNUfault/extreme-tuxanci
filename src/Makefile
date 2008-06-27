@@ -9,7 +9,7 @@ CFLAGS = -g -O0 -std=c99 -I../include -Wall `sdl-config --cflags`
 BUILD_DIR = .
 LIBS = `sdl-config --libs` -lSDL_image -lSDL_ttf -lSDL_mixer -lSDL_net
 
-FILES = interface.o space.o idManager.o storage.o font.o list.o modules.o\
+FILES = interface.o protect.o space.o idManager.o storage.o font.o list.o modules.o\
 	image.o layer.o director.o configFile.o tux.o main.o checkFront.o\
 	screen.o screen_world.o shot.o myTimer.o panel.o net_multiplayer.o \
 	arena.o arenaFile.o textFile.o audio.o sound.o music.o gun.o \
@@ -23,6 +23,9 @@ tuxanci-ng: $(FILES)
 
 main.o: main.c 
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/main.o -c main.c
+
+protect.o: protect.c 
+	$(CC) $(CFLAGS) -o $(BUILD_DIR)/protect.o -c protect.c
 
 hashTable.o: hashTable.c ../include/hashTable.h
 	$(CC) $(CFLAGS) -o $(BUILD_DIR)/hashTable.o -c hashTable.c

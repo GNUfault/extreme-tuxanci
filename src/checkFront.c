@@ -63,17 +63,17 @@ void eventMsgInCheckFront(client_t *client)
 
 	currentTime = getMyTime();
 
-	for( i = 0 ; i < client->listCheck->count ; i++ )
+	for( i = 0 ; i < client->listSendMsg->count ; i++ )
 	{
 		checkfront_t *this;
 
-		this = (checkfront_t *)client->listCheck->list[i];
+		this = (checkfront_t *)client->listSendMsg->list[i];
 
 		switch( this->type )
 		{
 			case CHECK_FORNT_TYPE_SIMPLE :
 					sendClient(client, this->msg);
-					delListItem(client->listCheck, i, destroyCheck);
+					delListItem(client->listSendMsg, i, destroyCheck);
 					i--;
 			break;
 
@@ -92,7 +92,7 @@ void eventMsgInCheckFront(client_t *client)
 						delID(this->id);
 					}
 		
-					delListItem(client->listCheck, i, destroyCheck);
+					delListItem(client->listSendMsg, i, destroyCheck);
 					i--;
 				}
 			break;

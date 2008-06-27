@@ -331,9 +331,8 @@ void getObjectFromSpace(space_t *p, int x, int y, int w, int h, list_t *list)
 	}
 }
 
-void* getObjectFromSpaceWithID(space_t *space, int id)
+int searchObjectInSpace(space_t *space, int id)
 {
-#ifdef ERROR_SUPPORT
 	int point_id;
 	int x, y, w, h;
 	int len;
@@ -357,7 +356,7 @@ void* getObjectFromSpaceWithID(space_t *space, int id)
 
 		if(  max < 0 || point >= len || max < min )
 		{
-			return NULL;
+			return -1;
 		}
 
 		space->getStatus(space->list->list[point], &point_id, &x, &y, &w, &h);
@@ -369,7 +368,7 @@ void* getObjectFromSpaceWithID(space_t *space, int id)
 
 		if( point_id == id )
 		{
-			return space->list->list[point];
+			return point;
 		}
 
 		if( id > point_id )
@@ -384,29 +383,15 @@ void* getObjectFromSpaceWithID(space_t *space, int id)
 			continue;
 		}
 	}
+}
 
-#endif
+void* getObjectFromSpaceWithID(space_t *space, int id)
+{
+	int index;
 
-#ifndef ERROR_SUPPORT
-	int this_id, x, y, w, h;
-	void *this;
-	int i;
+	index = searchObjectInSpace(space, id);
 
-	for( i = 0 ; i < space->list->count ; i++ )
-	{
-		this  = space->list->list[i];
-		assert( this != NULL );
-
-		space->getStatus(this, &this_id, &x, &y, &w, &h);
-
-		if( this_id == id )
-		{
-			return this;
-		}
-	}
-
-	return NULL;
-#endif
+	return ( index != -1 ? space->list->list[index] : NULL );
 }
 
 int isConflictWithObjectFromSpace(space_t *p, int x, int y, int w, int h)
@@ -495,7 +480,7 @@ void delObjectFromSpace(space_t *p, void *item)
 		}
 	}
 
-	index = searchListItem(p->list, item);
+	index = searchObjectInSpace(p, id);
 	assert( index != -1 );
 	delList(p->list, index);
 }

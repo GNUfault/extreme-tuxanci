@@ -16,7 +16,6 @@
 #include "list.h"
 #include "tux.h"
 #include "network.h"
-#include "buffer.h"
 #include "proto.h"
 #include "server.h"
 #include "assert.h"
@@ -24,6 +23,7 @@
 #include "arena.h"
 #include "net_multiplayer.h"
 #include "checkFront.h"
+#include "protect.h"
 
 #ifndef PUBLIC_SERVER
 #include "screen_world.h"
@@ -72,9 +72,11 @@ static void delZombieCLient(void *p_nothink)
 	{
 		thisClient = (client_t *) listClient->list[i];
 
-		if( currentTime - thisClient->lastPing > SERVER_TIMEOUT )
+		if( isDown(thisClient->protect) == TRUE )
 		{
-			proto_send_error_server(PROTO_SEND_ONE, thisClient, PROTO_ERROR_CODE_TIMEOUT);
+			//proto_send_error_server(PROTO_SEND_ONE, thisClient, PROTO_ERROR_CODE_TIMEOUT);
+			proto_send_end_server(PROTO_SEND_ONE, thisClient);
+			eventMsgInCheckFront(thisClient);
 			thisClient->status = NET_STATUS_ZOMBIE;
 		}
 
@@ -241,9 +243,9 @@ static client_t* newAnyClient()
 	memset(new, 0, sizeof(client_t));
 	
 	new->status = NET_STATUS_OK;
-	new->buffer = newList();
-	new->lastPing = getMyTime();
-	new->listCheck = newCheckFront();
+	new->listRecvMsg = newList();
+	new->listSendMsg = newCheckFront();
+	new->protect = newProtect();
 
 	return new;
 }
@@ -287,6 +289,8 @@ void destroyClient(client_t *p)
 
 	assert( p != NULL );
 
+	eventMsgInCheckFront(p);
+
 #ifdef SUPPORT_NET_UNIX_UDP
 	getSockUdpIp(p->socket_udp, str_ip, STR_IP_SIZE);
 	printf("close connect %s %d\n", str_ip, getSockUdpPort(p->socket_udp) );
@@ -300,8 +304,10 @@ void destroyClient(client_t *p)
 	closeSdlUdpSocket(p->socket_sdl_udp);
 #endif
 
-	destroyListItem(p->buffer, free);
-	destroyCheckFront(p->listCheck);
+	destroyListItem(p->listRecvMsg, free);
+	destroyCheckFront(p->listSendMsg);
+
+	destroyProtect(p->protect);
 
 	if( p->tux != NULL )
 	{
@@ -381,7 +387,7 @@ static void addMsgClient(client_t *p, char *msg, int type, int id)
 
 	if( p->status != NET_STATUS_ZOMBIE )
 	{
-		addMsgInCheckFront(p->listCheck, msg, type, id);
+		addMsgInCheckFront(p->listSendMsg, msg, type, id);
 	}
 }
 
@@ -565,10 +571,10 @@ static void eventClientBuffer(client_t *client)
 
 	/* obsluha udalosti od clientov */
 	
-	//while( getBufferLine(client->buffer, line, STR_PROTO_SIZE) >= 0 )
-	for( i = 0 ; i < client->buffer->count ; i++ )
+	//while( getBufferLine(client->listRecvMsg, line, STR_PROTO_SIZE) >= 0 )
+	for( i = 0 ; i < client->listRecvMsg->count ; i++ )
 	{
-		line = (char *)client->buffer->list[i];
+		line = (char *)client->listRecvMsg->list[i];
 
 #ifndef PUBLIC_SERVER
 		if( isParamFlag("--recv") )
@@ -576,7 +582,8 @@ static void eventClientBuffer(client_t *client)
 			printf("recv -> %s", line);
 		}
 #endif
-		client->lastPing = getMyTime();
+
+		rereshLastPing(client->protect);
 
 		if( strncmp(line, "hello", 5) == 0 )
 		{
@@ -631,8 +638,8 @@ static void eventClientBuffer(client_t *client)
 		}
 	}
 
-	destroyListItem(client->buffer, free);
-	client->buffer = newList();
+	destroyListItem(client->listRecvMsg, free);
+	client->listRecvMsg = newList();
 }
 
 void eventClientListBuffer()
@@ -672,7 +679,7 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 {
 	sock_udp_t *sock_client;
 	client_t *client;
-	char buffer[STR_SIZE];
+	char listRecvMsg[STR_SIZE];
 	bool_t isCreateNewClient;
 	int ret;
 
@@ -681,9 +688,9 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 	sock_client = newSockUdp(sock_server->proto);
 	isCreateNewClient = FALSE;
 
-	memset(buffer, 0, STR_SIZE);
+	memset(listRecvMsg, 0, STR_SIZE);
 
-	ret = readUdpSocket(sock_server, sock_client, buffer, STR_SIZE-1);
+	ret = readUdpSocket(sock_server, sock_client, listRecvMsg, STR_SIZE-1);
 
 	client = findUdpClient(sock_client);
 
@@ -717,8 +724,8 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 		return;
 	}
 
-	//printf("add packet >>%s<<\n", buffer);
-	addList(client->buffer, strdup(buffer) );
+	//printf("add packet >>%s<<\n", listRecvMsg);
+	addList(client->listRecvMsg, strdup(listRecvMsg) );
 }
 
 int selectServerUdpSocket()
@@ -770,15 +777,21 @@ int selectServerUdpSocket()
 
 	//printf("select..\n");
 
+#ifdef PUBLIC_SERVER
 	if( listClient->count == 0 )
 	{
-		ret = select(max_fd+1, &readfds, (fd_set *)NULL, &errorfds,  &tv);
+		ret = select(max_fd+1, &readfds, (fd_set *)NULL, &errorfds,  NULL);
 		setServerTimer();
 	}
 	else
 	{
 		ret = select(max_fd+1, &readfds, (fd_set *)NULL,&errorfds, &tv);
 	}
+#endif
+
+#ifndef PUBLIC_SERVER
+	ret = select(max_fd+1, &readfds, (fd_set *)NULL,&errorfds, &tv);
+#endif
 
 	if( ret < 0 )
 	{
@@ -843,7 +856,7 @@ void selectServerSdlUdpSocket()
 {
 	sock_sdl_udp_t *sock_client;
 	client_t *client;
-	char buffer[STR_PROTO_SIZE];
+	char listRecvMsg[STR_PROTO_SIZE];
 	bool_t isCreateNewClient;
 	int ret;
 
@@ -853,9 +866,9 @@ void selectServerSdlUdpSocket()
 		sock_client = newSdlSockUdp();
 		isCreateNewClient = FALSE;
 	
-		memset(buffer, 0, STR_PROTO_SIZE);
+		memset(listRecvMsg, 0, STR_PROTO_SIZE);
 	
-		ret = readSdlUdpSocket(sock_server_sdl_udp, sock_client, buffer, STR_PROTO_SIZE-1);
+		ret = readSdlUdpSocket(sock_server_sdl_udp, sock_client, listRecvMsg, STR_PROTO_SIZE-1);
 	
 		if( ret < 0 )
 		{
@@ -889,7 +902,7 @@ void selectServerSdlUdpSocket()
 			return;
 		}
 	
-		addList(client->buffer, strdup(buffer) );
+		addList(client->listRecvMsg, strdup(listRecvMsg) );
 	}while( ret > 0 );
 }
 
@@ -897,6 +910,8 @@ void selectServerSdlUdpSocket()
 
 void eventServer()
 {
+#ifndef PUBLIC_SERVER
+
 	int count;
 
 #ifdef SUPPORT_NET_SDL_UDP
@@ -907,6 +922,12 @@ void eventServer()
 	do{
 		count = selectServerUdpSocket();
 	}while( count > 0 );
+#endif
+
+#endif
+
+#ifdef PUBLIC_SERVER
+	selectServerUdpSocket();
 #endif
 
 	eventClientListBuffer();

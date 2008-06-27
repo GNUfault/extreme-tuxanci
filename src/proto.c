@@ -16,6 +16,7 @@
 #include "net_multiplayer.h"
 #include "checkFront.h"
 #include "idManager.h"
+#include "protect.h"
 
 #ifndef PUBLIC_SERVER
 #include "language.h"
@@ -208,7 +209,7 @@ void proto_recv_check_server(client_t *client, char *msg)
 	sscanf(msg, "%s %d",
 		cmd, &id);
 
-	delMsgInCheckFront(client->listCheck, id);
+	delMsgInCheckFront(client->listSendMsg, id);
 }
 
 void proto_send_init_server(int type, client_t *client, client_t *client2)
@@ -307,6 +308,25 @@ void proto_send_event_client(int action)
 
 #endif
 
+/*
+static void debug_interval()
+{
+	static my_time_t lastEvent = 0;
+	my_time_t curentTime;
+
+	if( lastEvent == 0 )
+	{
+		lastEvent = getMyTime();
+	}
+
+	curentTime = getMyTime();
+
+	printf("time = %d\n", curentTime - lastEvent);
+
+	lastEvent = getMyTime();
+}
+*/
+
 void proto_recv_event_server(client_t *client, char *msg)
 {
 	char cmd[STR_PROTO_SIZE];
@@ -315,10 +335,13 @@ void proto_recv_event_server(client_t *client, char *msg)
 	assert( client != NULL );
 	assert( msg != NULL );
 
+	//debug_interval();
+
 	sscanf(msg, "%s %d", cmd, &action);
 
 	proto_send_event_server(PROTO_SEND_ALL_SEES_TUX, client, client->tux, action);
 
+	refreshLastMove(client->protect);
 	actionTux(client->tux, action);
 }
 
@@ -572,17 +595,15 @@ void proto_recv_additem_client(char *msg)
 void proto_send_shot_server(int type, client_t *client, shot_t *p)
 {
 	char msg[STR_PROTO_SIZE];
-	int check_id;
 
 	assert( p != NULL );
 
-	check_id = getNewID();
-	sprintf(msg, "shot %d %d %d %d %d %d %d %d %d %d\n",
-		p->id, p->x, p->y, p->px, p->py, p->position, p->gun, p->author_id, p->isCanKillAuthor, check_id);
+	sprintf(msg, "shot %d %d %d %d %d %d %d %d %d\n",
+		p->id, p->x, p->y, p->px, p->py, p->position, p->gun, p->author_id, p->isCanKillAuthor);
 
 	//proto_send(type, client, msg);
 	//proto_check(type, client, msg, check_id);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_CHECK, check_id);
+	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -590,15 +611,14 @@ void proto_send_shot_server(int type, client_t *client, shot_t *p)
 void proto_recv_shot_client(char *msg)
 {
 	char cmd[STR_PROTO_SIZE];
-	int x, y, px, py, position, gun, shot_id, author_id, isCanKillAuthor, check_id;
+	int x, y, px, py, position, gun, shot_id, author_id, isCanKillAuthor;
 	shot_t *shot;
 
 	assert( msg != NULL );
 
-	sscanf(msg, "%s %d %d %d %d %d %d %d %d %d %d",
-		cmd, &shot_id, &x, &y, &px, &py, &position, &gun, &author_id, &isCanKillAuthor, &check_id);
+	sscanf(msg, "%s %d %d %d %d %d %d %d %d %d",
+		cmd, &shot_id, &x, &y, &px, &py, &position, &gun, &author_id, &isCanKillAuthor);
 
-	proto_send_check_client(check_id);
 
 	if( ( shot = getObjectFromSpaceWithID(getCurrentArena()->spaceShot, shot_id) )  != NULL )
 	{

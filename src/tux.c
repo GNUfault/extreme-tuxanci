@@ -471,23 +471,6 @@ void eventConflictTuxWithShot(arena_t *arena)
 	}
 }
 
-static void interval()
-{
-	static my_time_t lastEvent = 0;
-	my_time_t curentTime;
-
-	if( lastEvent == 0 )
-	{
-		lastEvent = getMyTime();
-	}
-
-	curentTime = getMyTime();
-
-	printf("time = %d\n", curentTime - lastEvent);
-
-	lastEvent = getMyTime();
-}
-
 void moveTux(tux_t *tux, int n)
 {
 	int px, py;

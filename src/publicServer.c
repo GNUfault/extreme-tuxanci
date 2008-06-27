@@ -138,6 +138,7 @@ void eventPublicServer()
 */
 	lastActive = getMyTime();
 
+	//fce_interval();
 	eventArena(arena);
 }
 

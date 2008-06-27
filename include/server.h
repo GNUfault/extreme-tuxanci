@@ -9,6 +9,7 @@
 #include "tux.h"
 #include "buffer.h"
 #include "myTimer.h"
+#include "protect.h"
 
 #ifndef PUBLIC_SERVER
 #include "interface.h"
@@ -27,7 +28,7 @@
 
 #endif
 
-#define SERVER_TIMEOUT		5000
+#define SERVER_TIMEOUT		1000
 #define SERVER_TIME_SYNC	1000
 #define SERVER_TIME_PING	1000
 #define SERVER_MAX_CLIENTS	100
@@ -45,10 +46,13 @@ typedef struct client_struct
 	sock_sdl_udp_t *socket_sdl_udp;
 #endif
 	int status;
+
 	tux_t *tux;
-	my_time_t lastPing;
-	list_t *listCheck;
-	list_t *buffer;
+
+	protect_t *protect;
+
+	list_t *listSendMsg;
+	list_t *listRecvMsg;
 } client_t;
 
 #ifdef PUBLIC_SERVER
