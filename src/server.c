@@ -430,6 +430,11 @@ static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 		thisClient = (client_t *)listClient->list[i];
 		thisTux = (tux_t *)thisClient->tux;
 
+		if( thisTux == NULL )
+		{
+			continue;
+		}
+
 		if( tux != thisTux &&
 		    isTuxSeesTux(thisTux, tux) )
 		{
