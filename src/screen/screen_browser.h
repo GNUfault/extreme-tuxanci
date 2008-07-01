@@ -3,9 +3,6 @@
 
 #define SCREEN_BROWSER_H
 
-#define MASTER_SERVER	"193.85.244.165"
-#define MASTER_PORT	2200
-
 typedef struct server_context {
   	struct server_context *next, *prev;
 

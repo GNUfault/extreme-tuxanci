@@ -99,11 +99,14 @@ void stopScreenBrowser()
 			server->next->prev = server->prev;
 			server->prev->next = server->next;
 
-			//if (server->version)
-			//	free (server->version);
+			if (server->name)
+				free (server->name);
 
-			//if (server->arena)
-				//free (server->arena);
+			if (server->version)
+				free (server->version);
+
+			if (server->arena)
+				free (server->arena);
 
 			free (server);
 
@@ -181,15 +184,13 @@ int server_getinfo (server_t *server)
 	}
 
 	struct timeval tv;
-	// Mno¾ina
+
 	fd_set myset;
-	// Mno¾ina obsahuje náhodná data. Odstraním je.
 	FD_ZERO(&myset);
-	// Zaplnìní mno¾iny sokety
 	FD_SET(mySocket, &myset);
-	// Vyplním èasový údaj (napøíklad na 3 minuty)
-	tv.tv_sec = 2;// Poèet sekund
-	tv.tv_usec = 0;// Poèet mikrosekund
+
+	tv.tv_sec = 2;
+	tv.tv_usec = 0;
 
 	srv.sin_family = AF_INET;
 	srv.sin_port = htons (server->port);
@@ -200,7 +201,6 @@ int server_getinfo (server_t *server)
 		    return -1;
 	}
 
-	// Zavolám select (V Linuxu musím mít nastavenou promìnnou max.)
 	int ret = select (mySocket+1, NULL, &myset, NULL, &tv);
 
 	if (ret == -1)
@@ -251,6 +251,7 @@ int server_getinfo (server_t *server)
 #endif
 
 	/*
+		["name: F\n"] >= svn82
 		"version: svnX\n"
 		"clients: N\n"
 		"maxclients: M\n"
@@ -278,41 +279,74 @@ int server_getinfo (server_t *server)
 		i ++;
 	}
 
-	unsigned len = strlen (str);
-	if (!strncmp (str, "version: ", 9)) {
-		unsigned ver_len = strlen (str+9);
-		server->version = (char *) malloc (sizeof (char) * (ver_len + 1));
-  
+	unsigned name = 0;
+
+	if (strstr (str, "name: "))
+		name = 1;
+
+	int len = 0;
+
+	if (name) {
+		len = strlen (str);
+		if (!strncmp (str, "name: ", 6)) {
+			unsigned name_len = strlen (str+6);
+			server->name = (char *) malloc (sizeof (char) * (name_len + 2));
+	  
+			if (!server->name)
+				return 0;
+	
+			memcpy (server->name, str+6, name_len+1);
+			server->name[name_len+1] = '\0';
+		}
+	}
+
+	/* HACK */
+	if (!name)
+		len = -1;
+
+	if (!strncmp (str+len+1, "version: ", 9)) {
+		unsigned ver_len = strlen (str+len+10);
+		server->version = (char *) malloc (sizeof (char) * (ver_len + 2));
+	 
 		if (!server->version)
 			return 0;
-
-		memcpy (server->version, str+9, ver_len+1);
+	
+		memcpy (server->version, str+len+10, ver_len+1);
+		server->version[ver_len+1] = '\0';
 	}
+
+	len += strlen (str+len+1) + 1;
+
 
 	if (!strncmp (str+len+1, "clients: ", 9))
 		server->clients = atoi (str+len+10);
 
 	len += strlen (str+len+1) + 1;
 
+
 	if (!strncmp (str+len+1, "maxclients: ", 12))
 		server->maxclients = atoi (str+len+13);
 
 	len += strlen (str+len+1) + 1;
+	
 
 	if (!strncmp (str+len+1, "uptime: ", 8))
 		server->uptime = atoi (str+len+9);
 
 	len += strlen (str+len+1) + 1;
+	
 
 	if (!strncmp (str+len+1, "arena: ", 7)) {
-		unsigned arena_len = strlen (str+9);
-		server->arena = (char *) malloc (sizeof (char) * (arena_len + 1));
-  
+		unsigned arena_len = strlen (str+len+9);
+		server->arena = (char *) malloc (sizeof (char) * (arena_len + 2));
+	  
 		if (!server->arena)
 			return 0;
-
+	
 		memcpy (server->arena, str+len+8, arena_len+1);
+		server->arena[arena_len+1] = '\0';
 	}
+
 
 	free (str);
 
@@ -332,8 +366,8 @@ static int LoadServers ()
 	struct sockaddr_in server;
 	
 	server.sin_family = AF_INET;
-	server.sin_port = htons (MASTER_PORT);
-	server.sin_addr.s_addr = inet_addr (MASTER_SERVER);
+	server.sin_port = htons (NET_MASTER_PORT);
+	server.sin_addr.s_addr = inet_addr (NET_MASTER_SERVER);
 	
 	if ((s = socket (AF_INET, SOCK_STREAM, 0)) < 0) {
 		close (s);
@@ -385,11 +419,7 @@ static int LoadServers ()
 	if (ret == 0)
 		return -2;
 
-	/* receive server list if exist */
-	//int len;
-	//do {
 	int len = recv (s, buf, 1024, 0);
-	//} while (len < 1);
 
 	close (s);
 #else
@@ -419,14 +449,17 @@ static int LoadServers ()
 		
 		ctx->ip = header->ip;
 		ctx->port = header->port;
+		ctx->name = 0;
+		ctx->version = 0;
+		ctx->arena = 0;
 
 		srv.sin_addr.s_addr = ctx->ip;
 
 		int ret = server_getinfo (ctx);
   
 		if (ret == 1) {
-			sprintf (list, "%s:%d (%s) - %s - %d/%d - %dms", inet_ntoa (srv.sin_addr), ctx->port, ctx->version,
-				ctx->arena, ctx->clients, ctx->maxclients, ctx->ping);
+			sprintf (list, "%s (%s) - %s:%d - %s - %d/%d - %dms", ctx->name ? ctx->name : "Unknown", ctx->version, inet_ntoa (srv.sin_addr), ctx->port,
+				ctx->arena ? ctx->arena : "Unknown", ctx->clients, ctx->maxclients, ctx->ping);
 		} else if (ret == -2)
 			sprintf (list, "%s:%d - Timeout", inet_ntoa (srv.sin_addr), ctx->port);
 		else

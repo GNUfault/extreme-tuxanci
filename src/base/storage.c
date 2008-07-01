@@ -112,7 +112,7 @@ void delAllItemFromStorage(list_t *list, char *group, void *f)
 
 	assert( list != NULL );
 	assert( group != NULL );
-	
+
 	for(i = 0 ; i < list->count; i++)
 	{
 		this = (storage_item_t *) list->list[i];

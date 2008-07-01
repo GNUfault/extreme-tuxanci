@@ -6,6 +6,14 @@
 #include <signal.h>
 #include <time.h>
 
+#ifdef SUPPORT_NET_UNIX_UDP
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <errno.h>
+#endif
+
 #include "base/main.h"
 #include "base/list.h"
 #include "base/tux.h"
@@ -27,6 +35,12 @@ static int arenaId;
 static arena_t *arena;
 static bool_t isSignalEnd;
 
+#ifdef SUPPORT_NET_UNIX_UDP
+extern int errno;
+
+#define	__PACKED__ __attribute__ ((__packed__))
+#endif
+
 void countRoundInc()
 {
 }
@@ -34,6 +48,96 @@ void countRoundInc()
 static char *getSetting(char *env, char *param, char *default_val)
 {
 	return getParamElse(param, getServerConfigFileValue(env, default_val) );
+}
+
+static int registerPublicServer()
+{
+	int s;
+
+	/* TODO: dodelat TCP makro */
+#ifdef SUPPORT_NET_UNIX_UDP
+	struct sockaddr_in server;
+	
+	server.sin_family = AF_INET;
+	server.sin_port = htons (NET_MASTER_PORT);
+	server.sin_addr.s_addr = inet_addr (NET_MASTER_SERVER);
+	
+	if ((s = socket (AF_INET, SOCK_STREAM, 0)) < 0) {
+		close (s);
+		return 0;
+	}
+
+	int oldFlag = fcntl (s, F_GETFL, 0);
+	if (fcntl (s, F_SETFL, oldFlag | O_NONBLOCK) == -1) {
+		return -1;
+	}
+
+	if (connect (s, (struct sockaddr *) &server, sizeof (server)) == -1) {
+		if (errno != EINPROGRESS)
+		    return -1;
+	}
+
+	struct timeval tv;
+
+	fd_set myset;
+
+	FD_ZERO(&myset);
+	FD_SET(s, &myset);
+
+	tv.tv_sec = 3;
+	tv.tv_usec = 0;
+
+	int ret = select (s+1, NULL, &myset, NULL, &tv);
+
+	if (ret == -1)
+		return -1;
+
+	if (ret == 0)
+		return -1;
+
+	FD_ZERO(&myset);
+	FD_SET(s, &myset);
+
+	tv.tv_sec = 1;
+	tv.tv_usec = 0;
+
+	ret = select (s+1, NULL, &myset, NULL, &tv);
+
+	if (ret == -1)
+		return -1;
+
+	if (ret == 0)
+		return -1;
+
+
+	typedef struct {
+		unsigned char cmd;
+		unsigned port;
+		unsigned ip;
+	} __PACKED__ register_head;
+
+	char *str = (char *) malloc (sizeof (register_head));
+
+	register_head *head = (register_head *) str;
+
+	head->cmd = 'p';
+	head->port = atoi( getSetting("PORTv4", "--port", "2200") );
+	head->ip = 0;	// TODO
+
+	/* send request for server list */
+	int r = send (s, str, 9, 0);
+
+	if (r == -1) {
+		close(s);
+		return -1;
+	}
+
+	close(s);
+#else
+	return -1;
+#endif
+
+	return 0;
 }
 
 static int initPublicServerNetwork()
@@ -101,6 +205,11 @@ int initPublicServer()
 	}
 
 	setServerMaxClients( atoi( getSetting("MAX_CLIENTS", "--maxclients", "32") ));
+
+	if (registerPublicServer() < 0)
+	{
+		printf("Nemuzu kontaktovat master server !\n");
+	}
 
 	return 0;
 }
