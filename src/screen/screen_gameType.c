@@ -51,6 +51,10 @@ void startScreenGameType()
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
+
+	check_none->status = TRUE;
+	check_server->status = FALSE;
+	check_client->status = FALSE;
 }
 
 void drawScreenGameType()
@@ -69,6 +73,15 @@ void drawScreenGameType()
 		drawWidgetTextfield(textfield_ip);
 	}
 
+	if( check_server->status == TRUE )
+	{
+		setSettingIP (getParamElse ("--ip", "127.0.0.1"));
+		setSettingPort (atoi (getParamElse("--port", "2200")));
+	}
+
+	if( check_client->status == TRUE )
+		drawWidgetButton(button_browser);
+
 	drawWidgetCheck(check_none);
 	drawWidgetCheck(check_server);
 	drawWidgetCheck(check_client);
@@ -76,8 +89,6 @@ void drawScreenGameType()
 	drawWidgetButton(button_back);
 	drawWidgetButton(button_play);
 
-	if( check_client->status == TRUE )
-		drawWidgetButton(button_browser);
 }
 
 void eventScreenGameType()
