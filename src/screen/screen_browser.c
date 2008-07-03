@@ -58,6 +58,22 @@ static server_t server_list;
 static int LoadServers ();
 static server_t *server_getcurr ();
 
+
+static int net_ip_convert (unsigned ip, char *ip_addr)
+{
+	if (!ip_addr)
+		return -1;
+
+	unsigned char a = (unsigned char) ip;
+	unsigned char b = (unsigned char) (ip >> 8);
+	unsigned char c = (unsigned char) (ip >> 16);
+	unsigned char d = (unsigned char) (ip >> 24);
+
+	sprintf (ip_addr, "%d.%d.%d.%d", a, b, c, d);
+
+	return 0;
+}
+
 void startScreenBrowser()
 {
 #ifndef NO_SOUND
@@ -92,7 +108,8 @@ void stopScreenBrowser()
 	unsigned i = 0;
 	server_t *server;
 
-	listDoEmpty(select_server->list);
+	destroyListItem(select_server->list, free);
+	select_server->list = newList();
 
 	while (1) {
 		i = 0;
@@ -259,18 +276,6 @@ int server_getinfo (server_t *server)
 		"uptime: D\n"
 	*/
 
-	typedef struct {
-		char *version;
-		unsigned char clients;
-		unsigned char maxclients;
-		unsigned uptime;
-	} server_info;
-
-	server_info *info = (server_info *) malloc (sizeof (server_info));
-
-	if (!info)
-		return 0;
-
 	unsigned i = 0;
 
 	while (i < ret) {
@@ -433,7 +438,7 @@ static int LoadServers ()
 	unsigned i = 0;
 	char list[256];
 
-	struct sockaddr_in srv;
+	char address[16];
 
 	typedef struct {
 		unsigned port;
@@ -454,17 +459,18 @@ static int LoadServers ()
 		ctx->version = 0;
 		ctx->arena = 0;
 
-		srv.sin_addr.s_addr = ctx->ip;
-
 		int ret = server_getinfo (ctx);
   
+		net_ip_convert (ctx->ip, address);
+
 		if (ret == 1) {
-			sprintf (list, "%s (%s) - %s:%d - %s - %d/%d - %dms", ctx->name ? ctx->name : "Unknown", ctx->version, inet_ntoa (srv.sin_addr), ctx->port,
+			sprintf (list, "%s (%s) - %s:%d - %s - %d/%d - %dms", ctx->name ? ctx->name : "Unknown", ctx->version, address, ctx->port,
 				ctx->arena ? ctx->arena : "Unknown", ctx->clients, ctx->maxclients, ctx->ping);
 		} else if (ret == -2)
-			sprintf (list, "%s:%d - Timeout", inet_ntoa (srv.sin_addr), ctx->port);
+			sprintf (list, "%s:%d - Timeout", address, ctx->port);
 		else
-			sprintf (list, "%s:%d - Offline", inet_ntoa (srv.sin_addr), ctx->port);
+			sprintf (list, "%s:%d - Offline", address, ctx->port);
+
 
 		addToWidgetSelect(select_server, list);
 
