@@ -127,7 +127,6 @@ extern void eventListTux(list_t *listTux);
 extern tux_t* getTuxID(list_t *listTux, int id);
 extern void getTuxProportion(tux_t *tux, int *x,int *y, int *w, int *h);
 extern void replaceTuxID(tux_t *tux, int id);
-extern int isTuxSeesTux(tux_t *tux, tux_t *thisTux);
 extern void setTuxProportion(tux_t *tux, int x, int y);
 extern void getStatusTux(void *p, int *id, int *x,int *y, int *w, int *h);
 extern void setStatusTux(void *p, int x, int y, int w, int h);

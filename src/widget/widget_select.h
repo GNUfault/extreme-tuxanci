@@ -18,6 +18,7 @@ typedef struct widget_select
 
 extern widget_select_t* newWidgetSelect(int x, int y, void (*fce_event)(void *));
 extern void addToWidgetSelect(widget_select_t *p, char *s);
+extern void removeAllFromWidgetSelect(widget_select_t *p);
 extern void drawWidgetSelect(widget_select_t *p);
 extern void eventWidgetSelect(widget_select_t *p);
 extern void destroyWidgetSelect(widget_select_t *p);

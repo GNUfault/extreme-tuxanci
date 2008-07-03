@@ -230,6 +230,7 @@ void replaceTuxID(tux_t *tux, int id)
 	tux->id = id;
 }
 
+#if 0
 int isTuxSeesTux(tux_t *tux, tux_t *thisTux)
 {
 	int tux_x, tux_y, tux_w, tux_h;
@@ -244,6 +245,7 @@ int isTuxSeesTux(tux_t *tux, tux_t *thisTux)
 	return conflictSpace(screen_x-WINDOW_SIZE_X/4, screen_y-WINDOW_SIZE_Y/4,
 			     WINDOW_SIZE_X*1.25, WINDOW_SIZE_Y*1.25, thisTux_x, thisTux_y, thisTux_w, thisTux_h);
 }
+#endif
 
 static void timer_spawnTux(void *p)
 {

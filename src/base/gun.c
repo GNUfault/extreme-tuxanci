@@ -13,9 +13,11 @@
 #include "base/proto.h"
 #include "base/net_multiplayer.h"
 
-#ifndef PUBLIC_SERVER
+#ifndef NO_SOUND
 #include "audio/sound.h"
+#endif
 
+#ifndef PUBLIC_SERVER
 #include "client/interface.h"
 #include "client/term.h"
 

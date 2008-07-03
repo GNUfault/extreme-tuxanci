@@ -16,6 +16,7 @@ widget_textfield_t* newWidgetTextfield(char *text, int x, int y)
 	new->y = y;
 	new->time = 0;
 	new->timeBlick = 0;
+	new->atime = 0;
 	new->active = FALSE;
 	getTextSize(text, &new->w, &new->h);
 

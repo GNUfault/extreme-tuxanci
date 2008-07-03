@@ -22,6 +22,7 @@
 #include "base/net_multiplayer.h"
 #include "base/checkFront.h"
 #include "base/protect.h"
+#include "base/index.h"
 
 #ifndef PUBLIC_SERVER
 #include "screen/screen_world.h"
@@ -38,6 +39,8 @@ static sock_udp_t *sock_server_udp;
 static sock_udp_t *sock_server_udp_second;
 
 static list_t *listClient;
+static list_t *listClientIndex;
+
 static list_t *listServerTimer;
 static time_t timeUpdate;
 static int maxClients;
@@ -50,6 +53,18 @@ static void startUpdateServer()
 time_t getUpdateServer()
 {
 	return time(NULL) - timeUpdate;
+}
+
+static void eventDelClient(client_t *client)
+{
+	int offset;
+
+	offset =  getFormIndex(listClientIndex, getSockUdpPort(client->socket_udp));
+
+	assert( offset != -1 );
+
+	delFromIndex(listClientIndex, getSockUdpPort(client->socket_udp));
+	delListItem(listClient, offset, destroyClient);
 }
 
 static void delZombieCLient(void *p_nothink)
@@ -78,7 +93,8 @@ static void delZombieCLient(void *p_nothink)
 				proto_send_del_server(PROTO_SEND_ALL, NULL, thisClient->tux->id);
 			}
 
-			delListItem(listClient, i, destroyClient);
+			eventDelClient(thisClient);
+			i--;
 		}
 	}
 
@@ -86,39 +102,25 @@ static void delZombieCLient(void *p_nothink)
 
 static void eventPeriodicSyncClient(void *p_nothink)
 {
-	client_t *thisClientInfo;
 	client_t *thisClientSend;
 	tux_t *thisTux;
-	int i, j;
+	int i;
 
-	for( i = 0 ; i < listClient->count; i++)
+#ifndef PUBLIC_SERVER
+		proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, NULL, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT));
+#endif
+
+	for( i = 0 ; i < listClient->count; i++ )
 	{
 		thisClientSend = (client_t *) listClient->list[i];
+		thisTux = thisClientSend->tux;
 
-		if( thisClientSend->tux == NULL )
+		if( thisTux == NULL )
 		{
 			continue;
 		}
 
-#ifndef PUBLIC_SERVER
-		thisTux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
-		if( isTuxSeesTux(thisClientSend->tux, thisTux)  )
-		proto_send_newtux_server(PROTO_SEND_ONE, thisClientSend, thisTux);
-#endif
-
-		for( j = 0 ; j < listClient->count; j++)
-		{
-			thisClientInfo = (client_t *) listClient->list[j];
-			thisTux = thisClientInfo->tux;
-
-			if( thisTux != NULL &&
-			    thisClientSend != thisClientInfo &&
-			    isTuxSeesTux(thisClientSend->tux, thisTux) )
-			{
-				proto_send_newtux_server(PROTO_SEND_ONE,
-					thisClientSend, thisTux);
-			}
-		}
+		proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, thisClientSend, thisTux);
 	}
 }
 
@@ -147,7 +149,10 @@ static void initServer()
 {
 	startUpdateServer();
 	listServerTimer = NULL;
+
 	listClient = newList();
+	listClientIndex = newIndex();
+
 	setServerMaxClients(SERVER_MAX_CLIENTS);
 	setServerTimer();
 }
@@ -350,10 +355,68 @@ static void addMsgAllClient(char *msg, int type, int id)
 
 static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 {
+	arena_t *arena;
+	space_t *space;
+	int x, y, w, h;
 	int i;
 
 	assert( msg != NULL );
 
+	listDoEmpty(listHelp);
+
+	arena = getCurrentArena();
+	space = arena->spaceTux;
+	
+	x = tux->x-(WINDOW_SIZE_X/2)*1.25;
+	y = tux->y-(WINDOW_SIZE_Y/2)*1.25;
+
+	w = WINDOW_SIZE_X*1.5;
+	h = WINDOW_SIZE_Y*1.5;
+
+	if( x < 0 )
+	{
+		x = 0;
+	}
+
+	if( y < 0 )
+	{
+		y = 0;
+	}
+
+	if( w+x >= arena->w )
+	{
+		w = arena->w - (x+1);
+	}
+
+	if( h+y >= arena->h )
+	{
+		h = arena->h - (y+1);
+	}
+
+	getObjectFromSpace(space, x, y, w, h, listHelp);
+	//printf("%d %d %d %d %d\n", x, y, w, h, listHelp->count);
+
+	for( i = 0 ; i < listHelp->count ; i++ )
+	{
+		tux_t *thisTux;
+		client_t *thisClient;
+
+		thisTux = (tux_t *)listHelp->list[i];
+
+		if( thisTux == tux )
+		{
+			continue;
+		}
+
+		thisClient = thisTux->client;
+
+		if( thisClient != NULL )
+		{
+			addMsgClient(thisClient, msg, type, id);
+		}
+	}
+
+#if 0
 	for( i = 0 ; i < listClient->count ; i++ )
 	{
 		client_t *thisClient;
@@ -373,6 +436,7 @@ static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 			addMsgClient(thisClient, msg, type, id);
 		}
 	}
+#endif
 }
 
 void protoSendClient(int type, client_t *client, char *msg, int type2, int id)
@@ -474,11 +538,20 @@ void sendInfoCreateClient(client_t *client)
 static void eventCreateNewUdpClient(sock_udp_t *socket_udp)
 {
 	client_t *client;
+	int offset;
 
 	assert( socket_udp != NULL );
 
 	client = newUdpClient( socket_udp );
-	addList(listClient, client);
+
+	offset = addToIndex(listClientIndex, getSockUdpPort(client->socket_udp) );
+
+	if( offset == -1 )
+	{
+		return;
+	}
+
+	insList(listClient, offset, client);
 }
 
 static void eventClientBuffer(client_t *client)
@@ -575,20 +648,17 @@ void eventClientListBuffer()
 
 static client_t* findUdpClient(sock_udp_t *sock_udp)
 {
-	int i;
-	client_t *thisClient;
+	int offset;
 
-	for( i = 0 ; i < listClient->count; i++)
+	offset =  getFormIndex(listClientIndex, getSockUdpPort(sock_udp));
+
+	if( offset == -1 )
 	{
-		thisClient = (client_t *) listClient->list[i];
-
-		if( getSockUdpPort(thisClient->socket_udp) == getSockUdpPort(sock_udp) )
-		{
-			return thisClient;
-		}
+		return NULL;
 	}
 
-	return NULL;
+	return (client_t *) listClient->list[offset];
+
 }
 
 static void eventClientUdpSelect(sock_udp_t *sock_server)
@@ -773,7 +843,10 @@ void quitUdpServer()
 	proto_send_end_server(PROTO_SEND_ALL, NULL);
 
 	assert( listClient != NULL );
+
 	destroyListItem(listClient, destroyClient);
+	destroyIndex(listClientIndex);
+
 	destroyTimer(listServerTimer);
 
 	if( sock_server_udp != NULL )

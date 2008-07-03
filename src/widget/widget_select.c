@@ -34,6 +34,14 @@ void addToWidgetSelect(widget_select_t *p, char *s)
 	addList(p->list, strdup(s) );
 }
 
+void removeAllFromWidgetSelect(widget_select_t *p)
+{
+	while( p->list->count > 0 )
+	{
+		delListItem(p->list, 0, free);
+	}
+}
+
 void drawWidgetSelect(widget_select_t *p)
 {
 	int x, y, w, h;

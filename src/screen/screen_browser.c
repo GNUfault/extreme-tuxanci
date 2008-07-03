@@ -98,8 +98,9 @@ void stopScreenBrowser()
 	unsigned i = 0;
 	server_t *server;
 
-	destroyListItem(select_server->list, free);
-	select_server->list = newList();
+	//destroyListItem(select_server->list, free);
+	//select_server->list = newList();
+	removeAllFromWidgetSelect(select_server);
 
 	while (1) {
 		i = 0;
@@ -397,16 +398,16 @@ static int LoadServers ()
 	}
 
 	struct timeval tv;
-	// Mno¾ina
+	// Mnoï¿½ina
 	fd_set myset;
-	// Mno¾ina obsahuje náhodná data. Odstraním je.
+	// Mnoï¿½ina obsahuje nï¿½hodnï¿½ data. Odstranï¿½m je.
 	FD_ZERO(&myset);
-	// Zaplnìní mno¾iny sokety
+	// Zaplnï¿½nï¿½ mnoï¿½iny sokety
 	FD_SET(s, &myset);
-	// Vyplním èasový údaj (napøíklad na 3 minuty)
-	tv.tv_sec = 3;// Poèet sekund
-	tv.tv_usec = 0;// Poèet mikrosekund
-	// Zavolám select (V Linuxu musím mít nastavenou promìnnou max.)
+	// Vyplnï¿½m ï¿½asovï¿½ ï¿½daj (napï¿½ï¿½klad na 3 minuty)
+	tv.tv_sec = 3;// Poï¿½et sekund
+	tv.tv_usec = 0;// Poï¿½et mikrosekund
+	// Zavolï¿½m select (V Linuxu musï¿½m mï¿½t nastavenou promï¿½nnou max.)
 	int ret = select (s+1, NULL, &myset, NULL, &tv);
 
 	if (ret == -1)
@@ -418,9 +419,9 @@ static int LoadServers ()
 	/* send request for server list */
 	send (s, "l", 1, 0);
 
-	// Mno¾ina obsahuje náhodná data. Odstraním je.
+	// Mnoï¿½ina obsahuje nï¿½hodnï¿½ data. Odstranï¿½m je.
 	FD_ZERO(&myset);
-	// Zaplnìní mno¾iny sokety
+	// Zaplnï¿½nï¿½ mnoï¿½iny sokety
 	FD_SET(s, &myset);
 
 	ret = select (s+1, &myset, NULL, NULL, &tv);
@@ -546,7 +547,7 @@ void initScreenBrowser()
 {
 	SDL_Surface *image;
 
-	image = addImageData("screen_main.png", IMAGE_NO_ALPHA, "screen_browser", IMAGE_GROUP_BASE);
+	image = getImage(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund  = newWidgetImage(0, 0, image);
 
 	button_back = newWidgetButton(getMyText("BACK"), 100, WINDOW_SIZE_Y-100, eventWidget);

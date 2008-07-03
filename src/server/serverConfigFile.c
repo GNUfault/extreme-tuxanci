@@ -49,6 +49,24 @@ void initServerConfigFile()
 
 }
 
+static char *findValue(char *s)
+{
+	int len;
+	int i;
+
+	len = strlen(s);
+
+	for( i = 0 ; i < len-1 ; i++)
+	{
+		if( s[i] == ' ' && s[i+1] != ' ' )
+		{
+			return s+i+1;
+		}
+	}
+
+	return NULL;
+}
+
 char* getServerConfigFileValue(char *env, char *s)
 {
 	int i;
@@ -69,7 +87,7 @@ char* getServerConfigFileValue(char *env, char *s)
 
 		if( strncmp(line, env, len) == 0 )
 		{
-			return strrchr(line,' ')+1;
+			return findValue(line);
 		}
 	}
 

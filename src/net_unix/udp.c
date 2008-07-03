@@ -249,10 +249,11 @@ void getSockUdpIp(sock_udp_t *p, char *str_ip, int len)
 	assert( p != NULL  );
 	assert( str_ip != NULL );
 
-	//strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));
 	
 	if( p->proto == PROTO_UDPv4 )
 	{
+		//strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));
+		//printf("strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));\n");
 		inet_ntop(AF_INET, &(p->sockAddr.sin_addr), str_ip, len);
 	}
 
