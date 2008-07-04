@@ -105,9 +105,12 @@ void drawRadar(arena_t *arena)
 		x = ( ( (float)RADAR_SIZE_X) / ( (float)arena->w ) ) * ( (float)thisRadarItem->x );
 		y = ( ( (float)RADAR_SIZE_Y) / ( (float)arena->h ) ) * ( (float)thisRadarItem->y );
 
-		drawImage(g_radar,
-			RADAR_LOCATION_X+1+x, RADAR_LOCATION_Y+1+y,
-			2*thisRadarItem->type, RADAR_SIZE_Y+2, 2, 2);
+		if( x >= 0 && x <= RADAR_SIZE_X && y >= 0 && y <= RADAR_SIZE_Y )
+		{
+			drawImage(g_radar,
+				RADAR_LOCATION_X+1+x, RADAR_LOCATION_Y+1+y,
+				2*thisRadarItem->type, RADAR_SIZE_Y+2, 2, 2);
+		}
 	}
 }
 

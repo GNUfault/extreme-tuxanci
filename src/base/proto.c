@@ -381,11 +381,10 @@ void proto_send_newtux_server(int type, client_t *client, tux_t *tux)
 	}
 	else
 	{
-		x = tux->x;
-		y = tux->y;
+		//x = tux->x;
+		//y = tux->y;
+		getTuxProportion(tux, &x, &y, NULL, NULL);
 	}
-
-	getTuxProportion(tux, &x, &y, NULL, NULL);
 
 	sprintf(msg, "newtux %d %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d\n",
 	tux->id ,x, y, tux->status, tux->position ,tux->frame, tux->score, tux->name,
@@ -440,7 +439,18 @@ void proto_recv_newtux_client(char *msg)
 		addObjectToSpace(getCurrentArena()->spaceTux, tux);
 	}
 
+	if( tux->control == TUX_CONTROL_KEYBOARD_RIGHT &&
+	    x == TUX_LOCATE_UNKNOWN && y == TUX_LOCATE_UNKNOWN )
+	{
+		getTuxProportion(tux, &x, &y, NULL, NULL);
+	}
+
 	addToRadar(id, x, y, RADAR_TYPE_TUX);
+
+	if( tux->bonus == BONUS_HIDDEN )
+	{
+		delFromRadar(id);
+	}
 
 	moveObjectInSpace(getCurrentArena()->spaceTux, tux, x, y);
 	tux->status = status;
