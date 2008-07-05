@@ -5,19 +5,14 @@
 
 #include "main.h"
 
-#ifdef DESTDIR
-
-#define PATH_DIR	"share/tuxanci-ng/"
-
+#ifndef PUBLIC_SERVER
+#define PATH_DIR		"share/tuxanci-ng/"
+#define PATH_MODULES DESTDIR	"lib/tuxanci-ng/"
 #endif
 
-#ifndef DESTDIR
-
-#define PATH_DIR "./"
-
-#undef DESTDIR
-#define DESTDIR ""
-
+#ifdef PUBLIC_SERVER
+#define PATH_DIR		"share/tuxanci-ng-server/"
+#define PATH_MODULES DESTDIR 	"lib/tuxanci-ng-server/"
 #endif
 
 #define PATH_IMAGE	DESTDIR PATH_DIR "image/"
@@ -28,6 +23,5 @@
 #define PATH_CONFIG	DESTDIR PATH_DIR "conf/"
 #define PATH_LANG	DESTDIR PATH_DIR "lang/"
 #define PATH_DATA	DESTDIR PATH_DIR "doc/"
-#define PATH_MODULES DESTDIR "lib/tuxanci-ng/"
 
-#endif 
+#endif

@@ -5,12 +5,6 @@
 
 #include "../../config.h"
 
-#if defined PUBLIC_SERVER
-
-#undef DESTDIR
-
-#endif
-
 #include "bool.h"
 #include "string_length.h"
 #include "path.h"
