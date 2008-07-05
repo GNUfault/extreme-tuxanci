@@ -1,10 +1,11 @@
 # Created by Tomas Chvatal
 # volani se vsemy externimy moznostmy:
 
-# cmake . -DNO_Server=1 -DNO_Audio=1 -DDebug=1 -DCMAKE_C_FLAGS="-Wall"
+# cmake . -DNO_Server=1 -DNO_Audio=1 -DDebug=1 -DCMAKE_C_FLAGS="-Wall -DDist=1"
 # make
 # make install
 
+# DDist=1 vyrobi binarku do adresare dist/ -> vhodne pro distribuci binarniho baliku...
 # pri zmene zdrojovych souboru se podivejte co je treba delat do souboru
 # CMakeLists.txt v adresari src
 SET ( APPNAME "tuxanci-ng")
@@ -35,8 +36,10 @@ SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 # nazev projektu
 PROJECT ( tuxanci )
 # verbose nastaveni vypnout pred release
+IF ( Dist )
+	SET ( CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/dist )
+ENDIF ( Dist )
 IF ( Debug )
-	set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/dist)
 	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0")
 	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0")
 	SET ( CMAKE_VERBOSE_MAKEFILE on )
@@ -57,9 +60,9 @@ ADD_SUBDIRECTORY ( src )
 # data !TODO
 #MESSAGE ( STATUS "<Installing datafiles>" )
 #MESSAGE ( STATUS "<******************************>" )
-IF ( NOT CMAKE_INSTALL_DATADIR EQUAL "" )
+IF ( NOT CMAKE_INSTALL_DATADIR )
 	SET ( CMAKE_INSTALL_DATADIR share/ )
-ENDIF ( NOT CMAKE_INSTALL_DATADIR EQUAL "" )
+ENDIF ( CMAKE_INSTALL_DATADIR )
 SET ( CMAKE_INSTALL_ETCDIR /etc )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/tuxanci-ng.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/)
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/LICENCE DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/)
