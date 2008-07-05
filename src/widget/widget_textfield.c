@@ -1,9 +1,9 @@
 
 #include <stdlib.h>
-#include "base/main.h"
-#include "client/interface.h"
-#include "client/font.h"
-#include "client/image.h"
+#include "main.h"
+#include "interface.h"
+#include "font.h"
+#include "image.h"
 #include "widget_textfield.h"
 
 widget_textfield_t* newWidgetTextfield(char *text, int x, int y)

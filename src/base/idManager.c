@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/idManager.h"
+#include "main.h"
+#include "list.h"
+#include "idManager.h"
 
 static list_t *listID;
 static int lastID;

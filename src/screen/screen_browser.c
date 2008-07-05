@@ -3,16 +3,16 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/textFile.h"
-#include "base/homeDirector.h"
-#include "base/net_multiplayer.h"
+#include "main.h"
+#include "list.h"
+#include "textFile.h"
+#include "homeDirector.h"
+#include "net_multiplayer.h"
 
-#include "client/language.h"
-#include "client/interface.h"
-#include "client/screen.h"
-#include "client/image.h"
+#include "language.h"
+#include "interface.h"
+#include "screen.h"
+#include "image.h"
 
 #ifdef SUPPORT_NET_UNIX_UDP
 #include <sys/socket.h>
@@ -25,23 +25,23 @@
 #include <fcntl.h>
 #include <errno.h>
 
-#include "net_unix/udp.h"
-#include "net_unix/dns.h"
+#include "udp.h"
+#include "dns.h"
 
 extern int errno;
 #endif
 
 #ifndef NO_SOUND
-#include "audio/music.h"
+#include "music.h"
 #endif
 
-#include "screen/screen_gameType.h"
-#include "screen/screen_browser.h"
+#include "screen_gameType.h"
+#include "screen_browser.h"
 
-#include "widget/widget_image.h"
-#include "widget/widget_label.h"
-#include "widget/widget_button.h"
-#include "widget/widget_select.h"
+#include "widget_image.h"
+#include "widget_label.h"
+#include "widget_button.h"
+#include "widget_select.h"
 
 #define SERVER_TIMEOUT	200
 

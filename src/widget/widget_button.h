@@ -3,7 +3,7 @@
 
 #define WIDGET_BUTTON_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define WIDGET_BUTTON_TIME	10
 

@@ -3,7 +3,7 @@
 
 #define WIDGET_LABEL_H
 
-#include "base/main.h"
+#include "main.h"
 
 typedef struct widget_label
 {

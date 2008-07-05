@@ -4,13 +4,13 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/homeDirector.h"
-#include "base/textFile.h"
+#include "main.h"
+#include "list.h"
+#include "homeDirector.h"
+#include "textFile.h"
 
-#include "client/keytable.h"
-#include "client/configFile.h"
+#include "keytable.h"
+#include "configFile.h"
 
 static textFile_t *keytableFile;
 static textFile_t *keycontrolFile;

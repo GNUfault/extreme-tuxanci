@@ -3,14 +3,14 @@
 
 #define MODULE_H
 
-#include "base/tux.h"
-#include "base/shot.h"
-#include "base/arena.h"
-#include "base/proto.h"
-#include "base/myTimer.h"
+#include "tux.h"
+#include "shot.h"
+#include "arena.h"
+#include "proto.h"
+#include "myTimer.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/image.h"
+#include "image.h"
 #endif
 
 typedef struct export_fce_s

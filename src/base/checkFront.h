@@ -3,8 +3,8 @@
 
 #define CHECK_FRONT_H
 
-#include "base/list.h"
-#include "base/server.h"
+#include "list.h"
+#include "server.h"
 
 #define CHECK_FRONT_SEND_TIME_INTERVAL	100
 #define CHECK_FRONT_MAX_COUNT_SEND	30

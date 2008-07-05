@@ -3,7 +3,7 @@
 
 #define AUDIO_H
 
-#include "base/main.h"
+#include "main.h"
 
 extern bool_t isAudioInicialized();
 extern void initAudio();

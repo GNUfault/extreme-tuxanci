@@ -1,11 +1,11 @@
 
 #include <stdlib.h>
 
-#include "base/main.h"
-#include "base/myTimer.h"
+#include "main.h"
+#include "myTimer.h"
 
-#include "client/interface.h"
-#include "client/screen.h"
+#include "interface.h"
+#include "screen.h"
 
 //povrch okna
 static SDL_Surface *screen;

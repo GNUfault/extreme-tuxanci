@@ -5,20 +5,20 @@
 #include <dlfcn.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/shot.h"
-#include "base/modules.h"
-#include "base/arena.h"
-#include "base/arenaFile.h"
-#include "base/proto.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "shot.h"
+#include "modules.h"
+#include "arena.h"
+#include "arenaFile.h"
+#include "proto.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/interface.h"
-#include "client/image.h"
-#include "client/layer.h"
-#include "client/configFile.h"
+#include "interface.h"
+#include "image.h"
+#include "layer.h"
+#include "configFile.h"
 #endif
 
 int pokus(char *s)

@@ -1,0 +1,84 @@
+SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
+# pro aktualizaci tehle seznamu pouzijte radsi skript nezli to delat rucne
+# find ./ -maxdepth 1 -type f -name \*.c |grep "$" |sed -e 's/^\.\//\$\{WORKDIR\}\/DIR\//' -e 's/\.c//' |tr '\n' ' ' > DIRfiles
+# nahradte DIR potrebnym adresarem a pak vemte vse co je v DIRfiles a vlozte to sem
+SET ( SRC_base
+${WORKDIR}/base/main ${WORKDIR}/base/shot ${WORKDIR}/base/space ${WORKDIR}/base/checkFront ${WORKDIR}/base/storage ${WORKDIR}/base/myTimer ${WORKDIR}/base/protect  ${WORKDIR}/base/list ${WORKDIR}/base/arena ${WORKDIR}/base/server ${WORKDIR}/base/textFile ${WORKDIR}/base/gun ${WORKDIR}/base/arenaFile ${WORKDIR}/base/modules ${WORKDIR}/base/net_multiplayer ${WORKDIR}/base/index ${WORKDIR}/base/item ${WORKDIR}/base/tux ${WORKDIR}/base/director ${WORKDIR}/base/idManager ${WORKDIR}/base/homeDirector ${WORKDIR}/base/proto
+
+${WORKDIR}/net/udp ${WORKDIR}/net/dns
+)
+
+SET ( SRC_client
+
+${WORKDIR}/client/language ${WORKDIR}/client/radar ${WORKDIR}/client/interface ${WORKDIR}/client/game ${WORKDIR}/client/image ${WORKDIR}/client/term ${WORKDIR}/client/layer ${WORKDIR}/client/screen ${WORKDIR}/client/panel ${WORKDIR}/client/client ${WORKDIR}/client/configFile ${WORKDIR}/client/font ${WORKDIR}/client/keytable
+
+${WORKDIR}/screen/screen_choiceArena ${WORKDIR}/screen/screen_table ${WORKDIR}/screen/screen_setting ${WORKDIR}/screen/screen_credits ${WORKDIR}/screen/screen_world ${WORKDIR}/screen/screen_analyze ${WORKDIR}/screen/screen_mainMenu ${WORKDIR}/screen/screen_browser ${WORKDIR}/screen/screen_gameType
+
+${WORKDIR}/widget/widget_check ${WORKDIR}/widget/widget_button ${WORKDIR}/widget/widget_textfield ${WORKDIR}/widget/widget_label ${WORKDIR}/widget/widget_buttonimage ${WORKDIR}/widget/widget_image ${WORKDIR}/widget/widget_select
+)
+
+SET ( SRC_audio ${WORKDIR}/audio/audio ${WORKDIR}/audio/music ${WORKDIR}/audio/sound)
+
+SET ( SRC_server
+${WORKDIR}/server/logFile ${WORKDIR}/server/serverConfigFile ${WORKDIR}/server/heightScore ${WORKDIR}/server/publicServer
+)
+# nechcem sdl
+ADD_DEFINITIONS ( -DSUPPORT_NET_UNIX_UDP )
+# server nebo klient
+IF ( NOT NO_Server )
+	ADD_DEFINITIONS ( -DPUBLIC_SERVER )
+	ADD_DEFINITIONS ( -DNO_SOUND )
+ENDIF ( NOT NO_Server )
+#include zdrojaku
+INCLUDE_DIRECTORIES ( ${WORKDIR}/base )
+INCLUDE_DIRECTORIES ( ${WORKDIR}/net )
+#vytvoreni knihoven
+SET ( CMAKE_INSTALL_BINDIR bin )
+SET ( CMAKE_INSTALL_LIBDIR lib )
+ADD_SUBDIRECTORY ( modules )
+IF ( NO_Server ) # server nebo klient
+	MESSAGE ( STATUS "<Checking for SDL>" )
+	MESSAGE ( STATUS "<******************************>" )
+	FIND_PACKAGE ( SDL REQUIRED )
+	FIND_PACKAGE ( SDL_image REQUIRED )
+	FIND_PACKAGE ( SDL_ttf REQUIRED )
+	LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} SDLmain )
+	MESSAGE ( STATUS "<Building client as requested>" )
+	MESSAGE ( STATUS "<******************************>" )
+	INCLUDE_DIRECTORIES ( ${WORKDIR}/client )
+	INCLUDE_DIRECTORIES ( ${WORKDIR}/screen )
+	INCLUDE_DIRECTORIES ( ${WORKDIR}/widget )
+	INCLUDE_DIRECTORIES ( ${SDL_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDLTTF_INCLUDE_DIR})
+	SET ( SRC_compile ${SRC_base} ${SRC_client} )
+	IF ( NOT NO_Audio )
+		MESSAGE ( STATUS "<Building with audio as requested>" )
+		MESSAGE ( STATUS "<******************************>" )
+		SET ( SRC_compile ${SRC_base} ${SRC_client} ${SRC_audio} )
+		INCLUDE_DIRECTORIES ( ${WORKDIR}/audio )
+		FIND_PACKAGE ( SDL_mixer REQUIRED )
+		INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
+		LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLTTF_LIBRARY} SDLmain )
+	ELSE (NOT NO_Audio)
+		MESSAGE ( STATUS "<Building without audio as requested>" )
+		ADD_DEFINITIONS ( -DNO_SOUND )
+		MESSAGE ( STATUS "<******************************>" )
+	ENDIF ( NOT NO_Audio )
+	ADD_EXECUTABLE ( tuxanci-ng ${SRC_compile} )
+	#TARGET_LINK_LIBRARIES (tuxanci-ng modWall modPipe modTeleport modAI)
+	SET (TUX_BIN "tuxanci-ng")
+ELSE ( NO_Server )
+	# kontrola libdl
+	LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
+	MESSAGE ( STATUS "<Building server as requested>" )
+	MESSAGE ( STATUS "<******************************>" )
+	INCLUDE_DIRECTORIES ( ${WORKDIR}/server )
+	SET ( SRC_compile ${SRC_base} ${SRC_server} )
+	ADD_EXECUTABLE ( tuxanci-ng-server ${SRC_compile} )
+	#TARGET_LINK_LIBRARIES (tuxanci-ng-server modWall modPipe modTeleport modAI)
+	SET (TUX_BIN "tuxanci-ng-server")
+ENDIF ( NO_Server )
+
+# binarky a knihovny instalace
+#MESSAGE ( STATUS "<Installing binaries and libraries>" )
+#MESSAGE ( STATUS "<******************************>" )
+INSTALL ( TARGETS ${TUX_BIN} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${APPNAME} )

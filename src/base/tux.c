@@ -4,32 +4,32 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/tux.h"
-#include "base/arena.h"
-#include "base/shot.h"
-#include "base/gun.h"
-#include "base/item.h"
-#include "base/arena.h"
-#include "base/myTimer.h"
-#include "base/net_multiplayer.h"
-#include "base/proto.h"
-#include "base/modules.h"
-#include "base/idManager.h"
+#include "main.h"
+#include "tux.h"
+#include "arena.h"
+#include "shot.h"
+#include "gun.h"
+#include "item.h"
+#include "arena.h"
+#include "myTimer.h"
+#include "net_multiplayer.h"
+#include "proto.h"
+#include "modules.h"
+#include "idManager.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/image.h"
-#include "client/layer.h"
-#include "client/term.h"
-#include "client/radar.h"
+#include "image.h"
+#include "layer.h"
+#include "term.h"
+#include "radar.h"
 
-#include "audio/sound.h"
+#include "sound.h"
 
-#include "screen/screen_world.h"
+#include "screen_world.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
+#include "publicServer.h"
 #endif
 
 #ifndef PUBLIC_SERVER

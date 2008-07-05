@@ -3,9 +3,9 @@
 #include <assert.h>
 #include <SDL_mixer.h>
 
-#include "base/main.h"
-#include "audio/audio.h"
-#include "client/interface.h"
+#include "main.h"
+#include "audio.h"
+#include "interface.h"
 
 static bool_t isAudioInit = FALSE;
 

@@ -3,29 +3,29 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/arena.h"
-#include "base/tux.h"
-#include "base/shot.h"
-#include "base/myTimer.h"
-#include "base/item.h"
-#include "base/gun.h"
-#include "base/proto.h"
-#include "base/net_multiplayer.h"
+#include "main.h"
+#include "arena.h"
+#include "tux.h"
+#include "shot.h"
+#include "myTimer.h"
+#include "item.h"
+#include "gun.h"
+#include "proto.h"
+#include "net_multiplayer.h"
 
 #ifndef NO_SOUND
-#include "audio/sound.h"
+#include "sound.h"
 #endif
 
 #ifndef PUBLIC_SERVER
-#include "client/interface.h"
-#include "client/term.h"
+#include "interface.h"
+#include "term.h"
 
-#include "screen/screen_world.h"
+#include "screen_world.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
+#include "publicServer.h"
 #endif
 
 static void modificiationCopuse(int courser, int right_x, int right_y, int *dest_x, int *dest_y)

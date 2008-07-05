@@ -2,24 +2,24 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/textFile.h"
+#include "main.h"
+#include "list.h"
+#include "textFile.h"
 
-#include "client/language.h"
-#include "client/interface.h"
-#include "client/screen.h"
-#include "client/image.h"
+#include "language.h"
+#include "interface.h"
+#include "screen.h"
+#include "image.h"
 
 #ifndef NO_SOUND
-#include "audio/music.h"
+#include "music.h"
 #endif
 
-#include "screen/screen_credits.h"
+#include "screen_credits.h"
 
-#include "widget/widget_image.h"
-#include "widget/widget_label.h"
-#include "widget/widget_button.h"
+#include "widget_image.h"
+#include "widget_label.h"
+#include "widget_button.h"
 
 static widget_image_t *image_backgorund;
 static widget_button_t *button_back;

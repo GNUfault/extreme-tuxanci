@@ -3,14 +3,14 @@
 
 #define ARENA_H
 
-#include "base/main.h"
+#include "main.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/interface.h"
+#include "interface.h"
 #endif
 
-#include "base/list.h"
-#include "base/space.h"
+#include "list.h"
+#include "space.h"
 
 typedef struct arena_struct
 {

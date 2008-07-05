@@ -4,12 +4,12 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/myTimer.h"
-#include "base/checkFront.h"
-#include "base/idManager.h"
-#include "base/server.h"
+#include "main.h"
+#include "list.h"
+#include "myTimer.h"
+#include "checkFront.h"
+#include "idManager.h"
+#include "server.h"
 
 typedef struct struct_checkfront_t
 {

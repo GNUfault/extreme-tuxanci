@@ -5,8 +5,8 @@
 #include <assert.h>
 #include <sys/stat.h>
 
-#include "base/main.h"
-#include "base/homeDirector.h"
+#include "main.h"
+#include "homeDirector.h"
 
 static char homeDirector[STR_PATH_SIZE];
 

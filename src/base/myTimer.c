@@ -6,12 +6,12 @@
 #include <sys/time.h>
 #include <signal.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/myTimer.h"
+#include "main.h"
+#include "list.h"
+#include "myTimer.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/interface.h"
+#include "interface.h"
 #endif
 
 static struct timeval start = { .tv_sec = 0, .tv_usec = 0 };

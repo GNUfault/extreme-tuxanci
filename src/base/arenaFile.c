@@ -4,21 +4,21 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/textFile.h"
-#include "base/arenaFile.h"
-#include "base/arena.h"
-#include "base/tux.h"
-#include "base/shot.h"
-#include "base/item.h"
-#include "base/director.h"
-#include "base/modules.h"
+#include "main.h"
+#include "list.h"
+#include "textFile.h"
+#include "arenaFile.h"
+#include "arena.h"
+#include "tux.h"
+#include "shot.h"
+#include "item.h"
+#include "director.h"
+#include "modules.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/configFile.h"
-#include "client/image.h"
-#include "audio/music.h"
+#include "configFile.h"
+#include "image.h"
+#include "music.h"
 #endif
 
 static list_t *listArenaFile;

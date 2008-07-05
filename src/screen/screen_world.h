@@ -3,10 +3,10 @@
 
 #define SCREEN_WORLD_H
 
-#include "base/main.h"
-#include "base/myTimer.h"
-#include "base/tux.h"
-#include "base/arena.h"
+#include "main.h"
+#include "myTimer.h"
+#include "tux.h"
+#include "arena.h"
 
 #define TIMER_END_ARENA 5000
 #define WORLD_COUNT_ROUND_UNLIMITED	-1

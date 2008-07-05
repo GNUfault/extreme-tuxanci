@@ -15,24 +15,24 @@
 #include <errno.h>
 #endif
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/idManager.h"
-#include "base/myTimer.h"
-#include "base/arena.h"
-#include "base/item.h"
-#include "base/shot.h"
-#include "base/arenaFile.h"
-#include "base/proto.h"
-#include "base/modules.h"
-#include "base/net_multiplayer.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "idManager.h"
+#include "myTimer.h"
+#include "arena.h"
+#include "item.h"
+#include "shot.h"
+#include "arenaFile.h"
+#include "proto.h"
+#include "modules.h"
+#include "net_multiplayer.h"
 
-#include "server/publicServer.h"
-#include "server/serverConfigFile.h"
-#include "server/heightScore.h"
+#include "publicServer.h"
+#include "serverConfigFile.h"
+#include "heightScore.h"
 
-#include "net_unix/dns.h"
+#include "dns.h"
 
 static int arenaId;
 static arena_t *arena;

@@ -2,13 +2,13 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/myTimer.h"
+#include "main.h"
+#include "list.h"
+#include "myTimer.h"
 
-#include "client/interface.h"
-#include "client/term.h"
-#include "client/font.h"
+#include "interface.h"
+#include "term.h"
+#include "font.h"
 
 typedef struct struct_term_t
 {

@@ -3,8 +3,8 @@
 
 #define IMAGE_H
 
-#include "client/image.h"
-#include "client/interface.h"
+#include "image.h"
+#include "interface.h"
 
 #define IMAGE_NO_ALPHA	0
 #define IMAGE_ALPHA	1

@@ -3,7 +3,7 @@
 
 #define MY_CLIENT
 
-#include "base/main.h"
+#include "main.h"
 
 #if defined SUPPORT_NET_UNIX_UDP || defined SUPPORT_NET_SDL_UDP
 

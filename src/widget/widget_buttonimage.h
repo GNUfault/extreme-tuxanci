@@ -1,7 +1,7 @@
 
 #ifndef WIDGET_BUTTONIMAGE_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define WIDGET_BUTTONIMAGE_H
 

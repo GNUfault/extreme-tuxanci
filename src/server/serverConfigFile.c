@@ -4,10 +4,10 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/textFile.h"
-#include "server/serverConfigFile.h"
+#include "main.h"
+#include "list.h"
+#include "textFile.h"
+#include "serverConfigFile.h"
 
 static textFile_t *serverTextFile;
 

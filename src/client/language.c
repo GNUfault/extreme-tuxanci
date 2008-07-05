@@ -4,13 +4,13 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/homeDirector.h"
-#include "base/textFile.h"
+#include "main.h"
+#include "list.h"
+#include "homeDirector.h"
+#include "textFile.h"
 
-#include "client/configFile.h"
-#include "client/language.h"
+#include "configFile.h"
+#include "language.h"
 
 static textFile_t *languageFile;
 static char fontFile[STR_FILE_NAME_SIZE];

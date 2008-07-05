@@ -3,10 +3,10 @@
 
 #define NET_MULTIPLAYER_H
 
-#include "base/main.h"
-#include "base/tux.h"
-#include "base/item.h"
-#include "base/arena.h"
+#include "main.h"
+#include "tux.h"
+#include "item.h"
+#include "arena.h"
 
 #define PROTO_UDPv4	0
 #define PROTO_UDPv6	1

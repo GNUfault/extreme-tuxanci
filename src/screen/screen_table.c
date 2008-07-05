@@ -3,25 +3,25 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/textFile.h"
-#include "base/homeDirector.h"
+#include "main.h"
+#include "list.h"
+#include "textFile.h"
+#include "homeDirector.h"
 
-#include "client/language.h"
-#include "client/interface.h"
-#include "client/screen.h"
-#include "client/image.h"
+#include "language.h"
+#include "interface.h"
+#include "screen.h"
+#include "image.h"
 
 #ifndef NO_SOUND
-#include "audio/music.h"
+#include "music.h"
 #endif
 
-#include "screen/screen_table.h"
+#include "screen_table.h"
 
-#include "widget/widget_image.h"
-#include "widget/widget_label.h"
-#include "widget/widget_button.h"
+#include "widget_image.h"
+#include "widget_label.h"
+#include "widget_button.h"
 
 static widget_image_t *image_backgorund;
 static widget_button_t *button_back;

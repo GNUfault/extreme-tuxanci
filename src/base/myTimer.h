@@ -3,8 +3,8 @@
 
 #define MY_TIME_H
 
-#include "base/main.h"
-#include "base/list.h"
+#include "main.h"
+#include "list.h"
 
 #define my_time_t unsigned int
 

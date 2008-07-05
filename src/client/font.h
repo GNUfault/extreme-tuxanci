@@ -5,7 +5,7 @@
 
 #include <SDL_ttf.h>
 #include <assert.h>
-#include "base/main.h"
+#include "main.h"
 
 #define COLOR_WHITE	255, 255, 255
 #define COLOR_BLACK	0, 0, 0

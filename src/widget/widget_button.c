@@ -1,11 +1,11 @@
 
 #include <stdlib.h>
 
-#include "base/main.h"
+#include "main.h"
 
-#include "client/interface.h"
-#include "client/image.h"
-#include "client/font.h"
+#include "interface.h"
+#include "image.h"
+#include "font.h"
 
 #include "widget_button.h"
 

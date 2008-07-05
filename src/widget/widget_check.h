@@ -3,7 +3,7 @@
 
 #define WIDGET_CHECK_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define WIDGET_CHECK_TIME_SWITCH_STATUS	5
 

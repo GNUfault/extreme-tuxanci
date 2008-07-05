@@ -3,9 +3,9 @@
 
 #define TUX_H
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/arena.h"
+#include "main.h"
+#include "list.h"
+#include "arena.h"
 
 #define TUX_STEP 7
 #define TUX_LAYER 0

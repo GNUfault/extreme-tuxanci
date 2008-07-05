@@ -8,25 +8,25 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/item.h"
-#include "base/shot.h"
-#include "base/arenaFile.h"
-#include "base/myTimer.h"
-#include "base/server.h"
-#include "base/proto.h"
-#include "base/net_multiplayer.h"
+#include "main.h"
+#include "list.h"
+#include "item.h"
+#include "shot.h"
+#include "arenaFile.h"
+#include "myTimer.h"
+#include "server.h"
+#include "proto.h"
+#include "net_multiplayer.h"
 
 #ifndef PUBLIC_SERVER
-#include "screen/screen_world.h"
-#include "screen/screen_setting.h"
-#include "screen/screen_choiceArena.h"
-#include "client/client.h"
+#include "screen_world.h"
+#include "screen_setting.h"
+#include "screen_choiceArena.h"
+#include "client.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
+#include "publicServer.h"
 #endif
 
 #define PROTO_SEND_ONE			0

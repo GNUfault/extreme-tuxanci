@@ -3,8 +3,8 @@
 
 #define WIDGET_IMAGE_H
 
-#include "base/main.h"
-#include "client/interface.h"
+#include "main.h"
+#include "interface.h"
 
 typedef struct widget_image
 {

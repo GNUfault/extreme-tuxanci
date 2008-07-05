@@ -3,8 +3,8 @@
 
 #define ARENA_FILE_H
 
-#include "base/main.h"
-#include "base/arena.h"
+#include "main.h"
+#include "arena.h"
 
 #define PUBLIC_SERVER_PATH_ARENA "./arena/"
 

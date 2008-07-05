@@ -4,35 +4,35 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/item.h"
-#include "base/shot.h"
-#include "base/arenaFile.h"
-#include "base/myTimer.h"
-#include "base/server.h"
-#include "base/proto.h"
-#include "base/net_multiplayer.h"
-#include "base/checkFront.h"
-#include "base/idManager.h"
-#include "base/protect.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "item.h"
+#include "shot.h"
+#include "arenaFile.h"
+#include "myTimer.h"
+#include "server.h"
+#include "proto.h"
+#include "net_multiplayer.h"
+#include "checkFront.h"
+#include "idManager.h"
+#include "protect.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/language.h"
-#include "screen/screen_world.h"
-#include "screen/screen_setting.h"
-#include "screen/screen_choiceArena.h"
-#include "screen/screen_analyze.h"
-#include "client/client.h"
-#include "client/term.h"
-#include "client/radar.h"
+#include "language.h"
+#include "screen_world.h"
+#include "screen_setting.h"
+#include "screen_choiceArena.h"
+#include "screen_analyze.h"
+#include "client.h"
+#include "term.h"
+#include "radar.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/heightScore.h"
-#include "server/publicServer.h"
-#include "server/serverConfigFile.h"
+#include "heightScore.h"
+#include "publicServer.h"
+#include "serverConfigFile.h"
 #endif
 
 void proto_send_error_server(int type, client_t *client, int errorcode)

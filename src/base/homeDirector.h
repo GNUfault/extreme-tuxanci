@@ -3,7 +3,7 @@
 
 #define HOMEDIRECTOR_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define HOMEDIRECTOR_NAME ".tuxanci-ng"
 

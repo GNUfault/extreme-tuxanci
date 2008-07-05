@@ -1,6 +1,0 @@
-- napisat _prehladnejsi_ kod
-- identifikatory su po anglicky
-- normalne formatovanie zdrojveho kodu (medzeri, ciatky )
-- slovenske komentare ( ak vam vadi, ze niesu po EN, tak ich ignorujte )
-- paramtre funckii sa budu kontrolovat pomocou assert ( aj vsetko co sa len da )
-- 

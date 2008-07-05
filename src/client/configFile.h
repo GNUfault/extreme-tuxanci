@@ -3,8 +3,8 @@
 
 #define CONFIGFILE_H
 
-#include "base/main.h"
-#include "base/textFile.h"
+#include "main.h"
+#include "textFile.h"
 
 extern int isYesOrNO(char *s);
 extern char* getYesOrNo(int n);

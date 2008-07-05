@@ -3,14 +3,14 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/storage.h"
+#include "main.h"
+#include "list.h"
+#include "storage.h"
 
-#include "client/interface.h"
+#include "interface.h"
 
-#include "audio/audio.h"
-#include "audio/music.h"
+#include "audio.h"
+#include "music.h"
 
 static list_t *listStorage;
 

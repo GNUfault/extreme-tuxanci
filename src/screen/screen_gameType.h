@@ -3,7 +3,7 @@
 
 #define SCREEN_GAME_TYPE
 
-#include "base/main.h"
+#include "main.h"
 
 extern void drawScreenGameType();
 extern void eventScreenGameType();

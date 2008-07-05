@@ -10,26 +10,26 @@
 #include <sys/socket.h>
 #include <sys/select.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/proto.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "proto.h"
 
-#include "client/client.h"
-#include "client/language.h"
+#include "client.h"
+#include "language.h"
 
-#include "screen/screen_analyze.h"
-#include "screen/screen_world.h"
+#include "screen_analyze.h"
+#include "screen_world.h"
 
 static int protocolType;
 
 #ifdef SUPPORT_NET_UNIX_UDP
-#include "net_unix/udp.h"
+#include "udp.h"
 static sock_udp_t *sock_server_udp;
 #endif
 
 #ifdef SUPPORT_NET_SDL_UDP
-#include "net_sdl/sdl_udp.h"
+#include "sdl_udp.h"
 static sock_sdl_udp_t *sock_server_sdl_udp;
 #endif
 

@@ -5,25 +5,25 @@
 
 #include <time.h>
 
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/myTimer.h"
-#include "base/protect.h"
+#include "list.h"
+#include "tux.h"
+#include "myTimer.h"
+#include "protect.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/interface.h"
+#include "interface.h"
 #endif
 
 
 #ifdef SUPPORT_NET_SDL_UDP
 
-#include "net_sdl/sdl_udp.h"
+#include "sdl_udp.h"
 
 #endif
 
 #ifdef SUPPORT_NET_UNIX_UDP
 
-#include "net_unix/udp.h"
+#include "udp.h"
 
 #endif
 

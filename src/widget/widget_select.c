@@ -1,8 +1,8 @@
 
 #include <stdlib.h>
-#include "base/main.h"
-#include "client/interface.h"
-#include "client/font.h"
+#include "main.h"
+#include "interface.h"
+#include "font.h"
 #include "widget_select.h"
 
 /*

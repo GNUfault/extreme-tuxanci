@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
+#include "main.h"
+#include "list.h"
 
-#include "client/interface.h"
-#include "client/screen.h"
-#include "client/layer.h"
+#include "interface.h"
+#include "screen.h"
+#include "layer.h"
 
 static screen_t *currentScreen;
 static list_t *listScreen;

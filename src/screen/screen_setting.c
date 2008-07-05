@@ -3,33 +3,33 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/textFile.h"
-#include "base/director.h"
-#include "base/homeDirector.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "textFile.h"
+#include "director.h"
+#include "homeDirector.h"
 
-#include "client/configFile.h"
-#include "client/language.h"
-#include "client/interface.h"
-#include "client/screen.h"
-#include "client/image.h"
+#include "configFile.h"
+#include "language.h"
+#include "interface.h"
+#include "screen.h"
+#include "image.h"
 
 #ifndef NO_SOUND
-#include "audio/music.h"
-#include "audio/sound.h"
+#include "music.h"
+#include "sound.h"
 #endif
 
-#include "screen/screen_mainMenu.h"
-#include "screen/screen_setting.h"
+#include "screen_mainMenu.h"
+#include "screen_setting.h"
 
-#include "widget/widget_label.h"
-#include "widget/widget_button.h"
-#include "widget/widget_image.h"
-#include "widget/widget_textfield.h"
-#include "widget/widget_check.h"
-#include "widget/widget_select.h"
+#include "widget_label.h"
+#include "widget_button.h"
+#include "widget_image.h"
+#include "widget_textfield.h"
+#include "widget_check.h"
+#include "widget_select.h"
 
 static widget_image_t *image_backgorund;
 

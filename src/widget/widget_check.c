@@ -1,8 +1,8 @@
 
 #include <stdlib.h>
-#include "base/main.h"
-#include "client/interface.h"
-#include "client/image.h"
+#include "main.h"
+#include "interface.h"
+#include "image.h"
 #include "widget_check.h"
 
 widget_check_t* newWidgetCheck(int x, int y, bool_t status, void (*fce_event)(void *))

@@ -1,9 +1,9 @@
 
 #include <stdlib.h>
-#include "base/main.h"
-#include "client/interface.h"
-#include "client/font.h"
-#include "client/image.h"
+#include "main.h"
+#include "interface.h"
+#include "font.h"
+#include "image.h"
 #include "widget_buttonimage.h"
 
 widget_buttonimage_t* newWidgetButtonimage(SDL_Surface *image, int x, int y, void (*fce_event)(void *))

@@ -10,7 +10,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_thread.h>
-#include "base/main.h"
+#include "main.h"
 
 /*
 #include <SDL_net.h>

@@ -1,9 +1,9 @@
 
 #include <stdlib.h>
 
-#include "base/main.h"
-#include "client/interface.h"
-#include "client/font.h"
+#include "main.h"
+#include "interface.h"
+#include "font.h"
 #include "widget_label.h"
 
 widget_label_t* newWidgetLabel(char *text, int x, int y, int bind)

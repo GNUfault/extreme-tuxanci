@@ -4,8 +4,8 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "client/configFile.h"
+#include "main.h"
+#include "configFile.h"
 
 int isYesOrNO(char *s)
 {

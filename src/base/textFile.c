@@ -6,8 +6,8 @@
 #include <assert.h>
 #include <unistd.h>
 
-#include "base/main.h"
-#include "base/textFile.h"
+#include "main.h"
+#include "textFile.h"
 
 textFile_t* newTextFile(char *s)
 {

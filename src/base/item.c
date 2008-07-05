@@ -2,33 +2,33 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/arena.h"
-#include "base/tux.h"
-#include "base/item.h"
-#include "base/shot.h"
-#include "base/proto.h"
-#include "base/idManager.h"
-#include "base/net_multiplayer.h"
+#include "main.h"
+#include "arena.h"
+#include "tux.h"
+#include "item.h"
+#include "shot.h"
+#include "proto.h"
+#include "idManager.h"
+#include "net_multiplayer.h"
 
 #ifndef PUBLIC_SERVER
 
-#include "client/interface.h"
-#include "client/image.h"
-#include "client/layer.h"
-#include "client/term.h"
+#include "interface.h"
+#include "image.h"
+#include "layer.h"
+#include "term.h"
 
-#include "screen/screen_world.h"
-#include "screen/screen_setting.h"
+#include "screen_world.h"
+#include "screen_setting.h"
 
 #ifndef NO_SOUND
-#include "audio/sound.h"
+#include "sound.h"
 #endif
 
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
+#include "publicServer.h"
 #endif
 
 #ifndef PUBLIC_SERVER	

@@ -7,7 +7,7 @@
 #define MAX_ID		1000
 #define ID_UNKNOWN	-1
 
-#include "base/list.h"
+#include "list.h"
 
 extern void initListID();
 extern int getNewID();

@@ -2,15 +2,15 @@
 #include <stdlib.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
 
-#include "client/interface.h"
-#include "client/layer.h"
-#include "client/image.h"
+#include "interface.h"
+#include "layer.h"
+#include "image.h"
 
-#include "screen/screen_world.h"
+#include "screen_world.h"
 
 static list_t *listLayer;
 

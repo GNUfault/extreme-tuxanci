@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 #include <stdlib.h>
-#include "base/main.h"
-#include "client/image.h"
-#include "client/interface.h"
-#include "client/font.h"
+#include "main.h"
+#include "image.h"
+#include "interface.h"
+#include "font.h"
 #include "widget_image.h"
 
 widget_image_t* newWidgetImage(int x, int y, SDL_Surface *image)

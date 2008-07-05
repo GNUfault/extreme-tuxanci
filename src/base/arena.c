@@ -3,18 +3,18 @@
 #include <assert.h>
 #include <string.h>
 
-#include "base/main.h"
-#include "base/arena.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/shot.h"
-#include "base/item.h"
-#include "base/myTimer.h"
-#include "base/modules.h"
+#include "main.h"
+#include "arena.h"
+#include "list.h"
+#include "tux.h"
+#include "shot.h"
+#include "item.h"
+#include "myTimer.h"
+#include "modules.h"
 
 #ifndef PUBLIC_SERVER
-#include "screen/screen_world.h"
-#include "client/layer.h"
+#include "screen_world.h"
+#include "layer.h"
 #endif
 
 static arena_t *currentArena;

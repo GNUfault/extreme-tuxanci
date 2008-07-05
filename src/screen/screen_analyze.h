@@ -3,7 +3,7 @@
 
 #define SCREEN_ANALYZE_H
 
-#include "base/main.h"
+#include "main.h"
 
 typedef struct analyze_struct
 {

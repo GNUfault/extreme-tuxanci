@@ -3,17 +3,17 @@
 
 #define ITEM_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define ITEM_SYNC_TIMEOUT	5000
 
 #ifndef PUBLIC_SERVER
-#include "client/interface.h"
+#include "interface.h"
 #endif
 
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/myTimer.h"
+#include "list.h"
+#include "tux.h"
+#include "myTimer.h"
 
 typedef struct item_struct
 {

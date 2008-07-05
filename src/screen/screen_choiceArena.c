@@ -2,26 +2,26 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/arenaFile.h"
+#include "main.h"
+#include "list.h"
+#include "arenaFile.h"
 
-#include "client/language.h"
-#include "client/interface.h"
-#include "client/screen.h"
-#include "client/image.h"
+#include "language.h"
+#include "interface.h"
+#include "screen.h"
+#include "image.h"
 
 #ifndef NO_SOUND
-#include "audio/music.h"
+#include "music.h"
 #endif
 
-#include "screen/screen_mainMenu.h"
-#include "screen/screen_choiceArena.h"
+#include "screen_mainMenu.h"
+#include "screen_choiceArena.h"
 
-#include "widget/widget_label.h"
-#include "widget/widget_button.h"
-#include "widget/widget_image.h"
-#include "widget/widget_buttonimage.h"
+#include "widget_label.h"
+#include "widget_button.h"
+#include "widget_image.h"
+#include "widget_buttonimage.h"
 
 static widget_image_t *image_backgorund;
 

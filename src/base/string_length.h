@@ -3,7 +3,7 @@
 
 #define STR_LENGTH_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define STR_SIZE		128
 #define STR_PROTO_SIZE		128

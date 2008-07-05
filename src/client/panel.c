@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
 
-#include "client/interface.h"
-#include "client/image.h"
-#include "client/panel.h"
-#include "client/font.h"
+#include "interface.h"
+#include "image.h"
+#include "panel.h"
+#include "font.h"
 
 static SDL_Surface *g_panel;
 static SDL_Surface *g_shot;

@@ -3,7 +3,7 @@
 
 #define SCREEN_SETTING
 
-#include "base/main.h"
+#include "main.h"
 
 extern void initScreenSetting();
 extern void drawScreenSetting();

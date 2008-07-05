@@ -3,7 +3,7 @@
 
 #define PATH_H
 
-#include "base/main.h"
+#include "main.h"
 
 #ifdef DESTDIR
 
@@ -27,7 +27,7 @@
 #define PATH_MUSIC	DESTDIR PATH_DIR "music/"
 #define PATH_CONFIG	DESTDIR PATH_DIR "conf/"
 #define PATH_LANG	DESTDIR PATH_DIR "lang/"
-#define PATH_DATA	DESTDIR PATH_DIR "data/"
-#define PATH_MODULES	DESTDIR PATH_DIR "modules/"
+#define PATH_DATA	DESTDIR PATH_DIR "doc/"
+#define PATH_MODULES DESTDIR "lib/tuxanci-ng/"
 
 #endif 

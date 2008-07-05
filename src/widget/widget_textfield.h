@@ -3,7 +3,7 @@
 
 #define WIDGET_TEXTFIELD_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define WIDGET_TEXTFIELD_WIDTH		188
 #define WIDGET_TEXTFIELD_HEIGHT		36

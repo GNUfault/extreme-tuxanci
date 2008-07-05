@@ -3,21 +3,21 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/shot.h"
-#include "base/gun.h"
-#include "base/net_multiplayer.h"
-#include "base/proto.h"
-#include "base/idManager.h"
+#include "main.h"
+#include "shot.h"
+#include "gun.h"
+#include "net_multiplayer.h"
+#include "proto.h"
+#include "idManager.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/image.h"
-#include "client/layer.h"
-#include "screen/screen_world.h"
+#include "image.h"
+#include "layer.h"
+#include "screen_world.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
+#include "publicServer.h"
 #endif
 
 #ifndef PUBLIC_SERVER

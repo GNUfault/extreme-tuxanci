@@ -4,28 +4,28 @@
 #include <assert.h>
 #include <unistd.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/item.h"
-#include "base/arenaFile.h"
-#include "base/net_multiplayer.h"
-#include "base/server.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "item.h"
+#include "arenaFile.h"
+#include "net_multiplayer.h"
+#include "server.h"
 
 #ifdef SUPPORT_NET_UNIX_UDP
-#include "net_unix/udp.h"
+#include "udp.h"
 #endif
 
 #ifdef SUPPORT_NET_SDL_UDP
-#include "net_sdl/sdl_udp.h"
+#include "sdl_udp.h"
 #endif
 
 #ifndef PUBLIC_SERVER
-#include "screen/screen_setting.h"
-#include "screen/screen_choiceArena.h"
+#include "screen_setting.h"
+#include "screen_choiceArena.h"
 
-#include "client/screen.h"
-#include "client/client.h"
+#include "screen.h"
+#include "client.h"
 #endif
 
 static int netGameType;

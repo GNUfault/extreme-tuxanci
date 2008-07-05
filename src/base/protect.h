@@ -3,8 +3,8 @@
 
 #define PROTECT_H
 
-#include "base/main.h"
-#include "base/myTimer.h"
+#include "main.h"
+#include "myTimer.h"
 
 #define PROTECT_PING_INTERVAL_TIMEOUT	5000
 #define PROTECT_SPEED_INTERVAL_TIMEOUT	40

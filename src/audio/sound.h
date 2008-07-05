@@ -6,7 +6,7 @@
 #ifndef NO_SOUND
 
 #include <SDL_mixer.h>
-#include "base/main.h"
+#include "main.h"
 
 #define SOUND_GROUP_BASE "base"
 #define SOUND_GROUP_USER "user"

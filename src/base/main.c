@@ -8,15 +8,15 @@
 #include <assert.h>
 #include <sys/stat.h>
 
-#include "base/main.h"
-#include "base/tux.h"
+#include "main.h"
+#include "tux.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/game.h"
+#include "game.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
+#include "publicServer.h"
 #endif
 
 static int my_argc;

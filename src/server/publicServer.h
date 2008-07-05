@@ -3,7 +3,7 @@
 
 #define PUBLIC_SERVER_H
 
-#include "base/arena.h"
+#include "arena.h"
 
 #define WORLD_COUNT_ROUND_UNLIMITED	-1
 

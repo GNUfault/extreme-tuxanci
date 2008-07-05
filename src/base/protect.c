@@ -4,9 +4,9 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/myTimer.h"
-#include "base/protect.h"
+#include "main.h"
+#include "myTimer.h"
+#include "protect.h"
 
 protect_t* newProtect()
 {

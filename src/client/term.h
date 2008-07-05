@@ -3,7 +3,7 @@
 
 #define TERM_H
 
-#include "base/main.h"
+#include "main.h"
 
 #define TERM_MAX_LINES		10
 #define TERM_DEL_TEXT_TIMEOUT	2000

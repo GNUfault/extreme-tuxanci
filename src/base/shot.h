@@ -3,13 +3,13 @@
 
 #define SHOT_H
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/arena.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "arena.h"
 
 #ifndef PUBLIC_SERVER	
-#include "client/interface.h"
+#include "interface.h"
 #endif	
 
 typedef struct shot_struct

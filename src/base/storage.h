@@ -3,8 +3,8 @@
 
 #define STORAGE_H
 
-#include "base/main.h"
-#include "base/list.h"
+#include "main.h"
+#include "list.h"
 
 extern list_t* newStorage();
 extern void addItemToStorage(list_t *list, char *group, char *name, void *data);

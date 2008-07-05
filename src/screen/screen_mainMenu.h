@@ -3,7 +3,7 @@
 
 #define SCREEN_MIAN_MENU_H
 
-#include "base/main.h"
+#include "main.h"
 
 extern void startScreenMainMenu();
 extern void drawScreenMainMenu();

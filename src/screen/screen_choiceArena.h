@@ -3,7 +3,7 @@
 
 #define SCREEN_CHOICE_ARENA
 
-#include "base/main.h"
+#include "main.h"
 
 #define SCREENSHOT_ARENA_WIDTH		160
 #define SCREENSHOT_ARENA_HEIGHT		107

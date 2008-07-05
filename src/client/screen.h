@@ -3,7 +3,7 @@
 
 #define SCREEN_H
 
-#include "base/main.h"
+#include "main.h"
 
 typedef struct screen_struct
 {

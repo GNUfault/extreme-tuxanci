@@ -12,28 +12,28 @@
 #include <sys/ioctl.h>
 #include <sys/time.h>
 
-#include "base/main.h"
-#include "base/list.h"
-#include "base/tux.h"
-#include "base/proto.h"
-#include "base/server.h"
-#include "base/myTimer.h"
-#include "base/arena.h"
-#include "base/net_multiplayer.h"
-#include "base/checkFront.h"
-#include "base/protect.h"
-#include "base/index.h"
+#include "main.h"
+#include "list.h"
+#include "tux.h"
+#include "proto.h"
+#include "server.h"
+#include "myTimer.h"
+#include "arena.h"
+#include "net_multiplayer.h"
+#include "checkFront.h"
+#include "protect.h"
+#include "index.h"
 
 #ifndef PUBLIC_SERVER
-#include "screen/screen_world.h"
+#include "screen_world.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
-#include "server/heightScore.h"
+#include "publicServer.h"
+#include "heightScore.h"
 #endif
 
-#include "net_unix/udp.h"
+#include "udp.h"
 
 static sock_udp_t *sock_server_udp;
 static sock_udp_t *sock_server_udp_second;

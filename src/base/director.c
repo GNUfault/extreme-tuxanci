@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/list.h"
+#include "main.h"
+#include "list.h"
 
 typedef struct director_struct
 {

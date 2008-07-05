@@ -3,8 +3,8 @@
 
 #define PANEL_H
 
-#include "base/main.h"
-#include "base/list.h"
+#include "main.h"
+#include "list.h"
 
 #define PANEL_SCORE_LOCATION_X ( WINDOW_SIZE_X / 2 - w / 2 )
 #define PANEL_SCORE_LOCATION_Y ( WINDOW_SIZE_Y - 40 )

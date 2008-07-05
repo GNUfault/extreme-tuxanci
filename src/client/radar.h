@@ -3,7 +3,7 @@
 
 #define RADAR_H
 
-#include "base/arena.h"
+#include "arena.h"
 
 #define RADAR_LOCATION_X (WINDOW_SIZE_X-110)
 #define RADAR_LOCATION_Y (10)

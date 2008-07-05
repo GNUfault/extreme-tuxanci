@@ -4,21 +4,21 @@
 #include <string.h>
 #include <assert.h>
 
-#include "base/main.h"
-#include "base/modules.h"
-#include "base/tux.h"
-#include "base/shot.h"
-#include "base/list.h"
-#include "base/gun.h"
-#include "base/space.h"
+#include "main.h"
+#include "modules.h"
+#include "tux.h"
+#include "shot.h"
+#include "list.h"
+#include "gun.h"
+#include "space.h"
 
 #ifndef PUBLIC_SERVER
-#include "client/interface.h"
-#include "client/image.h"
+#include "interface.h"
+#include "image.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "server/publicServer.h"
+#include "publicServer.h"
 #endif
 
 typedef struct teleport_struct

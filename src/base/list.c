@@ -1,6 +1,6 @@
 
-#include "base/main.h"
-#include "base/list.h"
+#include "main.h"
+#include "list.h"
 
 #include <stdio.h>
 #include <stdlib.h>

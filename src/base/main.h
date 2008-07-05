@@ -11,15 +11,15 @@
 
 #endif
 
-#include "base/bool.h"
-#include "base/string_length.h"
-#include "base/path.h"
+#include "bool.h"
+#include "string_length.h"
+#include "path.h"
 
 //rozlisenie obrazovky
 #define WINDOW_SIZE_X 800
 #define WINDOW_SIZE_Y 600
 
-#include "base/list.h"
+#include "list.h"
 
 extern list_t *listHelp;
 
