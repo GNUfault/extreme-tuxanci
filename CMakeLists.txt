@@ -9,6 +9,9 @@
 # !! pri zmene zdrojovych souboru se podivejte co je treba delat do souboru !!
 # !! CMakeLists.txt v adresari src !!
 SET ( APPNAME "tuxanci-ng")
+IF ( NOT NO_Server )
+	SET ( APPNAME "tuxanci-ng-server" )
+ENDIF ( NOT NO_Server )
 MESSAGE ( "<******************************>" )
 MESSAGE ( "Configure for ${APPNAME} Started" )
 MESSAGE ( "<******************************>" )
@@ -60,7 +63,9 @@ ADD_SUBDIRECTORY ( src )
 # data !TODO
 #MESSAGE ( STATUS "<Installing datafiles>" )
 #MESSAGE ( STATUS "<******************************>" )
-
+IF ( NOT NO_Server )
+	INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/conf/server.conf DESTINATION ${CMAKE_INSTALL_ETCDIR}/${APPNAME} )
+ENDIF ( NOT NO_Server )
 IF ( NOT CMAKE_INSTALL_DATADIR )
 	SET ( CMAKE_INSTALL_DATADIR share/ )
 ENDIF ( NOT CMAKE_INSTALL_DATADIR )
@@ -70,9 +75,7 @@ INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/LICENCE DESTINATION ${CMAKE_INSTALL_DAT
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/AUTHORS DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/ )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/credits.en DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/ )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/README.sk DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/) # meli by sme vytvorit jeste soubory authors a licence
-IF ( NOT NO_Server )
-	INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/conf/server.conf DESTINATION ${CMAKE_INSTALL_ETCDIR}/${APPNAME} )
-ENDIF ( NOT NO_Server )
+
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/conf/keytable.conf DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/conf/ )
 FILE ( GLOB files "${CMAKE_SOURCE_DIR}/data/arena/*.map" )
 INSTALL ( FILES ${files} DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/arena/ )
