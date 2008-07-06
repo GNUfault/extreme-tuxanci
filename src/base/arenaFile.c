@@ -18,6 +18,8 @@
 #ifndef PUBLIC_SERVER
 #include "configFile.h"
 #include "image.h"
+#endif
+#ifndef NO_SOUND
 #include "music.h"
 #endif
 

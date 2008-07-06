@@ -23,7 +23,9 @@
 #include "term.h"
 #include "radar.h"
 
+#ifndef NO_SOUND
 #include "sound.h"
+#endif
 
 #include "screen_world.h"
 #endif

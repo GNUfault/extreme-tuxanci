@@ -25,9 +25,11 @@
 #include "panel.h"
 #include "radar.h"
 
+#ifndef NO_SOUND
 #include "audio.h"
 #include "sound.h"
 #include "music.h"
+#endif
 
 #include "screen_world.h"
 #include "screen_mainMenu.h"
