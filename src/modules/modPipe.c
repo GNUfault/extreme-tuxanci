@@ -218,7 +218,7 @@ static void moveShot(shot_t *shot, int position, int src_x, int src_y,
 	int dist_x, int dist_y, int dist_w, int dist_h)
 {
 	int offset = 0;
-	int new_x, new_y;
+	int new_x = 0, new_y = 0;  // no warninng
 
 	switch( shot->position )
 	{
@@ -341,6 +341,8 @@ static int negPosition(int n)
 			assert( ! "premenna n ma zlu hodnotu !" );
 		break;
 	}
+
+	return -1; // no warnning
 }
 
 int event()

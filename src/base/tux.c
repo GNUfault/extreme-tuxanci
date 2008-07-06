@@ -483,7 +483,7 @@ void eventConflictTuxWithShot(arena_t *arena)
 
 void moveTux(tux_t *tux, int n)
 {
-	int px, py;
+	int px = 0, py = 0;  // no warninng
 	int zal_x, zal_y;
 	int new_x, new_y;
 	int w, h;
@@ -756,7 +756,7 @@ void eventListTux(list_t *listTux)
 #endif
 		pickUpGun(thisTux);
 		eventBonus(thisTux);
-		//eventGiveTuxListItem(thisTux, arena->spaceItem);
+		eventGiveTuxListItem(thisTux, arena->spaceItem);
 	}
 }
 

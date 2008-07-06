@@ -187,7 +187,7 @@ void drawListShot(list_t *listShot)
 
 static int getRandomCourse(int x, int y)
 {
-	int ret;
+	int ret = -1; // no warnning
 
 	do{
 		switch( random() % 3 )

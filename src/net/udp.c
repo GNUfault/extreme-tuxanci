@@ -41,7 +41,7 @@ void destroySockUdp(sock_udp_t *p)
 sock_udp_t* bindUdpSocket(char *address, int port, int proto)
 {
 	sock_udp_t *new;
-	int res;
+	int res = -1; // no warninng
 
 	assert( port > 0 && port < 65535 );
 
@@ -167,7 +167,7 @@ int setUdpSockNonBlock(sock_udp_t *p)
 int readUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 {
 	int addrlen;
-	int size;
+	int size = -1;  // no warninng
 
 	assert( src != NULL );
 	assert( dst != NULL );
@@ -207,7 +207,7 @@ int readUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 int writeUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 {
 	int addrlen;
-	int size;
+	int size = -1;  // no warninng
 
 	assert( src != NULL );
 	assert( dst != NULL );

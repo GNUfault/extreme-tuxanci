@@ -208,7 +208,6 @@ static void readKey()
 
 void eventChat()
 {
-	my_time_t currentTime;
 	Uint8 *mapa;
 	
 	mapa = SDL_GetKeyState(NULL);

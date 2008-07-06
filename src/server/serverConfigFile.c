@@ -37,7 +37,9 @@ static void prepareConfigFile(textFile_t *ts)
 
 void initServerConfigFile()
 {
-	serverTextFile = loadTextFile("./server.conf");
+	printf("load configuration form %s\n", SERVER_CONFIG);
+
+	serverTextFile = loadTextFile(SERVER_CONFIG);
 
 	if( serverTextFile == NULL )
 	{

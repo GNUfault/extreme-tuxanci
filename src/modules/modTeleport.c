@@ -184,12 +184,13 @@ static int getRandomPosition()
 	}
 
 	assert( ! "Stupid error ! " );
+	return -1; // no warnning
 }
 
 static void teleportTux(tux_t *tux, teleport_t *teleport)
 {
 	teleport_t *distTeleport;
-	int dist_x, dist_y;
+	int dist_x = 0, dist_y = 0; // no warnning
 
 	if( tux->bonus == BONUS_GHOST ||
 	    export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_CLIENT )
@@ -319,7 +320,7 @@ static void moveShot(shot_t *shot, int position, int src_x, int src_y,
 	int dist_x, int dist_y, int dist_w, int dist_h)
 {
 	int offset = 0;
-	int new_x, new_y;
+	int new_x = 0, new_y = 0; // no warnning
 
 	switch( shot->position )
 	{

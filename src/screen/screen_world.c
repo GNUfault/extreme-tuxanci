@@ -449,6 +449,8 @@ void tuxControl(tux_t *p)
 
 void eventWorld()
 {
+	tux_t *thisTux;
+
 	if( arena == NULL )
 	{
 		eventNetMultiplayer();
@@ -462,10 +464,22 @@ void eventWorld()
 	eventArena(arena);
 	//eventModule();
 
-	addToRadar(tuxWithControlRightKeyboard->id,
-		tuxWithControlRightKeyboard->x,
-		tuxWithControlRightKeyboard->y,
+	thisTux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
+
+	addToRadar(thisTux->id,
+		thisTux->x,
+		thisTux->y,
 		RADAR_TYPE_YOU);
+
+	thisTux = getControlTux(TUX_CONTROL_KEYBOARD_LEFT);
+
+	if( thisTux != NULL )
+	{
+		addToRadar(thisTux->id,
+			thisTux->x,
+			thisTux->y,
+			RADAR_TYPE_YOU);
+	}
 
 	eventTerm();
 	eventEnd();

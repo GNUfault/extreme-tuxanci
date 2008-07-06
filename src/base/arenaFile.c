@@ -199,7 +199,7 @@ char *getArenaImage(int id)
 arena_t* getArena(int id)
 {
 	textFile_t *ts;
-	arena_t *arena;
+	arena_t *arena = NULL;  // no warninng
 	int i;
 
 	ts = (textFile_t *) listArenaFile->list[id];
