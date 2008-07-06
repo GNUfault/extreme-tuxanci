@@ -236,7 +236,6 @@ void initArenaFile()
 
 	isArenaFileInit = TRUE;
 	listArenaFile  = newList();
-
 	p = loadDirector(PATH_ARENA);
 
 	for( i = 0 ; i < p->list->count ; i++ )
