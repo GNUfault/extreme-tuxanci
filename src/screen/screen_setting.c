@@ -322,7 +322,6 @@ void initScreenSetting()
 	label_count_round = newWidgetLabel(getMyText("COUNT_ROUND"), 100, WINDOW_SIZE_Y-200, WIDGET_LABEL_LEFT);
 	label_name_player1 = newWidgetLabel(getMyText("NAME_PLAYER1"), 100, WINDOW_SIZE_Y-160, WIDGET_LABEL_LEFT);
 	label_name_player2 = newWidgetLabel(getMyText("NAME_PLAYER2"), 100, WINDOW_SIZE_Y-120, WIDGET_LABEL_LEFT);
-	label_ai = newWidgetLabel("AI :", 430, 400, WIDGET_LABEL_LEFT);
 
 	textfield_count_cound = newWidgetTextfield(getParamElse("--count", "15"), 110+label_count_round->w, WINDOW_SIZE_Y-200);
 	
@@ -337,9 +336,12 @@ void initScreenSetting()
 		WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
 	check_sound = newWidgetCheck(label_sound->x + label_sound->w + 10,
 		WINDOW_SIZE_Y-80, isSoundActive() , eventWidget);
+	label_ai = newWidgetLabel("AI:", check_sound->x + WIDGET_CHECK_WIDTH + 10, WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
+#elif
+	label_ai = newWidgetLabel("AI:", 100, WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
 #endif
 
-	check_ai = newWidgetCheck(460, 405, FALSE, eventWidget);
+	check_ai = newWidgetCheck(label_ai->x + label_ai->w + 10, WINDOW_SIZE_Y-80, FALSE, eventWidget);
 
 	for( i = GUN_DUAL_SIMPLE ; i <= GUN_BOMBBALL ; i++ )
 	{

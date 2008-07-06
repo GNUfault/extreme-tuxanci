@@ -9,7 +9,7 @@
 #include "string_length.h"
 #include "path.h"
 
-//rozlisenie obrazovky
+// screen resolution
 #define WINDOW_SIZE_X 800
 #define WINDOW_SIZE_Y 600
 
