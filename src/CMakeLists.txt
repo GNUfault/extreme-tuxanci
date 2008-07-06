@@ -25,10 +25,10 @@ ${WORKDIR}/server/logFile ${WORKDIR}/server/serverConfigFile ${WORKDIR}/server/h
 # nechcem sdl
 ADD_DEFINITIONS ( -DSUPPORT_NET_UNIX_UDP )
 # server nebo klient
-IF ( NOT NO_Server )
+IF ( Server )
 	ADD_DEFINITIONS ( -DPUBLIC_SERVER )
 	ADD_DEFINITIONS ( -DNO_SOUND )
-ENDIF ( NOT NO_Server )
+ENDIF ( Server )
 #include zdrojaku
 INCLUDE_DIRECTORIES ( ${WORKDIR}/base )
 INCLUDE_DIRECTORIES ( ${WORKDIR}/net )
@@ -36,7 +36,7 @@ INCLUDE_DIRECTORIES ( ${WORKDIR}/net )
 SET ( CMAKE_INSTALL_BINDIR bin )
 SET ( CMAKE_INSTALL_LIBDIR lib )
 ADD_SUBDIRECTORY ( modules )
-IF ( NO_Server ) # server nebo klient
+IF ( NOT Server ) # server nebo klient
 	MESSAGE ( STATUS "<Checking for SDL>" )
 	MESSAGE ( STATUS "<******************************>" )
 	FIND_PACKAGE ( SDL REQUIRED )
@@ -66,7 +66,7 @@ IF ( NO_Server ) # server nebo klient
 	ADD_EXECUTABLE ( tuxanci-ng ${SRC_compile} )
 	#TARGET_LINK_LIBRARIES (tuxanci-ng modWall modPipe modTeleport modAI)
 	SET (TUX_BIN "tuxanci-ng")
-ELSE ( NO_Server )
+ELSE ( NOT Server )
 	# kontrola libdl
 	LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
 	MESSAGE ( STATUS "<Building server as requested>" )
@@ -76,7 +76,7 @@ ELSE ( NO_Server )
 	ADD_EXECUTABLE ( tuxanci-ng-server ${SRC_compile} )
 	#TARGET_LINK_LIBRARIES (tuxanci-ng-server modWall modPipe modTeleport modAI)
 	SET (TUX_BIN "tuxanci-ng-server")
-ENDIF ( NO_Server )
+ENDIF ( NOT Server )
 
 # binarky a knihovny instalace
 #MESSAGE ( STATUS "<Installing binaries and libraries>" )

@@ -1,7 +1,7 @@
 # Created by Tomas Chvatal
 # volani se vsema externima moznostma:
 
-# cmake . -DNO_Server=1 -DNO_Audio=1 -DDebug=1 -DCMAKE_C_FLAGS="-Wall -DDist=1"
+# cmake . -DServer=1 -DNO_Audio=1 -DDebug=1 -DCMAKE_C_FLAGS=-Wall -DDist=1"
 # make
 # make install
 
@@ -69,9 +69,9 @@ IF ( NOT CMAKE_INSTALL_DATADIR )
 	SET ( CMAKE_INSTALL_DATADIR share/ )
 ENDIF ( NOT CMAKE_INSTALL_DATADIR )
 SET ( CMAKE_INSTALL_ETCDIR /etc )
-IF ( NOT NO_Server )
+IF ( Server )
 	INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/conf/server.conf DESTINATION ${CMAKE_INSTALL_ETCDIR}/${APPNAME} )
-ELSE ( NOT NO_Server )
+ELSE ( Server )
 	INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/tuxanci-ng.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/)
 	INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/conf/keytable.conf DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/conf/ )
 	FILE ( GLOB files "${CMAKE_SOURCE_DIR}/data/font/*.ttf" )
@@ -84,7 +84,7 @@ ELSE ( NOT NO_Server )
 	INSTALL ( FILES ${files} DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/music/ )
 	FILE ( GLOB files "${CMAKE_SOURCE_DIR}/data/sound/*.ogg" )
 	INSTALL ( FILES ${files} DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/sound/ )
-ENDIF ( NOT NO_Server )
+ENDIF ( Server )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/LICENCE DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/)
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/AUTHORS DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/ )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/README DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/)

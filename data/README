@@ -59,12 +59,12 @@ HOWTO COMPILE
 	(all commands are supposed to be written in tuxanci sources directory)
 	Building Client
 	---------------
-		$ cmake . -DNO_Server=1 -DNO_Audio=1	
+		$ cmake . -DNO_Audio=1	
 		$ make
 		# make install
 	Building Server
 	--------------
-		$ cmake .
+		$ cmake . -DServer=1
 		$ make
 		$ make install
 	Removing current install
