@@ -13,12 +13,10 @@
 #include "space.h"
 
 #ifndef PUBLIC_SERVER
-#include "interface.h"
-#include "image.h"
-#endif
-
-#ifdef PUBLIC_SERVER
-#include "publicServer.h"
+  #include "interface.h"
+  #include "image.h"
+#else
+  #include "publicServer.h"
 #endif
 
 static export_fce_t *export_fce;
@@ -35,7 +33,6 @@ int init(export_fce_t *p)
 }
 
 #ifndef PUBLIC_SERVER
-
 int draw(int x, int y, int w, int h)
 {
 	return 0;

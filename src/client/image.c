@@ -20,7 +20,7 @@ bool_t isImageInicialized()
 }
 
 /*
- * Inicialuzje globalny zoznam obrazkov
+ * Inicializuje globalny zoznam obrazkov
  */
 void initImageData()
 {
@@ -128,12 +128,12 @@ void drawImage(SDL_Surface *p, int x,int y, int px, int py, int w, int h)
 
 	dst_rect.x = x;
 	dst_rect.y = y;
-	
+
 	src_rect.x = px;
 	src_rect.y = py;
 	src_rect.w = w;
 	src_rect.h = h;
-		
+
 	SDL_BlitSurface(p, &src_rect, screen, &dst_rect);
 }
 

@@ -337,7 +337,7 @@ void initScreenSetting()
 	check_sound = newWidgetCheck(label_sound->x + label_sound->w + 10,
 		WINDOW_SIZE_Y-80, isSoundActive() , eventWidget);
 	label_ai = newWidgetLabel("AI:", check_sound->x + WIDGET_CHECK_WIDTH + 10, WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
-#elif
+#else
 	label_ai = newWidgetLabel("AI:", 100, WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
 #endif
 

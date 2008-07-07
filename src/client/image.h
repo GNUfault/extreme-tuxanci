@@ -3,7 +3,7 @@
 
 #define IMAGE_H
 
-#include "image.h"
+//#include "image.h"
 #include "interface.h"
 
 #define IMAGE_NO_ALPHA	0

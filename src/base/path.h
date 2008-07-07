@@ -12,13 +12,10 @@
 #ifndef PUBLIC_SERVER
   #define PATH_DIR	PREFIX	"/share/tuxanci-ng/"
   #define PATH_MODULES 	PREFIX	"/lib/tuxanci-ng/"
-#endif
-
-#ifdef PUBLIC_SERVER
+#else
   #define PATH_DIR	PREFIX	"/share/tuxanci-ng-server/"
   #define PATH_MODULES	PREFIX	"/lib/tuxanci-ng-server/"
   #define SERVER_CONFIG		"/etc/tuxanci-ng-server/server.conf"
-
 #endif
 
 #define PATH_IMAGE	PATH_DIR "image/"
