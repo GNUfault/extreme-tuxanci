@@ -88,7 +88,8 @@ void drawScreenSetting()
 	
 	drawWidgetLabel(label_count_round);
 	drawWidgetLabel(label_name_player1);
-	drawWidgetLabel(label_name_player2);
+	if ( check_ai->status == 0 )
+		drawWidgetLabel(label_name_player2);
 	drawWidgetLabel(label_ai);
 
 #ifndef NO_SOUND
@@ -98,7 +99,8 @@ void drawScreenSetting()
 
 	drawWidgetTextfield(textfield_count_cound);
 	drawWidgetTextfield(textfield_name_player1);
-	drawWidgetTextfield(textfield_name_player2);
+	if ( check_ai->status == 0 )
+		drawWidgetTextfield(textfield_name_player2);
 
 	drawWidgetImage(image_gun_dual_revolver);
 	drawWidgetImage(image_gun_scatter);
@@ -199,6 +201,20 @@ static void eventWidget(void *p)
 		setSoundActive( check_sound->status );
 	}
 #endif
+	if( check == check_ai )
+	{
+		if ( check_ai->status ) {
+			// ai je zapnuto nechceme hrace 2
+			destroyWidgetTextfield(textfield_name_player2);
+			destroyWidgetLabel(label_name_player2);
+		} else {
+			// ai je vypnuto chceme hrace 2
+			label_name_player2 = newWidgetLabel(getMyText("NAME_PLAYER2"), 100, WINDOW_SIZE_Y-120, WIDGET_LABEL_LEFT);
+			drawWidgetLabel(label_name_player2);
+			textfield_name_player2 = newWidgetTextfield(getParamElse("--name2", "TUX Warrior #02"), 110+label_name_player2->w, WINDOW_SIZE_Y-120);
+			drawWidgetTextfield(textfield_name_player2);
+		}
+	}
 }
 
 static void initSettingFile()
@@ -226,9 +242,9 @@ static void initSettingFile()
 
 	loadValueFromConfigFile(configFile, "COUNT_ROUND", val, STR_SIZE, "15");
 	strcpy(textfield_count_cound->text, val);
-	loadValueFromConfigFile(configFile, "NAME_PLAYER_RIGHT", val, STR_SIZE, "name1");
+	loadValueFromConfigFile(configFile, "NAME_PLAYER_RIGHT", val, STR_SIZE, "TUX Warrior #01");
 	strcpy(textfield_name_player1->text, val);
-	loadValueFromConfigFile(configFile, "NAME_PLAYER_LEFT", val, STR_SIZE, "name2");
+	loadValueFromConfigFile(configFile, "NAME_PLAYER_LEFT", val, STR_SIZE, "TUX Warrior #02");
 	strcpy(textfield_name_player2->text, val);
 
 	loadValueFromConfigFile(configFile, "GUN_DUAL_SIMPLE", val, STR_SIZE, "YES");
@@ -273,6 +289,7 @@ static void initSettingFile()
 
 static void saveAndDestroyConfigFile()
 {
+	char val[STR_SIZE], name2[STR_SIZE];
 	if( configFile == NULL )
 	{
 		fprintf(stderr, "i can't save configure, "
@@ -283,8 +300,13 @@ static void saveAndDestroyConfigFile()
 
 	setValueInConfigFile(configFile, "COUNT_ROUND", textfield_count_cound->text );
 	setValueInConfigFile(configFile, "NAME_PLAYER_RIGHT", textfield_name_player1->text );
-	setValueInConfigFile(configFile, "NAME_PLAYER_LEFT", textfield_name_player2->text );
-
+	if ( check_ai->status ) {
+		loadValueFromConfigFile(configFile, "NAME_PLAYER_LEFT", val, STR_SIZE, "TUX Warrior #02");
+		strcpy(name2, val);
+		setValueInConfigFile(configFile, "NAME_PLAYER_LEFT", name2 );
+	} else {
+		setValueInConfigFile(configFile, "NAME_PLAYER_LEFT", textfield_name_player2->text );
+	}
 	setValueInConfigFile(configFile, "GUN_DUAL_SIMPLE", getYesOrNo(check[GUN_DUAL_SIMPLE]->status) );
 	setValueInConfigFile(configFile, "GUN_SCATTER", getYesOrNo(check[GUN_SCATTER]->status) );
 	setValueInConfigFile(configFile, "GUN_TOMMY", getYesOrNo(check[GUN_TOMMY]->status) );
@@ -319,15 +341,6 @@ void initScreenSetting()
 
 	button_back = newWidgetButton(getMyText("BACK"), WINDOW_SIZE_X-200, WINDOW_SIZE_Y-100, eventWidget);
 
-	label_count_round = newWidgetLabel(getMyText("COUNT_ROUND"), 100, WINDOW_SIZE_Y-200, WIDGET_LABEL_LEFT);
-	label_name_player1 = newWidgetLabel(getMyText("NAME_PLAYER1"), 100, WINDOW_SIZE_Y-160, WIDGET_LABEL_LEFT);
-	label_name_player2 = newWidgetLabel(getMyText("NAME_PLAYER2"), 100, WINDOW_SIZE_Y-120, WIDGET_LABEL_LEFT);
-
-	textfield_count_cound = newWidgetTextfield(getParamElse("--count", "15"), 110+label_count_round->w, WINDOW_SIZE_Y-200);
-	
-	textfield_name_player1 = newWidgetTextfield(getParamElse("--name1", "name1"), 110+label_name_player1->w, WINDOW_SIZE_Y-160);
-	textfield_name_player2 = newWidgetTextfield(getParamElse("--name2", "name2"), 110+label_name_player2->w, WINDOW_SIZE_Y-120);
-
 #ifndef NO_SOUND
 	label_music = newWidgetLabel(getMyText("MUSIC"), 100, WINDOW_SIZE_Y-85, WIDGET_LABEL_LEFT);
 	check_music = newWidgetCheck(label_music->x + label_music->w  + 10,
@@ -342,6 +355,16 @@ void initScreenSetting()
 #endif
 
 	check_ai = newWidgetCheck(label_ai->x + label_ai->w + 10, WINDOW_SIZE_Y-80, FALSE, eventWidget);
+
+	label_count_round = newWidgetLabel(getMyText("COUNT_ROUND"), 100, WINDOW_SIZE_Y-200, WIDGET_LABEL_LEFT);
+	label_name_player1 = newWidgetLabel(getMyText("NAME_PLAYER1"), 100, WINDOW_SIZE_Y-160, WIDGET_LABEL_LEFT);
+	label_name_player2 = newWidgetLabel(getMyText("NAME_PLAYER2"), 100, WINDOW_SIZE_Y-120, WIDGET_LABEL_LEFT);
+
+	textfield_count_cound = newWidgetTextfield(getParamElse("--count", "15"), 110+label_count_round->w, WINDOW_SIZE_Y-200);
+	
+	textfield_name_player1 = newWidgetTextfield(getParamElse("--name1", "TUX Warrior #01"), 110+label_name_player1->w, WINDOW_SIZE_Y-160);
+	if ( check_ai->status == 0 )
+		textfield_name_player2 = newWidgetTextfield(getParamElse("--name2", "TUX Warrior #02"), 110+label_name_player2->w, WINDOW_SIZE_Y-120);
 
 	for( i = GUN_DUAL_SIMPLE ; i <= GUN_BOMBBALL ; i++ )
 	{
@@ -466,15 +489,16 @@ void quitScreenSetting()
 
 	destroyWidgetLabel(label_count_round);
 	destroyWidgetLabel(label_name_player1);
-	destroyWidgetLabel(label_name_player2);
+	if ( check_ai->status == 0 )
+		destroyWidgetLabel(label_name_player2);
 	destroyWidgetLabel(label_ai);
 
 #ifndef NO_SOUND
 	destroyWidgetLabel(label_music);
 	destroyWidgetLabel(label_sound);
 #endif
-
-	destroyWidgetTextfield(textfield_count_cound);
+	if ( check_ai->status == 0 )
+		destroyWidgetTextfield(textfield_count_cound);
 	destroyWidgetTextfield(textfield_name_player1);
 	destroyWidgetTextfield(textfield_name_player2);
 
