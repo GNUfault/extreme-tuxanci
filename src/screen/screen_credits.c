@@ -26,7 +26,7 @@ static widget_button_t *button_back;
 static list_t *listWidgetLabel;
 static textFile_t *textFile;
 static int offset;
-
+static int creditExists;
 void startScreenCredits()
 {
 #ifndef NO_SOUND
@@ -104,21 +104,37 @@ void initScreenCredits()
 	button_back = newWidgetButton(getMyText("BACK"), WINDOW_SIZE_X/2 -WIDGET_BUTTON_WIDTH/2, WINDOW_SIZE_Y-80, eventWidget);
 
 	listWidgetLabel = newList();
-	accessExistFile(PATH_DATA SCREEN_CREDITS_FILE);
-	textFile = loadTextFile(PATH_DATA SCREEN_CREDITS_FILE);
 
-	for( i = 0 ; i < textFile->text->count ; i++ )
+	if( tryExistFile(PATH_DATA SCREEN_CREDITS_FILE) == 0 )
 	{
-		widget_label_t *label;
-		char *line;
+		creditExists=1;
+		textFile = loadTextFile(PATH_DATA SCREEN_CREDITS_FILE);
+    	for( i = 0 ; i < textFile->text->count ; i++ )
+		{
+			widget_label_t *label;
+			char *line;
+			line = (char *)textFile->text->list[i];
+			label = newWidgetLabel(line, WINDOW_SIZE_X/2-WINDOW_SIZE_X/4,
+				(WINDOW_SIZE_Y-100)+i*20, WIDGET_LABEL_LEFT);
 
-		line = (char *)textFile->text->list[i];
-		label = newWidgetLabel(line, WINDOW_SIZE_X/2, (WINDOW_SIZE_Y-100)+i*20,
-			 WIDGET_LABEL_CENTER);
-
-		addList(listWidgetLabel, label);
+			addList(listWidgetLabel, label);
+		}
 	}
+	else
+	{
+		for( i = 0 ; i < 5 ; i++ )
+		{
+			creditExists=0;
+			widget_label_t *label;
+			char *line;
+			line = "Credit file not found...";
+			label = newWidgetLabel(line, WINDOW_SIZE_X/2, (WINDOW_SIZE_Y-100)+i*20,
+				WIDGET_LABEL_CENTER);
 
+			addList(listWidgetLabel, label);
+		}
+	}
+	
 	registerScreen( newScreen("credits", startScreenCredits, eventScreenCredits,
 		drawScreenCredits, stopScreenCredits) );
 }
@@ -129,6 +145,9 @@ void quitScreenCredits()
 
 	destroyWidgetButton(button_back);
 	destroyListItem(listWidgetLabel, destroyWidgetLabel);
-	destroyTextFile(textFile);
+	if( creditExists )
+	{
+		destroyTextFile(textFile);
+	}
 }
 

@@ -101,6 +101,14 @@ void accessExistFile(const char *s)
 	}
 }
 
+int tryExistFile (const char *s)
+{
+	if (access(s, F_OK) !=0)
+		return 1;
+	else
+		return 0;
+}
+
 int main(int argc, char *argv[])
 {
 	listHelp = newList();
