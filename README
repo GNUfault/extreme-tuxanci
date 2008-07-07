@@ -75,10 +75,18 @@ HOWTO COMPILE
 	-----
 		Option -DNO_AUDIO=1 says we want no audio support for client so change
 		if you want so.
+		
 		Server and client can be both on same computer they use different
 		folders.
+		
 		Cleaning data from previous compilation "$ make clean".
 
+		On Apple use please -DApple=1 variable for cmake.
+		
+		If you want another prefix than /usr/local/, you can achieve this by
+		adding -DPREFIX=\\\"/usr/games/\\\" and 
+		-DCMAKE_INSTALL_PREFIX:PATH=/usr/games.	Change /usr/games/ to path you
+		intend to use.
 
 GAME USAGE
 ==========

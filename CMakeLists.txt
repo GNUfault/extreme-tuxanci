@@ -50,6 +50,7 @@ PROJECT ( tuxanci )
 # verbose nastaveni vypnout pred release
 IF ( Dist )
 	SET ( CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/dist )
+	SET ( PREFIX \\"../\\" ) # tohle by melo vytvorit binarku s relativni path
 ENDIF ( Dist )
 IF ( Debug )
 	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 -Wall -pipe")

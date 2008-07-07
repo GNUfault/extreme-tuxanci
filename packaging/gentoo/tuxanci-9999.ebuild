@@ -16,7 +16,7 @@ IUSE="alsa dedicated"
 
 DEPEND="!dedicated? (
 			>=media-libs/libsdl-1.2.10
-       		>=media-libs/sdl-ttf-2.0.7
+			>=media-libs/sdl-ttf-2.0.7
 			>=media-libs/sdl-image-1.2.6-r1
 			alsa? (
 				>=media-libs/sdl-mixer-1.2.7
