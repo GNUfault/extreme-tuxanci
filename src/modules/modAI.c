@@ -247,6 +247,10 @@ void cmdArena(char *line)
 	if( strncmp(line, "ai", 2) == 0 )cmd_ai(line);
 }
 
+void recvMsg(char *msg)
+{
+}
+
 int destroy()
 {
 	return 0;

@@ -16,6 +16,7 @@
 #include "net_multiplayer.h"
 #include "checkFront.h"
 #include "idManager.h"
+#include "modules.h"
 #include "protect.h"
 
 #ifndef PUBLIC_SERVER
@@ -744,6 +745,47 @@ void proto_recv_chat_client(char *msg)
 }
 
 #endif
+
+#ifndef PUBLIC_SERVER
+
+void proto_send_module_client(char *msg)
+{
+	char out[STR_PROTO_SIZE];
+
+	strcpy(out, "modules ");
+	strcat(out, msg);
+	strcat(out, "\n");
+
+	sendServer(out);
+}
+
+#endif
+
+void proto_recv_module_server(client_t *client, char *msg)
+{
+	recvMsgModule(msg+7);
+}
+
+void proto_send_module_server(int type, client_t *client, char *msg)
+{
+	char out[STR_PROTO_SIZE];
+
+	strcpy(out, "module ");
+	strcat(out, msg);
+	strcat(out, "\n");
+
+	protoSendClient(type, client, out, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+}
+
+#ifndef PUBLIC_SERVER
+
+void proto_recv_module_client(char *msg)
+{
+	recvMsgModule(msg+7);
+}
+
+#endif
+
 
 #ifndef PUBLIC_SERVER
 

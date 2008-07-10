@@ -21,17 +21,11 @@
 #include "screen_analyze.h"
 #include "screen_world.h"
 
+#include "udp.h"
+
 static int protocolType;
 
-#ifdef SUPPORT_NET_UNIX_UDP
-#include "udp.h"
 static sock_udp_t *sock_server_udp;
-#endif
-
-#ifdef SUPPORT_NET_SDL_UDP
-#include "sdl_udp.h"
-static sock_sdl_udp_t *sock_server_sdl_udp;
-#endif
 
 static list_t *clientBuffer;
 static my_time_t lastPing;
@@ -48,8 +42,6 @@ static void initClient()
 	getSettingNameRight(name);
 	proto_send_hello_client(name);
 }
-
-#ifdef SUPPORT_NET_UNIX_UDP
 
 int initUdpClient(char *ip, int port, int proto)
 {
@@ -68,29 +60,6 @@ int initUdpClient(char *ip, int port, int proto)
 	return 0;
 }
 
-#endif
-
-#ifdef SUPPORT_NET_SDL_UDP
-
-int initSdlUdpClient(char *ip, int port)
-{
-	sock_server_sdl_udp = connectSdlUdpSocket(ip, port);
-
-	if( sock_server_sdl_udp == NULL )
-	{
-		return -1;
-	}
-
-	printf("connect UDP %s %d\n", ip, port);
-
-	protocolType = NET_PROTOCOL_TYPE_UDP;
-	initClient();
-
-	return 0;
-}
-
-#endif
-
 void sendServer(char *msg)
 {
 	int ret;
@@ -98,19 +67,13 @@ void sendServer(char *msg)
 	assert( msg != NULL );
 
 #ifndef PUBLIC_SERVER
-		if( isParamFlag("--send") )
-		{
-			printf("send -> %s", msg);
-		}
+	if( isParamFlag("--send") )
+	{
+		printf("send -> %s", msg);
+	}
 #endif
 
-#ifdef SUPPORT_NET_UNIX_UDP
 	ret = writeUdpSocket(sock_server_udp, sock_server_udp, msg, strlen(msg));
-#endif
-
-#ifdef SUPPORT_NET_SDL_UDP
-	ret = writeSdlUdpSocket(sock_server_sdl_udp, sock_server_sdl_udp, msg, strlen(msg));
-#endif
 }
 
 static int eventServerSelect()
@@ -120,32 +83,19 @@ static int eventServerSelect()
 
 	memset(buffer,0 ,STR_PROTO_SIZE);
 
-#ifdef SUPPORT_NET_UNIX_UDP
 	ret = readUdpSocket(sock_server_udp, sock_server_udp, buffer, STR_PROTO_SIZE-1);
-#endif
-
-#ifdef SUPPORT_NET_SDL_UDP
-	ret = readSdlUdpSocket(sock_server_sdl_udp, sock_server_sdl_udp, buffer, STR_PROTO_SIZE-1);
 
 	if( ret < 0 )
 	{
 		return ret;
 	}
-#endif
 
 	addList(clientBuffer, strdup(buffer) );
-/*
-	if( addBuffer(clientBuffer, buffer, ret) != 0 )
-	{
-		fprintf(stderr, "chyba, nemozem zapisovat do mojho buffera !\n");
-		setWorldEnd();
-		return ret;
-	}
-*/
+	
 	return ret;
 }
 
-void eventServerBuffer()
+static void eventServerBuffer()
 {
 	char *line;
 	int i;
@@ -172,6 +122,7 @@ void eventServerBuffer()
 		if( strncmp(line, "additem", 7) == 0 )proto_recv_additem_client(line);
 		if( strncmp(line, "shot", 4) == 0 )proto_recv_shot_client(line);
 		if( strncmp(line, "kill", 4) == 0 )proto_recv_kill_client(line);
+		if( strncmp(line, "module", 6) == 0 )proto_recv_module_client(line);
 		if( strncmp(line, "chat", 4) == 0 )proto_recv_chat_client(line);
 		if( strncmp(line, "ping", 4) == 0 )proto_recv_ping_client(line);
 		if( strncmp(line, "end", 3) == 0 )proto_recv_end_client(line);
@@ -183,7 +134,7 @@ void eventServerBuffer()
 	clientBuffer = newList();
 }
 
-void eventPingServer()
+static void eventPingServer()
 {
 	my_time_t currentTime;
 
@@ -196,7 +147,7 @@ void eventPingServer()
 	}
 }
 
-bool_t isServerAlive()
+static bool_t isServerAlive()
 {
 	my_time_t currentTime;
 
@@ -210,9 +161,7 @@ bool_t isServerAlive()
 	return TRUE;
 }
 
-#ifdef SUPPORT_NET_UNIX_UDP
-
-void selectClientUdpSocket()
+static void selectClientUdpSocket()
 {
 	fd_set readfds;
 	struct timeval tv;
@@ -246,30 +195,14 @@ void selectClientUdpSocket()
 		}
 
 	}while( isNext == TRUE );
-
 }
 
-#endif
-
-#ifdef SUPPORT_NET_SDL_UDP
-
-void selectClientSdlUdpSocket()
+void eventClient()
 {
-	int ret;
-
-	if( isServerAlive() == FALSE )
-	{
-		setMsgToAnalyze(getMyText("ERROR_SERVER_DONT_ALIVE"));
-		setWorldEnd();
-		return;
-	}
-
-	do{
-		ret = eventServerSelect();
-	}while( ret > 0);
+	eventPingServer();
+	selectClientUdpSocket();
+	eventServerBuffer();
 }
-
-#endif
 
 static void quitClient()
 {
@@ -277,8 +210,6 @@ static void quitClient()
 	assert( clientBuffer != NULL );
 	destroyListItem(clientBuffer, free);
 }
-
-#ifdef SUPPORT_NET_UNIX_UDP
 
 void quitUdpClient()
 {
@@ -289,19 +220,3 @@ void quitUdpClient()
 
 	printf("quit UDP conenct\n");
 }
-
-#endif
-
-#ifdef SUPPORT_NET_SDL_UDP
-
-void quitSdlUdpClient()
-{
-	quitClient();
-
-	assert( sock_server_sdl_udp != NULL );
-	closeSdlUdpSocket(sock_server_sdl_udp);
-
-	printf("quit UDP conenct\n");
-}
-
-#endif

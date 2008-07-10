@@ -55,6 +55,59 @@ time_t getUpdateServer()
 	return time(NULL) - timeUpdate;
 }
 
+static client_t* newUdpClient(sock_udp_t *sock_udp)
+{
+	client_t *new;
+	char str_ip[STR_IP_SIZE];
+
+	assert( sock_udp != NULL );
+
+	getSockUdpIp(sock_udp, str_ip, STR_IP_SIZE);
+	printf("new client from %s %d\n", str_ip, getSockUdpPort(sock_udp));
+	
+	new = malloc( sizeof(client_t) );
+	memset(new, 0, sizeof(client_t));
+	
+	new->status = NET_STATUS_OK;
+	new->listRecvMsg = newList();
+	new->listSendMsg = newCheckFront();
+	new->listSeesShot = newList();
+	new->protect = newProtect();
+	new->socket_udp = sock_udp;
+
+	return new;
+}
+
+static void destroyClient(client_t *p)
+{
+	char str_ip[STR_IP_SIZE];
+
+	assert( p != NULL );
+
+	eventMsgInCheckFront(p);
+
+	getSockUdpIp(p->socket_udp, str_ip, STR_IP_SIZE);
+	printf("close connect %s %d\n", str_ip, getSockUdpPort(p->socket_udp) );
+
+	closeUdpSocket(p->socket_udp);
+
+	destroyListItem(p->listRecvMsg, free);
+	destroyListItem(p->listSeesShot, free);
+	destroyCheckFront(p->listSendMsg);
+
+	destroyProtect(p->protect);
+
+	if( p->tux != NULL )
+	{
+#ifdef PUBLIC_SERVER
+		addPlayerInHighScore(p->tux->name, p->tux->score);
+#endif
+		delObjectFromSpaceWithObject(getCurrentArena()->spaceTux, p->tux, destroyTux);
+	}
+
+	free(p);
+}
+
 static void eventDelClient(client_t *client)
 {
 	int offset;
@@ -213,59 +266,6 @@ int initUdpPublicServer(char *ip4, int port4, char *ip6, int port6)
 
 #endif
 
-client_t* newUdpClient(sock_udp_t *sock_udp)
-{
-	client_t *new;
-	char str_ip[STR_IP_SIZE];
-
-	assert( sock_udp != NULL );
-
-	getSockUdpIp(sock_udp, str_ip, STR_IP_SIZE);
-	printf("new client from %s %d\n", str_ip, getSockUdpPort(sock_udp));
-	
-	new = malloc( sizeof(client_t) );
-	memset(new, 0, sizeof(client_t));
-	
-	new->status = NET_STATUS_OK;
-	new->listRecvMsg = newList();
-	new->listSendMsg = newCheckFront();
-	new->listSeesShot = newList();
-	new->protect = newProtect();
-	new->socket_udp = sock_udp;
-
-	return new;
-}
-
-void destroyClient(client_t *p)
-{
-	char str_ip[STR_IP_SIZE];
-
-	assert( p != NULL );
-
-	eventMsgInCheckFront(p);
-
-	getSockUdpIp(p->socket_udp, str_ip, STR_IP_SIZE);
-	printf("close connect %s %d\n", str_ip, getSockUdpPort(p->socket_udp) );
-
-	closeUdpSocket(p->socket_udp);
-
-	destroyListItem(p->listRecvMsg, free);
-	destroyListItem(p->listSeesShot, free);
-	destroyCheckFront(p->listSendMsg);
-
-	destroyProtect(p->protect);
-
-	if( p->tux != NULL )
-	{
-#ifdef PUBLIC_SERVER
-		addPlayerInHighScore(p->tux->name, p->tux->score);
-#endif
-		delObjectFromSpaceWithObject(getCurrentArena()->spaceTux, p->tux, destroyTux);
-	}
-
-	free(p);
-}
-
 list_t* getListServerClient()
 {
 	return listClient;
@@ -376,26 +376,11 @@ static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 	w = 2 * WINDOW_SIZE_X;
 	h = 2 * WINDOW_SIZE_Y;
 
-	if( x < 0 )
-	{
-		x = 0;
-	}
-
-	if( y < 0 )
-	{
-		y = 0;
-	}
-
-	if( w+x >= arena->w )
-	{
-		w = arena->w - (x+1);
-	}
-
-	if( h+y >= arena->h )
-	{
-		h = arena->h - (y+1);
-	}
-
+	if( x < 0 )x = 0;
+	if( y < 0 )y = 0;
+	if( w+x >= arena->w )w = arena->w - (x+1);
+	if( h+y >= arena->h )h = arena->h - (y+1);
+	
 	getObjectFromSpace(space, x, y, w, h, listHelp);
 	//printf("%d %d %d %d %d\n", x, y, w, h, listHelp->count);
 
@@ -418,28 +403,6 @@ static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 			addMsgClient(thisClient, msg, type, id);
 		}
 	}
-
-#if 0
-	for( i = 0 ; i < listClient->count ; i++ )
-	{
-		client_t *thisClient;
-		tux_t *thisTux;
-
-		thisClient = (client_t *)listClient->list[i];
-		thisTux = (tux_t *)thisClient->tux;
-
-		if( thisTux == NULL )
-		{
-			continue;
-		}
-
-		if( tux != thisTux &&
-		    isTuxSeesTux(thisTux, tux) )
-		{
-			addMsgClient(thisClient, msg, type, id);
-		}
-	}
-#endif
 }
 
 void protoSendClient(int type, client_t *client, char *msg, int type2, int id)
@@ -479,29 +442,6 @@ void protoSendClient(int type, client_t *client, char *msg, int type2, int id)
 			assert( ! "Premenna type ma zlu hodnotu !" );
 		break;
 	}
-}
-
-tux_t *getServerTux()
-{
-	return NULL;
-}
-
-client_t *getClientFromTux(tux_t *tux)
-{
-	client_t *thisClient;
-	int i;
-
-	for( i = 0 ; i < listClient->count; i++)
-	{
-		thisClient = (client_t *) listClient->list[i];
-
-		if( thisClient->tux == tux )
-		{
-			return thisClient;
-		}
-	}
-
-	return NULL;
 }
 
 void sendInfoCreateClient(client_t *client)
@@ -613,6 +553,12 @@ static void eventClientBuffer(client_t *client)
 				continue;
 			}
 
+			if( strncmp(line, "module", 7) == 0 )
+			{
+				proto_recv_module_server(client, line);
+				continue;
+			}
+
 			if( strncmp(line, "chat", 4) == 0 )
 			{
 				proto_recv_chat_server(client, line);
@@ -642,7 +588,7 @@ static void eventClientBuffer(client_t *client)
 	client->listRecvMsg = newList();
 }
 
-void eventClientListBuffer()
+static void eventClientListBuffer()
 {
 	int i;
 	client_t *thisClient;
@@ -723,7 +669,7 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 	addList(client->listRecvMsg, strdup(listRecvMsg) );
 }
 
-int selectServerUdpSocket()
+static int selectServerUdpSocket()
 {
 	struct timeval tv;
 	fd_set readfds;

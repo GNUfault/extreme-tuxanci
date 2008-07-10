@@ -21,12 +21,6 @@
 #include "configFile.h"
 #endif
 
-int pokus(char *s)
-{
-	printf("s = %s\n", s);
-	return 0;
-}
-
 static export_fce_t export_fce =
 	{
 #ifndef PUBLIC_SERVER
@@ -37,7 +31,6 @@ static export_fce_t export_fce =
 		.fce_getNetTypeGame = getNetTypeGame,
 		.fce_getTuxProportion = getTuxProportion,
 		.fce_setTuxProportion = setTuxProportion,
-		//.fce_getTuxID = getTuxID,
 		.fce_actionTux = actionTux,
 
 		.fce_getMyTime = getMyTime,
@@ -46,8 +39,12 @@ static export_fce_t export_fce =
 		.fce_conflictSpace = conflictSpace,
 		.fce_isFreeSpace = isFreeSpace,
 		.fce_findFreeSpace = findFreeSpace,
-		.fce_proto_send_newtux_server = proto_send_newtux_server,
-		.fce_proto_send_shot_server = proto_send_shot_server,
+
+		.fce_proto_send_module_server = proto_send_module_server,
+#ifndef PUBLIC_SERVER
+		.fce_proto_send_module_client = proto_send_module_client,
+#endif
+
 		.fce_destroyShot = destroyShot,
 		.fce_boundBombBall = boundBombBall,
 		.fce_transformOnlyLasser = transformOnlyLasser
@@ -101,6 +98,7 @@ static module_t* newModule(char *name)
 	ret->fce_destroy = getFce(ret, "destroy");
 	ret->fce_isConflict = getFce(ret, "isConflict");
 	ret->fce_cmd = getFce(ret, "cmdArena");
+	ret->fce_recvMsg = getFce(ret, "recvMsg");
 
 	printf("load module.. (%s)\n", name);
 
@@ -211,6 +209,21 @@ int isConflictModule(int x, int y, int w, int h)
 		{
 			return 1;
 		}
+	}
+
+	return 0;
+}
+
+int recvMsgModule(char *msg)
+{
+	int i;
+
+	for( i = 0 ; i < listModule->count ; i++ )
+	{
+		module_t *this;
+
+		this = (module_t *)listModule->list[i];
+		this->fce_recvMsg(msg);
 	}
 
 	return 0;

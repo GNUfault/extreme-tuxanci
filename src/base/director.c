@@ -44,6 +44,14 @@ director_t* loadDirector(char *s)
 
 	dir = opendir(new->path);
 
+	if( dir == NULL )
+	{
+		free(new->path);
+		free(new);
+
+		return NULL;
+	}
+
 	while( ( item = readdir(dir) ) != NULL )
 		addList(new->list, strdup(item->d_name) );
 

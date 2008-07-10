@@ -170,7 +170,6 @@ static int myAbs(int n)
 	return ( n > 0 ? n : -n );
 }
 
-
 static int getSppedShot(shot_t *shot)
 {
 	return ( myAbs(shot->px) > myAbs(shot->py) ? myAbs(shot->px) : myAbs(shot->py) );
@@ -239,33 +238,38 @@ static void moveShot(shot_t *shot, int position, int src_x, int src_y,
 	{
 		case TUX_UP :
 			new_x = dist_x + offset;
-			new_y = dist_y;
+			new_y = dist_y - ( shot->h + 5 );
 		break;
 
 		case TUX_LEFT :
-			new_x = dist_x;
+			new_x = dist_x - ( shot->w + 5 );
 			new_y = dist_y + offset;
 		break;
 
 		case TUX_RIGHT :
-			new_x = dist_x + dist_w;
+			new_x = dist_x + dist_w + 5;
 			new_y = dist_y + offset;
 		break;
 
 		case TUX_DOWN :
 			new_x = dist_x + offset;
-			new_y = dist_y + dist_h;
+			new_y = dist_y + dist_h + 5;
 		break;
 	}
 
-	new_x += myAbs(shot->px) * shot->px;
-	new_y += myAbs(shot->py) * shot->py;
+	//new_x += myValueOperator(shot->px) * shot->w;
+	//new_y += myValueOperator(shot->py) * shot->h;
 
 	moveObjectInSpace(export_fce->fce_getCurrentArena()->spaceShot, shot, new_x, new_y);
 
 	if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
-		export_fce->fce_proto_send_shot_server(PROTO_SEND_ALL, NULL, shot);
+		char msg[STR_PROTO_SIZE];
+
+		sprintf(msg, "pipe %d %d %d %d %d %d",
+			shot->id, shot->x, shot->y, shot->px, shot->py, shot->position);
+
+		export_fce->fce_proto_send_module_server(PROTO_SEND_ALL, NULL, msg);
 	}
 }
 
@@ -422,6 +426,50 @@ int isConflict(int x, int y, int w, int h)
 void cmdArena(char *line)
 {
 	if( strncmp(line, "pipe", 4) == 0 )cmd_teleport(line);
+}
+
+static void proto_pipe(char *msg)
+{
+	char cmd[STR_PROTO_SIZE];
+	int shot_id, x, y, px, py, position;
+	space_t *space;
+	shot_t *shot;
+
+	assert( msg != NULL );
+
+	sscanf(msg, "%s %d %d %d %d %d %d",
+		cmd, &shot_id, &x, &y, &px, &py, &position);
+
+
+	space = export_fce->fce_getCurrentArena()->spaceShot;
+
+	if( ( shot = getObjectFromSpaceWithID(space, shot_id) )  == NULL )
+	{
+		//delObjectFromSpaceWithObject(getCurrentArena()->spaceShot, shot, destroyShot);
+
+		return;
+	}
+
+	moveObjectInSpace(space, shot, x, y);
+	shot->isCanKillAuthor = 1;
+	shot->position = position;
+	shot->px = px;
+	shot->py = py;
+
+	if( shot->gun == GUN_LASSER )
+	{
+		transformOnlyLasser(shot);
+	}
+}
+
+void recvMsg(char *msg)
+{
+	if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_SERVER )
+	{
+		return;
+	}
+
+	if( strncmp(msg, "pipe", 4) == 0 )proto_pipe(msg);
 }
 
 int destroy()

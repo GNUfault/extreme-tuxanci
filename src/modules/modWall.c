@@ -338,6 +338,10 @@ void cmdArena(char *line)
 	if( strncmp(line, "wall", 4) == 0 )cmd_wall(line);
 }
 
+void recvMsg(char *msg)
+{
+}
+
 int destroy()
 {
 	destroySpaceWithObject(spaceWall, destroyWall);

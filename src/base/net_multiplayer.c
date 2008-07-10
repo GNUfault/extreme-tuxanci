@@ -54,42 +54,22 @@ int initNetMuliplayer(int type, char *ip, int port, int proto)
 		break;
 
 		case NET_GAME_TYPE_SERVER :
-#ifdef SUPPORT_NET_UNIX_UDP
 			if( initUdpServer(ip, port, proto) != 0 )
 			{
 				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre server !\n");
 				netGameType = NET_GAME_TYPE_NONE;
 				return -1;
 			}
-#endif
-#ifdef SUPPORT_NET_SDL_UDP
-			if( initSdlUdpServer(port) != 0 )
-			{
-				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre server !\n");
-				netGameType = NET_GAME_TYPE_NONE;
-				return -1;
-			}
-#endif
 		break;
 
 #ifndef PUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
-#ifdef SUPPORT_NET_UNIX_UDP
 			if( initUdpClient(ip, port, proto) != 0 )
 			{
 				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre clienta !\n");
 				netGameType = NET_GAME_TYPE_NONE;
 				return -1;
 			}
-#endif			
-#ifdef SUPPORT_NET_SDL_UDP
-			if( initSdlUdpClient(ip, port) != 0 )
-			{
-				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre clienta !\n");
-				netGameType = NET_GAME_TYPE_NONE;
-				return -1;
-			}
-#endif			
 		break;
 #endif
 		default :
@@ -108,28 +88,14 @@ void eventNetMultiplayer()
 		break;
 
 		case NET_GAME_TYPE_SERVER :
-#ifdef SUPPORT_NET_UNIX_UDP
 			eventServer();
-#endif
-#ifdef SUPPORT_NET_SDL_UDP
-			eventServer();
-#endif
 		break;
 
 #ifndef PUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
-#ifdef SUPPORT_NET_UNIX_UDP
-			eventPingServer();
-			selectClientUdpSocket();
-			eventServerBuffer();
-#endif
-#ifdef SUPPORT_NET_SDL_UDP
-			eventPingServer();
-			selectClientSdlUdpSocket();
-			eventServerBuffer();
-#endif
-#endif
+			eventClient();
 		break;
+#endif
 		default :
 			assert( ! "Premenna netGameType ma zlu hodnotu !" );
 		break;
@@ -144,25 +110,14 @@ void quitNetMultiplayer()
 		break;
 
 		case NET_GAME_TYPE_SERVER :
-#ifdef SUPPORT_NET_UNIX_UDP
 			quitUdpServer();
-#endif
-#ifdef SUPPORT_NET_SDL_UDP
-			quitSdlUdpServer();
-#endif
 		break;
 
 #ifndef PUBLIC_SERVER	
 		case NET_GAME_TYPE_CLIENT :
-#ifdef SUPPORT_NET_UNIX_UDP
 			quitUdpClient();
-#endif
-#ifdef SUPPORT_NET_SDL_UDP
-			quitSdlUdpClient();
-#endif
 		break;
 #endif
-
 		default :
 			assert( ! "Premenna netGameType ma zlu hodnotu !" );
 		break;

@@ -11,6 +11,8 @@ widget_textfield_t* newWidgetTextfield(char *text, int filter, int x, int y)
 	widget_textfield_t *new;
 
 	new = malloc( sizeof(widget_textfield_t) );
+	memset(new, 0, sizeof(widget_textfield_t));
+
 	strcpy(new->text, text);
 	new->x = x;
 	new->y = y;
@@ -85,6 +87,7 @@ void drawWidgetTextfield(widget_textfield_t *p)
 
 void setWidgetTextFiledText(widget_textfield_t *p, char *text)
 {
+	memset(p->text, 0, STR_SIZE);
 	strcpy(p->text, text);
 	getTextSize(text, &p->w, &p->h);
 }
