@@ -15,8 +15,15 @@
 #include "image.h"
 
 #ifdef SUPPORT_NET_UNIX_UDP
+
+#ifndef __WIN32__
 #include <sys/socket.h>
 #include <sys/select.h>
+#else
+#include <windows.h>
+#include <winsock2.h>
+#endif
+
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>

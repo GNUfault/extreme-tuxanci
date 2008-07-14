@@ -4,11 +4,17 @@
 #include <stdlib.h>
 
 #include <fcntl.h>
-#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/time.h>
+
+#ifndef __WIN32__
+#include <sys/ioctl.h>
 #include <sys/socket.h>
 #include <sys/select.h>
+#else
+#include <io.h>
+#include <winsock2.h>
+#endif
 
 #include "main.h"
 #include "list.h"

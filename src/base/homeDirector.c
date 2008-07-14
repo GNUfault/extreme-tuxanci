@@ -27,8 +27,11 @@ void createHomeDirector()
 	if ( access(homeDirector, F_OK) != 0 )
 	{
 		printf("Create home director %s\n", homeDirector);
-
+#ifndef __WIN32__
 		if( mkdir(homeDirector, 0755) != 0 )
+#else
+		if( mkdir(homeDirector) != 0 )
+#endif
 		{
 			fprintf(stderr, "Can't create home directory!\n");
 			exit(0);
