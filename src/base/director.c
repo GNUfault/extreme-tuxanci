@@ -29,17 +29,22 @@ director_t* loadDirector(char *s)
 	memset(new, 0, sizeof(director_t) );
 
 	new->list = newList();
-
+#ifndef __WIN32__
 	if( s[0] == '/' )
+#else
+	if( s[1] == ':' )
+#endif
 	{
 		strcpy(path, s);
 	}
 	else
 	{
+		// tohle je opravdu dobre...
 		getcwd(path, STR_PATH_SIZE);
-		strcat(path, s+1);
+		strcat(path, "/");
+		strcat(path, s);
 	}
-
+	printf("%s\n", path);
 	new->path = strdup(path);
 
 	dir = opendir(new->path);

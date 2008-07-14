@@ -239,7 +239,7 @@ void initArenaFile()
 	isArenaFileInit = TRUE;
 	listArenaFile  = newList();
 	p = loadDirector(PATH_ARENA);
-
+	printf ("Pocet aren: %d\n", p->list->count);
 	for( i = 0 ; i < p->list->count ; i++ )
 	{
 		char *line;

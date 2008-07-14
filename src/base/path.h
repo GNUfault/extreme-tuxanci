@@ -15,13 +15,18 @@
 
 #ifndef PUBLIC_SERVER
   #define PATH_DIR	PREFIX	"/share/tuxanci-ng/"
+#ifndef __WIN32__
   #define PATH_MODULES 	PREFIX	"/lib/tuxanci-ng/"
 #else
+  #define PATH_MODULES 	PREFIX	"/bin/"
+#endif
+#else
   #define PATH_DIR	PREFIX	"/share/tuxanci-ng-server/"
-  #define PATH_MODULES	PREFIX	"/lib/tuxanci-ng-server/"
 #ifndef __WIN32__
+  #define PATH_MODULES	PREFIX	"/lib/tuxanci-ng-server/"
   #define SERVER_CONFIG		"/etc/tuxanci-ng-server/server.conf"
 #else
+  #define PATH_MODULES	PREFIX	"/bin"
 	#define SERVER_CONFIG	PREFIX	"/etc/tuxanci-ng-server/server.conf"
 #endif
 #endif
