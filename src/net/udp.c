@@ -26,58 +26,6 @@
 
 #include "udp.h"
 
-#ifdef __WIN32__
-const char *inet_ntop(int af, const void *src, char *dst, socklen_t cnt)
-{
-        if ( af == AF_INET )
-        {
-                struct sockaddr_in in;
-                memset(&in, 0, sizeof(in));
-                in.sin_family = AF_INET;
-                memcpy(&in.sin_addr, src, sizeof(struct in_addr));
-                getnameinfo((struct sockaddr *)&in, sizeof(struct sockaddr_in), dst, cnt, NULL, 0, NI_NUMERICHOST);
-
-                return dst;
-        }
-        else if ( af == AF_INET6 )
-        {
-                struct sockaddr_in6 in;
-                memset(&in, 0, sizeof(in));
-                in.sin6_family = AF_INET6;
-                memcpy(&in.sin6_addr, src, sizeof(struct in_addr6));
-                getnameinfo((struct sockaddr *)&in, sizeof(struct sockaddr_in6), dst, cnt, NULL, 0, NI_NUMERICHOST);
-
-                return dst;
-        }
-
-        return NULL;
-}
-
-int inet_pton(int af, const char *src, void *dst)
-{
-        struct addrinfo hints, *res, *ressave;
-
-        memset(&hints, 0, sizeof(struct addrinfo));
-        hints.ai_family = af;
-
-        if ( getaddrinfo(src, NULL, &hints, &res) != 0 )
-        {
-                return -1;
-        }
-
-        ressave = res;
-
-        while ( res )
-        {
-                memcpy(dst, res->ai_addr, res->ai_addrlen);
-                res = res->ai_next;
-        }
-
-        freeaddrinfo(ressave);
-        return 0;
-}
-#endif
-
 sock_udp_t* newSockUdp(int proto)
 {
 	sock_udp_t *new;
@@ -335,9 +283,12 @@ void getSockUdpIp(sock_udp_t *p, char *str_ip, int len)
 	
 	if( p->proto == PROTO_UDPv4 )
 	{
-		//strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));
-		//printf("strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));\n");
+#ifndef __WIN32__
 		inet_ntop(AF_INET, &(p->sockAddr.sin_addr), str_ip, len);
+#else
+		strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));
+		//printf("strcpy(str_ip, inet_ntoa(p->sockAddr.sin_addr));\n");
+#endif
 	}
 
 #ifdef SUPPORT_IPv6
