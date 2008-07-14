@@ -136,14 +136,10 @@ void saveTextFile(textFile_t *p)
 	FILE *file;
 	assert( p != NULL );
 	
-	file = fopen(p->file, "wt");
+	file = fopen(p->file, "wb");
 	for(i = 0; i < p->text->count; i++)
 	{
-#ifndef __WIN32__
 		fprintf(file, "%s\n", (char *)p->text->list[i]);
-#else
-		fprintf(file, "%s\r\n", (char *)p->text->list[i]);
-#endif
 	}
 
 	fclose(file);
