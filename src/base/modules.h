@@ -13,6 +13,9 @@
 #include "image.h"
 #endif
 
+#define MODULE_TYPE_UNIX	".so"
+#define MODULE_TYPE_WIN		".dll"
+
 typedef struct export_fce_s
 {
 	int (*fce_getValue)(char *line, char *env, char *val, int len);

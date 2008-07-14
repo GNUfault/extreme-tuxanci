@@ -3,8 +3,8 @@ name In a captivity of 8-bit
 netName BAIACO8B
 screen ba_in_a_captivity_of_8-bit.png
 
-loadModule file="libmodWall.so"
-loadModule file="libmodTeleport.so"
+loadModule file="libmodWall"
+loadModule file="libmodTeleport"
 
 loadMusic file="in_a_captivity_of_8-bit.ogg" name="in_a_captivity_of_8-bit"
 

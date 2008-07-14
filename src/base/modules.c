@@ -184,7 +184,11 @@ int loadModule(char *name)
 	char str[STR_PATH_SIZE];
 	module_t *module;
 
-	sprintf(str, PATH_MODULES "%s", name);
+#ifndef __WIN32__
+	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_UNIX, name);
+#else
+	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_WIN, name);
+#endif
 	accessExistFile(str);
 
 	module = newModule(str);

@@ -3,7 +3,7 @@ name construction site
 netName CS
 screen construction_site.png
 
-loadModule file="libmodWall.so"
+loadModule file="libmodWall"
 
 loadMusic file="night_workshift.ogg" name="night_workshift"
 
