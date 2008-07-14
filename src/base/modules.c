@@ -2,27 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-#ifndef PUBLIC_SERVER
-#define SUPPORT_SDL_DYN
-#endif
-
-#ifdef PUBLIC_SERVER
-#define SUPPORT_LIBDYN
-#endif
-
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-#ifdef SUPPORT_LIBDYN
+#ifndef __WIN32__
 #include <dlfcn.h>
+#else
+#include <windows.h>
 #endif
-
-#ifdef SUPPORT_SDL_DYN
-#include <SDL/SDL.h>
-#endif
+#include <assert.h>
 
 #include "main.h"
 #include "list.h"
@@ -73,34 +58,28 @@ static list_t *listModule;
 
 static void* getFce(module_t *p, char *s)
 {
+#ifndef __WIN32__
+
 	void *ret;
-#ifdef SUPPORT_LIBDYN
 	char *error;
-#endif
 
 	assert( p != NULL );
 	assert( s != NULL );
 	
-#ifdef SUPPORT_LIBDYN
 	ret = dlsym(p->image, s);
 
-	if( ( error = dlerror() ) != NULL )
+	if( ( error = dlerror() ) != NULL)
 	{
 		fprintf (stderr, "error = %s\n", error);
 		return NULL;
 	}
+#else
+	FARPROC ret = GetProcAddress((HMODULE)p->image,(LPCSTR)s);
+	if ( !ret )
+		fprintf(stderr, "n_dllsymbol(%s) failed!\n", s);
+
+	
 #endif
-
-#ifdef SUPPORT_SDL_DYN
-	ret = SDL_LoadFunction(p->image, s);
-
-	if( ret == NULL )
-	{
-		fprintf (stderr, "load %s error\n", s);
-		return NULL;
-	}
-#endif
-
 	return (void *)ret;
 }
 
@@ -111,28 +90,42 @@ static module_t* newModule(char *name)
 	assert( name != NULL );
 
 	ret = malloc( sizeof(module_t) );
-
-#ifdef SUPPORT_LIBDYN
-	ret->image = dlopen(name, RTLD_LAZY);
-#endif
-
-#ifdef SUPPORT_SDL_DYN
-	ret->image = SDL_LoadObject(name);
-#endif
+	#ifndef __WIN32__
+	ret->image = dlopen (name, RTLD_LAZY);
 
 	if(!ret->image)
 	{
-#ifdef SUPPORT_LIBDYN
 		fputs (dlerror(), stderr);
-#endif
-
-#ifdef SUPPORT_SDL_DYN
-		printf("load module error\n");
-#endif
 		free(ret);
 		return NULL;
 	}
-
+	#else
+	HINSTANCE image;
+	image = LoadLibrary((LPCSTR) name);
+	if (!image)
+	{
+		LPVOID msg;
+		FormatMessage(
+			FORMAT_MESSAGE_ALLOCATE_BUFFER |
+			FORMAT_MESSAGE_FROM_SYSTEM |
+			FORMAT_MESSAGE_IGNORE_INSERTS,
+			NULL,
+			GetLastError(),
+			MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+			(LPTSTR) &msg,
+			0,
+			NULL
+		);
+		fputs(msg, stderr);
+		free(msg);
+		free(ret);
+		free(image);
+		return NULL;
+	}
+	ret->image = image;
+	free(image);
+	free(image);
+	#endif
 	ret->file = strdup(name);
 
 	ret->fce_init = getFce(ret, "init");
@@ -151,14 +144,7 @@ static module_t* newModule(char *name)
 	{
 		fprintf(stderr, "init module failed !\n");
 
-#ifdef SUPPORT_LIBDYN
 		dlclose(ret->image);
-#endif
-
-#ifdef SUPPORT_SDL_DYN
-		SDL_UnloadObject(ret->image);
-#endif
-
 		free(ret->file);
 		free(ret);
 		return NULL;
@@ -174,15 +160,7 @@ static int destroyModule(module_t *p)
 	p->fce_destroy();
 
 	free(p->file);
-
-#ifdef SUPPORT_LIBDYN
 	dlclose(p->image);
-#endif
-
-#ifdef SUPPORT_SDL_DYN
-	SDL_UnloadObject(p->image);
-#endif
-
 	free(p);
 
 	printf("destroy module..\n");
