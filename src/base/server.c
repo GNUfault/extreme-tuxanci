@@ -4,13 +4,21 @@
 #include <string.h>
 
 #include <sys/types.h>
+#ifndef __WIN32__
 #include <sys/socket.h>
 #include <sys/select.h>
+#else
+#include <winsock2.h>
 
+#endif
 #include <unistd.h>
 #include <fcntl.h>
-#include <sys/ioctl.h>
 #include <sys/time.h>
+#ifndef __WIN32__
+#include <sys/ioctl.h>
+#else
+#include <io.h>
+#endif
 
 #include "main.h"
 #include "list.h"

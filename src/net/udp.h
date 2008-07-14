@@ -10,7 +10,7 @@
 
 #define MY_UDP
 
-#ifdef __WIN32__
+#ifndef __WIN32__
 #define SUPPORT_IPv6
 #endif
 
