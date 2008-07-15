@@ -121,7 +121,7 @@ static module_t* newModule(char *name)
 		return NULL;
 	}
 	ret->image = image;
-	FreeLibrary(image);
+	//FreeLibrary(image); //to tu nema bejt
 #endif
 	ret->file = strdup(name);
 
@@ -135,7 +135,7 @@ static module_t* newModule(char *name)
 	ret->fce_cmd = getFce(ret, "cmdArena");
 	ret->fce_recvMsg = getFce(ret, "recvMsg");
 
-	printf("load module.. (%s)\n", name);
+	printf("load module: (%s)\n", name);
 
 	if( ret->fce_init(&export_fce) != 0 )
 	{

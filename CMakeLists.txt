@@ -29,7 +29,7 @@ IF ( Apple )
 		CACHE_INTERNAL "OSX Architectures" FORCE
 	)
 ENDIF ( Apple )
-IF ( Win )
+IF ( Win AND NOT Server )
 	# budeme pocitat s tim ze uzivatel ma vse v C:\MinGW\lib ...
 	# tise predpokladame ze s automatikou chce MinGW only, jinak si to bude muset nastavit rucne...
 	MESSAGE ( "<******************************>" )
@@ -48,7 +48,7 @@ IF ( Win )
 	SET ( SDLMIXER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
 	SET ( SDLIMAGE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
 	SET ( SDLTTF_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
-ENDIF ( Win )
+ENDIF ( Win AND NOT Server)
 SET ( CMAKE_COLOR_MAKEFILE ON )
 ## balickovani 
 SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README" )
@@ -101,7 +101,7 @@ SET ( CMAKE_INSTALL_DATADIR share/ )
 IF ( NOT Win )
 	SET ( CMAKE_INSTALL_ETCDIR /etc )
 ELSE ( NOT Win )
-	SET ( CMAKE_INSTALL_ETCDIR /etc )
+	SET ( CMAKE_INSTALL_ETCDIR etc )
 ENDIF ( NOT Win )
 IF ( Server )
 	INSTALL ( FILES ${CMAKE_SOURCE_DIR}/data/conf/server.conf DESTINATION ${CMAKE_INSTALL_ETCDIR}/${APPNAME} )
@@ -124,6 +124,7 @@ INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS DESTINATION ${CMAKE_INSTALL_DATADIR}
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/doc/)
 FILE ( GLOB files "${CMAKE_SOURCE_DIR}/data/arena/*.map" )
 INSTALL ( FILES ${files} DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/arena/ )
+IF ( NOT Server )
 IF ( Win )
 	FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/*.dll" )
 	INSTALL ( FILES ${files} DESTINATION bin/ )
@@ -134,6 +135,7 @@ IF ( Win )
 	FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/*.la" )
 	INSTALL ( FILES ${files} DESTINATION bin/ )
 ENDIF ( Win )
+ENDIF ( NOT Server )
 CONFIGURE_FILE(
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"

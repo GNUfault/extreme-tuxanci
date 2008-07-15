@@ -26,7 +26,7 @@
   #define PATH_MODULES	PREFIX	"/lib/tuxanci-ng-server/"
   #define SERVER_CONFIG		"/etc/tuxanci-ng-server/server.conf"
 #else
-  #define PATH_MODULES	PREFIX	"/bin"
+  #define PATH_MODULES	PREFIX	"/bin/"
   #define SERVER_CONFIG	PREFIX	"/etc/tuxanci-ng-server/server.conf"
 #endif
 #endif

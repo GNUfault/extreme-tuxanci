@@ -144,7 +144,7 @@ void prepareArena()
 
 			if( isSettingAI() )
 			{
-				if( loadModule("libmodAI.so") == 0 )
+				if( loadModule("libmodAI") == 0 )
 				{
 					tux->control = TUX_CONTROL_AI;
 				}
