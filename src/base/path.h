@@ -9,8 +9,8 @@
 #ifndef __WIN32__
   #define PREFIX "/usr/local"
 #else
+	#define PREFIX ".."
 #endif
-#define PREFIX ".."
 #endif
 
 #ifndef PUBLIC_SERVER
@@ -27,7 +27,7 @@
   #define SERVER_CONFIG		"/etc/tuxanci-ng-server/server.conf"
 #else
   #define PATH_MODULES	PREFIX	"/bin"
-	#define SERVER_CONFIG	PREFIX	"/etc/tuxanci-ng-server/server.conf"
+  #define SERVER_CONFIG	PREFIX	"/etc/tuxanci-ng-server/server.conf"
 #endif
 #endif
 

@@ -44,7 +44,6 @@ director_t* loadDirector(char *s)
 		strcat(path, "/");
 		strcat(path, s);
 	}
-	printf("%s\n", path);
 	new->path = strdup(path);
 
 	dir = opendir(new->path);
