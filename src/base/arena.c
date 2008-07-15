@@ -71,6 +71,11 @@ int conflictSpace(int x1,int y1,int w1,int h1,int x2,int y2,int w2,int h2)
 
 int isFreeSpace(arena_t *arena, int x, int y, int w, int h)
 {
+	if( x < 0 || y < 0 || x+w > arena->w || y+h > arena->h )
+	{
+		return 0;
+	}
+
 	if( isConflictWithObjectFromSpace(arena->spaceTux, x, y, w, h) )return 0;
 	if( isConflictWithObjectFromSpace(arena->spaceShot, x, y, w, h) )return 0;
 	if( isConflictWithObjectFromSpace(arena->spaceItem, x, y, w, h) )return 0;

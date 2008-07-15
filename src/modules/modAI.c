@@ -21,6 +21,104 @@
 
 static export_fce_t *export_fce;
 
+typedef struct alternative_struct
+{
+	int first;
+	int route;
+	int step;
+	int x, y;
+} alternative_t;
+
+alternative_t* newAlternative(int route, int x, int y)
+{
+	alternative_t *new;
+
+	new = malloc( sizeof(alternative_t) );
+	new->first = route;
+	new->route = route;
+	new->x = x;
+	new->y = y;
+	new->step = 0;
+
+	return new;
+}
+
+alternative_t* cloneAlternative(alternative_t *p, int route, int x, int y)
+{
+	alternative_t *new;
+
+	assert( p != NULL );
+	
+	new = newAlternative(route, p->x, p->y);
+	new->first = p->first;
+	new->step = p->step;
+
+	return new;
+}
+
+void forkAlternative(list_t *list, alternative_t *p, int w, int h)
+{
+	int x, y;
+
+	assert( list != NULL );
+	assert( p != NULL );
+
+	x  = p->x;
+	y  = p->y;
+
+	switch( p->route )
+	{
+		case TUX_UP :
+			addList(list, cloneAlternative(p, TUX_RIGHT, x+(w+5), y ) );
+			addList(list, cloneAlternative(p, TUX_LEFT, x-(w+5), y ) );
+		break;
+		case TUX_RIGHT :
+			addList(list, cloneAlternative(p, TUX_UP, x, y-(h+5) ) );
+			addList(list, cloneAlternative(p, TUX_DOWN, x, y+(h+5) ) );
+		break;
+		case TUX_LEFT :
+			addList(list, cloneAlternative(p, TUX_UP, x, y-(h+5) ) );
+			addList(list, cloneAlternative(p, TUX_DOWN, x, y+(h+5) ) );
+		break;
+		case TUX_DOWN :
+			addList(list, cloneAlternative(p, TUX_RIGHT, x+(w+5), y ) );
+			addList(list, cloneAlternative(p, TUX_LEFT, x-(w+5), y ) );
+		break;
+	}
+
+}
+
+void moveAlternative(alternative_t *p, int offset)
+{
+	assert( p != NULL );
+
+	p->step++;
+
+	//printf("move %d %d %d\n", p->x, p->y, p->step);
+
+	switch( p->route )
+	{
+		case TUX_UP :
+			p->y -= offset;
+		break;
+		case TUX_RIGHT :
+			p->x += offset;
+		break;
+		case TUX_LEFT :
+			p->x -= offset;
+		break;
+		case TUX_DOWN :
+			p->y += offset;
+		break;
+	}
+}
+
+void destroyAlternative(alternative_t *p)
+{
+	assert( p != NULL );
+	free(p);
+}
+
 static void cmd_ai(char *line)
 {
 }
@@ -39,159 +137,207 @@ int draw(int x, int y, int w, int h)
 }
 #endif
 
-/////////////////
-
-int colisionAll(tux_t *tux, int px, int py)
+tux_t *findOtherTux(list_t *list)
 {
-	arena_t *arena;
-	int x, y, w, h;
-
-	arena = export_fce->fce_getCurrentArena();
-
-	export_fce->fce_getTuxProportion(tux, &x, &y, &w, &h);
-	x += px;
-	y += py;
-
-	return export_fce->fce_isFreeSpace(arena, x, y, w, h);
-}
-
-void gotoTux(tux_t *tux, int x, int y, int w, int h)
-{
-	int px = 0,py = 0;
-	int smer = TUX_DOWN;
-
-	if(tux->x > x+w ) px = -TUX_STEP;
-	if(tux->x < x ) px = +TUX_STEP;
-	if(tux->y > y+h ) py = -TUX_STEP;
-	if(tux->y < y ) py = +TUX_STEP;
-
-	if( px != 0 && py !=0 ) px = 0;
-
-	while( colisionAll(tux, px, 0 ) )
-	{
-		px=0;
-		if(py==0) py = +TUX_STEP;
-		goto sem;
-	}
-
-	while( colisionAll(tux, 0, py ) )
-	{
-		py = 0;
-		if( px == 0 ) px = +TUX_STEP;
-	}
-
-	sem:
-	if( px != 0 && py != 0 ) px = 0;
-
-	if( py== -TUX_STEP )smer = TUX_UP;
-	if( px== +TUX_STEP )smer = TUX_RIGHT;
-	if( px== -TUX_STEP )smer = TUX_LEFT;
-	if( py== +TUX_STEP )smer = TUX_DOWN;
-	
-	//printf("smer=%d\n",smer);
-	export_fce->fce_actionTux(tux, smer);
-}
-
-void gotoTuxShot(tux_t *tux, int x, int y, int w, int h)
-{
-	if( tux->x > x && tux->x < x+w )
-	{
-		if( tux->y > y+h )tux->position = TUX_UP;
-		if( tux->y < y )tux->position = TUX_DOWN;
-	
-		if( colisionAll(tux, 0, 0) == 0 )
-		{
-			if( tux->shot[GUN_SIMPLE] > 0 )tux->gun = GUN_SIMPLE;
-			if( tux->shot[GUN_DUAL_SIMPLE] > 0 )tux->gun = GUN_DUAL_SIMPLE;
-			if( tux->shot[GUN_SCATTER] > 0 )tux->gun = GUN_SCATTER;
-			if( tux->shot[GUN_TOMMY] > 0 )tux->gun = GUN_TOMMY;
-			if( tux->shot[GUN_LASSER] > 0 )tux->gun = GUN_LASSER;
-			if( tux->shot[GUN_BOMBBALL] > 0 )tux->gun = GUN_BOMBBALL;
-
-			export_fce->fce_actionTux(tux, TUX_SHOT);
-		}
-	}
-
-	if( tux->y > y && tux->y < y+h )
-	{
-		if( tux->x > x+w )tux->position=TUX_LEFT;
-		if( tux->x < x )tux->position=TUX_RIGHT;
-
-		if( colisionAll(tux, 0 , 0) == 0 )
-		{
-			if( tux->shot[GUN_SIMPLE] > 0 )tux->gun = GUN_SIMPLE;
-			if( tux->shot[GUN_DUAL_SIMPLE] > 0 )tux->gun = GUN_DUAL_SIMPLE;
-			if( tux->shot[GUN_SCATTER] > 0 )tux->gun = GUN_SCATTER;
-			if( tux->shot[GUN_TOMMY] > 0 )tux->gun = GUN_TOMMY;
-			if( tux->shot[GUN_LASSER] > 0 )tux->gun = GUN_LASSER;
-			if( tux->shot[GUN_BOMBBALL] > 0 )tux->gun = GUN_BOMBBALL;
-
-			export_fce->fce_actionTux(tux, TUX_SHOT);
-		}
-	}
-}
-
-void killTux(tux_t *tux, int active)
-{
-	arena_t *arena;
 	int i;
 
-	arena = export_fce->fce_getCurrentArena();
-
-	for( i = 0 ; i < arena->spaceTux->list->count ; i++ )
+	for( i = 0 ; i < list->count ; i++ )
 	{
 		tux_t *thisTux;
 
-		thisTux = arena->spaceTux->list->list[i];
+		thisTux = list->list[i];
 
-		if( thisTux->control != TUX_CONTROL_KEYBOARD_LEFT &&
-		    thisTux->status == TUX_STATUS_ALIVE )
+		if( thisTux->control != TUX_CONTROL_AI )
 		{
-			gotoTuxShot(tux, thisTux->x, thisTux->y,
-					TUX_WIDTH, TUX_HEIGHT);
-
-			if( active )
-			{
-				gotoTux(tux, thisTux->x, thisTux->y,
-				TUX_WIDTH, TUX_HEIGHT);
-
-				gotoTuxShot(tux, thisTux->x, thisTux->y,
-				TUX_WIDTH, TUX_HEIGHT);
-
-				break;
-			}
+			return thisTux;
 		}
 	}
+
+	return NULL;
 }
 
-/////////////////
+static void shotTux(arena_t *arena, tux_t *tux_ai, tux_t *tux_rival)
+{
+	const int limit = 20;
+	int x_ai, y_ai;
+	int x_rival, y_rival;
+	int w, h;
+
+	export_fce->fce_getTuxProportion(tux_ai, &x_ai, &y_ai, &w, &h);
+	export_fce->fce_getTuxProportion(tux_rival, &x_rival, &y_rival, &w, &h);
+
+	if( y_rival < y_ai && x_rival > x_ai && x_rival < x_ai+limit )
+	{
+		export_fce->fce_actionTux(tux_ai, TUX_UP);
+		export_fce->fce_actionTux(tux_ai, TUX_SHOT);
+	}
+
+	if( x_rival > x_ai && y_rival > y_ai && y_rival < y_ai+limit )
+	{
+		export_fce->fce_actionTux(tux_ai, TUX_RIGHT);
+		export_fce->fce_actionTux(tux_ai, TUX_SHOT);
+	}
+
+	if( x_rival < x_ai && y_rival > y_ai && y_rival < y_ai+limit )
+	{
+		export_fce->fce_actionTux(tux_ai, TUX_LEFT);
+		export_fce->fce_actionTux(tux_ai, TUX_SHOT);
+	}
+
+	if( y_rival > y_ai && x_rival > x_ai && x_rival < x_ai+limit )
+	{
+		export_fce->fce_actionTux(tux_ai, TUX_DOWN);
+		export_fce->fce_actionTux(tux_ai, TUX_SHOT);
+	}
+}
 
 static void eventTux(tux_t *tux)
 {
 	arena_t *arena;
-	item_t *item;
+	tux_t *rivalTux;
+
+	list_t *listAlternative;
+	list_t *listDst;
+	list_t *listFork;
+
+	int x, y, w, h;
+	int rival_x, rival_y;
+	int i, index;
+
+	int countFork = 0;
+	int countDel = 0;
+	int countLimit = 0;
+	int countDo = 0;
+
+	listAlternative = newList();
+	listDst = newList();
+	listFork = newList();
+
+	export_fce->fce_getTuxProportion(tux, &x, &y, &w, &h);
+	//printf("tux AI %d %d\n", x, y);
 
 	arena = export_fce->fce_getCurrentArena();
 
-	killTux(tux, 0);
+	rivalTux = findOtherTux(arena->spaceTux->list);
 
-	item = NULL;
-
-	if( arena->spaceItem->list->count > 0  )
+	if( rivalTux == NULL || rivalTux->status != TUX_STATUS_ALIVE )
 	{
-		item = (item_t *) arena->spaceItem->list->list[0];
+		return;
 	}
 
-	if( item != NULL && 
-	    item->type != GUN_MINE )
+	shotTux(arena, tux, rivalTux);
+
+	export_fce->fce_getTuxProportion(rivalTux, &rival_x, &rival_y, NULL, NULL);
+	//printf("tux rival %d %d\n", rival_x, rival_y);
+
+	addList(listAlternative, newAlternative(TUX_UP, x, y-(h+10)) );
+	addList(listAlternative, newAlternative(TUX_RIGHT, x+(w+10), y) );
+	addList(listAlternative, newAlternative(TUX_LEFT, x-(w+10), y) );
+	addList(listAlternative, newAlternative(TUX_DOWN, x, y+(h+10)) );
+
+	index = -1;
+	while(1)
 	{
-		gotoTux(tux, item->x, item->y,
-		item->w, item->h);
+		alternative_t *this;
+
+		index++;
+		if( index < 0 || index >= listAlternative->count )
+		{
+
+			int j;
+
+			//printf("listFork->count = %d\n", listFork->count);
+
+			for( j = 0; j < listFork->count ; j++ )
+			{
+				addList(listAlternative, listFork->list[j]);
+			}
+
+			listDoEmpty(listFork);
+
+			index = 0;
+		}
+
+		if( listAlternative->count == 0 )
+		{
+			break;
+		}
+
+		this = (alternative_t *)listAlternative->list[index];
+		
+		if( ++countDo == 100 )break;
+
+		if( this->step > 100 )
+		{
+			delListItem(listAlternative, index, destroyAlternative);
+			countLimit++;
+			index--;
+			continue;
+		}
+
+		moveAlternative(this, w*2);
+
+		if( export_fce->fce_isFreeSpace(arena, this->x, this->y, w, h) == 1 )
+		{
+			forkAlternative(listFork, this, 2*w, 2*h);
+			countFork++;
+			continue;
+		}
+
+		if( export_fce->fce_conflictSpace(this->x, this->y, w, h, rival_x, rival_y, w, h) )
+		{
+			//printf("this->step = %d\n", this->step);
+
+ 			delList(listAlternative, index);
+			addList(listDst, this);
+			index--;
+			//continue;
+			break;
+		}
+
+		if( export_fce->fce_isFreeSpace(arena, this->x, this->y, w, h) == 0 )
+		{
+			//forkAlternative(listFork, this, w*2, h*2);
+			delListItem(listAlternative, index, destroyAlternative);
+			index--;
+			countDel++;
+			
+			continue;
+		}
+
 	}
-	else
+
+	int minStep = 1000;
+	int recRoute = 0;
+
+	//printf("------------\n");
+	for( i = 0 ; i < listDst->count ; i++ )
 	{
-		killTux(tux, 1);
+		alternative_t *this;
+
+		this = (alternative_t *)listDst->list[i];
+
+		//printf("XXX step %d route = %d\n", this->step, this->first);
+		if( this->step < minStep )
+		{
+			minStep = this->step;
+			recRoute = this->first;
+		}
 	}
+
+	if( recRoute != 0 )
+	{
+		export_fce->fce_actionTux(tux, recRoute);
+	}
+
+	destroyListItem(listAlternative, destroyAlternative);
+	destroyListItem(listDst, destroyAlternative);
+/*
+	printf("countFork = %d\n", countFork);
+	printf("countDel = %d\n", countDel);
+	printf("countLimit = %d\n", countLimit);
+	printf("countDo = %d\n", countDo);
+*/
 }
 
 int event()
@@ -218,6 +364,12 @@ int event()
 	//printf("event AI\n");
 
 	arena = export_fce->fce_getCurrentArena();
+
+	if( arena == NULL )
+	{
+		return 0;
+	}
+
 	countTuxAI = 0;
 
 	for( i = 0 ; i < arena->spaceTux->list->count ; i++ )

@@ -6,6 +6,8 @@
 #include "image.h"
 #include "widget_textfield.h"
 
+//#define ZZEEXX86_READKEY
+
 widget_textfield_t* newWidgetTextfield(char *text, int filter, int x, int y)
 {
 	widget_textfield_t *new;
@@ -157,7 +159,7 @@ static void checkText(widget_textfield_t *p)
 
 }
 
-#if 0
+#ifdef ZZEEXX86_READKEY
 static void readKey(widget_textfield_t *p)
 {
 	Uint8 *mapa;
@@ -293,7 +295,7 @@ static void readKey(widget_textfield_t *p)
 }
 #endif
 
-#if 1
+#ifndef ZZEEXX86_READKEY
 static void readKey(widget_textfield_t *p)
 {
 	Uint8 *mapa;
@@ -319,12 +321,12 @@ static void readKey(widget_textfield_t *p)
 			char c = '\0';
 
 			if( name == NULL )continue;
+			printf("name %s\n", name);
 
 			if( strlen(name) == 1 )c = name[0];
 			if( strlen(name) == 3 )c = name[1];
 			if( strcmp(name, "space") == 0 )c = ' ';
 
-			//printf("name %s\n", name);
 
 			if( strcmp(name, "backspace") == 0 && len > 0 )
 			{
