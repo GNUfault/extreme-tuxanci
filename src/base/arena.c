@@ -188,6 +188,7 @@ void drawArena(arena_t *arena)
 
 	t = getMyTime();
 */
+
 	if( tux == NULL )
 	{
 		drawLayerCenter(WINDOW_SIZE_X/2, WINDOW_SIZE_Y/2);

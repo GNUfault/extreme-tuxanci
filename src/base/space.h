@@ -41,6 +41,8 @@ extern void delObjectFromSpace(space_t *p, void *item);
 extern void delObjectFromSpaceWithObject(space_t *p, void *item, void *f);
 extern void moveObjectInSpace(space_t *p, void *item, int move_x, int move_y);
 extern void printSpace(space_t *p);
+extern void actionSpace(space_t *space, void *f, void *p);
+extern void actionSpaceFromLocation(space_t *space, void *f, void *p, int x, int y, int w, int h);
 extern void destroySpace(space_t *p);
 extern void destroySpaceWithObject(space_t *p, void *f);
 

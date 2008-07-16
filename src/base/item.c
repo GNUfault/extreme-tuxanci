@@ -367,60 +367,53 @@ static void mineExplosion(space_t *spaceItem, item_t *item)
 	}
 }
 
+static void action_item(space_t *space, item_t *item, int *isDel)
+{
+	arena_t *arena;
+
+	arena = getCurrentArena();
+
+	switch( item->type )
+	{
+		case ITEM_MINE :
+			if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+			{
+				mineExplosion(space, item);
+			}
+		break;
+	
+		case ITEM_EXPLOSION :
+		case ITEM_BIG_EXPLOSION :
+			*isDel = 1;
+		break;
+	}
+}
+
+static void action_shot(space_t *space, shot_t *shot, space_t *spaceItem)
+{
+	int isDel = 0;
+
+	actionSpaceFromLocation(spaceItem, action_item, &isDel, shot->x, shot->y, shot->w, shot->h);
+
+	if( isDel )
+	{
+		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+		{
+			proto_send_del_server(PROTO_SEND_ALL, NULL, shot->id);
+		}
+	
+		delObjectFromSpaceWithObject(space, shot, destroyShot);
+	}
+}
+
 void eventConflictShotWithItem(arena_t *arena)
 {
-	shot_t *thisShot;
-	item_t *thisItem;
-	int i, j;
-
 	if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 	{
 		return; 
 	}
 
-	for( i = 0 ; i < arena->spaceShot->list->count ; i++ )
-	{
-		bool_t isDelShot;
-
-		isDelShot = FALSE;
-		thisShot  = (shot_t *)arena->spaceShot->list->list[i];
-		assert( thisShot != NULL );
-
-		listDoEmpty(listHelp);
-		getObjectFromSpace(arena->spaceItem, thisShot->x, thisShot->y, thisShot->w, thisShot->h, listHelp);
-
-		for( j = 0 ; j < listHelp->count ; j++ )
-		{
-			thisItem  = (item_t *)listHelp->list[j];
-			assert( thisItem != NULL );
-
-			switch( thisItem->type )
-			{
-				case ITEM_MINE :
-					if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
-					{
-						mineExplosion(arena->spaceItem, thisItem);
-					}
-				break;
-	
-				case ITEM_EXPLOSION :
-				case ITEM_BIG_EXPLOSION :
-					isDelShot = TRUE;
-				break;
-			}
-		}
-
-		if( isDelShot )
-		{
-			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
-			{
-				proto_send_del_server(PROTO_SEND_ALL, NULL, thisShot->id);
-			}
-	
-			delObjectFromSpaceWithObject(arena->spaceShot, thisShot, destroyShot);
-			i--;
-		}
-	}
+	actionSpace(arena->spaceShot, action_shot, arena->spaceItem);
 }
 
 static void eventTuxIsDeadWithItem(tux_t *tux, item_t *item)
@@ -504,7 +497,7 @@ static void tuxGiveGun(tux_t *tux, item_t *item)
 	}
 }
 
-void eventGiveTuxItem(tux_t *tux, item_t *item, space_t *spaceItem)
+static void action_giveitem(space_t *space, item_t *item, tux_t *tux)
 {
 	switch( item->type )
 	{
@@ -521,13 +514,13 @@ void eventGiveTuxItem(tux_t *tux, item_t *item, space_t *spaceItem)
 				proto_send_del_server(PROTO_SEND_ALL, NULL, item->id);
 			}
 
-			delObjectFromSpaceWithObject(spaceItem, item, destroyItem);
+			delObjectFromSpaceWithObject(space, item, destroyItem);
 		break;
 
 		case ITEM_MINE :
 			if( tux->bonus != BONUS_GHOST )
 			{
-				mineExplosion(spaceItem, item);
+				mineExplosion(space, item);
 			}
 		break;
 
@@ -552,24 +545,22 @@ void eventGiveTuxItem(tux_t *tux, item_t *item, space_t *spaceItem)
 				proto_send_del_server(PROTO_SEND_ALL, NULL, item->id);
 			}
 			
-			delObjectFromSpaceWithObject(spaceItem, item, destroyItem);
+ 			delObjectFromSpaceWithObject(space, item, destroyItem);
 		break;
 	}
 }
 
 void eventGiveTuxListItem(tux_t *tux, space_t *spaceItem)
 {
-	item_t *thisItem;
 	int x, y, w, h;
-	int i;
+
+	assert( spaceItem != NULL );
+	assert( tux != NULL );
 
 	if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 	{
 		return; 
 	}
-
-	assert( spaceItem != NULL );
-	assert( tux != NULL );
 
 	if( tux->status == TUX_STATUS_DEAD )
 	{
@@ -578,24 +569,7 @@ void eventGiveTuxListItem(tux_t *tux, space_t *spaceItem)
 
 	getTuxProportion(tux, &x, &y, &w, &h);
 	
-	listDoEmpty(listHelp);
-	getObjectFromSpace(spaceItem, x, y, w, h, listHelp);
-
-	for( i = 0 ; i < listHelp->count ; i++ )
-	{
-		thisItem  = (item_t *)listHelp->list[i];
-		assert( thisItem != NULL );
-
-		eventGiveTuxItem(tux, thisItem, spaceItem);
-
-#ifdef PUBLIC_SERVER
-		addNewItem(spaceItem, ID_UNKNOWN);
-#endif		
-		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
-		{
-			proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
-		}
-	}
+	actionSpaceFromLocation(spaceItem, action_giveitem, tux, x, y, w, h);
 }
 
 void destroyItem(item_t *p)

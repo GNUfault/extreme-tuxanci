@@ -45,6 +45,25 @@ my_time_t getMyTime()
 	return ticks;
 }
 
+my_time_t getMyTimeMicro()
+{
+	static struct timeval start = { .tv_sec = 0, .tv_usec = 0 };
+	struct timeval now;
+	my_time_t ticks;
+
+	if(  start.tv_sec == 0 && start.tv_usec == 0 )
+	{
+		gettimeofday(&start, NULL);
+	}
+
+	gettimeofday(&now, NULL);
+
+	ticks = (now.tv_sec-start.tv_sec)*1000*1000+(now.tv_usec-start.tv_usec);
+
+	//printf("-> %d\n", ticks);
+	return ticks;
+}
+
 my_timer_t* newTimerItem(int type, void (*fce)(void *p), void *arg, my_time_t my_time)
 {
 	static int new_id = 0;

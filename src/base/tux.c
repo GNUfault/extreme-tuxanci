@@ -406,62 +406,53 @@ static void bombBallExplosion(shot_t *shot)
 	delObjectFromSpaceWithObject(getCurrentArena()->spaceShot, shot, destroyShot);
 }
 
-void eventConflictTuxWithShot(arena_t *arena)
+static void action_tux(space_t *space, tux_t *tux, shot_t *shot)
 {
-	shot_t *thisShot;
-	tux_t *thisTux;
-	int i, j;
+	arena_t *arena;
 
-	for( i = 0 ; i < arena->spaceShot->list->count ; i++ )
+	arena = getCurrentArena();
+
+	if(  tux->status == TUX_STATUS_ALIVE )
 	{
-		thisShot = (shot_t *)arena->spaceShot->list->list[i];
-		assert( thisShot != NULL );
-
-		listDoEmpty(listHelp);
-		getObjectFromSpace(arena->spaceTux, thisShot->x, thisShot->y,
-			thisShot->w, thisShot->h, listHelp);
-
-		for( j = 0 ; j < listHelp->count ; j++ )
+		if( shot->author_id == tux->id &&
+		    shot->isCanKillAuthor == FALSE )
 		{
-			thisTux = listHelp->list[j];
+			return;
+		}
 
-			if(  thisTux->status == TUX_STATUS_ALIVE )
+		if( tux->bonus == BONUS_TELEPORT )
+		{
+			tuxTeleport(tux);
+			return;
+		}
+	
+		if( shot->gun == GUN_BOMBBALL )
+		{
+			if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 			{
-				if( thisShot->author_id == thisTux->id &&
-				    thisShot->isCanKillAuthor == FALSE )
-				{
-					continue;
-				}
-
-				if( thisTux->bonus == BONUS_TELEPORT )
-				{
-					tuxTeleport(thisTux);
-					continue;
-				}
-
-				if( thisShot->gun == GUN_BOMBBALL )
-				{
-					if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
-					{
-						bombBallExplosion(thisShot);
-						i--;
-					}
-
-					continue;
-				}
-
-				if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
-				{
-					eventTuxIsDeadWIthShot(thisTux, thisShot);
-				}
+				bombBallExplosion(shot);
 			}
-
-			delObjectFromSpaceWithObject(arena->spaceShot, thisShot, destroyShot);
-			i--;
-
-			continue;
+	
+			return;
+		}
+	
+		if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+		{
+			eventTuxIsDeadWIthShot(tux, shot);
 		}
 	}
+
+	delObjectFromSpaceWithObject(arena->spaceShot, shot, destroyShot);
+}
+
+static void action_shot(space_t *space, shot_t *shot, space_t *spaceTux)
+{
+	actionSpaceFromLocation(spaceTux, action_tux, shot, shot->x, shot->y, shot->w, shot->h);
+}
+
+void eventConflictTuxWithShot(arena_t *arena)
+{
+	actionSpace(arena->spaceShot, action_shot, arena->spaceTux);
 }
 
 void moveTux(tux_t *tux, int n)

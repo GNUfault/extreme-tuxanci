@@ -272,31 +272,28 @@ void transformOnlyLasser(shot_t *shot)
 	}
 }
 
+static void action_moveShot(space_t *space, shot_t *shot, void *p)
+{
+	int new_x, new_y;
+	arena_t *arena;
+
+	arena = getCurrentArena();
+
+	new_x = shot->x + shot->px;
+	new_y = shot->y + shot->py;
+
+	moveObjectInSpace(space, shot, new_x, new_y);
+
+	if( shot->x+shot->w < 0 || shot->x > arena->w ||
+	    shot->y+shot->h < 0 || shot->y > arena->h )
+	{
+		delObjectFromSpaceWithObject(space, shot, destroyShot);
+	}
+}
+
 void eventMoveListShot(arena_t *arena)
 {
-	shot_t *thisShot;
-	int new_x, new_y;
-	int i;
-
-	for( i = 0 ; i < arena->spaceShot->list->count ; i++ )
-	{
-		thisShot  = (shot_t *) arena->spaceShot->list->list[i];
-		assert( thisShot != NULL );
-
-		new_x = thisShot->x + thisShot->px;
-		new_y = thisShot->y + thisShot->py;
-
-		moveObjectInSpace(getCurrentArena()->spaceShot, thisShot, new_x, new_y);
-
-		if( thisShot->x+thisShot->w < 0 || thisShot->x > arena->w ||
-		    thisShot->y+thisShot->h < 0 || thisShot->y > arena->h )
-		{
-			delObjectFromSpaceWithObject(arena->spaceShot,
-				thisShot, destroyShot);
-			i--;
-			continue;
-		}
-	}
+	actionSpace(arena->spaceShot, action_moveShot, NULL);
 }
 
 static int isValueInList(list_t *list, int x)
@@ -314,14 +311,22 @@ static int isValueInList(list_t *list, int x)
 	return 0;
 }
 
+static void action_check(space_t *space, shot_t *shot, client_t *client)
+{
+	if( isValueInList(client->listSeesShot, shot->id) == 0 )
+	{
+		addList(client->listSeesShot, newInt(shot->id) );
+		proto_send_shot_server(PROTO_SEND_ONE, client, shot);
+	}
+}
+
 void checkShotIsInTuxScreen(arena_t *arena)
 {
 	int screen_x, screen_y;
-	shot_t *thisShot;
 	tux_t *thisTux;
 	client_t *thisClient;
 	list_t *listClient;
-	int i, j;
+	int i;
 
 	if( getNetTypeGame() != NET_GAME_TYPE_SERVER )
 	{
@@ -342,20 +347,8 @@ void checkShotIsInTuxScreen(arena_t *arena)
 
 		getCenterScreen(&screen_x, &screen_y, thisTux->x, thisTux->y);
 
-		listDoEmpty(listHelp);
-
-		getObjectFromSpace(arena->spaceShot, screen_x, screen_y,  WINDOW_SIZE_X, WINDOW_SIZE_Y, listHelp);
-
-		for( j = 0 ; j <listHelp->count ; j++ )
-		{
-			thisShot = (shot_t *)listHelp->list[j];
-
-			if( isValueInList(thisClient->listSeesShot, thisShot->id) == 0 )
-			{
-				addList(thisClient->listSeesShot, newInt(thisShot->id) );
-				proto_send_shot_server(PROTO_SEND_ONE, thisClient, thisShot);
-			}
-		}
+		actionSpaceFromLocation(arena->spaceShot, action_check,
+			thisClient, screen_x, screen_y,  WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 		while( thisClient->listSeesShot->count > 100 )
 		{

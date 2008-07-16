@@ -8,6 +8,9 @@
 #include "interface.h"
 #include "screen.h"
 #include "layer.h"
+#include "myTimer.h"
+
+//#define DEBUG_TIME_DRAW
 
 static screen_t *currentScreen;
 static list_t *listScreen;
@@ -115,16 +118,38 @@ void drawScreen()
 {
 	assert( currentScreen != NULL );
 
+#ifdef DEBUG_TIME_DRAW
+	clock_t prev;
+
+ 	prev = clock();
+#endif
+
 	currentScreen->fce_draw();
 
 	interfaceRefresh();
+
+#ifdef DEBUG_TIME_DRAW
+	printf("CLK_TCK = %d\n", CLOCKS_PER_SEC);
+	printf("c draw time = %d\n", clock() - prev );
+#endif
 }
+
 
 void eventScreen()
 {
 	assert( currentScreen != NULL );
 
+#ifdef DEBUG_TIME_EVENT
+	clock_t prev;
+
+ 	prev = clock();
+#endif
+
 	currentScreen->fce_event();
+
+#ifdef DEBUG_TIME_EVENT
+	printf("c event time = %d\n", clock() - prev );
+#endif
 }
 
 void quitScreen()

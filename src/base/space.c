@@ -310,8 +310,48 @@ void printSpace(space_t *p)
 	}
 }
 
-void actionSpace(space_t *space)
+void actionSpace(space_t *space, void *f, void *p)
 {
+	void (*fce)(space_t *space, void *f, void *p);
+	int len;
+	int i;
+
+	fce = f;
+	len = space->list->count;
+
+	for( i = 0 ; i < len ; i++ )
+	{
+		fce(space, space->list->list[i], p);
+
+		if( space->list->count == len-1 )
+		{
+			len--;
+			i--;
+		}
+	}
+}
+
+void actionSpaceFromLocation(space_t *space, void *f, void *p, int x, int y, int w, int h)
+{
+	void (*fce)(space_t *space, void *f, void *p);
+	list_t *list;
+	int len;
+	int i;
+
+	fce = f;
+
+	list = newList();
+
+	getObjectFromSpace(space, x, y, w, h, list);
+
+	len = list->count;
+
+	for( i = 0 ; i < len ; i++ )
+	{
+		fce(space, list->list[i], p);
+	}
+
+	destroyList(list);
 }
 
 void destroySpace(space_t *p)
