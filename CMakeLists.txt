@@ -26,6 +26,7 @@ IF ( Apple )
 	SET (
 		CMAKE_OSX_ARCHITECTURES "ppc;i386"
 		CACHE_INTERNAL "OSX Architectures" FORCE
+		ADD_DEFINITIONS ( -DAPPLE )
 	)
 ENDIF ( Apple )
 IF ( Win AND NOT Server )

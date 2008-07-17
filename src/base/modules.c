@@ -182,12 +182,12 @@ int loadModule(char *name)
 	char str[STR_PATH_SIZE];
 	module_t *module;
 
+	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_UNIX, name); // linux
 #ifdef __WIN32__
 	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_WIN, name); // windows
-#elifdef __APPLE__
-	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_DARWIN, name); // apple
-#else
-	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_UNIX, name); // linux
+#endif
+#ifdef APPLE
+	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_APPLE, name); // apple
 #endif
 	accessExistFile(str);
 
