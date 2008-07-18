@@ -108,8 +108,6 @@ void quitGame()
 	quitScreenTable();
 	quitScreenBrowser();
 
-	destroyList(listHelp);
-
 	printf("quit..\n");
 
 	exit(0);
@@ -119,7 +117,7 @@ void startGame()
 {
 	initGame();
 
-	setScreen("mainMenu");
+	startScreen("mainMenu");
 
 	eventSDL();
 	quitGame();

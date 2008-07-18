@@ -16,7 +16,6 @@
 #include "interface.h"
 #include "image.h"
 #include "layer.h"
-#include "term.h"
 
 #include "screen_world.h"
 #include "screen_setting.h"
@@ -28,7 +27,6 @@
 #endif
 
 #ifdef PUBLIC_SERVER
-#include "publicServer.h"
 #include "publicServer.h"
 #endif
 
@@ -166,9 +164,6 @@ void replaceItemID(item_t *item, int id)
 
 void addNewItem(space_t *spaceItem, int author_id)
 {
-#ifndef PUBLIC_SERVER
-	char msg[STR_SIZE];
-#endif
 	arena_t *arena;
 	item_t *item;
 	int new_x, new_y;
@@ -237,12 +232,6 @@ void addNewItem(space_t *spaceItem, int author_id)
 	{
 		proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
 	}
-
-#ifndef PUBLIC_SERVER
-	sprintf(msg, "in arena is new item\n");
-	appendTextInTerm(msg);
-#endif
-
 }
 
 #ifndef PUBLIC_SERVER	
@@ -449,20 +438,12 @@ static void eventTuxIsDeadWithItem(tux_t *tux, item_t *item)
 
 static void tuxGiveBonus(tux_t *tux, item_t *item)
 {
-#ifndef PUBLIC_SERVER	
-	char msg[STR_SIZE];
 #ifndef NO_SOUND
 	playSound("item_bonus", SOUND_GROUP_BASE);
 #endif
 
-#endif
 	tux->bonus = item->type;
 	tux->bonus_time = TUX_MAX_BONUS;
-
-#ifndef PUBLIC_SERVER
-	sprintf(msg, "tux with id %d bonus enabled\n", tux->id);
-	appendTextInTerm(msg);
-#endif
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{
@@ -472,21 +453,13 @@ static void tuxGiveBonus(tux_t *tux, item_t *item)
 
 static void tuxGiveGun(tux_t *tux, item_t *item)
 {
-#ifndef PUBLIC_SERVER	
-	char msg[STR_SIZE];
 #ifndef NO_SOUND
 	playSound("item_gun", SOUND_GROUP_BASE);
-#endif
 #endif
 
 	tux->pickup_time = 0;
 	tux->shot[ item->type ] += GUN_MAX_SHOT;
 	tux->gun = item->type;
-
-#ifndef PUBLIC_SERVER
-	sprintf(msg, "tux with id %d has new gun\n", tux->id);
-	appendTextInTerm(msg);
-#endif
 
 	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 	{

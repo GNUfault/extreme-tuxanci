@@ -300,26 +300,20 @@ int init(export_fce_t *p)
 
 #ifndef PUBLIC_SERVER
 
+static void action_drawpipe(space_t *space, pipe_t *pipe, void *p)
+{
+	drawPipe(pipe);
+}
+
 int draw(int x, int y, int w, int h)
 {
-	pipe_t *thisPipe;
-	int i;
-
 	if( spacePipe == NULL )
 	{
 		return 0;
 	}
 
-	listDoEmpty(listPipe);
-	getObjectFromSpace(spacePipe, x, y, w, h, listPipe);
+	actionSpaceFromLocation(spacePipe, action_drawpipe, NULL, x, y, w, h);
 	//printSpace(spacePipe);
-
-	for( i = 0 ; i < listPipe->count ; i++ )
-	{
-		thisPipe  = (pipe_t *)listPipe->list[i];
-		assert( thisPipe != NULL );
-		drawPipe(thisPipe);
-	}
 
 	return 0;
 }
@@ -349,66 +343,54 @@ static int negPosition(int n)
 	return -1; // no warnning
 }
 
+static void action_eventpipe(space_t *space, pipe_t *pipe, shot_t *shot)
+{
+	arena_t *arena;
+	tux_t *author;
+
+	arena = export_fce->fce_getCurrentArena();
+
+	author = getObjectFromSpaceWithID(arena->spaceTux, shot->author_id);
+			
+	if( author != NULL &&
+		author->bonus == BONUS_GHOST &&
+		author->bonus_time > 0 )
+	{
+		return;
+	}
+
+	if( negPosition( shot->position ) == pipe->position &&
+	    export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+	{
+		moveShotFromPipe(shot, pipe);
+	}
+	else
+	{
+		if( shot->gun == GUN_BOMBBALL && 
+		    export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT  )
+		{
+			export_fce->fce_boundBombBall(shot);
+		}
+		else
+		{
+			delObjectFromSpaceWithObject(arena->spaceShot, shot, export_fce->fce_destroyShot);
+		}
+	}
+}
+
+static void action_eventshot(space_t *space, shot_t *shot, space_t *spacePipe)
+{
+	actionSpaceFromLocation(spacePipe, action_eventpipe, shot, shot->x, shot->y, shot->w, shot->h);
+}
+
 int event()
 {
-	pipe_t *thisPipe;
-	arena_t *arena;
-	int i;
-
 	if( spacePipe == NULL )
 	{
 		return 0;
 	}
 
-	arena = export_fce->fce_getCurrentArena();
-
-	for( i = 0 ; i < arena->spaceShot->list->count ; i++ )
-	{
-		shot_t *thisShot;
-		int j;
-
-		thisShot  = (shot_t *) arena->spaceShot->list->list[i];
-		assert( thisShot != NULL );
-
-		listDoEmpty(listPipe);
-		getObjectFromSpace(spacePipe, thisShot->x, thisShot->y, thisShot->w, thisShot->h, listPipe);
-
-		for( j = 0 ; j < listPipe->count ; j++ )
-		{
-			tux_t *author;
-
-			thisPipe = (pipe_t *)listPipe->list[j];
-
-			author = getObjectFromSpaceWithID(arena->spaceTux, thisShot->author_id);
-			
-			if( author != NULL &&
-			    author->bonus == BONUS_GHOST &&
-			    author->bonus_time > 0 )
-			{
-				continue;
-			}
-
-			if( negPosition( thisShot->position ) == thisPipe->position &&
-			     export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT )
-			{
-				moveShotFromPipe(thisShot, thisPipe);
-			}
-			else
-			{
-				if( thisShot->gun == GUN_BOMBBALL && 
-				    export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT  )
-				{
-					export_fce->fce_boundBombBall(thisShot);
-				}
-				else
-				{
-					delObjectFromSpaceWithObject(export_fce->fce_getCurrentArena()->spaceShot,
-						thisShot, export_fce->fce_destroyShot);
-					i--;
-				}
-			}
-		}
-	}
+	actionSpace(export_fce->fce_getCurrentArena()->spaceShot, action_eventshot, spacePipe);
 
 	return 0;
 }

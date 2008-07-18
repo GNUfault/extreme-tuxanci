@@ -364,14 +364,13 @@ static void addMsgAllClient(char *msg, int type, int id)
 
 static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 {
+	list_t *listHelp;
 	arena_t *arena;
 	space_t *space;
 	int x, y, w, h;
 	int i;
 
 	assert( msg != NULL );
-
-	listDoEmpty(listHelp);
 
 	arena = getCurrentArena();
 	space = arena->spaceTux;
@@ -387,6 +386,8 @@ static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 	if( w+x >= arena->w )w = arena->w - (x+1);
 	if( h+y >= arena->h )h = arena->h - (y+1);
 	
+	listHelp = newList();
+
 	getObjectFromSpace(space, x, y, w, h, listHelp);
 	//printf("%d %d %d %d %d\n", x, y, w, h, listHelp->count);
 
@@ -409,6 +410,8 @@ static void addMsgAllClientSeesTux(char *msg, tux_t *tux, int type, int id)
 			addMsgClient(thisClient, msg, type, id);
 		}
 	}
+
+	destroyList(listHelp);
 }
 
 void protoSendClient(int type, client_t *client, char *msg, int type2, int id)

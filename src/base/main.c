@@ -27,8 +27,6 @@
 static int my_argc;
 static char **my_argv;
 
-list_t *listHelp;
-
 char* getParam(char *s)
 {
 	int i;
@@ -113,6 +111,7 @@ int tryExistFile (const char *s)
 	else
 		return 0;
 }
+
 #ifdef __WIN32__
 int WINAPI WinMain(
     HINSTANCE hInstance,
@@ -124,9 +123,8 @@ int WINAPI WinMain(
 int main(int argc, char *argv[])
 #endif
 {
-	listHelp = newList();
-
 	srand( (unsigned) time(NULL) );
+
 #ifndef __WIN32__
 	my_argc = argc;
 	my_argv = argv;

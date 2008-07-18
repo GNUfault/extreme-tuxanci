@@ -19,8 +19,6 @@
 
 #ifndef PUBLIC_SERVER
 #include "interface.h"
-#include "term.h"
-
 #include "screen_world.h"
 #endif
 
@@ -85,13 +83,7 @@ static void addShotTrivial(tux_t *tux, int x, int y, int px, int py, int gun)
 
 	shot = newShot(tux->x + dest_x, tux->y + dest_y, dest_px, dest_py, gun, tux->id);
 
-	if(1)// isFreeSpace(getCurrentArena(), shot->x, shot->y, shot->w, shot->h) )
-	{
-		addObjectToSpace(getCurrentArena()->spaceShot, shot);
-		return;
-	}
-
-	destroyShot(shot);
+	addObjectToSpace(getCurrentArena()->spaceShot, shot);
 }
 
 static void addShot(tux_t *tux,int x, int y, int px, int py)
@@ -261,14 +253,8 @@ static void putInGunMine(tux_t *tux)
 	if( isFreeSpace(getCurrentArena(), x, y, ITEM_MINE_WIDTH, ITEM_MINE_HEIGHT) )
 	{
 		item_t *item;
-
-#ifndef PUBLIC_SERVER
-		char msg[STR_SIZE];
 #ifndef NO_SOUND
 		playSound("put_mine", SOUND_GROUP_BASE);
-#endif
-		sprintf(msg, "tux with id %d pu mine\n", tux->id);
-		appendTextInTerm(msg);
 #endif
 
 		tux->shot[tux->gun]--;

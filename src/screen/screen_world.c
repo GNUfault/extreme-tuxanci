@@ -20,7 +20,6 @@
 #include "keytable.h"
 #include "layer.h"
 #include "image.h"
-#include "term.h"
 #include "font.h"
 #include "panel.h"
 #include "radar.h"
@@ -108,7 +107,7 @@ void countRoundInc()
 
 	if( count >= max_count )
 	{
-		printf("count %d ending\n", count);
+		//printf("count %d ending\n", count);
 #ifndef NO_SOUND
 		playSound("end", SOUND_GROUP_BASE);
 #endif
@@ -185,7 +184,6 @@ void drawWorld()
 		}
 	}
 
-	drawTerm();
 	drawChat();
 }
 
@@ -478,10 +476,9 @@ void eventWorld()
 			RADAR_TYPE_TUX);
 	}
 
-	eventTerm();
 	eventEnd();
-	eventEsc();
 	eventChat();
+	eventEsc();
 }
 
 void startWorld()
@@ -495,7 +492,6 @@ void startWorld()
 	initRadar();
 	initModule();
 	setGameType();
-	initTerm();
 	initChat();
 	prepareArena();
 }
@@ -566,7 +562,6 @@ void stoptWorld()
 	delAllMusicInGroup(MUSIC_GROUP_USER);
 #endif
 	quitModule();
-	quitTerm();
 	quitChat();
 	quitListID();
 }

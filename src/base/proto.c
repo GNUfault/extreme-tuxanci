@@ -386,13 +386,6 @@ void proto_send_newtux_server(int type, client_t *client, tux_t *tux)
 		getTuxProportion(tux, &x, &y, NULL, NULL);
 	}
 
-	if( type == PROTO_SEND_ONE &&
-	    tux->bonus == BONUS_HIDDEN &&
-	    client->tux == tux )
-	{
-		getTuxProportion(tux, &x, &y, NULL, NULL);
-	}
-
 	sprintf(msg, "newtux %d %d %d %d %d %d %d %s %d %d %d %d %d %d %d %d %d %d %d\n",
 	tux->id ,x, y, tux->status, tux->position ,tux->frame, tux->score, tux->name,
 	tux->gun, tux->bonus, tux->shot[GUN_SIMPLE], tux->shot[GUN_DUAL_SIMPLE],
@@ -436,10 +429,6 @@ void proto_recv_newtux_client(char *msg)
 
 	if( tux == NULL )
 	{
-		char term_msg[STR_SIZE];
-		sprintf(term_msg, "connect new client( id = %d)\n", id);
-		appendTextInTerm(term_msg);
-
 		tux = newTux();
 		replaceTuxID(tux, id);
 		tux->control = TUX_CONTROL_NET;
@@ -549,12 +538,6 @@ void proto_recv_del_client(char *msg)
 
 	if( tux != NULL )
 	{
-		char term_msg[STR_SIZE];
-	
-		//printf("delete tux..\n");
-		sprintf(term_msg, "tux with id %d is disconnect\n", tux->id);
-		appendTextInTerm(term_msg);
-
 		delFromRadar(id);
 		delObjectFromSpaceWithObject(getCurrentArena()->spaceTux, tux, destroyTux);
 		return;

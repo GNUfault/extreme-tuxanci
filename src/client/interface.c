@@ -209,6 +209,7 @@ int eventAction()
 				case USR_EVT_TIMER:
 					drawScreen();
 					eventScreen();
+					switchScreen();
 				break;
 
 				default:

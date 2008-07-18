@@ -380,36 +380,65 @@ int init(export_fce_t *p)
 }
 
 #ifndef PUBLIC_SERVER
+
+static void action_drawteleport(space_t *space, teleport_t *teleport, void *p)
+{
+	drawTeleport(teleport);
+}
+
 int draw(int x, int y, int w, int h)
 {
-	teleport_t *thisTeleport;
-	int i;
-
 	if( spaceTeleport == NULL )
 	{
 		return 0;
 	}
 
-	listDoEmpty(listTeleport);
-	getObjectFromSpace(spaceTeleport, x, y, w, h, listTeleport);
-
-	for( i = 0 ; i < listTeleport->count ; i++ )
-	{
-		thisTeleport  = (teleport_t *)listTeleport->list[i];
-		assert( thisTeleport != NULL );
-		drawTeleport(thisTeleport);
-	}
+	actionSpaceFromLocation(spaceTeleport, action_drawteleport, NULL, x, y, w, h);
 
 	return 0;
 }
 #endif
 
+static void action_eventteleportshot(space_t *space, teleport_t *teleport, shot_t *shot)
+{
+	arena_t *arena;
+	tux_t *author;
+
+	arena = export_fce->fce_getCurrentArena();
+
+	author = getObjectFromSpaceWithID(arena->spaceTux, shot->author_id);
+			
+	if( author != NULL && 
+	    author->bonus == BONUS_GHOST &&
+	    author->bonus_time > 0 )
+	{
+		return;
+	}
+
+	moveShotFromTeleport(shot, teleport, spaceTeleport->list);
+}
+
+static void action_eventshot(space_t *space, shot_t *shot, space_t *spaceTeleport)
+{
+	actionSpaceFromLocation(spaceTeleport, action_eventteleportshot, shot, shot->x, shot->y, shot->w, shot->h);
+}
+
+static void action_eventteleporttux(space_t *space, teleport_t *teleport, tux_t *tux)
+{
+	teleportTux(tux, teleport);
+}
+
+static void action_eventtux(space_t *space, tux_t *tux, space_t *spaceTeleport)
+{
+	int x, y, w, h;
+
+	export_fce->fce_getTuxProportion(tux, &x, &y, &w, &h);
+
+	actionSpaceFromLocation(spaceTeleport, action_eventteleporttux, tux, x, y, w, h);
+}
+
 int event()
 {
-	teleport_t *thisTeleport;
-	arena_t *arena;
-	int i;
-
 	if( spaceTeleport == NULL )
 	{
 		return 0;
@@ -420,55 +449,8 @@ int event()
 		return 0;
 	}
 
-	arena = export_fce->fce_getCurrentArena();
-
-	for( i = 0 ; i < arena->spaceTux->list->count ; i++ )
-	{
-		tux_t *thisTux;
-		int x, y, w, h;
-		int j;
-
-		thisTux = (tux_t *)arena->spaceTux->list->list[i];
-		export_fce->fce_getTuxProportion(thisTux, &x, &y, &w, &h);
-
-		listDoEmpty(listTeleport);
-		getObjectFromSpace(spaceTeleport, x, y, w, h, listTeleport);
-
-		for( j = 0 ; j < listTeleport->count ; j++ )
-		{
-			thisTeleport = (teleport_t *)listTeleport->list[j];
-			teleportTux(thisTux, thisTeleport);
-		}
-	}
-	
-	for( i = 0 ; i < arena->spaceShot->list->count ; i++ )
-	{
-		shot_t *thisShot;
-		int j;
-
-		thisShot  = (shot_t *)arena->spaceShot->list->list[i];
-		assert( thisShot != NULL );
-
-		listDoEmpty(listTeleport);
-		getObjectFromSpace(spaceTeleport, thisShot->x, thisShot->y, thisShot->w, thisShot->h, listTeleport);
-
-		for( j = 0 ; j < listTeleport->count ; j++ )
-		{
-			tux_t *author;
-
-			thisTeleport = (teleport_t *)listTeleport->list[j];
-			author = getObjectFromSpaceWithID(arena->spaceTux, thisShot->author_id);
-			
-			if( author != NULL && 
-			    author->bonus == BONUS_GHOST &&
-			    author->bonus_time > 0 )
-			{
-				continue;
-			}
-
-			moveShotFromTeleport(thisShot, thisTeleport, spaceTeleport->list);
-		}
-	}
+	actionSpace(export_fce->fce_getCurrentArena()->spaceShot, action_eventshot, spaceTeleport);
+	actionSpace(export_fce->fce_getCurrentArena()->spaceTux, action_eventtux, spaceTeleport);
 
 	return 0;
 }

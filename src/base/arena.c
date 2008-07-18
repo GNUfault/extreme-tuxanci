@@ -135,6 +135,21 @@ void getCenterScreen(int *screen_x, int *screen_y, int x, int y)
 
 #ifndef PUBLIC_SERVER
 
+static void action_drawTux(space_t *space, tux_t *tux, void *p)
+{
+	drawTux(tux);
+}
+
+static void action_drawItem(space_t *space, item_t *item, void *p)
+{
+	drawItem(item);
+}
+
+static void action_drawShot(space_t *space, shot_t *shot, void *p)
+{
+	drawShot(shot);
+}
+
 void drawArena(arena_t *arena)
 {
 	int screen_x, screen_y;
@@ -168,17 +183,14 @@ void drawArena(arena_t *arena)
 
 	}
 
-	listDoEmpty(listHelp);
-	getObjectFromSpace(arena->spaceTux, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y, listHelp);
-	drawListTux(listHelp);
+	actionSpaceFromLocation(arena->spaceTux, action_drawTux, NULL,
+		screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
-	listDoEmpty(listHelp);
-	getObjectFromSpace(arena->spaceItem, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y, listHelp);
-	drawListItem(listHelp);
+	actionSpaceFromLocation(arena->spaceItem, action_drawItem, NULL,
+		screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
-	listDoEmpty(listHelp);
-	getObjectFromSpace(arena->spaceShot, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y, listHelp);
-	drawListShot(listHelp);
+	actionSpaceFromLocation(arena->spaceShot, action_drawShot, NULL,
+		screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 	//printSpace(arena->spaceShot);
 

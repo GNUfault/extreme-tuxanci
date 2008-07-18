@@ -21,7 +21,6 @@
 #include "font.h"
 #include "image.h"
 #include "layer.h"
-#include "term.h"
 #include "radar.h"
 
 #ifndef NO_SOUND
@@ -309,21 +308,13 @@ static void timer_tuxCanSwitchGun(void *p)
 
 void eventTuxIsDead(tux_t *tux)
 {
-#ifndef PUBLIC_SERVER
-	char msg[STR_SIZE];
-#endif
-
 	if( tux->status == TUX_STATUS_DEAD )
 	{
 		return;
 	}
 
-#ifndef PUBLIC_SERVER
-	sprintf(msg, "tux with id %d is dead\n", tux->id);
 #ifndef NO_SOUND
 	playSound("dead", SOUND_GROUP_BASE);
-#endif
-	appendTextInTerm(msg);
 #endif
 
 	tux->status = TUX_STATUS_DEAD;
@@ -376,16 +367,9 @@ static void eventTuxIsDeadWIthShot(tux_t *tux, shot_t *shot)
 void tuxTeleport(tux_t *tux)
 {
 	int x, y;
-#ifndef PUBLIC_SERVER
-	char msg[STR_SIZE];
-#endif
 
-#ifndef PUBLIC_SERVER
-	sprintf(msg, "tux with id %d teleporting\n", tux->id);
 #ifndef NO_SOUND
 	playSound("teleport", SOUND_GROUP_BASE);
-#endif
-	appendTextInTerm(msg);
 #endif
 
 	if( getNetTypeGame() != NET_GAME_TYPE_CLIENT )
@@ -532,9 +516,6 @@ void moveTux(tux_t *tux, int n)
 void switchTuxGun(tux_t *tux)
 {
 	int i;
-#ifndef PUBLIC_SERVER
-	char msg[STR_SIZE];
-#endif
 
 	if( tux->control != TUX_CONTROL_NET &&
 	    tux->isCanSwitchGun == FALSE )
@@ -550,12 +531,8 @@ void switchTuxGun(tux_t *tux)
 			tux->isCanSwitchGun = FALSE;
 			addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE, timer_tuxCanSwitchGun,
 				newInt(tux->id), TUX_TIME_CAN_SWITCH_GUN );
-#ifndef PUBLIC_SERVER
 #ifndef NO_SOUND
 			playSound("switch_gun", SOUND_GROUP_BASE);
-#endif
-			sprintf(msg, "tux with id %d switch gun\n", tux->id);
-			appendTextInTerm(msg);
 #endif
 			return;
 		}
@@ -570,12 +547,8 @@ void switchTuxGun(tux_t *tux)
 			addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE, timer_tuxCanSwitchGun,
 				newInt(tux->id), TUX_TIME_CAN_SWITCH_GUN );
 
-#ifndef PUBLIC_SERVER
 #ifndef NO_SOUND
 			playSound("switch_gun", SOUND_GROUP_BASE);
-#endif
-			sprintf(msg, "tux with id %d switch gun\n", tux->id);
-			appendTextInTerm(msg);
 #endif
 
 			return;
@@ -649,13 +622,8 @@ static void pickUpGun(tux_t *tux)
 
 		if( tux->pickup_time == TUX_MAX_PICKUP && getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 		{
-#ifndef PUBLIC_SERVER
-			char msg[STR_SIZE];
 #ifndef NO_SOUND
 			playSound("switch_gun", SOUND_GROUP_BASE);
-#endif
-			sprintf(msg, "tux with id %d pickup\n", tux->id);
-			appendTextInTerm(msg);
 #endif
 
 			tux->gun = GUN_SIMPLE;
@@ -681,10 +649,6 @@ static void eventBonus(tux_t *tux)
 
 		if( tux->bonus_time == 0  && getNetTypeGame() != NET_GAME_TYPE_CLIENT )
 		{
-#ifndef PUBLIC_SERVER
-			char msg[STR_SIZE];
-#endif
-
 			if( tux->bonus == BONUS_GHOST )
 			{
 				int x, y, w, h;
@@ -701,11 +665,6 @@ static void eventBonus(tux_t *tux)
 			}
 
 			tux->bonus = BONUS_NONE;
-
-#ifndef PUBLIC_SERVER
-			sprintf(msg, "tux with id %d bonus disabled\n", tux->id);
-			appendTextInTerm(msg);
-#endif
 
 			if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
 			{

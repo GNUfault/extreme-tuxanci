@@ -68,7 +68,8 @@ extern void getStatusItem(void *p, int *id, int *x, int *y ,int *w, int *h);
 extern void setStatusItem(void *p, int x, int y, int w, int h);
 extern void replaceItemID(item_t *item, int id);
 extern void addNewItem(space_t *spaceItem, int author_id);
-#ifndef PUBLIC_SERVER	
+#ifndef PUBLIC_SERVER
+extern void drawItem(item_t *p);
 extern void drawListItem(list_t *listItem);
 #endif
 extern void eventListItem(space_t *listSpace);

@@ -13,6 +13,8 @@
 //#define DEBUG_TIME_DRAW
 
 static screen_t *currentScreen;
+static screen_t *futureScreen;
+
 static list_t *listScreen;
 
 static bool_t isScreenInit = FALSE;
@@ -63,24 +65,17 @@ void registerScreen(screen_t *p)
 void initScreen()
 {
 	listScreen = newList();
+
 	currentScreen = NULL;
+	futureScreen = NULL;
+
 	isScreenInit = TRUE;
 }
 
-void setScreen(char *name)
+static screen_t* findScreen(char *name)
 {
-	int i;
 	screen_t *this;
-
-	assert( name != NULL );
-
-	if( currentScreen != NULL &&
-	    strcmp(currentScreen->name, name) == 0 )
-	{
-		return;
-	}
-
-	printf("switch screen %s..\n", name);
+	int i;
 
 	for( i = 0 ; i < listScreen->count ; i++ )
 	{
@@ -89,23 +84,47 @@ void setScreen(char *name)
 
 		if( strcmp(name, this->name) == 0 )
 		{
-			flushLayer();
-
-			if( currentScreen != NULL )
-			{
-				printf("stop screen %s..\n", currentScreen->name);
-				currentScreen->fce_stop();
-			}
-
-			currentScreen = this;
-			printf("start screen %s..\n", currentScreen->name);
-			currentScreen->fce_start();
-
-			return;
+			return this;
 		}
 	}
 
-	assert( ! "screen sa nenasiel !" );
+	return NULL;
+}
+
+void setScreen(char *name)
+{
+	futureScreen = findScreen(name);
+	assert( futureScreen != NULL );
+}
+
+void switchScreen()
+{
+	if( futureScreen == NULL )
+	{
+		return;
+	}
+
+	flushLayer();
+
+	if( currentScreen != NULL )
+	{
+		printf("stop screen %s..\n", currentScreen->name);
+		currentScreen->fce_stop();
+	}
+
+	currentScreen = futureScreen;
+	futureScreen  = NULL;
+
+	//printf("switch screen %s..\n", currentScreen->name);
+
+	printf("start screen %s..\n", currentScreen->name);
+	currentScreen->fce_start();
+}
+
+void startScreen(char *name)
+{
+	setScreen(name);
+	switchScreen();
 }
 
 char* getScreen()

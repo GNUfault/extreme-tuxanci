@@ -110,51 +110,6 @@ void drawListWall(list_t *list)
 
 #endif
 
-void eventConflictShotWithWall()
-{
-	arena_t *arena;
-	shot_t *thisShot;
-	tux_t *author;
-	int i;
-
-	arena = export_fce->fce_getCurrentArena();
-
-	for( i = 0 ; i < arena->spaceShot->list->count ; i++ )
-	{
-		thisShot  = (shot_t *)arena->spaceShot->list->list[i];
-		assert( thisShot != NULL );
-
-		if( isConflictWithObjectFromSpace(spaceWall, thisShot->x, thisShot->y, thisShot->w, thisShot->h) )
-		{
-			author = getObjectFromSpaceWithID(
-				export_fce->fce_getCurrentArena()->spaceTux, thisShot->author_id );
-			
-			if( author != NULL &&
-			    author->bonus == BONUS_GHOST &&
-			    author->bonus_time > 0 )
-			{
-				continue;
-			}
-
-			if( thisShot->gun == GUN_BOMBBALL)
-			{
-				if( export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT )
-				{
-					export_fce->fce_boundBombBall(thisShot);
-				}
-
-				continue;
-			}
-
-			delObjectFromSpaceWithObject(export_fce->fce_getCurrentArena()->spaceShot,
-				thisShot, export_fce->fce_destroyShot);
-			
-			//delListItem(listShot, i, export_fce->fce_destroyShot);
-			i--;
-		}
-	}
-}
-
 void destroyWall(wall_t *p)
 {
 	assert( p != NULL );
@@ -285,25 +240,19 @@ int init(export_fce_t *p)
 
 #ifndef PUBLIC_SERVER
 
+static void action_drawwall(space_t *space, wall_t *wall, void *p)
+{
+	drawWall(wall);
+}
+
 int draw(int x, int y, int w, int h)
 {
-	wall_t *thisWall;
-	int i;
-
 	if( spaceWall == NULL )
 	{
 		return 0;
 	}
 
-	listDoEmpty(listWall);
-	getObjectFromSpace(spaceImgWall, x, y, w, h, listWall);
-
-	for( i = 0 ; i < listWall->count ; i++ )
-	{
-		thisWall  = (wall_t *)listWall->list[i];
-		assert( thisWall != NULL );
-		drawWall(thisWall);
-	}
+	actionSpaceFromLocation(spaceImgWall, action_drawwall, NULL, x, y, w, h);
 
 	//printSpace(spaceWall);
 
@@ -311,6 +260,39 @@ int draw(int x, int y, int w, int h)
 }
 #endif
 
+static void action_eventwall(space_t *space, wall_t *wall, shot_t *shot)
+{
+	arena_t *arena;
+	tux_t *author;
+
+	arena = export_fce->fce_getCurrentArena();
+
+	author = getObjectFromSpaceWithID(arena->spaceTux, shot->author_id );
+
+	if( author != NULL &&
+	    author->bonus == BONUS_GHOST &&
+	    author->bonus_time > 0 )
+	{
+		return;
+	}
+
+	if( shot->gun == GUN_BOMBBALL)
+	{
+		if( export_fce->fce_getNetTypeGame() != NET_GAME_TYPE_CLIENT )
+		{
+			export_fce->fce_boundBombBall(shot);
+		}
+
+		return;
+	}
+
+	delObjectFromSpaceWithObject(arena->spaceShot, shot, export_fce->fce_destroyShot);
+}
+
+static void action_eventshot(space_t *space, shot_t *shot, space_t *spaceWall)
+{
+	actionSpaceFromLocation(spaceWall, action_eventwall, shot, shot->x, shot->y, shot->w, shot->h);
+}
 
 int event()
 {
@@ -319,7 +301,8 @@ int event()
 		return 0;
 	}
 
-	eventConflictShotWithWall(export_fce->fce_getCurrentArena()->spaceShot->list);
+	actionSpace(export_fce->fce_getCurrentArena()->spaceShot, action_eventshot, spaceWall);
+
 	return 0;
 }
 

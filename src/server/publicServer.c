@@ -334,7 +334,6 @@ void quitPublicServer()
 	quitModule();
 	quitListID();
 	quitHeightScore();
-	destroyList(listHelp);
 
 	exit(0);
 }
