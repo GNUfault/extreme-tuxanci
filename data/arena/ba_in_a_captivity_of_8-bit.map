@@ -8,7 +8,7 @@ loadModule file="libmodTeleport"
 
 loadMusic file="in_a_captivity_of_8-bit.ogg" name="in_a_captivity_of_8-bit"
 
-loadImage file="l3.nic.png" name="nic" alpha="no"
+loadImage file="bal3.nic.png" name="nic" alpha="no"
 loadImage file="l3.ihlan.png" name="ihlan" alpha="yes"
 loadImage file="l3.kvader1.png" name="kvader1" alpha="yes"
 loadImage file="l3.kvader2.png" name="kvader2" alpha="yes"

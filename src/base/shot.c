@@ -80,6 +80,7 @@ shot_t* newShot(int x,int y, int px, int py, int gun, int author_id)
 	}
 
 	new->isCanKillAuthor = FALSE;
+	new->del = FALSE;
 
 	switch( gun )
 	{

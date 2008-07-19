@@ -286,12 +286,18 @@ static void action_eventwall(space_t *space, wall_t *wall, shot_t *shot)
 		return;
 	}
 
-	delObjectFromSpaceWithObject(arena->spaceShot, shot, export_fce->fce_destroyShot);
+	//delObjectFromSpaceWithObject(arena->spaceShot, shot, export_fce->fce_destroyShot);
+	shot->del = TRUE;
 }
 
 static void action_eventshot(space_t *space, shot_t *shot, space_t *spaceWall)
 {
 	actionSpaceFromLocation(spaceWall, action_eventwall, shot, shot->x, shot->y, shot->w, shot->h);
+
+	if( shot->del == TRUE )
+	{
+		delObjectFromSpaceWithObject(space, shot, export_fce->fce_destroyShot);
+	}
 }
 
 int event()

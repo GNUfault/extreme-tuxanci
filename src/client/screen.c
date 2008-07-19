@@ -138,9 +138,9 @@ void drawScreen()
 	assert( currentScreen != NULL );
 
 #ifdef DEBUG_TIME_DRAW
-	clock_t prev;
+	my_time_t prev;
 
- 	prev = clock();
+ 	prev = getMyTimeMicro();
 #endif
 
 	currentScreen->fce_draw();
@@ -148,8 +148,7 @@ void drawScreen()
 	interfaceRefresh();
 
 #ifdef DEBUG_TIME_DRAW
-	printf("CLK_TCK = %d\n", CLOCKS_PER_SEC);
-	printf("c draw time = %d\n", clock() - prev );
+	printf("c draw time = %d\n", getMyTimeMicro() - prev );
 #endif
 }
 
@@ -159,15 +158,15 @@ void eventScreen()
 	assert( currentScreen != NULL );
 
 #ifdef DEBUG_TIME_EVENT
-	clock_t prev;
+	my_time_t prev;
 
- 	prev = clock();
+ 	prev = getMyTimeMicro();
 #endif
 
 	currentScreen->fce_event();
 
 #ifdef DEBUG_TIME_EVENT
-	printf("c event time = %d\n", clock() - prev );
+	printf("c event time = %d\n", getMyTimeMicro() - prev );
 #endif
 }
 

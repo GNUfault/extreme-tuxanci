@@ -34,6 +34,7 @@ typedef struct shot_struct
 
 	int author_id;
 	bool_t isCanKillAuthor;
+	bool_t del;
 
 #ifndef PUBLIC_SERVER	
 	image_t *img;
