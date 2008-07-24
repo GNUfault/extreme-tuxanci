@@ -68,7 +68,7 @@ sock_udp_t* bindUdpSocket(char *address, int port, int proto)
 
 	if( new->sock < 0 )
 	{
-		fprintf(stderr, "nemozem vytvorit socket !\n");
+		fprintf(stderr, "Unable to create socket when binding!\n");
 		destroySockUdp(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -100,7 +100,7 @@ sock_udp_t* bindUdpSocket(char *address, int port, int proto)
 
 	if(  res < 0 )
 	{
-		fprintf(stderr, "nemozem nastavit sokcet %s %d !\n", address, port);
+		fprintf(stderr, "Unable to set socket %s %d!\n", address, port);
 		destroySockUdp(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -136,7 +136,7 @@ sock_udp_t* connectUdpSocket(char *address, int port, int proto)
 
 	if( new->sock < 0 )
 	{
-		fprintf(stderr, "nemozem vytvorit socket !\n");
+		fprintf(stderr, "Unable to create socket when connecting!\n");
 		destroySockUdp(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -199,7 +199,7 @@ int readUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 
 	if( dst->proto == PROTO_UDPv4 )
 	{
-	        addrlen = sizeof(src->sockAddr);
+	    addrlen = sizeof(src->sockAddr);
 
 #ifndef __WIN32
 		size = recvfrom(src->sock, address, len, 0, (struct sockaddr *)&dst->sockAddr, (socklen_t *)&addrlen);
@@ -211,10 +211,10 @@ int readUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 #ifdef SUPPORT_IPv6
 	if( dst->proto == PROTO_UDPv6 )
 	{
- 	       addrlen = sizeof(src->sockAddr6);
+ 	    addrlen = sizeof(src->sockAddr6);
 
 		size = recvfrom(src->sock, address, len, 0,
-			(struct sockaddr *)&dst->sockAddr6, (socklen_t *)&addrlen);
+		(struct sockaddr *)&dst->sockAddr6, (socklen_t *)&addrlen);
 	}
 #endif
 
@@ -224,7 +224,7 @@ int readUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 
 		getSockUdpIp(dst, str_ip, STR_IP_SIZE);
 
-		fprintf(stderr, "nemozem zapisat zo socketu %d %s %d!\n", size, str_ip, getSockUdpPort(dst));
+		fprintf(stderr, "Unable to read form socket %d %s %d!\n", size, str_ip, getSockUdpPort(dst));
 #ifdef __WIN32__
 		WSACleanup();
 #endif
@@ -265,7 +265,7 @@ int writeUdpSocket(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 
 		getSockUdpIp(dst, str_ip, STR_IP_SIZE);
 
-		fprintf(stderr, "nemozem zapisat na socket %d %s %d!\n", size, str_ip, getSockUdpPort(dst));
+		fprintf(stderr, "Unable to write on socket %d %s %d!\n", size, str_ip, getSockUdpPort(dst));
 #ifdef __WIN32__
 		WSACleanup();
 #endif
@@ -329,7 +329,7 @@ void closeUdpSocket(sock_udp_t *p)
 	close(p->sock);
 #else
 	closesocket(p->sock);
-	WSACleanup(); 
+	//WSACleanup();  //kdyz ukoncime socket dobre neni treba cleanup
 #endif
 	destroySockUdp(p);
 }

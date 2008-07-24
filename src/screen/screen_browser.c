@@ -286,6 +286,7 @@ int server_getinfo (server_t *server)
 			close (mySocket);
 #else
 			closesocket (mySocket);
+			WSACleanup();
 #endif
 			return -2;
 		}
@@ -296,6 +297,7 @@ int server_getinfo (server_t *server)
 			close (mySocket);
 #else
 			closesocket (mySocket);
+			WSACleanup();
 #endif
 			return -2;
 		}
@@ -306,6 +308,7 @@ int server_getinfo (server_t *server)
 			close (mySocket);
 #else
 			closesocket (mySocket);
+			WSACleanup();
 #endif
 			return -1;
 		}
@@ -318,6 +321,7 @@ int server_getinfo (server_t *server)
 	close (mySocket);
 #else
 	closesocket (mySocket);
+	WSACleanup();
 #endif
 
 	server->ping = 1000 - (tv.tv_usec/1000);
@@ -517,6 +521,7 @@ static int LoadServers ()
 	close (s);
 #else
 	closesocket (s);
+	WSACleanup();
 #endif
 
 #else
@@ -718,4 +723,3 @@ void quitScreenBrowser()
 
 	destroyWidgetSelect(select_server);
 }
-

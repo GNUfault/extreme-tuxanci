@@ -16,10 +16,6 @@
 #include "udp.h"
 #endif
 
-#ifdef SUPPORT_NET_SDL_UDP
-#include "sdl_udp.h"
-#endif
-
 #ifndef PUBLIC_SERVER
 #include "screen_setting.h"
 #include "screen_choiceArena.h"
@@ -56,8 +52,8 @@ int initNetMuliplayer(int type, char *ip, int port, int proto)
 		case NET_GAME_TYPE_SERVER :
 			if( initUdpServer(ip, port, proto) != 0 )
 			{
-				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre server !\n");
-				netGameType = NET_GAME_TYPE_NONE;
+				fprintf(stderr, "Unable to inicialize network game as server!\n");
+				netGameType = NET_GAME_TYPE_NONE; 
 				return -1;
 			}
 		break;
@@ -66,7 +62,7 @@ int initNetMuliplayer(int type, char *ip, int port, int proto)
 		case NET_GAME_TYPE_CLIENT :
 			if( initUdpClient(ip, port, proto) != 0 )
 			{
-				fprintf(stderr, "Neomzem inicalizovat sietovu hru pre clienta !\n");
+				fprintf(stderr, "Unable to inicialize network game as client!\n");
 				netGameType = NET_GAME_TYPE_NONE;
 				return -1;
 			}

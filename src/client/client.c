@@ -176,7 +176,7 @@ static void selectClientUdpSocket()
 
 	if( isServerAlive() == FALSE )
 	{
-		fprintf(stderr, "server neodpoveda !\n");
+		fprintf(stderr, "Server does not respond!\n");
 		setMsgToAnalyze(getMyText("ERROR_SERVER_DONT_ALIVE"));
 		setWorldEnd();
 		return;
