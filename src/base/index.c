@@ -31,22 +31,27 @@ static void printIndex(list_t *list)
 	}
 }
 
+#ifdef CHECK_INDEX
 static void checkIndex(list_t *list)
 {
 	int index, thisIndex;
 	int i;
 
+	//printf("check index\n");
+
 	if( list->count == 0 )
 	{
 		printf("nothing\n");
-		return;	
+		return;
 	}
 
 	thisIndex = *(int *)list->list[0];
 
+
 	for( i = 1 ; i < list->count ; i++ )
 	{
 		index = *(int *)list->list[i];
+		//printf("check %d\n", index);
 
 		if( index <= thisIndex )
 		{
@@ -57,6 +62,7 @@ static void checkIndex(list_t *list)
 		thisIndex = index;
 	}
 }
+#endif
 
 list_t* newIndex()
 {
@@ -65,43 +71,15 @@ list_t* newIndex()
 
 int addToIndex(list_t *list, int index)
 {
-	int point_index, inc_point_index;
-	int len;
 	int min, max;
 	int point;
+	int point_index;
+	int len;
 
 	len = list->count;
 
 	//printf("addToIndex (%p, %d)\n", list, index);
 	//printIndex(list);
-
-	if( len == 0 )
-	{
-		addList(list, index_newInt(index));
-		checkIndex(list);
-		return 0;
-	}
-
-	if( len == 1 )
-	{
-		point_index = *(int *)list->list[0];
-		
-		if( index > point_index )
-		{
-			addList(list, index_newInt(index));
-			checkIndex(list);
-			return 1;
-		}
-
-		if( index < point_index )
-		{
-			insList(list, 0, index_newInt(index));
-			checkIndex(list);
-			return 0;
-		}
-
-		return -1;
-	}
 
 	min = 0;
 	max = len-1;
@@ -113,28 +91,33 @@ int addToIndex(list_t *list, int index)
 		if(  max < 0 )
 		{
 			insList(list, 0, index_newInt(index));
+#ifdef CHECK_INDEX
 			checkIndex(list);
+#endif
 			return 0;
 		}
 
-		if(  point+1 >= len )
+		if(  min >= len )
 		{
 			addList(list, index_newInt(index) );
+#ifdef CHECK_INDEX
 			checkIndex(list);
+#endif
 			return len;
 		}
 		
 		point_index = *(int *)list->list[point];
-		inc_point_index = *(int *)list->list[point+1];
 
-		if( point_index < index && index < inc_point_index )
+		if( min > max )
 		{
-			insList(list, point+1,  index_newInt(index) );
+			insList(list, point,  index_newInt(index) );
+#ifdef CHECK_INDEX
 			checkIndex(list);
-			return point+1;
+#endif
+			return point;
 		}
 
-		if( index > inc_point_index )
+		if( index > point_index )
 		{
 			min = point + 1;
 			continue;
