@@ -1,62 +1,48 @@
 #SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
-INCLUDE_DIRECTORIES ( ${WORKDIR}/base )
+#INCLUDE_DIRECTORIES ( ${WORKDIR}/base )
+IF ( NOT Win )
+
+	LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
+ELSE ( NOT Win )
+	LINK_LIBRARIES ( ${CMAKE_DL_LIBS} wsock32 )
+ENDIF ( NOT Win )
 IF ( NOT Server )
-	INCLUDE_DIRECTORIES ( ${WORKDIR}/client )
-	INCLUDE_DIRECTORIES ( ${WORKDIR}/screen )
-	INCLUDE_DIRECTORIES ( ${WORKDIR}/widget )
-	IF ( NOT Win )
-		FIND_PACKAGE ( SDL REQUIRED )
-		FIND_PACKAGE ( SDL_image REQUIRED )
-		FIND_PACKAGE ( SDL_ttf REQUIRED )
-	ENDIF ( NOT Win )
-	INCLUDE_DIRECTORIES ( ${SDL_INCLUDE_DIR} ${SDLIMAGE_INCLUDE_DIR} ${SDLTTF_INCLUDE_DIR} )
-	IF ( NOT NO_Audio )
-		INCLUDE_DIRECTORIES ( ${WORKDIR}/audio )
-		IF ( NOT Win )
-			FIND_PACKAGE ( SDL_mixer REQUIRED )
-		ENDIF ( NOT Win )
-		INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
-		IF ( NOT Win )
-			LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLTTF_LIBRARY} SDLmain )
-		ELSE ( NOT Win )
-			LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLTTF_LIBRARY} wsock32 )
-		ENDIF ( NOT Win )
-	ELSE (NOT NO_Audio)
-		ADD_DEFINITIONS ( -DNO_SOUND )
-		IF ( NOT Win )
-			LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} SDLmain )
-		ELSE ( NOT Win )
-			LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} wsock32 )
-		ENDIF ( NOT Win )
-	ENDIF ( NOT NO_Audio )
+	#INCLUDE_DIRECTORIES ( ${WORKDIR}/client )
+	SET ( SRC_base_modules
+		${WORKDIR}/client/interface.h ${WORKDIR}/client/image.h
+	)
 ELSE ( NOT Server )
-	IF ( NOT Win )
-		LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
-	ELSE ( NOT Win )
-		LINK_LIBRARIES ( ${CMAKE_DL_LIBS} wsock32 )
-	ENDIF ( NOT Win )
-	INCLUDE_DIRECTORIES ( ${WORKDIR}/server )
+	#INCLUDE_DIRECTORIES ( ${WORKDIR}/server )
+	SET ( SRC_base_modules
+		${WORKDIR}/server/publicServer.h
+	)
 ENDIF ( NOT Server )
 SET ( SRC_base_modules
-${WORKDIR}/base/index.c ${WORKDIR}/base/space.c ${WORKDIR}/base/list.c
+	${SRC_base_modules}
+	${WORKDIR}/base/main.h ${WORKDIR}/base/modules.h ${WORKDIR}/base/shot.h ${WORKDIR}/base/tux.h ${WORKDIR}/base/list ${WORKDIR}/base/gun.h ${WORKDIR}/base/space.h
 )
 SET ( SRC_modWall
-${SRC_base_modules}
-modWall.c
+	${SRC_base_modules}
+	${WORKDIR}/base/index
+	${WORKDIR}/base/space.c
+	modWall.c
 )
 SET ( SRC_modPipe
-${SRC_base_modules}
-modPipe.c
+	${SRC_base_modules}
+	${WORKDIR}/base/index
+	${WORKDIR}/base/space.c
+	modPipe.c
 )
 SET ( SRC_modTeleport
-${SRC_base_modules}
-modTeleport.c
+	${SRC_base_modules}
+	${WORKDIR}/base/index
+	${WORKDIR}/base/space.c
+	modTeleport.c
 )
 SET ( SRC_modAI
-${SRC_base_modules}
-modAI.c
+	${SRC_base_modules}
+	modAI.c
 )
-
 ADD_LIBRARY ( modWall SHARED ${SRC_modWall} )
 ADD_LIBRARY ( modPipe SHARED ${SRC_modPipe} )
 ADD_LIBRARY ( modTeleport SHARED ${SRC_modTeleport} )

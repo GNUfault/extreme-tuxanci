@@ -25,6 +25,7 @@ ${WORKDIR}/server/logFile ${WORKDIR}/server/serverConfigFile ${WORKDIR}/server/h
 )
 # nechcem sdl
 ADD_DEFINITIONS ( -DSUPPORT_NET_UNIX_UDP )
+ADD_DEFINITIONS ( -DZZEEXX86_READKEY )
 # server nebo klient
 IF ( Server )
 	ADD_DEFINITIONS ( -DPUBLIC_SERVER )
@@ -51,7 +52,6 @@ ELSE ( NOT Win )
 SET ( CMAKE_INSTALL_BINDIR ${APPNAME}/bin )
 SET ( CMAKE_INSTALL_LIBDIR ${APPNAME}/lib )
 ENDIF ( NOT Win )
-ADD_SUBDIRECTORY ( modules )
 IF ( NOT Server ) # server nebo klient
 	IF ( NOT Win )
 		MESSAGE ( STATUS "<Checking for SDL>" )
@@ -107,7 +107,7 @@ ELSE ( NOT Server )
 	#TARGET_LINK_LIBRARIES (tuxanci-ng-server modWall modPipe modTeleport modAI)
 	SET (TUX_BIN "tuxanci-ng-server")
 ENDIF ( NOT Server )
-
+ADD_SUBDIRECTORY ( modules )
 # binarky a knihovny instalace
 #MESSAGE ( STATUS "<Installing binaries and libraries>" )
 #MESSAGE ( STATUS "<******************************>" )
