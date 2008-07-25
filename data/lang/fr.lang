@@ -1,45 +1,53 @@
 ###
-# Englis translation file
-# Author: Oroborus <dusan.d@centrum.sk>
+# French translation file
+# Author: 
 ###
 
 # about the author of this translation
-AUTHOR MeV
-AUTHOR_EMAIL chrystalyst@free.fr
-AUTHOR_JABBER unknown
+AUTHOR 
+AUTHOR_EMAIL 
+AUTHOR_JABBER none
 
 
 # specify font for this language
 HEAD fontfile="DejaVuSans.ttf" fontsize="16"
 
 # general
-OK Ok
+OK   Ok
 BACK Précédent
 NEXT Suivant
 
 # browser
-REFRESH Refresh
-SERVER Server
+REFRESH Rénouveler
+SERVER  Serveur
 VERSION Version
-ADDRESS Address
-ARENA Arena
-CLIENTS Players
-PING Ping
+ADDRESS Adresse
+ARENA   Arène
+CLIENTS Clients
+PING    Écho
 
 # error message
-ERROR_BAD_VERSION Version of your client isn't supported by the server.
+ERROR_BAD_VERSION Vous avez une version de client qui n'est pas admise par le serveur.
+ERROR_SERVER_DONT_ALIVE Serveur ne correspond pas.
 
 # main menu
-PLAY Jouer
-SETTING Paramètres
-TABLE Meilleur Score
-CREDITS Auteurs
-END Quitter
+PLAY    Jouer
+SETTING Mise au point
+TABLE   
+CREDITS 
+END     Fin
 
 # settings - menu
-COUNT_ROUND Count Round:
-NAME_PLAYER1 Joueur de droite :
-NAME_PLAYER2 Joueur de gauche :
-MUSIC Musique :
-SOUND Son :
-BROWSER Browser
+COUNT_ROUND  Le nombre de rounds:
+NAME_PLAYER1 Joueur numéro 1:
+NAME_PLAYER2 Joueur numéro 2:
+MUSIC        La musique
+SOUND        Le son
+
+# settings - game type
+NONE     
+SERVER   Création de serveur
+CLIENT   
+IP_ADDR  IP adresse de serveur:
+NET_PORT 
+BROWSER  Moteur de recherche
