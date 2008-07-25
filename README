@@ -53,7 +53,7 @@ HOWTO COMPILE
 		(g)libc, SDL, SDL_image, SDL_ttf, optionally SDL_mixer
 
 	And some applications:
-		cmake version 2.4.8 and above
+		cmake version 2.4.6 and above
 
 	Now we have two options what we can do:
 	(all commands are supposed to be written in tuxanci sources directory)
@@ -98,14 +98,18 @@ HOWTO COMPILE
 
 GAME USAGE
 ==========
-	Starting game is simple tuxanci-ng or tuxanci-ng-server based on what we
+	Starting game is simple tuxanci or tuxanci-server based on what we
 	compiled (based on presumption user installed into directories where path
 	is set).
+	
+	If we are using bundled binary and tuxanci are reporting "File not found!"
+	error, you need to launch it directly from BIN directory 
+	(eg.: "$ cd tuxanci/bin && ./tuxanci").
 
 	For client we create some configuration files in $HOME. There is created
 	".tuxanci-ng" directory and in there are pretty explaining .conf files.
 
-	For server we create directory /etc/tuxanci_ng/server.conf where you could
+	For server we create directory /etc/tuxanci/server.conf where you could
 	do some changes for it (again pretty selfexplaining).
 
 	Controls
