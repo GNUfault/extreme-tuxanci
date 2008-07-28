@@ -223,8 +223,8 @@ int init(export_fce_t *p)
 {
 	export_fce = p;
 
-	export_fce->fce_addToExportFce("move_tux", move_tux);
-	export_fce->fce_addToExportFce("move_shot", move_shot);
+	export_fce->fce_addToExportFce("move_tux", (void *)move_tux);
+	export_fce->fce_addToExportFce("move_shot", (void *)move_shot);
 
 	return 0;
 }

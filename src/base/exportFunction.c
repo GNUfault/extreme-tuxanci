@@ -37,7 +37,6 @@ void initExortFunction()
 {
 	listExportFce = newList();
 }
-
 void addToExportFce(char *name, void *function)
 {
 	printf("add to export function %s\n", name);

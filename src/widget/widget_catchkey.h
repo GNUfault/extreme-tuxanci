@@ -18,7 +18,7 @@ typedef struct widget_catchkey_struct
 	bool_t active;
 } widget_catchkey_t;
 
-extern widget_catchkey_t* newWidgetCatchkey(int x, int y, int key);
+extern widget_catchkey_t* newWidgetCatchkey(int key, int x, int y);
 extern int getWidgetCatchKey(widget_catchkey_t *p);
 extern void setWidgetCatchKey(widget_catchkey_t *p, int key);
 extern void drawWidgetCatchkey(widget_catchkey_t *p);

@@ -31,7 +31,11 @@ typedef struct export_fce_s
 
 	int (*fce_getNetTypeGame)();
 	int (*fce_loadDepModule)(void *name);
+#ifndef __WIN32__
 	void (*fce_addToExportFce)(char *name, void *function);
+#else
+	void (*fce_addToExportFce)(char *name, HINSTANCE *function);
+#endif
 	void* (*fce_getExportFce)(char *name);
 
 	void (*fce_getTuxProportion)(tux_t *tux, int *x,int *y, int *w, int *h);
@@ -56,7 +60,11 @@ typedef struct export_fce_s
 typedef struct module_s
 {
 	char *name;
+#ifndef __WIN32__
 	void *image;
+#else
+	HINSTANCE *image;
+#endif
 
 	int (*fce_init)(export_fce_t *p);
 #ifndef PUBLIC_SERVER

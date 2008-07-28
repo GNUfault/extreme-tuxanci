@@ -5,6 +5,7 @@
 
 extern void initExortFunction();
 extern void addToExportFce(char *name, void *function);
+
 extern void* getExportFce(char *name);
 extern void quitExportFunction();
 

@@ -6,7 +6,7 @@
 #include "font.h"
 #include "widget_catchkey.h"
 
-widget_catchkey_t* newWidgetCatchkey(int x, int y, int key)
+widget_catchkey_t* newWidgetCatchkey(int key, int x, int y)
 {
 	widget_catchkey_t *new;
 

@@ -88,9 +88,8 @@ static void* getFce(module_t *p, char *s)
 
 static void* mapImage(char *name)
 {
-	void *image;
-
 #ifndef __WIN32__
+	void *image;
 	image = dlopen (name, RTLD_LAZY);
 
 	if( image == NULL )
@@ -118,7 +117,6 @@ static void* mapImage(char *name)
 		);
 		fputs(msg, stderr);
 		free(msg);
-		free(ret);
 		FreeLibrary(image);
 		return NULL;
 	}

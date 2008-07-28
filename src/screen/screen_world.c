@@ -217,14 +217,11 @@ static void control_keyboard_right(tux_t *tux)
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_LEFT)] == SDL_PRESSED )countKey++;
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_MOVE_DOWN)] == SDL_PRESSED )countKey++;
 
-	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_SWITCH_WEAPON)] == SDL_PRESSED )
+	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_SWITCH_WEAPON)] == SDL_PRESSED && tux->isCanSwitchGun == TRUE )
 	{
-		if( tux->isCanSwitchGun == TRUE )
-		{
-			netAction(tux, TUX_SWITCH_GUN);
-			actionTux(tux, TUX_SWITCH_GUN);
-			return;
-		}
+		netAction(tux, TUX_SWITCH_GUN);
+		actionTux(tux, TUX_SWITCH_GUN);
+		return;
 	}
 
 	if( mapa[(SDLKey)getKey(KEY_TUX_RIGHT_SHOOT)] == SDL_PRESSED && tux->isCanShot == TRUE )
