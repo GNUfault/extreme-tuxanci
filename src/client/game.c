@@ -56,7 +56,6 @@ static void initGame()
 
 	initLayer();
 	initFont(getLanguageFont(), getLanguageSize());
-	initKeyTable();
 	initImageData();
 #ifndef NO_SOUND
 	initAudio();
@@ -86,7 +85,6 @@ void quitGame()
 	quitSDL();
 	quitLayer();
 	quitFont();
-	quitKeyTable();
 	quitLanguage();
 	quitScreen();
 	quitArenaFile();

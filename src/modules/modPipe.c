@@ -40,6 +40,9 @@ typedef struct pipe_struct
 #endif
 } pipe_t;
 
+static void (*fce_move_shot)(shot_t *shot, int position, int src_x, int src_y,
+		int dist_x, int dist_y, int dist_w, int dist_h);
+
 static export_fce_t *export_fce;
 
 static list_t *listPipe;
@@ -165,114 +168,6 @@ static void cmd_teleport(char *line)
 	addObjectToSpace(spacePipe, new);
 }
 
-static int myAbs(int n)
-{
-	return ( n > 0 ? n : -n );
-}
-
-static int getSppedShot(shot_t *shot)
-{
-	return ( myAbs(shot->px) > myAbs(shot->py) ? myAbs(shot->px) : myAbs(shot->py) );
-}
-
-static void transformShot(shot_t *shot, int position)
-{
-	int speed;
-
-	speed = getSppedShot(shot);
-
-	switch( position )
-	{
-		case TUX_UP :
-			shot->px = 0;
-			shot->py = -speed;
-		break;
-
-		case TUX_LEFT :
-			shot->px = -speed;
-			shot->py = 0;
-		break;
-
-		case TUX_RIGHT :
-			shot->px = speed;
-			shot->py = 0;
-		break;
-
-		case TUX_DOWN :
-			shot->px = 0;
-			shot->py = +speed;
-		break;
-	}
-
-	shot->position = position;	
-	shot->isCanKillAuthor = TRUE;
-
-	if( shot->gun == GUN_LASSER )
-	{
-		export_fce->fce_transformOnlyLasser(shot);
-	}
-}
-
-static void moveShot(shot_t *shot, int position, int src_x, int src_y,
-	int dist_x, int dist_y, int dist_w, int dist_h)
-{
-	int offset = 0;
-	int new_x = 0, new_y = 0;  // no warninng
-
-	switch( shot->position )
-	{
-		case TUX_UP :
-		case TUX_DOWN :
-			offset = shot->x - src_x;
-		break;
-
-		case TUX_RIGHT :
-		case TUX_LEFT :
-			offset = shot->y - src_y;
-		break;
-	}
-
-	transformShot(shot, position);
-
-	switch( shot->position )
-	{
-		case TUX_UP :
-			new_x = dist_x + offset;
-			new_y = dist_y - ( shot->h + 5 );
-		break;
-
-		case TUX_LEFT :
-			new_x = dist_x - ( shot->w + 5 );
-			new_y = dist_y + offset;
-		break;
-
-		case TUX_RIGHT :
-			new_x = dist_x + dist_w + 5;
-			new_y = dist_y + offset;
-		break;
-
-		case TUX_DOWN :
-			new_x = dist_x + offset;
-			new_y = dist_y + dist_h + 5;
-		break;
-	}
-
-	//new_x += myValueOperator(shot->px) * shot->w;
-	//new_y += myValueOperator(shot->py) * shot->h;
-
-	moveObjectInSpace(export_fce->fce_getCurrentArena()->spaceShot, shot, new_x, new_y);
-
-	if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_SERVER )
-	{
-		char msg[STR_PROTO_SIZE];
-
-		sprintf(msg, "pipe %d %d %d %d %d %d",
-			shot->id, shot->x, shot->y, shot->px, shot->py, shot->position);
-
-		export_fce->fce_proto_send_module_server(PROTO_SEND_ALL, NULL, msg);
-	}
-}
-
 static void moveShotFromPipe(shot_t *shot, pipe_t *pipe)
 {
 	pipe_t *distPipe;
@@ -285,7 +180,7 @@ static void moveShotFromPipe(shot_t *shot, pipe_t *pipe)
 		return;
 	}
 
-	moveShot(shot, distPipe->position, pipe->x, pipe->y,
+	fce_move_shot(shot, distPipe->position, pipe->x, pipe->y,
 		distPipe->x, distPipe->y, distPipe->w, distPipe->h);
 }
 
@@ -294,6 +189,16 @@ int init(export_fce_t *p)
 	export_fce = p;
 
 	listPipe = newList();
+
+	if( export_fce->fce_loadDepModule("libmodMove") != 0 )
+	{
+		return -1;
+	}
+
+	if( ( fce_move_shot = export_fce->fce_getExportFce("move_shot") ) == NULL )
+	{
+		return -1;
+	}
 
 	return 0;
 }
@@ -416,48 +321,9 @@ void cmdArena(char *line)
 	if( strncmp(line, "pipe", 4) == 0 )cmd_teleport(line);
 }
 
-static void proto_pipe(char *msg)
-{
-	char cmd[STR_PROTO_SIZE];
-	int shot_id, x, y, px, py, position;
-	space_t *space;
-	shot_t *shot;
-
-	assert( msg != NULL );
-
-	sscanf(msg, "%s %d %d %d %d %d %d",
-		cmd, &shot_id, &x, &y, &px, &py, &position);
-
-
-	space = export_fce->fce_getCurrentArena()->spaceShot;
-
-	if( ( shot = getObjectFromSpaceWithID(space, shot_id) )  == NULL )
-	{
-		//delObjectFromSpaceWithObject(getCurrentArena()->spaceShot, shot, destroyShot);
-
-		return;
-	}
-
-	moveObjectInSpace(space, shot, x, y);
-	shot->isCanKillAuthor = 1;
-	shot->position = position;
-	shot->px = px;
-	shot->py = py;
-
-	if( shot->gun == GUN_LASSER )
-	{
-		export_fce->fce_transformOnlyLasser(shot);
-	}
-}
-
 void recvMsg(char *msg)
 {
-	if( export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_SERVER )
-	{
-		return;
-	}
 
-	if( strncmp(msg, "pipe", 4) == 0 )proto_pipe(msg);
 }
 
 int destroy()

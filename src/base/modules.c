@@ -15,6 +15,7 @@
 #include "arena.h"
 #include "arenaFile.h"
 #include "proto.h"
+#include "exportFunction.h"
 
 #ifndef PUBLIC_SERVER
 #include "interface.h"
@@ -29,6 +30,10 @@ static export_fce_t export_fce =
 		.fce_addLayer = addLayer,
 		.fce_getImage = getImage,
 #endif
+		.fce_loadDepModule = loadDepModule,
+		.fce_addToExportFce = addToExportFce,
+		.fce_getExportFce = getExportFce,
+
 		.fce_getValue = getArenaValue,
 		.fce_getNetTypeGame = getNetTypeGame,
 		.fce_getTuxProportion = getTuxProportion,
@@ -81,25 +86,22 @@ static void* getFce(module_t *p, char *s)
 	return (void *)ret;
 }
 
-static module_t* newModule(char *name)
+static void* mapImage(char *name)
 {
-	module_t *ret;
+	void *image;
 
-	assert( name != NULL );
-
-	ret = malloc( sizeof(module_t) );
 #ifndef __WIN32__
-	ret->image = dlopen (name, RTLD_LAZY);
+	image = dlopen (name, RTLD_LAZY);
 
-	if(!ret->image)
+	if( image == NULL )
 	{
 		fputs (dlerror(), stderr);
-		free(ret);
 		return NULL;
 	}
 #else
 	HINSTANCE image;
 	image = LoadLibrary((LPCSTR) name);
+
 	if (!image)
 	{
 		LPVOID msg;
@@ -120,10 +122,53 @@ static module_t* newModule(char *name)
 		FreeLibrary(image);
 		return NULL;
 	}
-	ret->image = image;
 	//FreeLibrary(image); //to tu nema bejt
 #endif
-	ret->file = strdup(name);
+
+	return image;
+}
+
+static void unmapImage(void *image)
+{
+#ifndef __WIN32__
+	dlclose(image);
+#else
+	FreeLibrary(image);
+#endif
+}
+
+static void setModulePath(char *name, char *path)
+{
+	sprintf(path, PATH_MODULES "%s" MODULE_TYPE_UNIX, name); // linux
+#ifdef __WIN32__
+	sprintf(path, PATH_MODULES "%s" MODULE_TYPE_WIN, name); // windows
+#endif
+#ifdef APPLE
+	sprintf(path, PATH_MODULES "%s" MODULE_TYPE_APPLE, name); // apple
+#endif
+}
+
+static module_t* newModule(char *name)
+{
+	char path[STR_PATH_SIZE];
+	void *image;
+	module_t *ret;
+
+	assert( name != NULL );
+
+	setModulePath(name, path);
+	image = mapImage(path);
+
+	if( image == NULL )
+	{
+		fprintf(stderr, "I dont map %s file  !\n", name);
+		return NULL;
+	}
+
+	ret = malloc( sizeof(module_t) );
+
+	ret->image = image;
+	ret->name = strdup(name);
 
 	ret->fce_init = getFce(ret, "init");
 #ifndef PUBLIC_SERVER
@@ -140,13 +185,10 @@ static module_t* newModule(char *name)
 	if( ret->fce_init(&export_fce) != 0 )
 	{
 		fprintf(stderr, "init module failed !\n");
-#ifndef __WIN32__
-		dlclose(ret->image);
-#else
-		FreeLibrary(ret->image);
-#endif
-		free(ret->file);
+		unmapImage(image);
+		free(ret->name);
 		free(ret);
+
 		return NULL;
 	}
 
@@ -158,13 +200,8 @@ static int destroyModule(module_t *p)
 	assert( p != NULL );
 
 	p->fce_destroy();
-
-	free(p->file);
-#ifndef __WIN32__
-	dlclose(p->image);
-#else
-	FreeLibrary(p->image);
-#endif
+	unmapImage(p->image);
+	free(p->name);
 	free(p);
 
 	printf("destroy module..\n");
@@ -175,23 +212,39 @@ static int destroyModule(module_t *p)
 void initModule()
 {
 	listModule = newList();
+	initExortFunction();
+}
+
+int isModuleLoaded(char *name)
+{
+	int i;
+
+	for( i = 0 ; i < listModule->count ; i++ )
+	{
+		module_t *this;
+
+		this = (module_t *)listModule->list[i];
+
+		if( strcmp(this->name, name) == 0 )
+		{
+			return 1;
+		}
+	}
+
+	return 0;
 }
 
 int loadModule(char *name)
 {
-	char str[STR_PATH_SIZE];
 	module_t *module;
 
-	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_UNIX, name); // linux
-#ifdef __WIN32__
-	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_WIN, name); // windows
-#endif
-#ifdef APPLE
-	sprintf(str, PATH_MODULES "%s" MODULE_TYPE_APPLE, name); // apple
-#endif
-	accessExistFile(str);
+	if( isModuleLoaded(name) )
+	{
+		fprintf(stderr, "dupicit loaded module %s !\n", name);
+		return -1;
+	}
 
-	module = newModule(str);
+	module = newModule(name);
 
 	if( module == NULL )
 	{
@@ -202,6 +255,16 @@ int loadModule(char *name)
 	addList(listModule, module);
 
 	return 0;
+}
+
+int loadDepModule(char *name)
+{
+	if( isModuleLoaded(name) )
+	{
+		return 0;
+	}
+
+	return loadModule(name);
 }
 
 void cmdModule(char *s)
@@ -280,4 +343,5 @@ int recvMsgModule(char *msg)
 void quitModule()
 {
 	destroyListItem(listModule, destroyModule);
+	quitExportFunction();
 }

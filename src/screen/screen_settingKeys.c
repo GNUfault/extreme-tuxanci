@@ -417,6 +417,7 @@ void initScreenSettingKeys()
 }
 void quitKeyTable()
 {
+	//printf("quitKeyTable\n");
 	destroyTextFile(keycontrolFile);
 	destroyTextFile(keytableFile);
 }
