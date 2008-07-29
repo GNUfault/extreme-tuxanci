@@ -24,28 +24,6 @@
 
 static export_fce_t *export_fce;
 
-static int getRandomPosition()
-{
-	switch( random() % 4 )
-	{
-		case 0 :
-		return TUX_UP;
-
-		case 1 :
-		return TUX_LEFT;
-
-		case 2 :
-		return TUX_RIGHT;
-
-		case 3 :
-		return TUX_DOWN;
-	}
-
-	assert( ! "Stupid error ! " );
-
-	return -1; // no warnning
-}
-
 static void move_tux(tux_t *tux, int x,  int y, int w, int h)
 {
 	int dist_x = 0, dist_y = 0; // no warnning

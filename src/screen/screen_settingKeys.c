@@ -76,6 +76,7 @@ void startScreenSettingKeys()
 static void setKeytableFromConfigFile(textFile_t *configFile)
 {
 	char val[STR_SIZE];
+	loadValueFromConfigFile(configFile, "TUX_RIGHT_MOVE_UP", val, STR_SIZE, "273");
 	keytable[ KEY_TUX_RIGHT_MOVE_UP ] = atoi(val);
 	loadValueFromConfigFile(configFile, "TUX_RIGHT_MOVE_RIGHT", val, STR_SIZE, "275");
 	keytable[ KEY_TUX_RIGHT_MOVE_RIGHT ] = atoi(val);

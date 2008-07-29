@@ -486,7 +486,9 @@ static void action_giveitem(space_t *space, item_t *item, tux_t *tux)
 
 			delObjectFromSpaceWithObject(space, item, destroyItem);
 
+#ifdef PUBLIC_SERVER
 			addNewItem(space, ID_UNKNOWN);
+#endif
 		break;
 
 		case ITEM_MINE :
@@ -519,7 +521,9 @@ static void action_giveitem(space_t *space, item_t *item, tux_t *tux)
 			
  			delObjectFromSpaceWithObject(space, item, destroyItem);
 
+#ifdef PUBLIC_SERVER
 			addNewItem(space, ID_UNKNOWN);
+#endif
 		break;
 	}
 }

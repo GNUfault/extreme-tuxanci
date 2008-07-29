@@ -16,6 +16,7 @@ static int* index_newInt(int x)
 	return new;
 }
 
+#ifdef CHECK_INDEX
 static void printIndex(list_t *list)
 {
 	int i;
@@ -30,6 +31,7 @@ static void printIndex(list_t *list)
 		printf("%d\n", thisIndex);
 	}
 }
+#endif
 
 #ifdef CHECK_INDEX
 static void checkIndex(list_t *list)
