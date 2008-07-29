@@ -1,4 +1,3 @@
-
 #ifndef WIDGET_CATCHKEY_H
 
 #define WIDGET_CATCHKEY_H
@@ -27,4 +26,3 @@ extern void eventWidgetCatchkey(widget_catchkey_t *p);
 extern void destroyWidgetCatchkey(widget_catchkey_t *p);
 
 #endif
-

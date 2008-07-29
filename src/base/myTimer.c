@@ -13,11 +13,14 @@
 #ifndef PUBLIC_SERVER
 #include "interface.h"
 #endif
-
 #ifdef __WIN32__
 #include <windows.h>
 #include <time.h>
+#endif
+/* // uncoment when having issues with gettimeofday in Windows
+#ifdef __WIN32__
 #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
+
 struct timezone 
 {
   int  tz_minuteswest;
@@ -34,8 +37,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 	    tmpres |= ft.dwHighDateTime;
 	    tmpres <<= 32;
 	    tmpres |= ft.dwLowDateTime;
-	    /*converting file time to unix epoch*/
-	    tmpres /= 10;  /*convert into microseconds*/
+	    tmpres /= 10;
 	    tmpres -= DELTA_EPOCH_IN_MICROSECS; 
 	    tv->tv_sec = (long)(tmpres / 1000000UL);
 	    tv->tv_usec = (long)(tmpres % 1000000UL);
@@ -51,7 +53,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 	return 0;
 }
 #endif
-
+*/
 static struct timeval start = { .tv_sec = 0, .tv_usec = 0 };
 
 list_t* newTimer()

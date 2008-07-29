@@ -70,7 +70,7 @@ static int getPessAnyKey()
 void eventWidgetCatchkey(widget_catchkey_t *p)
 {
 	int x, y;
-
+	
 	getMousePosition(&x, &y);
 
 	if( isMouseClicked() )

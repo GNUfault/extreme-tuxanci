@@ -1,3 +1,4 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -72,12 +73,9 @@ void startScreenSettingKeys()
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
 }
-
 static void setKeytableFromConfigFile(textFile_t *configFile)
 {
 	char val[STR_SIZE];
-
-	loadValueFromConfigFile(configFile, "TUX_RIGHT_MOVE_UP", val, STR_SIZE, "273");
 	keytable[ KEY_TUX_RIGHT_MOVE_UP ] = atoi(val);
 	loadValueFromConfigFile(configFile, "TUX_RIGHT_MOVE_RIGHT", val, STR_SIZE, "275");
 	keytable[ KEY_TUX_RIGHT_MOVE_RIGHT ] = atoi(val);
@@ -102,27 +100,24 @@ static void setKeytableFromConfigFile(textFile_t *configFile)
 	loadValueFromConfigFile(configFile, "TUX_LEFT_SWITCH_WEAPON", val, STR_SIZE, "9");
 	keytable[ KEY_TUX_LEFT_SWITCH_WEAPON ] = atoi(val);
 }
-
 void initKeyTable()
 {
 	char path[STR_PATH_SIZE];
-
+/*
+	int i;
+*/
 	sprintf(path, "%s/keycontrol.conf", getHomeDirector());
 	keycontrolFile = loadTextFile(path);
-
-	if(keycontrolFile == NULL) {
+	if (keycontrolFile == NULL) {
 		fprintf(stderr, "Don't load %s\n", path);
 		fprintf(stderr, "I create %s\n", path);
 		keycontrolFile = newTextFile(path);
 	}
-
-	if(keycontrolFile == NULL) {
+	if (keycontrolFile == NULL) {
 		fprintf(stderr, "Don't create %s\n", path);
 		return;
 	}
-
 	setKeytableFromConfigFile(keycontrolFile);
-
 /*
 	for( i = 0 ; i < KEY_LENGTH ; i++)
 	{
@@ -130,16 +125,11 @@ void initKeyTable()
 	}
 */
 }
-
 int getKey(int n)
 {
-	assert( n >= 0 && n < KEY_LENGTH );
-
 //	printf("keytable[n] = %d\n", keytable[n]);
-
 	return keytable[n];
 }
-
 void drawScreenSettingKeys()
 {
 	drawWidgetImage(image_backgorund);
@@ -173,7 +163,6 @@ void drawScreenSettingKeys()
 	drawWidgetCatchkey(tux_left_keyswitch_val);
 	drawWidgetCatchkey(tux_left_keyfire_val);
 }
-
 static void refreshKeytable()
 {
 	keytable[6] = getWidgetCatchKey(tux_left_keyup_val);
@@ -190,7 +179,6 @@ static void refreshKeytable()
 	keytable[4] = getWidgetCatchKey(tux_right_keyfire_val);
 	keytable[5] = getWidgetCatchKey(tux_right_keyswitch_val);
 }
-
 static void eventWidget(void *p)
 {
 	widget_button_t *button;
@@ -198,13 +186,11 @@ static void eventWidget(void *p)
 	
 	button = (widget_button_t *)(p);
 	catcher = (widget_catchkey_t *)(p);
-
-	if(button == button_back) {
+	if (button == button_back) {
 		setScreen("setting");
 	}
-
 	//events on value
-	if( (catcher == tux_left_keyup_val) ||
+	if ((catcher == tux_left_keyup_val) ||
 		(catcher == tux_left_keydown_val) ||
 		(catcher == tux_left_keyleft_val) ||
 		(catcher == tux_left_keyright_val) ||
@@ -215,16 +201,16 @@ static void eventWidget(void *p)
 		(catcher == tux_right_keyleft_val) ||
 		(catcher == tux_right_keyright_val) ||
 		(catcher == tux_right_keyswitch_val) ||
-		(catcher == tux_right_keyfire_val) ) {
+		(catcher == tux_right_keyfire_val)) {
 		// draw press any key picture
+			//this will be done by widget catchkey
 		// check if there is no other key with new value (what to revert if yes?)
 		// allow ony one key per time change HOW THE HELL IS THIS EVEN POSSIBLE
-
+			// this will fix disabling mouse while waiting for keypress
 		//printf("catcher->key = %d\n", catcher->key);
 		refreshKeytable();
 	}
 }
-
 void eventScreenSettingKeys()
 {
 	eventWidgetButton(button_back);
@@ -283,6 +269,7 @@ void initScreenSettingKeys()
 	tux_right_keyfire_val =  newWidgetCatchkey(keytable[4], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_left_keyright->y + 20, eventWidget);
 	tux_right_keyswitch_val =  newWidgetCatchkey(keytable[5], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_left_keyfire->y + 20, eventWidget);	
 
+
 	registerScreen( newScreen("settingKeys", startScreenSettingKeys, eventScreenSettingKeys,
 		drawScreenSettingKeys, stopScreenSettingKeys) );	
 }
@@ -290,7 +277,6 @@ void quitKeyTable()
 {
 	destroyTextFile(keycontrolFile);
 }
-
 void saveKeyTable(textFile_t *configFile) {
 	char str[STR_SIZE];
 	sprintf(str,"%d",tux_left_keyup_val->key);
@@ -321,12 +307,10 @@ void saveKeyTable(textFile_t *configFile) {
 
 	saveTextFile(configFile);
 }
-
 void quitScreenSettingKeys()
 {
 	saveKeyTable(keycontrolFile);
 	quitKeyTable();
-
 	// key names
 	destroyWidgetImage(image_backgorund);
 	destroyWidgetLabel(tux_right);
