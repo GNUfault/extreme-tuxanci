@@ -16,6 +16,7 @@ widget_catchkey_t* newWidgetCatchkey(int key, int x, int y, void *event)
 	new->y = y;
 	new->key = key;
 	new->fce_event = event;
+	new->active = FALSE;
 
 	return new;
 }
@@ -56,8 +57,15 @@ static int getPessAnyKey()
 
 	mapa = SDL_GetKeyState(NULL);
 
-	for( i = SDLK_FIRST ; i <= SDLK_F15 ; i++ )
+	for( i = SDLK_FIRST ; i <= SDLK_COMPOSE ; i++ )
 	{
+		if( i == SDLK_NUMLOCK || // black key
+		    i == SDLK_CAPSLOCK ||
+		    i == SDLK_SCROLLOCK ) 
+		{
+			continue;
+		}
+
 		if( mapa[i] == SDL_PRESSED )
 		{
 			return i;
