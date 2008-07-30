@@ -18,12 +18,12 @@
 
 #define SDL_SUBSYSTEMS SDL_INIT_VIDEO|SDL_INIT_TIMER|SDL_DOUBLEBUF
 
-//napis na okne
-#define WINDOW_TITLE "Tuxanci next generation " TUXANCI_VERSION
+// windows title
+#define WINDOW_TITLE "Tuxánci " TUXANCI_VERSION
 #define WIN_BPP 0
 #define USR_EVT_TIMER 0
 
-//interval pri ktorom sa spusta akcia();
+// interval (in ms) of triggering akcia();
 #define INTERVAL 50
 
 extern bool_t isInterfaceInicialized();
@@ -35,6 +35,5 @@ extern int isPessAnyKey();
 extern void interfaceRefresh();
 extern void eventSDL();
 extern void quitSDL();
-
 
 #endif

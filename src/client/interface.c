@@ -7,14 +7,14 @@
 #include "interface.h"
 #include "screen.h"
 
-//povrch okna
+// window surface
 static SDL_Surface *screen;
 //static SDL_Surface *my_surface;
 
-//casovac
+// timer
 static SDL_TimerID timer;
 
-//priznaky okna
+// window flags
 static Uint32 g_win_flags = SDL_HWSURFACE|SDL_DOUBLEBUF;
 
 static bool_t isInterfaceInit = FALSE;
@@ -41,7 +41,7 @@ int initSDL()
 {
 	printf("init SDL..\n");
 
-	//inicializujem SDL
+	// initialization of SDL
 	if( SDL_Init(SDL_SUBSYSTEMS) == -1 )
 	{
 		fprintf(stderr, "%s\n", SDL_GetError());
@@ -49,7 +49,7 @@ int initSDL()
 		return -1;
 	}
 
-	//inicializujem okno
+	// initialization of SDL
 	//screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 	screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 
@@ -217,7 +217,7 @@ int eventAction()
 			}
 		break;
 
-		// Zmena velikosti okna
+		// change of window size
 		case SDL_VIDEORESIZE:
 			screen = SDL_SetVideoMode(event.resize.w,event.resize.h, WIN_BPP, g_win_flags);
 
@@ -228,7 +228,7 @@ int eventAction()
 			}
 		break;
 
-		// Pozadavek na ukonceni
+		// termination request
 		case SDL_QUIT:
 			return -1;
 		break;
