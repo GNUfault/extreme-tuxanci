@@ -5,7 +5,7 @@ SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 SET ( SRC_base
 ${WORKDIR}/base/main ${WORKDIR}/base/shot ${WORKDIR}/base/space ${WORKDIR}/base/checkFront ${WORKDIR}/base/storage ${WORKDIR}/base/myTimer ${WORKDIR}/base/protect  ${WORKDIR}/base/list ${WORKDIR}/base/arena ${WORKDIR}/base/server ${WORKDIR}/base/textFile ${WORKDIR}/base/gun ${WORKDIR}/base/arenaFile ${WORKDIR}/base/modules ${WORKDIR}/base/net_multiplayer ${WORKDIR}/base/index ${WORKDIR}/base/item ${WORKDIR}/base/tux ${WORKDIR}/base/director ${WORKDIR}/base/idManager ${WORKDIR}/base/homeDirector ${WORKDIR}/base/proto ${WORKDIR}/base/exportFunction
 
-${WORKDIR}/net/udp ${WORKDIR}/net/dns
+${WORKDIR}/net/udp ${WORKDIR}/net/tcp ${WORKDIR}/net/dns
 )
 
 SET ( SRC_client

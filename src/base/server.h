@@ -25,6 +25,7 @@
 
 typedef struct client_struct
 {
+	sock_udp_t *socket_udp_server;
 	sock_udp_t *socket_udp;
 
 	int status;

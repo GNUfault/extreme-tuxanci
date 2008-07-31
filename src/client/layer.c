@@ -108,6 +108,7 @@ void drawLayerCenter(int x, int y)
 	layer_t *this;
 	int screen_x, screen_y;
 	int i;
+	//int count = 0;
 
 	getCenterScreen(&screen_x, &screen_y, x, y);
 
@@ -115,11 +116,20 @@ void drawLayerCenter(int x, int y)
 	{
 		this = (layer_t *)listLayer->list[i];
 
+/*
 		if( (this->x - screen_x) + this->w < 0 || (this->x - screen_x) > WINDOW_SIZE_X ||
 		    (this->y - screen_y) + this->h < 0 || (this->y - screen_y) > WINDOW_SIZE_Y )
 		{
 			continue;
 		}
+*/
+		if( this->x + this->w  < screen_x || this->x > screen_x + WINDOW_SIZE_X ||
+		    this->y + this->h  < screen_y || this->y > screen_y + WINDOW_SIZE_Y )
+		{
+			continue;
+		}
+
+		//count++;
 
 		drawImage(this->image,
 			this->x - screen_x, this->y - screen_y,
@@ -128,6 +138,8 @@ void drawLayerCenter(int x, int y)
 
 		//printf("%d %d\n", this->x - screen_x, this->y - screen_y);
 	}
+
+	//printf("count = %d\n", count);
 
 	destroyListItem(listLayer, free);
 	listLayer = newList();

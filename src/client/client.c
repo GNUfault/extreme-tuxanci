@@ -37,6 +37,52 @@ static list_t *clientBuffer;
 static my_time_t lastPing;
 static my_time_t lastPingServerAlive;
 
+typedef struct proto_cmd_client_struct
+{
+	char *name;
+	int len;
+	void (*fce_proto)(char *msg);
+} proto_cmd_client_t;
+
+static proto_cmd_client_t proto_cmd_list[] =
+{
+	{ .name = "error",	.len = 5,	.fce_proto = proto_recv_error_client },
+	{ .name = "init",	.len = 4,	.fce_proto = proto_recv_init_client },
+	{ .name = "event",	.len = 5,	.fce_proto = proto_recv_event_client },
+	{ .name = "newtux",	.len = 6,	.fce_proto = proto_recv_newtux_client },
+	{ .name = "del",	.len = 3,	.fce_proto = proto_recv_del_client },
+	{ .name = "additem",	.len = 7,	.fce_proto = proto_recv_additem_client },
+	{ .name = "shot",	.len = 4,	.fce_proto = proto_recv_shot_client },
+	{ .name = "kill",	.len = 4,	.fce_proto = proto_recv_kill_client },
+	{ .name = "module",	.len = 6,	.fce_proto = proto_recv_module_client },
+	{ .name = "chat",	.len = 4,	.fce_proto = proto_recv_chat_client },
+	{ .name = "ping",	.len = 4,	.fce_proto = proto_recv_ping_client },
+	{ .name = "end",	.len = 3,	.fce_proto = proto_recv_end_client },
+	{ .name = "",		.len = 0,	.fce_proto = NULL },
+};
+
+static proto_cmd_client_t* findCmdProto(char *msg)
+{
+	int len;
+	int i;
+
+	len = strlen(msg);
+
+	for( i = 0 ; proto_cmd_list[i].len != 0 ; i++ )
+	{
+		proto_cmd_client_t *thisCmd;
+		
+		thisCmd = &proto_cmd_list[i];
+
+		if( len >= thisCmd->len && strncmp(msg, thisCmd->name, thisCmd->len) == 0 )
+		{
+			return thisCmd;
+		}
+	}
+
+	return NULL;
+}
+
 static void initClient()
 {
 	char name[STR_NAME_SIZE];
@@ -87,7 +133,7 @@ static int eventServerSelect()
 	char buffer[STR_PROTO_SIZE];
 	int ret;
 
-	memset(buffer,0 ,STR_PROTO_SIZE);
+	memset(buffer, 0, STR_PROTO_SIZE);
 
 	ret = readUdpSocket(sock_server_udp, sock_server_udp, buffer, STR_PROTO_SIZE-1);
 
@@ -103,6 +149,7 @@ static int eventServerSelect()
 
 static void eventServerBuffer()
 {
+	proto_cmd_client_t *protoCmd;
 	char *line;
 	int i;
 
@@ -113,6 +160,7 @@ static void eventServerBuffer()
 	for( i = 0 ; i < clientBuffer->count ; i++ )
 	{
 		line = (char *)clientBuffer->list[i];
+		protoCmd = findCmdProto(line);
 
 #ifndef PUBLIC_SERVER
 		if( isParamFlag("--recv") )
@@ -120,20 +168,11 @@ static void eventServerBuffer()
 			printf("recv -> %s", line);
 		}
 #endif
-		if( strncmp(line, "error", 5) == 0 )proto_recv_error_client(line);
-		if( strncmp(line, "init", 4) == 0 )proto_recv_init_client(line);
-		if( strncmp(line, "event", 5) == 0 )proto_recv_event_client(line);
-		if( strncmp(line, "newtux", 6) == 0 )proto_recv_newtux_client(line);
-		if( strncmp(line, "del", 3) == 0 )proto_recv_del_client(line);
-		if( strncmp(line, "additem", 7) == 0 )proto_recv_additem_client(line);
-		if( strncmp(line, "shot", 4) == 0 )proto_recv_shot_client(line);
-		if( strncmp(line, "kill", 4) == 0 )proto_recv_kill_client(line);
-		if( strncmp(line, "module", 6) == 0 )proto_recv_module_client(line);
-		if( strncmp(line, "chat", 4) == 0 )proto_recv_chat_client(line);
-		if( strncmp(line, "ping", 4) == 0 )proto_recv_ping_client(line);
-		if( strncmp(line, "end", 3) == 0 )proto_recv_end_client(line);
-
-		lastPingServerAlive = getMyTime();
+		if( protoCmd != NULL )
+		{
+			protoCmd->fce_proto(line);
+			lastPingServerAlive = getMyTime();
+		}
 	}
 
 	destroyListItem(clientBuffer, free);

@@ -150,11 +150,16 @@ static void action_drawShot(space_t *space, shot_t *shot, void *p)
 	drawShot(shot);
 }
 
+#if 0
+
+#endif
+
 void drawArena(arena_t *arena)
 {
 	int screen_x, screen_y;
 	tux_t *tux = NULL;
 	int i, j;
+	//int count = 0;
 
 	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
 
@@ -162,26 +167,29 @@ void drawArena(arena_t *arena)
 	{
 		return;
 	}
-/*
+
 	screen_x = tux->x - WINDOW_SIZE_X/2;
 	screen_y = tux->y - WINDOW_SIZE_Y/2;
-*/
+
 
 	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y);
 
 	for( i = screen_y/arena->background->h ;
-	     i <= screen_y/arena->background->h + WINDOW_SIZE_Y/arena->background->h+1 ; i++ )
+	     i <= screen_y/arena->background->h + WINDOW_SIZE_Y/arena->background->h ; i++ )
 	{
 		for( j = screen_x/arena->background->w ;
-		     j <= screen_x/arena->background->w + WINDOW_SIZE_X/arena->background->w+1 ; j++ )
+		     j <= screen_x/arena->background->w + WINDOW_SIZE_X/arena->background->w ; j++ )
 		{
 			addLayer(arena->background,
 				j * arena->background->w,
 				i * arena->background->h,
 				0, 0, arena->background->w, arena->background->h, -100);
-		}
 
+			//count++;
+		}
 	}
+
+	//printf("arena count = %d\n", count);
 
 	actionSpaceFromLocation(arena->spaceTux, action_drawTux, NULL,
 		screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);

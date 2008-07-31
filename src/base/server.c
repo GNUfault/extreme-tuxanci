@@ -51,6 +51,57 @@ static list_t *listServerTimer;
 static time_t timeUpdate;
 static int maxClients;
 
+typedef struct proto_cmd_server_struct
+{
+	char *name;
+	int len;
+	int tux;
+	void (*fce_proto)(client_t *,char *msg);
+} proto_cmd_server_t;
+
+static proto_cmd_server_t proto_cmd_list[] =
+{
+	{ .name = "hello",	.len = 5,	.tux = 0,	.fce_proto = proto_recv_hello_server },
+	{ .name = "status",	.len = 6,	.tux = 0,	.fce_proto = proto_recv_status_server },
+#ifdef PUBLIC_SERVER
+	{ .name = "list",	.len = 4,	.tux = 0,	.fce_proto = proto_recv_listscore_server },
+#endif
+	{ .name = "event",	.len = 5,	.tux = 1,	.fce_proto = proto_recv_event_server },
+	{ .name = "check",	.len = 5,	.tux = 1,	.fce_proto = proto_recv_check_server },
+	{ .name = "module",	.len = 6,	.tux = 1,	.fce_proto = proto_recv_module_server },
+	{ .name = "chat",	.len = 4,	.tux = 1,	.fce_proto = proto_recv_chat_server },
+	{ .name = "ping",	.len = 4,	.tux = 1,	.fce_proto = proto_recv_ping_server },
+	{ .name = "end",	.len = 3,	.tux = 1,	.fce_proto = proto_recv_end_server },
+	{ .name = "",		.len = 0,	.tux = 0,	.fce_proto = NULL },
+};
+
+static proto_cmd_server_t* findCmdProto(client_t *client, char *msg)
+{
+	int len;
+	int i;
+
+	len = strlen(msg);
+
+	for( i = 0 ; proto_cmd_list[i].len != 0 ; i++ )
+	{
+		proto_cmd_server_t *thisCmd;
+		
+		thisCmd = &proto_cmd_list[i];
+
+		if( len >= thisCmd->len && strncmp(msg, thisCmd->name, thisCmd->len) == 0 )
+		{
+			if( thisCmd->tux && client->tux == NULL )
+			{
+				return NULL;
+			}
+
+			return thisCmd;
+		}
+	}
+
+	return NULL;
+}
+
 static void startUpdateServer()
 {
 	timeUpdate = time(NULL);
@@ -61,7 +112,7 @@ time_t getUpdateServer()
 	return time(NULL) - timeUpdate;
 }
 
-static client_t* newUdpClient(sock_udp_t *sock_udp)
+static client_t* newUdpClient(sock_udp_t *sock_udp, sock_udp_t *socket_udp_server)
 {
 	client_t *new;
 	char str_ip[STR_IP_SIZE];
@@ -80,6 +131,7 @@ static client_t* newUdpClient(sock_udp_t *sock_udp)
 	new->listSeesShot = newList();
 	new->protect = newProtect();
 	new->socket_udp = sock_udp;
+	new->socket_udp_server = socket_udp_server;
 
 	return new;
 }
@@ -303,26 +355,7 @@ void sendClient(client_t *p, char *msg)
 		}
 #endif
 
-		if( p->socket_udp->proto == PROTO_UDPv4 && 
-		    sock_server_udp != NULL &&
-		    sock_server_udp->proto == PROTO_UDPv4 )
-		{
-			ret = writeUdpSocket(sock_server_udp, p->socket_udp, msg, strlen(msg));
-		}
-
-		if( p->socket_udp->proto == PROTO_UDPv6 &&
-		    sock_server_udp != NULL &&
-		    sock_server_udp->proto == PROTO_UDPv6 )
-		{
-			ret = writeUdpSocket(sock_server_udp, p->socket_udp, msg, strlen(msg));
-		}
-
-		if( p->socket_udp->proto == PROTO_UDPv6 &&
-		    sock_server_udp_second != NULL &&
-		    sock_server_udp_second->proto == PROTO_UDPv6 )
-		{
-			ret = writeUdpSocket(sock_server_udp_second, p->socket_udp, msg, strlen(msg));
-		}
+		ret = writeUdpSocket(p->socket_udp_server, p->socket_udp, msg, strlen(msg));
 	}
 }
 
@@ -487,14 +520,14 @@ void sendInfoCreateClient(client_t *client)
 	}
 }
 
-static void eventCreateNewUdpClient(sock_udp_t *socket_udp)
+static void eventCreateNewUdpClient(sock_udp_t *socket_udp, sock_udp_t *socket_udp_server)
 {
 	client_t *client;
 	int offset;
 
 	assert( socket_udp != NULL );
 
-	client = newUdpClient( socket_udp );
+	client = newUdpClient( socket_udp, socket_udp_server );
 
 	offset = addToIndex(listClientIndex, getSockUdpPort(client->socket_udp) );
 
@@ -508,6 +541,7 @@ static void eventCreateNewUdpClient(sock_udp_t *socket_udp)
 
 static void eventClientBuffer(client_t *client)
 {
+	proto_cmd_server_t* protoCmd;
 	char *line;
 	int i;
 
@@ -518,6 +552,7 @@ static void eventClientBuffer(client_t *client)
 	for( i = 0 ; i < client->listRecvMsg->count ; i++ )
 	{
 		line = (char *)client->listRecvMsg->list[i];
+		protoCmd = findCmdProto(client, line);
 
 #ifndef PUBLIC_SERVER
 		if( isParamFlag("--recv") )
@@ -526,68 +561,12 @@ static void eventClientBuffer(client_t *client)
 		}
 #endif
 
-		rereshLastPing(client->protect);
-
-		if( strncmp(line, "hello", 5) == 0 )
+		if( protoCmd != NULL )
 		{
-			proto_recv_hello_server(client, line);
-			continue;
+			protoCmd->fce_proto(client, line);
+			rereshLastPing(client->protect);
 		}
-
-		if( strncmp(line, "status", 6) == 0 )
-		{
-			proto_recv_status_server(client, line);
-			continue;
-		}
-
-#ifdef PUBLIC_SERVER
-		if( strncmp(line, "list", 4) == 0 )
-		{
-			proto_recv_listscore_server(client, line);
-			continue;
-		}
-#endif
-
-		if( client->tux != NULL )
-		{
-			if( strncmp(line, "event", 5) == 0 )
-			{
-				proto_recv_event_server(client, line);
-				continue;
-			}
-
-			if( strncmp(line, "check", 5) == 0 )
-			{
-				proto_recv_check_server(client, line);
-				continue;
-			}
-
-			if( strncmp(line, "module", 7) == 0 )
-			{
-				proto_recv_module_server(client, line);
-				continue;
-			}
-
-			if( strncmp(line, "chat", 4) == 0 )
-			{
-				proto_recv_chat_server(client, line);
-				continue;
-			}
-
-			if( strncmp(line, "ping", 4) == 0 )
-			{
-				proto_recv_ping_server(client, line);
-				continue;
-			}
-
-			if( strncmp(line, "end", 3) == 0 )
-			{
-				proto_recv_end_server(client, line);
-				continue;
-			}
-		}
-
-		if( client->tux != NULL )
+		else
 		{
 			proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_COMMAND);
 		}
@@ -652,7 +631,7 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 			return;
 		}
 
-		eventCreateNewUdpClient(sock_client);
+		eventCreateNewUdpClient(sock_client, sock_server);
 		client = findUdpClient(sock_client);
 		isCreateNewClient = TRUE;
 	}
