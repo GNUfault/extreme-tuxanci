@@ -31,14 +31,19 @@ int getNetTypeGame()
 	return netGameType;
 }
 
-#ifdef OLD_PUBLIC_SERVER
-
-int initNetMulitplayerPublicServer(char *ip4, int port4, char *ip6, int port6)
+int initNetMuliplayerForGameServer(char *ip4, int port4, char *ip6, int port6)
 {
-	netGameType = NET_GAME_TYPE_SERVER;
-	return initUdpPublicServer(ip4, port4, ip6, port6);
+	int ret;
+
+	ret = initServer(ip4, port4, ip6, port6);
+
+	if( ret > 0 )
+	{
+		netGameType = NET_GAME_TYPE_SERVER;
+	}
+
+	return ret;
 }
-#endif
 
 int initNetMuliplayer(int type, char *ip, int port, int proto)
 {
@@ -50,11 +55,24 @@ int initNetMuliplayer(int type, char *ip, int port, int proto)
 		break;
 
 		case NET_GAME_TYPE_SERVER :
-			if( initServer(ip, port, proto) != 0 )
+			switch( proto )
 			{
-				fprintf(stderr, "Unable to inicialize network game as server!\n");
-				netGameType = NET_GAME_TYPE_NONE; 
-				return -1;
+				case PROTO_UDPv4 :
+					if( initServer(ip, port, NULL, 0) != 1 )
+					{
+						fprintf(stderr, "Unable to inicialize network game as server!\n");
+						netGameType = NET_GAME_TYPE_NONE; 
+						return -1;
+					}
+				break;
+				case PROTO_UDPv6 :
+					if( initServer(NULL, 0, ip, port) != 1 )
+					{
+						fprintf(stderr, "Unable to inicialize network game as server!\n");
+						netGameType = NET_GAME_TYPE_NONE; 
+						return -1;
+					}
+				break;
 			}
 		break;
 

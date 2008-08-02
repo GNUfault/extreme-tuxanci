@@ -30,6 +30,7 @@
 #include "checkFront.h"
 #include "protect.h"
 #include "index.h"
+#include "serverSelect.h"
 
 #ifndef PUBLIC_SERVER
 #include "screen_world.h"
@@ -40,13 +41,25 @@
 #include "heightScore.h"
 #endif
 
-#define SUPPORT_UDP
-
 static list_t *listClient;
 
 static list_t *listServerTimer;
 static time_t timeUpdate;
 static int maxClients;
+
+/*
+	TRAFFIC
+
+	za 5 sekund :
+
+	up   : COUNT_PLAYERS * ( COUNT_PLAYERS - 1 ) * 1KB
+	down : COUNT_PLAYERS * 0.2KB
+
+	za 1 sekund :
+
+	up   : COUNT_PLAYERS * ( COUNT_PLAYERS - 1 ) * 1/5 KB
+	down : COUNT_PLAYERS * 1/25 KB
+*/
 
 typedef struct proto_cmd_server_struct
 {
@@ -147,7 +160,23 @@ void destroyAnyClient(client_t *p)
 	free(p);
 }
 
-static void eventDelClient(client_t *client)
+static void destroyUdpOrTcpClient(client_t *client)
+{
+	switch( client->type )
+	{
+		case CLIENT_TYPE_UDP :
+			destroyUdpClient(client);
+		break;
+		case CLIENT_TYPE_TCP :
+			destroyTcpClient(client);
+		break;
+		default :
+			assert( ! "zly typ !");
+		break;
+	}
+}
+
+static void eventDelClientFromListClient(client_t *client)
 {
 	int offset;
 
@@ -155,18 +184,7 @@ static void eventDelClient(client_t *client)
 
 	assert( offset != -1 );
 
-	switch( client->type )
-	{
-		case CLIENT_TYPE_UDP :
-			delListItem(listClient, offset, destroyUdpClient);
-		break;
-		case CLIENT_TYPE_TCP :
-			delListItem(listClient, offset, destroyTcpClient);
-		break;
-		default :
-			assert( ! "zly typ !");
-		break;
-	}
+	delListItem(listClient, offset, destroyUdpOrTcpClient);
 }
 
 static void delZombieCLient(void *p_nothink)
@@ -195,7 +213,7 @@ static void delZombieCLient(void *p_nothink)
 				proto_send_del_server(PROTO_SEND_ALL, NULL, thisClient->tux->id);
 			}
 
-			eventDelClient(thisClient);
+			eventDelClientFromListClient(thisClient);
 			i--;
 		}
 	}
@@ -208,7 +226,7 @@ static void eventPeriodicSyncClient(void *p_nothink)
 	int i;
 
 #ifndef PUBLIC_SERVER
-		proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, NULL, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT));
+	proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, NULL, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT));
 #endif
 
 	for( i = 0 ; i < listClient->count; i++ )
@@ -246,7 +264,7 @@ void setServerTimer()
 	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventSendPingClients, NULL, SERVER_TIME_PING);
 }
 
-int initServer(char *ip, int port, int proto)
+int initServer(char *ip4, int port4, char *ip6, int port6)
 {
 	int ret;
 
@@ -258,13 +276,20 @@ int initServer(char *ip, int port, int proto)
 	setServerMaxClients(SERVER_MAX_CLIENTS);
 	setServerTimer();
 
-#ifdef SUPPORT_UDP
-	ret = initUdpServer(ip, port, proto);
-#endif
+	ret = initUdpServer(ip4, port4, ip6, port6);
 
-#ifdef SUPPORT_TCP
-	ret = initTcpServer(ip, port, proto);
-#endif
+	if( ret == 0 )
+	{
+		return -1;
+	}
+
+	ret = initTcpServer(ip4, port4, ip6, port6);
+
+	if( ret == 0 )
+	{
+		return -1;
+	}
+
 	return ret;
 }
 
@@ -532,12 +557,39 @@ static void eventClientListBuffer()
 
 void eventServer()
 {
-#ifdef SUPPORT_UDP
-	eventUdpServer();
+#ifndef PUBLIC_SERVER
+	int count;
+
+	do{
+		restartSelect();
+		setServerTcpSelect();
+		actionSelect();
+		count = selectServerTcpSocket();
+	}while( count > 0 );
+
+	do{
+		restartSelect();
+		setServerUdpSelect();
+		actionSelect();
+		count = selectServerUdpSocket();
+	}while( count > 0 );
 #endif
 
-#ifdef SUPPORT_TCP
-	eventTcpServer();
+#ifdef PUBLIC_SERVER
+	int ret;
+
+	restartSelect();
+
+	setServerTcpSelect();
+	setServerUdpSelect();
+
+	ret = actionSelect();
+
+	if( ret > 0 )
+	{
+		selectServerTcpSocket();
+		selectServerUdpSocket();
+	}
 #endif
 
 	eventClientListBuffer();
@@ -550,21 +602,10 @@ void quitServer()
 
 	assert( listClient != NULL );
 
-#ifdef SUPPORT_UDP
-	destroyListItem(listClient, destroyUdpClient);
-#endif
-
-#ifdef SUPPORT_TCP
-	destroyListItem(listClient, destroyTcpClient);
-#endif
+	destroyListItem(listClient, destroyUdpOrTcpClient);
 
 	destroyTimer(listServerTimer);
 
-#ifdef SUPPORT_UDP
 	quitUdpServer();
-#endif
-
-#ifdef SUPPORT_TCP
 	quitTcpServer();
-#endif
 }

@@ -40,6 +40,7 @@
 
 #include "udp.h"
 #include "udp_server.h"
+#include "serverSelect.h"
 
 static sock_udp_t *sock_server_udp;
 static sock_udp_t *sock_server_udp_second;
@@ -75,58 +76,44 @@ void destroyUdpClient(client_t *p)
 	destroyAnyClient(p);
 }
 
-int initUdpServer(char *ip, int port, int proto)
+int initUdpServer(char *ip4, int port4, char *ip6, int port6)
 {
-	sock_server_udp = bindUdpSocket(ip, port, proto);
-	sock_server_udp_second = NULL;
+	int ret;
 
-	if( sock_server_udp == NULL )
-	{
-		return -1;
-	}
-
-	printf("server listen UDP port %s %d\n", ip, port);
-
-	return 0;
-}
-
-#ifdef OLD_PUBLIC_SERVER
-
-int initUdpPublicServer(char *ip4, int port4, char *ip6, int port6)
-{
-	sock_server_udp = NULL;
-	sock_server_udp_second = NULL;
+	ret = 0;
 
 	if( ip4 != NULL )
 	{
 		sock_server_udp = bindUdpSocket(ip4, port4, PROTO_UDPv4);
-	
-		if( sock_server_udp == NULL )
+
+		if( sock_server_udp != NULL )
 		{
-			return -1;
+			ret++;
+			printf("server listen UDP port %s %d\n", ip4, port4);
 		}
-	
-		printf("server listen UDP port %s %d\n", ip4, port4);
+		else
+		{
+			printf("server listen UDP port %s %d -- failed !!!\n", ip4, port4);
+		}
 	}
 
 	if( ip6 != NULL )
 	{
 		sock_server_udp_second = bindUdpSocket(ip6, port6, PROTO_UDPv6);
-	
-		if( sock_server_udp_second == NULL )
+
+		if( sock_server_udp_second != NULL )
 		{
-			return -1;
+			ret++;
+			printf("server listen UDP port %s %d\n", ip6, port6);
 		}
-	
-		printf("server listen UDP port %s %d\n", ip6, port6);
+		else
+		{
+			printf("server listen UDP port %s %d -- failed !!!\n", ip6, port6);
+		}
 	}
 
-	initServer();
-
-	return 0;
+	return ret;
 }
-
-#endif
 
 static void eventCreateNewUdpClient(sock_udp_t *socket_udp)
 {
@@ -156,7 +143,8 @@ static client_t* findUdpClient(sock_udp_t *sock_udp)
 
 		client = (client_t *)listClient->list[i];
 
-		if( getSockUdpPort(client->socket_udp) == port )
+		if( client->type == CLIENT_TYPE_UDP &&
+		    getSockUdpPort(client->socket_udp) == port )
 		{
 			return client;
 		}
@@ -218,128 +206,44 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 	addList(client->listRecvMsg, strdup(listRecvMsg) );
 }
 
-static int selectServerUdpSocket()
+void setServerUdpSelect()
 {
-	struct timeval tv;
-	fd_set readfds;
-	fd_set errorfds;
-	int max_fd;
-	int ret;
+	if( sock_server_udp != NULL )
+	{
+		addSockToSelect(sock_server_udp->sock);
+	}
+
+	if( sock_server_udp_second != NULL )
+	{
+		addSockToSelect(sock_server_udp_second->sock);
+	}
+}
+
+int selectServerUdpSocket()
+{
 	int count;
 
-#ifndef PUBLIC_SERVER
-	tv.tv_sec = 0;
-	tv.tv_usec = 0;
-#endif	
-
-#ifdef PUBLIC_SERVER
-	tv.tv_sec = 0;
-	tv.tv_usec = 1000;
-#endif	
-
-	FD_ZERO(&readfds);
-	FD_ZERO(&errorfds);
-
-	max_fd = 0;
 	count = 0;
 
 	if( sock_server_udp != NULL )
 	{
-		FD_SET(sock_server_udp->sock, &errorfds);
-		FD_SET(sock_server_udp->sock, &readfds);
-
-		if( sock_server_udp->sock > max_fd )
-		{
-			max_fd = sock_server_udp->sock;
-		}
-	}
-
-	if( sock_server_udp_second != NULL )
-	{
-		FD_SET(sock_server_udp_second->sock, &readfds);
-		FD_SET(sock_server_udp_second->sock, &errorfds);
-
-		if( sock_server_udp_second->sock > max_fd )
-		{
-			max_fd = sock_server_udp_second->sock;
-		}
-	}
-
-	//printf("select..\n");
-
-#ifdef PUBLIC_SERVER
-	list_t *listClient;
-	listClient = getListServerClient();
-
-	if( listClient->count == 0 )
-	{
-		ret = select(max_fd+1, &readfds, (fd_set *)NULL, &errorfds,  NULL);
-		setServerTimer();
-	}
-	else
-	{
-		ret = select(max_fd+1, &readfds, (fd_set *)NULL,&errorfds, &tv);
-	}
-#endif
-
-#ifndef PUBLIC_SERVER
-	ret = select(max_fd+1, &readfds, (fd_set *)NULL,&errorfds, &tv);
-#endif
-
-	if( ret < 0 )
-	{
-		//printf("select ret = %d\n", ret);
-		return 0;
-	}
-	
-	if( sock_server_udp != NULL )
-	{
-		if( FD_ISSET(sock_server_udp->sock, &readfds) )
+		if( isChangeSockInSelect(sock_server_udp->sock) )
 		{
 			eventClientUdpSelect(sock_server_udp);
-			count = 1;
-		}
-	
-		if( FD_ISSET(sock_server_udp->sock, &errorfds) )
-		{
-			printf("error\n");
+			count++;
 		}
 	}
 
 	if( sock_server_udp_second != NULL )
 	{
-		if( FD_ISSET(sock_server_udp_second->sock, &readfds) )
+		if( isChangeSockInSelect(sock_server_udp_second->sock) )
 		{
 			eventClientUdpSelect(sock_server_udp_second);
-			count = 1;
-		}
-	
-		if( FD_ISSET(sock_server_udp_second->sock, &errorfds) )
-		{
-			printf("error\n");
+			count++;
 		}
 	}
 
 	return count;
-}
-
-void eventUdpServer()
-{
-#ifndef PUBLIC_SERVER
-
-	int count;
-
-#ifdef SUPPORT_NET_UNIX_UDP
-	do{
-		count = selectServerUdpSocket();
-	}while( count > 0 );
-#endif
-
-#endif
-
-#ifdef PUBLIC_SERVER
-	selectServerUdpSocket();
-#endif
 }
 
 void quitUdpServer()

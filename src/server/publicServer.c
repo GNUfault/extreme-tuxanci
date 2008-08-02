@@ -222,7 +222,7 @@ static int initPublicServerNetwork()
 
 	if( strcmp(ip6, "none") == 0 )
 	{
-		p_ip6= NULL;
+		p_ip6 = NULL;
 	}
 
 	port4 = atoi( getSetting("PORTv4", "--port", "2200") );
@@ -230,7 +230,7 @@ static int initPublicServerNetwork()
 
 	//ret = initNetMulitplayerPublicServer(p_ip4, port4, p_ip6, port6);
 	
-	ret = initNetMuliplayer(NET_GAME_TYPE_SERVER, p_ip4, port4, PROTO_TCPv4);
+	ret = initNetMuliplayerForGameServer(p_ip4, port4, p_ip6, port6);
 
 	return ret;
 }
@@ -343,7 +343,6 @@ void quitPublicServer()
 int startPublicServer()
 {
 #ifndef __WIN32__
-	signal(SIGPIPE, SIG_IGN);
 	signal(SIGINT, my_handler_quit);
 	signal(SIGTERM, my_handler_quit);
 	signal(SIGQUIT, my_handler_quit);

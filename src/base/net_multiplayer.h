@@ -28,7 +28,7 @@
 #define NET_MASTER_PORT			2200
 
 #ifdef PUBLIC_SERVER
-extern int initNetMulitplayerPublicServer(char *ip4, int port4, char *ip6, int port6);
+extern int initNetMuliplayerForGameServer(char *ip4, int port4, char *ip6, int port6);
 #endif
 
 extern int initNetMuliplayer(int type, char *ip, int port, int proto);

@@ -31,8 +31,6 @@
 #include "tcp.h"
 #include "buffer.h"
 
-#define SUPPORT_UDP
-
 static sock_udp_t *sock_server_udp;
 static sock_tcp_t *sock_server_tcp;
 
@@ -40,6 +38,12 @@ static list_t *listRecvMsg;
 static buffer_t *clientBuffer;
 static my_time_t lastPing;
 static my_time_t lastPingServerAlive;
+
+#ifdef SUPPORT_TRAFFIC
+static my_time_t lastTraffic;
+static int traffic_down;
+static int traffic_up;
+#endif
 
 typedef struct proto_cmd_client_struct
 {
@@ -125,19 +129,43 @@ int initClient(char *ip, int port, int proto)
 	listRecvMsg = newList();
 	lastPing = getMyTime();
 	lastPingServerAlive = getMyTime();
+
+#ifdef SUPPORT_TRAFFIC
+	lastTraffic = getMyTime();
+	traffic_down = 0;
+	traffic_up = 0;
+#endif
+
 	clientBuffer = newBuffer(4096);
 
-#ifdef SUPPORT_UDP
-	ret = initUdpClient(ip, port, proto);
-#endif
-
-#ifdef SUPPORT_TCP
-	ret = initTcpClient(ip, port, proto);
-#endif
-
-	if( ret < 0 )
+	if( ! isParamFlag("--udp") && ! isParamFlag("--tcp") )
 	{
-		return -1;
+		ret = initUdpClient(ip, port, proto);
+
+		if( ret < 0 )
+		{
+			return -1;
+		}
+	}
+
+	if( isParamFlag("--udp") && ! isParamFlag("--tcp") )
+	{
+		ret = initUdpClient(ip, port, proto);
+
+		if( ret < 0 )
+		{
+			return -1;
+		}
+	}
+
+	if( isParamFlag("--tcp") && ! isParamFlag("--udp") )
+	{
+		ret = initTcpClient(ip, port, proto);
+
+		if( ret < 0 )
+		{
+			return -1;
+		}
 	}
 
 	getSettingNameRight(name);
@@ -157,15 +185,22 @@ void sendServer(char *msg)
 	{
 		printf("send -> %s", msg);
 	}
+
 #endif
 
-#ifdef SUPPORT_UDP
-	ret = writeUdpSocket(sock_server_udp, sock_server_udp, msg, strlen(msg));
+#ifdef SUPPORT_TRAFFIC
+	traffic_up += strlen(msg);
 #endif
 
-#ifdef SUPPORT_TCP
-	ret = writeTcpSocket(sock_server_tcp, msg, strlen(msg));
-#endif
+	if( sock_server_udp != NULL )
+	{
+		ret = writeUdpSocket(sock_server_udp, sock_server_udp, msg, strlen(msg));
+	}
+
+	if( sock_server_tcp != NULL )
+	{
+		ret = writeTcpSocket(sock_server_tcp, msg, strlen(msg));
+	}
 }
 
 static int eventServerSelect()
@@ -175,18 +210,24 @@ static int eventServerSelect()
 
 	memset(buffer, 0, STR_PROTO_SIZE);
 
-#ifdef SUPPORT_UDP
-	ret = readUdpSocket(sock_server_udp, sock_server_udp, buffer, STR_PROTO_SIZE-1);
-#endif
+	if( sock_server_udp != NULL )
+	{
+		ret = readUdpSocket(sock_server_udp, sock_server_udp, buffer, STR_PROTO_SIZE-1);
+	}
 
-#ifdef SUPPORT_TCP
-	ret = readTcpSocket(sock_server_tcp, buffer, STR_PROTO_SIZE-1);
-#endif
+	if( sock_server_tcp != NULL )
+	{
+		ret = readTcpSocket(sock_server_tcp, buffer, STR_PROTO_SIZE-1);
+	}
 
 	if( ret <= 0 )
 	{
 		return ret;
 	}
+
+#ifdef SUPPORT_TRAFFIC
+	traffic_down += ret;
+#endif
 
 	addBuffer(clientBuffer, buffer, ret);
 
@@ -268,12 +309,15 @@ static void selectClientSocket()
 	int sock;
 	bool_t isNext;
 
-	if( isServerAlive() == FALSE )
+	if( sock_server_udp != NULL )
 	{
-		fprintf(stderr, "Server does not respond!\n");
-		setMsgToAnalyze(getMyText("ERROR_SERVER_DONT_ALIVE"));
-		setWorldEnd();
-		return;
+		if( isServerAlive() == FALSE )
+		{
+			fprintf(stderr, "Server does not respond!\n");
+			setMsgToAnalyze(getMyText("ERROR_SERVER_DONT_ALIVE"));
+			setWorldEnd();
+			return;
+		}
 	}
 
 	do{
@@ -284,13 +328,15 @@ static void selectClientSocket()
 		
 		FD_ZERO(&readfds);
 
-#ifdef SUPPORT_UDP
-		sock = sock_server_udp->sock;
-#endif	
-
-#ifdef SUPPORT_TCP
-		sock = sock_server_tcp->sock;
-#endif
+		if( sock_server_udp != NULL )
+		{
+			sock = sock_server_udp->sock;
+		}
+	
+		if( sock_server_tcp != NULL )
+		{
+			sock = sock_server_tcp->sock;
+		}
 
 		FD_SET(sock, &readfds);
 		max_fd = sock;
@@ -307,8 +353,35 @@ static void selectClientSocket()
 	}while( isNext == TRUE );
 }
 
+#ifdef SUPPORT_TRAFFIC
+
+static void eventTraffic()
+{
+	my_time_t currentTime;
+
+ 	currentTime = getMyTime();
+
+	if( currentTime - lastTraffic > 5000 )
+	{
+		lastTraffic = currentTime;
+
+		printf("down: %d\n"
+		       "up  : %d\n",
+		traffic_down, traffic_up);
+
+		traffic_down = 0;
+		traffic_up = 0;
+	}
+}
+
+#endif
+
 void eventClient()
 {
+#ifdef SUPPORT_TRAFFIC
+	eventTraffic();
+#endif
+
 	eventPingServer();
 	selectClientSocket();
 	eventServerBuffer();
@@ -337,12 +410,14 @@ void quitClient()
 	destroyListItem(listRecvMsg, free);
 	destroyBuffer(clientBuffer);
 
-#ifdef SUPPORT_UDP
-	quitUdpClient();
-#endif
+	if( sock_server_udp != NULL )
+	{
+		quitUdpClient();
+	}
 
-#ifdef SUPPORT_TCP
-	quitTcpClient();
-#endif
+	if( sock_server_tcp != NULL )
+	{
+		quitTcpClient();
+	}
 }
 

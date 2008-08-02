@@ -260,6 +260,7 @@ int disableNagle(sock_tcp_t *p)
 		(char *) &flag,   /* the cast is historical cruft */
 		sizeof(int));     /* length of option value */
 	
+#if 0
 	if( result < 0 )
 	{
 		printf("disabled nagle error\n");
@@ -268,6 +269,7 @@ int disableNagle(sock_tcp_t *p)
 	{
 		printf("disabled nagle OK\n");
 	}
+#endif
 
 	return result;
 }

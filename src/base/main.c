@@ -123,6 +123,10 @@ int WINAPI WinMain(
 int main(int argc, char *argv[])
 #endif
 {
+#ifndef __WIN32__
+	signal(SIGPIPE, SIG_IGN);
+#endif
+
 	srand( (unsigned) time(NULL) );
 
 #ifndef __WIN32__

@@ -40,6 +40,7 @@
 
 #include "tcp.h"
 #include "tcp_server.h"
+#include "serverSelect.h"
 
 static sock_tcp_t *sock_server_tcp;
 static sock_tcp_t *sock_server_tcp_second;
@@ -69,7 +70,7 @@ void destroyTcpClient(client_t *p)
 	eventMsgInCheckFront(p);
 
 	getSockTcpIp(p->socket_tcp, str_ip, STR_IP_SIZE);
-	printf("closeTCP connect %s %d\n", str_ip, getSockTcpPort(p->socket_tcp) );
+	printf("close TCP connect %s %d\n", str_ip, getSockTcpPort(p->socket_tcp) );
 
 	closeTcpSocket(p->socket_tcp);
 	destroyBuffer(p->buffer);
@@ -77,20 +78,45 @@ void destroyTcpClient(client_t *p)
 	destroyAnyClient(p);
 }
 
-int initTcpServer(char *ip, int port, int proto)
+int initTcpServer(char *ip4, int port4, char *ip6, int port6)
 {
-	sock_server_tcp = bindTcpSocket(ip, port, proto);
-	sock_server_tcp_second = NULL;
+	int ret;
 
-	if( sock_server_tcp == NULL )
+	ret = 0;
+
+	if( ip4 != NULL )
 	{
-		return -1;
+		sock_server_tcp = bindTcpSocket(ip4, port4, PROTO_UDPv4);
+
+		if( sock_server_tcp != NULL )
+		{
+			ret++;
+			disableNagle(sock_server_tcp);
+			printf("server listen TCP port %s %d\n", ip4, port4);
+		}
+		else
+		{
+			printf("server listen TCP port %s %d -- failed !!!\n", ip4, port4);
+		}
 	}
 
-	disableNagle(sock_server_tcp);
-	printf("server listen TCP port %s %d\n", ip, port);
+	if( ip6 != NULL )
+	{
+		sock_server_tcp_second = bindTcpSocket(ip6, port6, PROTO_UDPv6);
 
-	return 0;
+		if( sock_server_tcp_second != NULL )
+		{
+			ret++;
+			disableNagle(sock_server_tcp_second);
+			printf("server listen TCP port %s %d\n", ip6, port6);
+		}
+		else
+		{
+			printf("server listen TCP port %s %d -- failed !!!\n", ip6, port6);
+		}
+	}
+
+	return ret;
 }
 
 static void eventNewClient(sock_tcp_t *server_sock)
@@ -129,44 +155,21 @@ static void eventTcpClient(client_t *client)
 	}
 }
 
-static int selectServerTcpSocket()
+void setServerTcpSelect()
 {
 	list_t *listClient;
-	struct timeval tv;
-	fd_set readfds;
-	fd_set errorfds;
-	int max_fd;
-	int ret;
-	int count;
 	int i;
 
 	listClient = getListServerClient();
 
-#ifndef PUBLIC_SERVER
-	tv.tv_sec = 0;
-	tv.tv_usec = 0;
-#endif	
-
-#ifdef PUBLIC_SERVER
-	tv.tv_sec = 0;
-	tv.tv_usec = 1000;
-#endif	
-
-	FD_ZERO(&readfds);
-	FD_ZERO(&errorfds);
-
-	max_fd = 0;
-	count = 0;
-
 	if( sock_server_tcp != NULL )
 	{
-		FD_SET(sock_server_tcp->sock, &errorfds);
-		FD_SET(sock_server_tcp->sock, &readfds);
+		addSockToSelect(sock_server_tcp->sock);
+	}
 
-		if( sock_server_tcp->sock > max_fd )
-		{
-			max_fd = sock_server_tcp->sock;
-		}
+	if( sock_server_tcp_second != NULL )
+	{
+		addSockToSelect(sock_server_tcp_second->sock);
 	}
 
 	for( i  = 0 ; i < listClient->count ; i++ )
@@ -175,56 +178,42 @@ static int selectServerTcpSocket()
 
 		client = (client_t *)listClient->list[i];
 
-		if( client->status != NET_STATUS_OK )
+		if( client->status != NET_STATUS_OK || client->type != CLIENT_TYPE_TCP )
 		{
 			continue;
 		}
 
-		FD_SET(client->socket_tcp->sock, &errorfds);
-		FD_SET(client->socket_tcp->sock, &readfds);
-
-		if( client->socket_tcp->sock > max_fd )
-		{
-			max_fd = client->socket_tcp->sock;
-		}
+		addSockToSelect(client->socket_tcp->sock);
 	}
+}
 
+int selectServerTcpSocket()
+{
+	list_t *listClient;
+	int count;
+	int i;
 
-#ifdef PUBLIC_SERVER
-	if( listClient->count == 0 )
-	{
-		ret = select(max_fd+1, &readfds, (fd_set *)NULL, &errorfds,  NULL);
-		setServerTimer();
-	}
-	else
-	{
-		ret = select(max_fd+1, &readfds, (fd_set *)NULL,&errorfds, &tv);
-	}
-#endif
+	count = 0;
 
-#ifndef PUBLIC_SERVER
-	ret = select(max_fd+1, &readfds, (fd_set *)NULL,&errorfds, &tv);
-#endif
-
-	if( ret < 0 )
-	{
-		//printf("select ret = %d\n", ret);
-		return 0;
-	}
-	
 	if( sock_server_tcp != NULL )
 	{
-		if( FD_ISSET(sock_server_tcp->sock, &readfds) )
+		if( isChangeSockInSelect(sock_server_tcp->sock) )
 		{
 			eventNewClient(sock_server_tcp);
-			count = 1;
-		}
-	
-		if( FD_ISSET(sock_server_tcp->sock, &errorfds) )
-		{
-			printf("error\n");
+			count++;
 		}
 	}
+
+	if( sock_server_tcp_second != NULL )
+	{
+		if( isChangeSockInSelect(sock_server_tcp_second->sock) )
+		{
+			eventNewClient(sock_server_tcp_second);
+			count++;
+		}
+	}
+
+	listClient = getListServerClient();
 
 	for( i  = 0 ; i < listClient->count ; i++ )
 	{
@@ -232,40 +221,20 @@ static int selectServerTcpSocket()
 
 		client = (client_t *)listClient->list[i];
 
-		if( FD_ISSET(client->socket_tcp->sock, &readfds) )
+		if( client->status != NET_STATUS_OK || client->type != CLIENT_TYPE_TCP )
+		{
+			continue;
+		}
+
+		if( isChangeSockInSelect(client->socket_tcp->sock) )
 		{
 			//printf("eventTcpClient(client);\n");
 			eventTcpClient(client);
-			count = 1;
-		}
-
-		if( FD_ISSET(client->socket_tcp->sock, &errorfds) )
-		{
-			//printf("error client\n");
-			count = 1;
+			count++;
 		}
 	}
 
 	return count;
-}
-
-void eventTcpServer()
-{
-#ifndef PUBLIC_SERVER
-
-	int count;
-
-#ifdef SUPPORT_NET_UNIX_UDP
-	do{
-		count = selectServerTcpSocket();
-	}while( count > 0 );
-#endif
-
-#endif
-
-#ifdef PUBLIC_SERVER
-	selectServerTcpSocket();
-#endif
 }
 
 void quitTcpServer()
