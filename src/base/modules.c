@@ -15,7 +15,7 @@
 #include "arena.h"
 #include "arenaFile.h"
 #include "proto.h"
-#include "exportFunction.h"
+#include "shareFunction.h"
 
 #ifndef PUBLIC_SERVER
 #include "interface.h"
@@ -31,8 +31,8 @@ static export_fce_t export_fce =
 		.fce_getImage = getImage,
 #endif
 		.fce_loadDepModule = loadDepModule,
-		.fce_addToExportFce = addToExportFce,
-		.fce_getExportFce = getExportFce,
+		.fce_addToShareFce = addToShareFce,
+		.fce_getShareFce = getShareFce,
 
 		.fce_getValue = getArenaValue,
 		.fce_getNetTypeGame = getNetTypeGame,
@@ -210,7 +210,7 @@ static int destroyModule(module_t *p)
 void initModule()
 {
 	listModule = newList();
-	initExortFunction();
+	initShareFunction();
 }
 
 int isModuleLoaded(char *name)
@@ -341,5 +341,5 @@ int recvMsgModule(char *msg)
 void quitModule()
 {
 	destroyListItem(listModule, destroyModule);
-	quitExportFunction();
+	quitShareFunction();
 }

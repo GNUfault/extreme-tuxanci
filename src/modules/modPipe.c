@@ -195,7 +195,7 @@ int init(export_fce_t *p)
 		return -1;
 	}
 
-	if( ( fce_move_shot = export_fce->fce_getExportFce("move_shot") ) == NULL )
+	if( ( fce_move_shot = export_fce->fce_getShareFce("move_shot") ) == NULL )
 	{
 		return -1;
 	}

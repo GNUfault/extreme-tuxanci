@@ -47,7 +47,14 @@ void drawWidgetCatchkey(widget_catchkey_t *p)
 		name = "no key";
 	}
 
-	drawFont(name, p->x, p->y, COLOR_WHITE);
+	if( p->active )
+	{
+		drawFont(name, p->x, p->y, COLOR_RED);
+	}
+	else
+	{
+		drawFont(name, p->x, p->y, COLOR_WHITE);
+	}
 }
 
 static int getPessAnyKey()

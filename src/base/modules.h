@@ -31,8 +31,8 @@ typedef struct export_fce_s
 
 	int (*fce_getNetTypeGame)();
 	int (*fce_loadDepModule)(char *name);
-	void (*fce_addToExportFce)(char *name, void *function);
-	void* (*fce_getExportFce)(char *name);
+	void (*fce_addToShareFce)(char *name, void *function);
+	void* (*fce_getShareFce)(char *name);
 
 	void (*fce_getTuxProportion)(tux_t *tux, int *x,int *y, int *w, int *h);
 	void (*fce_setTuxProportion)(tux_t *tux, int x, int y);

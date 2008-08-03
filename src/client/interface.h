@@ -26,7 +26,12 @@
 // interval (in ms) of triggering akcia();
 #define INTERVAL 50
 
+// velikost klavesoveho bufferu (ve znacich)
+#define KEYBOARD_BUFFER_SIZE 256
+
 extern bool_t isInterfaceInicialized();
+extern void enableKeyboardBuffer();
+extern void disableKeyboardBuffer();
 extern int initSDL();
 extern SDL_Surface* getSDL_Screen();
 extern void getMousePosition(int *x, int *y);

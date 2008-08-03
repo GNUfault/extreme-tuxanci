@@ -1,11 +1,13 @@
 
 #include <stdlib.h>
 #include <assert.h>
+#include <SDL.h>
 
 #include "main.h"
 #include "list.h"
 #include "myTimer.h"
 #include "image.h"
+#include "serverSendMsg.h"
 
 #include "net_multiplayer.h"
 #include "screen_world.h"
@@ -13,7 +15,7 @@
 #include "interface.h"
 #include "chat.h"
 #include "font.h"
-#include "serverSendMsg.h"
+#include "keyboardBuffer.h"
 
 static image_t *g_chat;
 
@@ -25,7 +27,7 @@ static int line_time, line_atime;
 static int timeBlick;
 
 static bool_t chat_active;
-static bool_t revicedNewMsg;
+static bool_t receivedNewMsg;
 
 static my_time_t lastActive;
 
@@ -36,7 +38,7 @@ void initChat()
 	listText = newList();
 	strcpy(line, "");
 	chat_active = FALSE;
-	revicedNewMsg = FALSE;
+	receivedNewMsg = FALSE;
 	line_time = 0;
 	line_atime = 0;
 	timeBlick = 0;
@@ -62,7 +64,7 @@ void drawChat()
 		char *s;
 
 		s = (char *)listText->list[i];
-		
+
 		drawFontMaxSize(s,
 			CHAT_LOCATION_X+5, CHAT_LOCATION_Y+5 + i*20,
 			CHAT_SIZE_X-10, 20, COLOR_WHITE);
@@ -85,109 +87,46 @@ void drawChat()
 	drawFont(str, CHAT_LOCATION_X+5, CHAT_LOCATION_Y+5 + CHAT_MAX_LINES*20, COLOR_WHITE);
 }
 
-static void readKey()
+static void processMessageKey(SDL_keysym keysym)
 {
-	Uint8 *mapa;
 	int w, h;
 	int len;
-	int i;
-
-	const int len_shift_map = 20;
-
-	char shift_map[] =
-	{
-		'-', '_',
-		'=', '+',
-		'[', '{',
-		']', '}',
-		';', ':',
-		'/', '\"',
-		'\\', '|',
-		',', '<',
-		'.', '>',
-		'/', '?'
-	};
+	//int i;
 
 	if (line_atime < 100)
 		line_atime ++;
 
-	mapa = SDL_GetKeyState(NULL);
 	len = strlen(line);
 	getTextSize(line, &w, &h);
 
-	for( i = SDLK_FIRST ; i <= SDLK_F15 ; i++ )
+	if(  w > CHAT_SIZE_X-40 )
 	{
-		if( mapa[i] == SDL_PRESSED && len < STR_SIZE )
-		{
-			char *name = (char *) SDL_GetKeyName(i);
-			char c = '\0';
-
-			if( name == NULL )continue;
-
-			if( strlen(name) == 1 )c = name[0];
-			if( strlen(name) == 3 )c = name[1];
-			if( strcmp(name, "space") == 0 )c = ' ';
-
-			//printf("name %s\n", name);
-
-			if( strcmp(name, "backspace") == 0 && len > 0 )
-			{
-				line_time = 0;
-				line[len-1]='\0';
-				return;
-			}
-
-			if( c == '\0' || w > CHAT_SIZE_X-40 )
-			{
-				continue;
-			}
-
-			if( len > 0 )
-			{
-				if( line[len-1] == c )
-				{
-					line_time++;
-
-					if( line_time < CHAT_TIME_MULTIPLE )
-					{
-						if( line_atime < 3 )return;
-					}
-				}
-				else
-				{
-					line_time = 0;
-				}
-			}
-
-			line_atime = 0;
-
-			line[len] = c;
-
-			if( mapa[SDLK_LSHIFT] == SDL_PRESSED ||
-			    mapa[SDLK_RSHIFT] == SDL_PRESSED)
-			{
-				int i;
-
-				for( i = 0 ; i < len_shift_map ; i+= 2 )
-				{
-					if( c == shift_map[i] )
-					{
-						line[len] = shift_map[i+1];
-					}
-				}
-
-				return;
-			}
-
-			if( mapa[SDLK_LSHIFT] == SDL_PRESSED ||
-			    mapa[SDLK_RSHIFT] == SDL_PRESSED)
-			{
-				line[len] -= 32;
-			}
-
-			return;
-		}
+		return;
 	}
+
+	/* zpracovani backspace */
+	if (keysym.sym == SDLK_BACKSPACE){
+		line[len-1]='\0';
+		return;
+	}
+
+	/* zpracovani tisknutelnych paznaku */
+	if ( (keysym.sym >= SDLK_SPACE && keysym.sym <= SDLK_AT)
+			|| (keysym.sym >= SDLK_LEFTBRACKET && keysym.sym <= SDLK_BACKQUOTE) ){
+		line[len] = keysym.sym;	/*  tady by bylo daleko lepsi dat strcat,
+							predpoklada se, ze line je vyplnen 0 az dokonce */
+	}
+
+	/* zpracovani pismenek */
+	if ( keysym.sym >= SDLK_a && keysym.sym <= SDLK_z){
+		char c = keysym.sym;
+		if (keysym.mod == KMOD_SHIFT)
+			c = toupper(c);
+		line[len] = c;	/*  tady by bylo daleko lepsi dat strcat,
+							predpoklada se, ze line je vyplnen 0 az dokonce */
+	}
+
+	return;
 }
 
 static void switchChatActive()
@@ -202,52 +141,87 @@ static void switchChatActive()
 	}
 }
 
-void eventChat()
+static void sendNewMessage()
 {
-	Uint8 *mapa;
-	my_time_t currentTime;
-
-	mapa = SDL_GetKeyState(NULL);
-	currentTime = getMyTime();
-	
-	if( mapa[SDLK_RETURN] == SDL_PRESSED &&
-	    strcmp(line, "") == 0 &&
-	    currentTime - lastActive > CHAT_LAST_ENTER_INTERVAL )
+	if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
 	{
-		lastActive = getMyTime();
-		revicedNewMsg = FALSE;
+		proto_send_chat_client(line);
+	}
+
+	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
+	{
+		char out[STR_PROTO_SIZE];
+
+		snprintf(out, STR_PROTO_SIZE, "chat %s:%s\n",
+			getControlTux(TUX_CONTROL_KEYBOARD_RIGHT)->name, line);
+
+		proto_send_chat_server(PROTO_SEND_ALL, NULL, out);
+	}
+}
+
+static void eventChatDisable()
+{ 
+	Uint8 *mapa;
+	mapa = SDL_GetKeyState(NULL);
+
+	if( mapa[SDLK_RETURN] == SDL_PRESSED )
+	{ /* chat neni aktivni, tak jej aktivujeme */
+		receivedNewMsg = FALSE;
 		switchChatActive();
 		memset(line, '\0', STR_SIZE);
-		return;
+		/* zapneme zachytavani klaves do bufferu a vycistime buffer */
+		enableKeyboardBuffer();
+		clearKeyboardBuffer();
 	}
+}
 
-	if( chat_active == FALSE )
-	{
-		return;
-	}
+static void eventChatEnable()
+{
+	/* Mame zobrazene okno chatu. Je potreba zpracovat vsechny klavesy v bufferu
+	 * s tim, ze pri klavese RETURN provedeme odeslani radku chatu
+	 * na server
+	 */
 
-	if( mapa[SDLK_RETURN] == SDL_PRESSED && strcmp(line, "") != 0 )
+	while( isAnyKeyInKeyboardBuffer() == TRUE )
 	{
-		if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
+		SDL_keysym key;
+		key = popKeyFromKeyboardBuffer();
+
+		if ( key.sym == SDLK_RETURN )
 		{
-			proto_send_chat_client(line);
+			if ( strcmp(line, "") != 0 )
+			{ /* mame napsany radek: je potreba jej odeslat */
+				sendNewMessage();
+				memset(line, '\0', STR_SIZE);
+				continue;	/* pokracovat s dalsimi klavesami */
+			}
+			else
+			{ /* radek je prazdny, je potreba vypnout okno chatu */
+				switchChatActive();
+				memset(line, '\0', STR_SIZE);
+				/* vypneme zachytavani klaves do bufferu a vycistime buffer */
+				disableKeyboardBuffer();
+				clearKeyboardBuffer();
+			}
 		}
 
-		if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
-		{
-			char out[STR_PROTO_SIZE];
-			
-			snprintf(out, STR_PROTO_SIZE, "chat %s:%s\n",
-				getControlTux(TUX_CONTROL_KEYBOARD_RIGHT)->name, line);
-			
-			proto_send_chat_server(PROTO_SEND_ALL, NULL, out);
-		}
-
-		memset(line, '\0', STR_SIZE);
-		return;
+		processMessageKey(key);
 	}
+}
 
-	readKey();
+/**
+ * Zpracovani "udalosti" chatu?
+ */
+void eventChat()
+{
+	if (isChatActive() == FALSE)
+	{ /* okno chatu neni aktivni */
+		eventChatDisable();
+	}
+	else
+	{
+		eventChatEnable();
+	}
 }
 
 bool_t isChatActive()
@@ -257,13 +231,13 @@ bool_t isChatActive()
 
 bool_t isRecivedNewMsg()
 {
-	return revicedNewMsg;
+	return receivedNewMsg;
 }
 
 void addToChat(char *s)
 {
 	addList(listText, strdup(s) );
-	
+
 	if( listText->count > CHAT_MAX_LINES )
 	{
 		delListItem(listText, 0, free);
@@ -271,7 +245,7 @@ void addToChat(char *s)
 
 	if( chat_active == FALSE )
 	{
-		revicedNewMsg = TRUE;
+		receivedNewMsg = TRUE;
 	}
 }
 

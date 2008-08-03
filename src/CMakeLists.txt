@@ -3,13 +3,13 @@ SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # find ./ -maxdepth 1 -type f -name \*.c |grep "$" |sed -e 's/^\.\//\$\{WORKDIR\}\/DIR\//' -e 's/\.c//' |tr '\n' ' ' > DIRfiles
 # nahradte DIR potrebnym adresarem a pak vemte vse co je v DIRfiles a vlozte to sem
 SET ( SRC_base
-${WORKDIR}/base/main ${WORKDIR}/base/shot ${WORKDIR}/base/space ${WORKDIR}/base/checkFront ${WORKDIR}/base/storage ${WORKDIR}/base/myTimer ${WORKDIR}/base/protect  ${WORKDIR}/base/list ${WORKDIR}/base/arena ${WORKDIR}/base/server ${WORKDIR}/base/udp_server ${WORKDIR}/base/tcp_server ${WORKDIR}/base/serverSelect ${WORKDIR}/base/serverSendMsg ${WORKDIR}/base/textFile ${WORKDIR}/base/gun ${WORKDIR}/base/arenaFile ${WORKDIR}/base/modules ${WORKDIR}/base/net_multiplayer ${WORKDIR}/base/index ${WORKDIR}/base/item ${WORKDIR}/base/tux ${WORKDIR}/base/director ${WORKDIR}/base/idManager ${WORKDIR}/base/homeDirector ${WORKDIR}/base/proto ${WORKDIR}/base/exportFunction ${WORKDIR}/base/buffer
+${WORKDIR}/base/main ${WORKDIR}/base/shot ${WORKDIR}/base/space ${WORKDIR}/base/checkFront ${WORKDIR}/base/storage ${WORKDIR}/base/myTimer ${WORKDIR}/base/protect  ${WORKDIR}/base/list ${WORKDIR}/base/arena ${WORKDIR}/base/server ${WORKDIR}/base/udp_server ${WORKDIR}/base/tcp_server ${WORKDIR}/base/serverSelect ${WORKDIR}/base/serverSendMsg ${WORKDIR}/base/textFile ${WORKDIR}/base/gun ${WORKDIR}/base/arenaFile ${WORKDIR}/base/modules ${WORKDIR}/base/net_multiplayer ${WORKDIR}/base/index ${WORKDIR}/base/item ${WORKDIR}/base/tux ${WORKDIR}/base/director ${WORKDIR}/base/idManager ${WORKDIR}/base/homeDirector ${WORKDIR}/base/proto ${WORKDIR}/base/shareFunction ${WORKDIR}/base/buffer
 
 ${WORKDIR}/net/udp ${WORKDIR}/net/tcp ${WORKDIR}/net/dns
 )
 
 SET ( SRC_client
-${WORKDIR}/client/layer ${WORKDIR}/client/term ${WORKDIR}/client/screen ${WORKDIR}/client/interface ${WORKDIR}/client/client ${WORKDIR}/client/chat ${WORKDIR}/client/configFile ${WORKDIR}/client/language ${WORKDIR}/client/font ${WORKDIR}/client/game ${WORKDIR}/client/radar ${WORKDIR}/client/panel ${WORKDIR}/client/image
+${WORKDIR}/client/layer ${WORKDIR}/client/term ${WORKDIR}/client/screen ${WORKDIR}/client/interface ${WORKDIR}/client/client ${WORKDIR}/client/chat ${WORKDIR}/client/configFile ${WORKDIR}/client/language ${WORKDIR}/client/font ${WORKDIR}/client/game ${WORKDIR}/client/radar ${WORKDIR}/client/panel ${WORKDIR}/client/image ${WORKDIR}/client/keyboardBuffer
 
 ${WORKDIR}/screen/screen_choiceArena ${WORKDIR}/screen/screen_settingKeys ${WORKDIR}/screen/screen_table ${WORKDIR}/screen/screen_setting ${WORKDIR}/screen/screen_credits ${WORKDIR}/screen/screen_world ${WORKDIR}/screen/screen_analyze ${WORKDIR}/screen/screen_mainMenu ${WORKDIR}/screen/screen_browser ${WORKDIR}/screen/screen_gameType
 

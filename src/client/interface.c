@@ -6,6 +6,7 @@
 
 #include "interface.h"
 #include "screen.h"
+#include "keyboardBuffer.h"
 
 // window surface
 static SDL_Surface *screen;
@@ -18,6 +19,9 @@ static SDL_TimerID timer;
 static Uint32 g_win_flags = SDL_HWSURFACE|SDL_DOUBLEBUF;
 
 static bool_t isInterfaceInit = FALSE;
+
+// flag, kterym se ridi zarazovani klaves do bufferu
+bool_t keyboardBufferEnabled = FALSE;
 
 bool_t isInterfaceInicialized()
 {
@@ -35,6 +39,14 @@ static Uint32 TimerCallback(Uint32 interval, void *param)
 	SDL_PushEvent(&event);
 
 	return interval;
+}
+
+void enableKeyboardBuffer(){
+	keyboardBufferEnabled=TRUE;
+}
+
+void disableKeyboardBuffer(){
+	keyboardBufferEnabled=FALSE;
 }
 
 int initSDL()
@@ -70,8 +82,10 @@ int initSDL()
 
 	SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 	//SDL_ShowCursor(0);
-	SDL_EnableKeyRepeat(1,1);
+	SDL_EnableKeyRepeat(0,1);
 	timer = SDL_AddTimer(INTERVAL, TimerCallback, NULL);
+
+	initKeyboardBuffer(KEYBOARD_BUFFER_SIZE);
 
 	srand((unsigned)time(NULL));
 	isInterfaceInit = TRUE;
@@ -199,6 +213,9 @@ int eventAction()
 				break;
 
 				default:
+					//neni potreba vyuzivat frontu stale
+					if (keyboardBufferEnabled==TRUE)
+						pushKeyToKeyboardBuffer(event.key.keysym);
 				break;
 			}
 		break;
@@ -252,6 +269,9 @@ void eventSDL()
 void quitSDL()
 {
 	printf("quit SDL..\n");
+	quitKeyboardBuffer();
+
 	SDL_Quit();
+
 	isInterfaceInit = FALSE;
 }
