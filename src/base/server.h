@@ -55,9 +55,7 @@ extern list_t* getListServerClient();
 extern int getServerMaxClients();
 extern void setServerTimer();
 extern void setServerMaxClients(int n);
-extern void sendInfoCreateClient(client_t *client);
 extern void sendClient(client_t *p, char *msg);
-extern void protoSendClient(int type, client_t *client, char *msg, int type2, int id);
 extern void eventServer();
 extern void quitServer();
 

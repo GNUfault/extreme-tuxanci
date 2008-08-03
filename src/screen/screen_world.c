@@ -15,6 +15,7 @@
 #include "proto.h"
 #include "modules.h"
 #include "idManager.h"
+#include "serverSendMsg.h"
 
 #include "interface.h"
 #include "screen_settingKeys.h"

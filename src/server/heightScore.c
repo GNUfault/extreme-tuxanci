@@ -25,6 +25,7 @@ void initHeightScore(char *file)
 	}
 	else
 	{
+		printf("I use %s as scorefile\n", file);
 		return;
 	}
 

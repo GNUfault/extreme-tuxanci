@@ -18,6 +18,7 @@
 #include "idManager.h"
 #include "modules.h"
 #include "protect.h"
+#include "serverSendMsg.h"
 
 #ifndef PUBLIC_SERVER
 #include "language.h"
@@ -83,20 +84,73 @@ void proto_send_hello_client(char *name)
 
 #endif
 
+static void sendInfoCreateClient(client_t *client)
+{
+	list_t *listClient;
+	client_t *thisClient;
+	tux_t *thisTux;
+	item_t *thisItem;
+	int i;
+
+	assert( client != NULL );
+
+	listClient = getListServerClient();
+
+	proto_send_init_server(PROTO_SEND_ONE, client, client);
+
+#ifndef PUBLIC_SERVER
+	proto_send_newtux_server(PROTO_SEND_ONE, client, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT) );
+#endif
+
+	for( i = 0 ; i < listClient->count; i++)
+	{
+		thisClient = (client_t *) listClient->list[i];
+		thisTux = thisClient->tux;
+
+		if( thisTux != NULL && thisTux != client->tux )
+		{
+			proto_send_newtux_server(PROTO_SEND_ONE, thisClient, client->tux);
+			proto_send_newtux_server(PROTO_SEND_ONE, client, thisTux);
+		}
+	}
+
+	for( i = 0 ; i < getCurrentArena()->spaceItem->list->count; i++)
+	{
+		thisItem = (item_t *) getCurrentArena()->spaceItem->list->list[i];
+		proto_send_additem_server(PROTO_SEND_ONE, client, thisItem);
+	}
+}
+
 void proto_recv_hello_server(client_t *client, char *msg)
 {
+	static char *supportVersion = NULL;
 	char cmd[STR_PROTO_SIZE];
 	char version[STR_NAME_SIZE];
 	char name[STR_NAME_SIZE];
-	
+
 	assert( client != NULL );
 	
 	strcpy(version, "");
 	strcpy(name, "");
 	
+#ifdef PUBLIC_SERVER
+	if( supportVersion == NULL )
+	{
+		supportVersion = getSetting("SUPPORT_CLIENTS", "--support-clients", TUXANCI_VERSION);
+	}
+#endif
+
+#ifndef PUBLIC_SERVER
+	if( supportVersion == NULL )
+	{
+		supportVersion = TUXANCI_VERSION;
+	}
+#endif
+
 	sscanf(msg, "%s %s %s", cmd, version, name);
-	
-	if( strncmp(version, TUXANCI_VERSION, strlen(TUXANCI_VERSION)) != 0 )
+
+		
+	if( strstr(supportVersion, version ) == NULL )
 	{
 		proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_VERSION);
 		eventMsgInCheckFront(client);
@@ -134,7 +188,7 @@ void proto_send_status_server(int type, client_t *client)
 #endif
 
 #ifdef PUBLIC_SERVER
-	name = getServerConfigFileValue("NAME", "noname");
+	name = getSetting("NAME", "--name", "noname");
 #endif
 
 	version = TUXANCI_VERSION;

@@ -16,6 +16,7 @@
 #include "proto.h"
 #include "modules.h"
 #include "idManager.h"
+#include "serverSendMsg.h"
 
 #ifndef PUBLIC_SERVER
 #include "font.h"

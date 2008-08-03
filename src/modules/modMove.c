@@ -11,6 +11,7 @@
 #include "list.h"
 #include "gun.h"
 #include "space.h"
+#include "serverSendMsg.h"
 
 #ifndef PUBLIC_SERVER
 #include "interface.h"

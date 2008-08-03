@@ -36,6 +36,7 @@
 #ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #include "heightScore.h"
+#include "log.h"
 #endif
 
 #include "tcp.h"
@@ -48,29 +49,38 @@ static sock_tcp_t *sock_server_tcp_second;
 client_t* newTcpClient(sock_tcp_t *sock_tcp)
 {
 	client_t *new;
-	char str_ip[STR_IP_SIZE];
 
 	assert( sock_tcp != NULL );
 
-	getSockTcpIp(sock_tcp, str_ip, STR_IP_SIZE);
-	printf("new client TCP from %s %d\n", str_ip, getSockTcpPort(sock_tcp));
-	
-	new = newAnyClient();
+		new = newAnyClient();
 	new->type = CLIENT_TYPE_TCP;
 	new->socket_tcp = sock_tcp;
 	new->buffer = newBuffer(4096);
+
+#ifdef PUBLIC_SERVER
+	char str_log[STR_LOG_SIZE];
+	char str_ip[STR_IP_SIZE];
+
+	getSockTcpIp(sock_tcp, str_ip, STR_IP_SIZE);
+	sprintf(str_log, "new client TCP from %s %d", str_ip, getSockTcpPort(sock_tcp));
+	addToLog(LOG_INF, str_log);
+#endif
 
 	return new;
 }
 
 void destroyTcpClient(client_t *p)
 {
-	char str_ip[STR_IP_SIZE];
-
 	eventMsgInCheckFront(p);
 
+#ifdef PUBLIC_SERVER
+	char str_log[STR_LOG_SIZE];
+	char str_ip[STR_IP_SIZE];
+
 	getSockTcpIp(p->socket_tcp, str_ip, STR_IP_SIZE);
-	printf("close TCP connect %s %d\n", str_ip, getSockTcpPort(p->socket_tcp) );
+	sprintf(str_log, "close TCP connect %s %d", str_ip, getSockTcpPort(p->socket_tcp));
+	addToLog(LOG_INF, str_log);
+#endif
 
 	closeTcpSocket(p->socket_tcp);
 	destroyBuffer(p->buffer);

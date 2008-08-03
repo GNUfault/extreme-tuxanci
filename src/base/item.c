@@ -10,6 +10,7 @@
 #include "proto.h"
 #include "idManager.h"
 #include "net_multiplayer.h"
+#include "serverSendMsg.h"
 
 #ifndef PUBLIC_SERVER
 

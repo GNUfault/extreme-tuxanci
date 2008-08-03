@@ -7,6 +7,7 @@
 
 #define STR_SIZE		128
 #define STR_PROTO_SIZE		128
+#define STR_LOG_SIZE		256
 #define STR_NUM_SIZE		8
 #define STR_NAME_SIZE		32
 #define STR_PATH_SIZE		4096

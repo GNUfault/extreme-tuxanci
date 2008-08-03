@@ -32,14 +32,16 @@ static void prepareConfigFile(textFile_t *ts)
 			}
 		}
 	}
-
 }
 
 void initServerConfigFile()
 {
-	printf("load configuration form %s\n", SERVER_CONFIG);
+	char *configFile;
 
-	serverTextFile = loadTextFile(SERVER_CONFIG);
+	configFile = getParamElse("--config-file", SERVER_CONFIG);
+	printf("load configuration from %s\n", getParamElse("--config-file", SERVER_CONFIG) );
+
+	serverTextFile = loadTextFile(configFile);
 
 	if( serverTextFile == NULL )
 	{
@@ -48,7 +50,6 @@ void initServerConfigFile()
 	}
 	
 	prepareConfigFile(serverTextFile);
-
 }
 
 static char *findValue(char *s)

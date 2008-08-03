@@ -12,6 +12,7 @@
 #include "gun.h"
 #include "proto.h"
 #include "net_multiplayer.h"
+#include "serverSendMsg.h"
 
 #ifndef NO_SOUND
 #include "sound.h"

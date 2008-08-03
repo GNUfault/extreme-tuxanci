@@ -36,6 +36,7 @@
 #ifdef PUBLIC_SERVER
 #include "publicServer.h"
 #include "heightScore.h"
+#include "log.h"
 #endif
 
 #include "udp.h"
@@ -48,28 +49,37 @@ static sock_udp_t *sock_server_udp_second;
 client_t* newUdpClient(sock_udp_t *sock_udp)
 {
 	client_t *new;
-	char str_ip[STR_IP_SIZE];
 
 	assert( sock_udp != NULL );
 
-	getSockUdpIp(sock_udp, str_ip, STR_IP_SIZE);
-	printf("new client UDP from %s %d\n", str_ip, getSockUdpPort(sock_udp));
-	
-	new = newAnyClient();
+		new = newAnyClient();
 	new->type = CLIENT_TYPE_UDP;
 	new->socket_udp = sock_udp;
+
+#ifdef PUBLIC_SERVER
+	char str_log[STR_LOG_SIZE];
+	char str_ip[STR_IP_SIZE];
+
+	getSockUdpIp(sock_udp, str_ip, STR_IP_SIZE);
+	sprintf(str_log, "new client UDP from %s %d", str_ip, getSockUdpPort(sock_udp));
+	addToLog(LOG_INF, str_log);
+#endif
 
 	return new;
 }
 
 void destroyUdpClient(client_t *p)
 {
-	char str_ip[STR_IP_SIZE];
-
 	eventMsgInCheckFront(p);
 
+#ifdef PUBLIC_SERVER
+	char str_log[STR_LOG_SIZE];
+	char str_ip[STR_IP_SIZE];
+
 	getSockUdpIp(p->socket_udp, str_ip, STR_IP_SIZE);
-	printf("close UDP connect %s %d\n", str_ip, getSockUdpPort(p->socket_udp) );
+	sprintf(str_log, "close UDP connect %s %d", str_ip, getSockUdpPort(p->socket_udp));
+	addToLog(LOG_INF, str_log);
+#endif
 
 	destroySockUdp(p->socket_udp);
 

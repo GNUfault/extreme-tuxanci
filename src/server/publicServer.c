@@ -37,6 +37,7 @@
 #include "publicServer.h"
 #include "serverConfigFile.h"
 #include "heightScore.h"
+#include "log.h"
 
 #include "dns.h"
 
@@ -167,7 +168,7 @@ static int registerPublicServer()
 	register_head *head = (register_head *) str;
 
 	head->cmd = 'p';
-	head->port = atoi( getSetting("PORTv4", "--port", "2200") );
+	head->port = atoi( getSetting("PORT4", "--port4", "2200") );
 	head->ip = 0;	// TODO
 
 	/* send request for server list */
@@ -225,8 +226,8 @@ static int initPublicServerNetwork()
 		p_ip6 = NULL;
 	}
 
-	port4 = atoi( getSetting("PORTv4", "--port", "2200") );
-	port6 = atoi( getSetting("PORTv6", "--port", "2200") );
+	port4 = atoi( getSetting("PORT4", "--port4", "2200") );
+	port6 = atoi( getSetting("PORT6", "--port6", "2200") );
 
 	//ret = initNetMulitplayerPublicServer(p_ip4, port4, p_ip6, port6);
 	
@@ -247,7 +248,16 @@ int initPublicServer()
 	initItem();
 	initShot();
 	initServerConfigFile();
-	initHeightScore( getSetting("SCOREFILE", "--scorefile", "./heightscore") );
+	
+	ret = initLog(getSetting("LOG_FILE", "--log-file", "/tmp/tuxanci-server.log") );
+	
+	if( ret < 0 )
+	{
+		fprintf(stderr, "I down open log file !\n");
+		return -1;
+	}
+
+	initHeightScore( getSetting("SCORE_FILE", "--score-file", "/tmp/heightscore") );
 
 	arenaId = getArenaIdFormNetName( getSetting("ARENA", "--arena", "FAGN") );
 	arena = getArena(arenaId);
@@ -268,7 +278,7 @@ int initPublicServer()
 		return -1;
 	}
 
-	setServerMaxClients( atoi( getSetting("MAX_CLIENTS", "--maxclients", "32") ));
+	setServerMaxClients( atoi( getSetting("MAX_CLIENTS", "--max-clients", "32") ));
 
 	if (registerPublicServer() < 0)
 	{
@@ -336,6 +346,7 @@ void quitPublicServer()
 	quitModule();
 	quitListID();
 	quitHeightScore();
+	quitLog();
 
 	exit(0);
 }

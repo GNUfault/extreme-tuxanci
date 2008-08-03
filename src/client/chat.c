@@ -13,6 +13,7 @@
 #include "interface.h"
 #include "chat.h"
 #include "font.h"
+#include "serverSendMsg.h"
 
 static image_t *g_chat;
 
