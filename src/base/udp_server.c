@@ -220,12 +220,12 @@ void setServerUdpSelect()
 {
 	if( sock_server_udp != NULL )
 	{
-		addSockToSelect(sock_server_udp->sock);
+		addSockToSelectRead(sock_server_udp->sock);
 	}
 
 	if( sock_server_udp_second != NULL )
 	{
-		addSockToSelect(sock_server_udp_second->sock);
+		addSockToSelectRead(sock_server_udp_second->sock);
 	}
 }
 
@@ -237,7 +237,7 @@ int selectServerUdpSocket()
 
 	if( sock_server_udp != NULL )
 	{
-		if( isChangeSockInSelect(sock_server_udp->sock) )
+		if( isChangeSockInSelectRead(sock_server_udp->sock) )
 		{
 			eventClientUdpSelect(sock_server_udp);
 			count++;
@@ -246,7 +246,7 @@ int selectServerUdpSocket()
 
 	if( sock_server_udp_second != NULL )
 	{
-		if( isChangeSockInSelect(sock_server_udp_second->sock) )
+		if( isChangeSockInSelectRead(sock_server_udp_second->sock) )
 		{
 			eventClientUdpSelect(sock_server_udp_second);
 			count++;

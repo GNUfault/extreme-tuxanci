@@ -86,6 +86,7 @@ void sendTcpClientBuffer(client_t *client)
 	data = getBufferData(client->sendBuffer);
 
 	res = writeTcpSocket(client->socket_tcp, data, len);
+	//printf("writeTcpSocket = %d\n", res);
 
 	if( res < 0 )
 	{
@@ -182,6 +183,7 @@ static void eventTcpClient(client_t *client)
 	memset(buffer, 0, STR_PROTO_SIZE);
 
 	ret = readTcpSocket(client->socket_tcp, buffer, STR_PROTO_SIZE-1);
+	//printf("readTcpSocket = %d\n", ret);
 
 	if( ret <= 0 )
 	{
@@ -189,7 +191,11 @@ static void eventTcpClient(client_t *client)
 		return;
 	}
 
-	addBuffer(client->recvBuffer, buffer, ret);
+	if( addBuffer(client->recvBuffer, buffer, ret) < 0 )
+	{
+		client->status = NET_STATUS_ZOMBIE;
+		return;
+	}
 
 	while( getBufferLine(client->recvBuffer, buffer, STR_PROTO_SIZE) >= 0 )
 	{
@@ -206,12 +212,12 @@ void setServerTcpSelect()
 
 	if( sock_server_tcp != NULL )
 	{
-		addSockToSelect(sock_server_tcp->sock);
+		addSockToSelectRead(sock_server_tcp->sock);
 	}
 
 	if( sock_server_tcp_second != NULL )
 	{
-		addSockToSelect(sock_server_tcp_second->sock);
+		addSockToSelectRead(sock_server_tcp_second->sock);
 	}
 
 	for( i  = 0 ; i < listClient->count ; i++ )
@@ -225,7 +231,7 @@ void setServerTcpSelect()
 			continue;
 		}
 
-		addSockToSelect(client->socket_tcp->sock);
+		addSockToSelectRead(client->socket_tcp->sock);
 	}
 }
 
@@ -239,7 +245,7 @@ int selectServerTcpSocket()
 
 	if( sock_server_tcp != NULL )
 	{
-		if( isChangeSockInSelect(sock_server_tcp->sock) )
+		if( isChangeSockInSelectRead(sock_server_tcp->sock) )
 		{
 			eventNewClient(sock_server_tcp);
 			count++;
@@ -248,7 +254,7 @@ int selectServerTcpSocket()
 
 	if( sock_server_tcp_second != NULL )
 	{
-		if( isChangeSockInSelect(sock_server_tcp_second->sock) )
+		if( isChangeSockInSelectRead(sock_server_tcp_second->sock) )
 		{
 			eventNewClient(sock_server_tcp_second);
 			count++;
@@ -268,14 +274,20 @@ int selectServerTcpSocket()
 			continue;
 		}
 
-		if( isChangeSockInSelect(client->socket_tcp->sock) )
+		if( isChangeSockInSelectRead(client->socket_tcp->sock) )
 		{
-			//printf("eventTcpClient(client);\n");
+			//printf("sChangeSockInSelectRead\n");
 			eventTcpClient(client);
 			count++;
 		}
-
-		sendTcpClientBuffer(client);
+/*
+		if( isChangeSockInSelectWrite(client->socket_tcp->sock) )
+		{
+			//printf("isChangeSockInSelectWrite\n");
+			sendTcpClientBuffer(client);
+			count++;
+		}
+*/		
 	}
 
 	return count;

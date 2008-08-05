@@ -318,8 +318,7 @@ void sendClient(client_t *p, char *msg)
 			break;
 			case CLIENT_TYPE_TCP :
 				//ret = writeTcpSocket(p->socket_tcp, msg, strlen(msg));
-				addBuffer(p->sendBuffer, msg, strlen(msg));
-				ret = 1;
+				ret = addBuffer(p->sendBuffer, msg, strlen(msg));
 			break;
 			default :
 				assert( ! "zly typ !");

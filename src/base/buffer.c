@@ -39,7 +39,7 @@ int addBuffer(buffer_t *p, char *data, int len)
 	{
 		memcpy(p->data + p->size, data, len);
 		p->size += len;
-		return 0;
+		return len;
 	}
 
 	return -1;

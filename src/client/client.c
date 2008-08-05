@@ -179,6 +179,13 @@ int initClient(char *ip, int port, int proto)
 	return 0;
 }
 
+static void errorWithServer()
+{
+	fprintf(stderr, "Server does not respond!\n");
+	setMsgToAnalyze(getMyText("ERROR_SERVER_DONT_ALIVE"));
+	setWorldEnd();
+}
+
 static void sendBuffer()
 {
 	void *data;
@@ -196,8 +203,9 @@ static void sendBuffer()
 
 	res = writeTcpSocket(sock_server_tcp, data, len);
 
-	if( res <= 0 )
+	if( res < 0 )
 	{
+		errorWithServer();
 		return;
 	}
 
@@ -230,8 +238,13 @@ void sendServer(char *msg)
 	if( sock_server_tcp != NULL )
 	{
 		//ret = writeTcpSocket(sock_server_tcp, msg, strlen(msg));
-		addBuffer(clientSendBuffer, msg, strlen(msg));
-		ret = 1;
+		ret = addBuffer(clientSendBuffer, msg, strlen(msg));
+	}
+
+	if( ret < 0 )
+	{
+		errorWithServer();
+		return;
 	}
 }
 
@@ -252,8 +265,9 @@ static int eventServerSelect()
 		ret = readTcpSocket(sock_server_tcp, buffer, STR_PROTO_SIZE-1);
 	}
 
-	if( ret <= 0 )
+	if( ret < 0 )
 	{
+		errorWithServer();
 		return ret;
 	}
 
@@ -261,7 +275,11 @@ static int eventServerSelect()
 	traffic_down += ret;
 #endif
 
-	addBuffer(clientRecvBuffer, buffer, ret);
+	if( addBuffer(clientRecvBuffer, buffer, ret) < 0 )
+	{
+		errorWithServer();
+		return ret;
+	}
 
 	while( getBufferLine(clientRecvBuffer, buffer, STR_PROTO_SIZE) >= 0 )
 	{
@@ -345,9 +363,7 @@ static void selectClientSocket()
 	{
 		if( isServerAlive() == FALSE )
 		{
-			fprintf(stderr, "Server does not respond!\n");
-			setMsgToAnalyze(getMyText("ERROR_SERVER_DONT_ALIVE"));
-			setWorldEnd();
+			errorWithServer();
 			return;
 		}
 	}
