@@ -25,6 +25,8 @@
 #include "panel.h"
 #include "radar.h"
 #include "chat.h"
+#include "pauza.h"
+#include "term.h"
 
 #ifndef NO_SOUND
 #include "music.h"
@@ -186,6 +188,8 @@ void drawWorld()
 	}
 
 	drawChat();
+	drawPauza();
+	drawTerm();
 }
 
 static void netAction(tux_t *tux, int action)
@@ -454,8 +458,11 @@ void eventWorld()
 
 	eventNetMultiplayer();
 
-	eventArena(arena);
-	//eventModule();
+	if( isPauzeActive() == FALSE )
+	{
+		eventArena(arena);
+		//eventModule();
+	}
 
 	thisTux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
 
@@ -476,6 +483,8 @@ void eventWorld()
 
 	eventEnd();
 	eventChat();
+	eventPauza();
+	eventTerm();
 	eventEsc();
 }
 
@@ -488,6 +497,8 @@ void startWorld()
 
 	initListID();
 	initRadar();
+	initPauza();
+	initTerm();
 	initModule();
 	setGameType();
 	initChat();
@@ -550,6 +561,8 @@ void stoptWorld()
 	}
 
 	quitRadar();
+	quitPauza();
+	quitTerm();
 
 #ifndef NO_SOUND
 	stopMusic();

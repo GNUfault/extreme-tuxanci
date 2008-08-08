@@ -69,12 +69,13 @@ static void initGame()
 	initShot();
 	initPanel();
 	initWorld();
+
 	initScreenMainMenu();
 	initScreenAnalyze();
+	initScreenChoiceArena();
 	initScreenSetting();
 	initScreenSettingKeys();
 	initScreenGameType();
-	initScreenChoiceArena();
 	initScreenCredits();
 	initScreenTable();
 	initScreenBrowser();
@@ -83,6 +84,17 @@ static void initGame()
 void quitGame()
 {
 	quitSDL();
+
+	quitScreenMainMenu();
+	quitScreenAnalyze();
+	quitScreenSetting();
+	quitScreenSettingKeys();
+	quitScreenGameType();
+	quitScreenChoiceArena();
+	quitScreenCredits();
+	quitScreenTable();
+	quitScreenBrowser();
+
 	quitLayer();
 	quitFont();
 	quitLanguage();
@@ -99,15 +111,6 @@ void quitGame()
 	quitMusic();
 	quitAudio();
 #endif
-	quitScreenMainMenu();
-	quitScreenAnalyze();
-	quitScreenSetting();
-	quitScreenSettingKeys();
-	quitScreenGameType();
-	quitScreenChoiceArena();
-	quitScreenCredits();
-	quitScreenTable();
-	quitScreenBrowser();
 
 	printf("quit..\n");
 

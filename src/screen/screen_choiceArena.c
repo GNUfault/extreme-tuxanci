@@ -104,6 +104,16 @@ int getChoiceArenaId()
 	return choiceArenaId;
 }
 
+void setChoiceArenaId(int n)
+{
+	widget_buttonimage_t *widget_buttonimage;
+
+	choiceArenaId = n;
+
+	widget_buttonimage = (widget_buttonimage_t *)listWidgetButtonimage->list[choiceArenaId];
+	widget_buttonimage->active = TRUE;
+}
+
 static void eventWidget(void *p)
 {
 	widget_button_t *button;
@@ -147,12 +157,12 @@ void initScreenChoiceArena()
 
 		widget_buttonimage = newWidgetButtonimage(image,
 			x, y, eventWidgetButtonImage);
-
+/*
 		if( i == choiceArenaId )
 		{
 			widget_buttonimage->active = 1;
 		}
-
+*/
 		addList( listWidgetButtonimage, widget_buttonimage);
 	}
 

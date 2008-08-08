@@ -11,6 +11,7 @@
 extern void drawScreenChoiceArena();
 extern void eventScreenChoiceArena();
 extern int getChoiceArenaId();
+extern void setChoiceArenaId(int n);
 extern void initScreenChoiceArena();
 extern void quitScreenChoiceArena();
 

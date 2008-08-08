@@ -9,7 +9,7 @@ ${WORKDIR}/net/udp ${WORKDIR}/net/tcp ${WORKDIR}/net/dns
 )
 
 SET ( SRC_client
-${WORKDIR}/client/layer ${WORKDIR}/client/term ${WORKDIR}/client/screen ${WORKDIR}/client/interface ${WORKDIR}/client/client ${WORKDIR}/client/chat ${WORKDIR}/client/configFile ${WORKDIR}/client/language ${WORKDIR}/client/font ${WORKDIR}/client/game ${WORKDIR}/client/radar ${WORKDIR}/client/panel ${WORKDIR}/client/image ${WORKDIR}/client/keyboardBuffer
+${WORKDIR}/client/layer ${WORKDIR}/client/term ${WORKDIR}/client/screen ${WORKDIR}/client/interface ${WORKDIR}/client/client ${WORKDIR}/client/chat ${WORKDIR}/client/configFile ${WORKDIR}/client/language ${WORKDIR}/client/font ${WORKDIR}/client/game ${WORKDIR}/client/radar ${WORKDIR}/client/panel ${WORKDIR}/client/image ${WORKDIR}/client/keyboardBuffer ${WORKDIR}/client/pauza
 
 ${WORKDIR}/screen/screen_choiceArena ${WORKDIR}/screen/screen_settingKeys ${WORKDIR}/screen/screen_table ${WORKDIR}/screen/screen_setting ${WORKDIR}/screen/screen_credits ${WORKDIR}/screen/screen_world ${WORKDIR}/screen/screen_analyze ${WORKDIR}/screen/screen_mainMenu ${WORKDIR}/screen/screen_browser ${WORKDIR}/screen/screen_gameType
 

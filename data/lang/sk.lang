@@ -42,6 +42,18 @@ NAME_PLAYER1 Meno Hraca 1:
 NAME_PLAYER2 Meno Hraca 2:
 MUSIC Hudba:
 SOUND Zvuk:
+CONTROLS Ovladanie
+
+#setting keys - menu
+TUXLEFT Hrač 2
+TUXRIGHT Hrač 1
+KEY_UP Hore:
+KEY_DOWN Dole:
+KEY_LEFT Dolava:
+KEY_RIGHT Doprava:
+KEY_FIRE Strelba:
+KEY_SWITCH Prepnutie zb.:
+#setting keys - menu
 
 # settings - game type
 NONE žiadne

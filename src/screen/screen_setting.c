@@ -9,6 +9,7 @@
 #include "textFile.h"
 #include "director.h"
 #include "homeDirector.h"
+#include "arenaFile.h"
 
 #include "configFile.h"
 #include "language.h"
@@ -24,6 +25,8 @@
 #include "screen_mainMenu.h"
 #include "screen_setting.h"
 #include "screen_settingKeys.h"
+#include "screen_settingKeys.h"
+#include "screen_choiceArena.h"
 
 #include "widget_label.h"
 #include "widget_button.h"
@@ -277,6 +280,9 @@ static void initSettingFile()
 	check_sound->status = isYesOrNO(val);
 #endif
 
+	loadValueFromConfigFile(configFile, "ARENA", val, STR_SIZE, "FAGN");
+	setChoiceArenaId( getArenaIdFormNetName(val) );
+
 	saveTextFile(configFile);
 }
 
@@ -314,6 +320,8 @@ static void saveAndDestroyConfigFile()
 	setValueInConfigFile(configFile, "MUSIC", getYesOrNo(check_music->status) );
 	setValueInConfigFile(configFile, "SOUND", getYesOrNo(check_sound->status) );
 #endif
+
+	setValueInConfigFile(configFile, "ARENA", getArenaNetName(getChoiceArenaId()) );
 
 	saveTextFile(configFile);
 	destroyTextFile(configFile);

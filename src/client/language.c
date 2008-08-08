@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <sys/stat.h>
 
 #include "main.h"
 #include "list.h"
@@ -11,12 +12,13 @@
 
 #include "configFile.h"
 #include "language.h"
+#include "director.h"
 
 static textFile_t *languageFile;
 static char fontFile[STR_FILE_NAME_SIZE];
 static int fontSize;
 
-char* getHead(textFile_t *ts)
+static char* getHead(textFile_t *ts)
 {
 	int i;
 
@@ -34,7 +36,54 @@ char* getHead(textFile_t *ts)
 	return NULL;
 }
 
+static char* getSupportLanguage()
+{
+	director_t *director;
+	char *envLang;
+	char lang[STR_SIZE];
+	int i;
 
+	printf("I search language..\n");
+
+	envLang = getenv("LANG");
+
+	if( envLang == NULL )
+	{
+		printf("Environment LANG not defined, I use default value \"en\"\n");
+		return strdup("en");
+	}
+
+	memset(lang, 0, STR_SIZE);
+	strncpy(lang, envLang, 2);
+
+	director = loadDirector(PATH_LANG);
+
+	if( director == NULL )
+	{
+		fprintf(stderr, "Do not open director %s\n", PATH_LANG);
+		return strdup("en");
+	}
+
+	for( i = 0 ; i < director->list->count ; i++ )
+	{
+		char *line;
+
+		line = (char *)director->list->list[i];
+
+		if( strncmp(lang, line, 2) == 0 )
+		{
+			printf("I choice lang %s in file %s\n", lang, line);
+			return strdup(lang);
+		}
+	}
+
+	destroyDirector(director);
+
+	printf("Lang %s not support, I use default language english\n", lang);
+
+	return strdup("en");
+}
+ 
 int initLanguage()
 {
 	textFile_t *languageTypeFile;
@@ -48,12 +97,16 @@ int initLanguage()
 
 	if( languageTypeFile == NULL )
 	{
+		char *defaultLang;
+
 		fprintf(stderr, "Don't load %s\n", path);
 		fprintf(stderr, "I create %s\n", path);
 
 		languageTypeFile = newTextFile(path);
-		addList(languageTypeFile->text, strdup("en") );
+		defaultLang = getSupportLanguage();
+		addList(languageTypeFile->text, strdup(defaultLang) );
 		saveTextFile(languageTypeFile);
+		free(defaultLang);
 	}
 
 	if( languageTypeFile == NULL )
