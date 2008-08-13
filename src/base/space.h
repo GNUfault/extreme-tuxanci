@@ -21,7 +21,6 @@ typedef struct space_struct
 
 	zone_t ***zone;
 
-	list_t *list;
 	list_t *listIndex;
 
 	void (*getStatus)(void *p, int *id, int *x, int *y, int *w, int *h);
@@ -32,6 +31,8 @@ extern space_t *newSpace(int w, int h, int segW, int segH,
 		  void (*getStatus)(void *p, int *id, int *x, int *y, int *w, int *h),
 		  void (*setStatus)(void *p, int x, int y, int w, int h));
 
+extern int getSpaceCount(space_t *p);
+extern void* getItemFromSpace(space_t *p, int offset);
 extern void addObjectToSpace(space_t *p, void *item);
 extern void getObjectFromSpace(space_t *p, int x, int y, int w, int h, list_t *list);
 extern void* getObjectFromSpaceWithID(space_t *p, int id);

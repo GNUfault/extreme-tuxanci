@@ -137,15 +137,15 @@ int draw(int x, int y, int w, int h)
 }
 #endif
 
-tux_t *findOtherTux(list_t *list)
+tux_t *findOtherTux(space_t *space)
 {
 	int i;
 
-	for( i = 0 ; i < list->count ; i++ )
+	for( i = 0 ; i < getSpaceCount(space) ; i++ )
 	{
 		tux_t *thisTux;
 
-		thisTux = list->list[i];
+		thisTux = getItemFromSpace(space, i);
 
 		if( thisTux->control != TUX_CONTROL_AI )
 		{
@@ -191,7 +191,7 @@ static void shotTux(arena_t *arena, tux_t *tux_ai, tux_t *tux_rival)
 	}
 }
 
-static void eventTux(tux_t *tux)
+static void eventTuxAI(tux_t *tux)
 {
 	arena_t *arena;
 	tux_t *rivalTux;
@@ -218,7 +218,7 @@ static void eventTux(tux_t *tux)
 
 	arena = export_fce->fce_getCurrentArena();
 
-	rivalTux = findOtherTux(arena->spaceTux->list);
+	rivalTux = findOtherTux(arena->spaceTux);
 
 	if( rivalTux == NULL || rivalTux->status != TUX_STATUS_ALIVE )
 	{
@@ -340,13 +340,22 @@ static void eventTux(tux_t *tux)
 */
 }
 
+static void action_tuxAI(space_t *space, tux_t *tux, void *p)
+{
+	if( tux->control == TUX_CONTROL_AI &&
+	    tux->status == TUX_STATUS_ALIVE )
+	{
+		eventTuxAI(tux);
+	}
+}
+
 int event()
 {
 	static my_time_t lastEvent = 0;
 	my_time_t curentTime;
 	arena_t *arena;
 	int countTuxAI;
-	int i;
+	//int i;
 
 	if( lastEvent == 0 )
 	{
@@ -372,6 +381,8 @@ int event()
 
 	countTuxAI = 0;
 
+	actionSpace(arena->spaceTux, action_tuxAI, NULL);
+/*
 	for( i = 0 ; i < arena->spaceTux->list->count ; i++ )
 	{
 		tux_t *thisTux;
@@ -385,7 +396,7 @@ int event()
 			countTuxAI = 0;
 		}
 	}
-
+*/
 	return 0;
 }
 

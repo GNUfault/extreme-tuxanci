@@ -171,7 +171,7 @@ void addNewItem(space_t *spaceItem, int author_id)
 	int type;
 
 #ifdef PUBLIC_SERVER	
-	if( spaceItem->list->count >= atoi( getSetting("MAX_ITEM", "--max-item", "100") ) )
+	if( getSpaceCount(spaceItem) >= atoi( getSetting("MAX_ITEM", "--max-item", "100") ) )
 	{
 		return;
 	}

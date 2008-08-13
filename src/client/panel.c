@@ -51,36 +51,24 @@ void initPanel()
 	isPanelInit = TRUE;
 }
 
-static void setScoreline(list_t *listTux, char *str)
-{
-	tux_t *thisTux;
-	int i;
-
-	assert( listTux != NULL );
-	assert( str != NULL );
-
-	strcpy(str, "");
-
-	for( i = 0 ; i < listTux->count ; i++ )
-	{
-		char num[STR_SIZE];
-
-		thisTux = (tux_t *)listTux->list[i];
-		assert( thisTux != NULL );
-
-		sprintf(num, "%s%d", ( i == 0 ? "" : " : " ), thisTux->score);
-		strcat(str, num);
-	}
-}
-
-static void drawScore(list_t *listTux)
+static void drawScore(tux_t *tux_right, tux_t *tux_left)
 {
 	char strScoreLine[STR_SIZE];
 	int w, h;
 
-	assert( listTux != NULL );
+	if( tux_right != NULL && tux_left != NULL )
+	{
+		sprintf(strScoreLine, "%d : %d", tux_right->score, tux_left->score);
+	}
+	else if( tux_right != NULL )
+	{
+		sprintf(strScoreLine, "%d", tux_right->score);
+	}
+	else if( tux_left != NULL )
+	{
+		sprintf(strScoreLine, "%d", tux_left->score);
+	}
 
-	setScoreline(listTux, strScoreLine);
 	getTextSize(strScoreLine, &w , &h);
 	drawFont(strScoreLine, PANEL_SCORE_LOCATION_X, PANEL_SCORE_LOCATION_Y, COLOR_WHITE);
 }
@@ -137,56 +125,52 @@ static void drawGrafBonus(tux_t *tux,int x, int y)
 	drawImage(g_bonus, x+1, y, 0, g_bonus->h/2, offset, g_bonus->h/2);
 }
 
-void drawPanel(list_t *listTux)
+static void drawTuxRight(tux_t *tux)
 {
-	int i;
+	if( tux == NULL )
+	{
+		return;
+	}
 
-	assert( listTux != NULL );
+	drawShotInfo(tux, PANEL_LOCATION_X+740, PANEL_LOCATION_Y+34);
+	drawGunInfo(tux, PANEL_LOCATION_X+620, PANEL_LOCATION_Y+30);
 
+	if( tux->bonus != BONUS_NONE )
+	{
+		drawGrafBonus(tux, PANEL_LOCATION_X+460, PANEL_LOCATION_Y+50);
+		drawBonusInfo(tux, PANEL_LOCATION_X+460, PANEL_LOCATION_Y+30);
+	}
+}
+
+static void drawTuxLeft(tux_t *tux)
+{
+	if( tux == NULL )
+	{
+		return;
+	}
+
+	drawShotInfo(tux, PANEL_LOCATION_X+8, PANEL_LOCATION_Y+34);
+	drawGunInfo(tux, PANEL_LOCATION_X+130, PANEL_LOCATION_Y+30);
+
+	if( tux->bonus != BONUS_NONE )
+	{
+		drawGrafBonus(tux, PANEL_LOCATION_X+200, PANEL_LOCATION_Y+50);
+		drawBonusInfo(tux, PANEL_LOCATION_X+200, PANEL_LOCATION_Y+30);
+	}
+}
+
+void drawPanel(tux_t *tux_right, tux_t *tux_left)
+{
 	drawImage(g_panel, PANEL_LOCATION_X, PANEL_LOCATION_Y, 0, 0, g_panel->w, g_panel->h);
-	drawScore(listTux);
+	drawScore(tux_right, tux_left);
 
 	if( isRecivedNewMsg() )
 	{
 		drawFont("recived new msg", PANEL_LOCATION_X, PANEL_LOCATION_Y, COLOR_WHITE);
 	}
 
-	for( i = 0 ; i < listTux->count ; i++ )
-	{
-		tux_t *thisTux;
-		int x, y;
-	
-		thisTux  = (tux_t *)listTux->list[i];
-		assert( thisTux != NULL );
-
-		x = PANEL_LOCATION_X;
-		y = PANEL_LOCATION_Y;
-
-		switch( i )
-		{
-			case 0 :
-				drawShotInfo(thisTux, x+8, y+34);
-				drawGunInfo(thisTux, x+130, y+30);
-
-				if( thisTux->bonus != BONUS_NONE )
-				{
-					drawGrafBonus(thisTux,x+200, y+50);
-					drawBonusInfo(thisTux,x+200, y+30);
-				}
-			break;
-
-			case 1 :
-				drawShotInfo(thisTux, x+740, y+34);
-				drawGunInfo(thisTux, x+620, y+30);
-
-				if( thisTux->bonus != BONUS_NONE )
-				{
-					drawGrafBonus(thisTux,x+460, y+50);
-					drawBonusInfo(thisTux,x+460, y+30);
-				}
-			break;
-		}
-	}
+	drawTuxRight(tux_right);
+	drawTuxLeft(tux_left);
 }
 
 void quitPanel()

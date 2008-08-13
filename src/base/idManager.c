@@ -74,9 +74,10 @@ static int findNewID()
 	}
 
 	do{
-		ret  = random() % MAX_ID;
-
+		ret  = ( random() % (listID->count + 8 ) ) + 1;
 	}while( isRegisterID(ret) != -1 );
+
+	//printf("new ID %d\n", ret);
 
 	return ret;
 }

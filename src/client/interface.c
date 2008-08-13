@@ -16,7 +16,7 @@ static SDL_Surface *screen;
 static SDL_TimerID timer;
 
 // window flags
-static Uint32 g_win_flags = SDL_HWSURFACE|SDL_DOUBLEBUF;
+static Uint32 g_win_flags = SDL_SWSURFACE|SDL_DOUBLEBUF|SDL_ANYFORMAT;
 
 static bool_t isInterfaceInit = FALSE;
 
@@ -70,9 +70,9 @@ int initSDL()
 		screen->format->BitsPerPixel,
 		screen->format->Rmask,	screen->format->Gmask,
 		screen->format->Bmask,	screen->format->Amask);
-
-	memset(my_surface->pixels, 128, 200);
 */
+	//memset(my_surface->pixels, 128, 200);
+
 	if (screen == NULL )
 	{
 		fprintf(stderr, "%s\n", SDL_GetError());
@@ -106,6 +106,7 @@ void interfaceRefresh()
 
 	//drawImage(my_surface, 200, 100, 0, 0, 200, 200);
 	SDL_Flip(screen);
+	//SDL_UpdateRect(screen, 400, 0, 400, 600);
 }
 
 int toggleFullscreen()

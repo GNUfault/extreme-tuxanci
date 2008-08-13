@@ -8,80 +8,95 @@
 #include "list.h"
 #include "index.h"
 
-static int* index_newInt(int x)
+#define DEBUG_INDEX
+
+static index_item_t* newIndexItem(int key, void *data)
 {
-	int *new;
-	new = malloc( sizeof(int) );
-	*new = x;
+	index_item_t *new;
+
+	new = malloc( sizeof(index_item_t) );
+	new->key = key;
+	new->data = data;
+
 	return new;
 }
 
-#ifdef CHECK_INDEX
-static void printIndex(list_t *list)
+#ifdef DEBUG_INDEX
+static void printIndexItem(index_item_t *p)
+{
+	printf("key = %d data = %p\n", p->key, p->data);
+}
+
+static void printListIndexItem(list_t *list)
 {
 	int i;
 
-	printf("printIndex\n");
+	printf("list :\n");
+	printf("------------------\n");
 
 	for( i = 0 ; i < list->count ; i++ )
 	{
-		int thisIndex;
+		index_item_t *this;
 
-		thisIndex = *(int *)list->list[i];
-		printf("%d\n", thisIndex);
+		this = (index_item_t *)list->list[i];
+		printIndexItem(this);
 	}
 }
-#endif
 
-#ifdef CHECK_INDEX
-static void checkIndex(list_t *list)
+static void checkList(list_t *list)
 {
-	int index, thisIndex;
 	int i;
+	int prev;
+	int this;
 
-	//printf("check index\n");
+	//return;
 
 	if( list->count == 0 )
 	{
 		printf("nothing\n");
-		return;
+		return;	
 	}
 
-	thisIndex = *(int *)list->list[0];
-
+	prev = ( (index_item_t *) list->list[0] )->key;
 
 	for( i = 1 ; i < list->count ; i++ )
 	{
-		index = *(int *)list->list[i];
-		//printf("check %d\n", index);
+		this = ( (index_item_t *) list->list[i] )->key;
 
-		if( index <= thisIndex )
+		if( prev >= this )
 		{
-			printIndex(list);
+			printListIndexItem(list);
 			assert( ! "error" );
 		}
 
-		thisIndex = index;
+		prev = this;
 	}
 }
 #endif
+
+static void destroyIndexItem(index_item_t *p)
+{
+	free(p);
+}
 
 list_t* newIndex()
 {
 	return newList();
 }
 
-int addToIndex(list_t *list, int index)
+void addToIndex(list_t *list, int key, void *data)
 {
-	int min, max;
-	int point;
-	int point_index;
+#ifdef DEBUG_INDEX
+	int count = 0;
+#endif
+
+	index_item_t *item;
+	index_item_t *this;
+	int min, max, point;
 	int len;
 
+	item = newIndexItem(key, data);
 	len = list->count;
-
-	//printf("addToIndex (%p, %d)\n", list, index);
-	//printIndex(list);
 
 	min = 0;
 	max = len-1;
@@ -90,42 +105,58 @@ int addToIndex(list_t *list, int index)
 	{
 		point = min + ( max - min ) / 2;
 
-		if(  max < 0 )
+#ifdef DEBUG_INDEX
+		if( ++count == len*5 )
 		{
-			insList(list, 0, index_newInt(index));
-#ifdef CHECK_INDEX
-			checkIndex(list);
+			printf("CICLIC ERROR\n");
+			printIndexItem(item);
+			printf("-------------------\n");
+			printListIndexItem(list);
+			assert( 0 );
+		}
 #endif
-			return 0;
+
+		if( max < 0 )
+		{
+			insList(list, 0, item);
+#ifdef DEBUG_INDEX
+			checkList(list);
+#endif
+			return;
 		}
 
-		if(  min >= len )
+		if( min >= len )
 		{
-			addList(list, index_newInt(index) );
-#ifdef CHECK_INDEX
-			checkIndex(list);
+			addList(list, item);
+#ifdef DEBUG_INDEX
+			checkList(list);
 #endif
-			return len;
+			return;
 		}
 		
-		point_index = *(int *)list->list[point];
+		this = (index_item_t *)list->list[point];
 
+/*
+		printf("min = %d max = %d point = %d len = %d offset = %d\n",
+			min, max, point, len, offset);
+
+*/
 		if( min > max )
 		{
-			insList(list, point,  index_newInt(index) );
-#ifdef CHECK_INDEX
-			checkIndex(list);
+			insList(list, point, item);
+#ifdef DEBUG_INDEX
+			checkList(list);
 #endif
-			return point;
+			return;
 		}
 
-		if( index > point_index )
+		if( item->key > this->key )
 		{
 			min = point + 1;
 			continue;
 		}
 
-		if( index < point_index )
+		if( item->key < this->key )
 		{
 			max = point - 1;
 			continue;
@@ -133,17 +164,17 @@ int addToIndex(list_t *list, int index)
 	}
 }
 
-int getFormIndex(list_t *list, int index)
+static int getOffsetFromIndex(list_t *list, int key)
 {
-	int point_index;
-	int len;
-	int min, max;
-	int point;
+	index_item_t *this;
+	int min, max, point, len;
 
-	//printf("getFormIndex %d\n", index);
-	//printIndex(list);
+	len = list->count;
 
-	len =list->count;
+	if( len == 0 )
+	{
+		return -1;
+	}
 
 	min = 0;
 	max = len-1;
@@ -156,21 +187,24 @@ int getFormIndex(list_t *list, int index)
 		{
 			return -1;
 		}
-
-		point_index = *(int *)list->list[point];
-
-		if( point_index == index )
+		
+		this = (index_item_t *)list->list[point];
+/*
+		printf("min = %d max = %d point = %d len = %d offset = %d\n",
+			min, max, point, len, offset);
+*/
+		if( key == this->key )
 		{
 			return point;
 		}
 
-		if( index > point_index )
+		if( key > this->key )
 		{
 			min = point + 1;
 			continue;
 		}
 
-		if( index < point_index )
+		if( key < this->key )
 		{
 			max = point - 1;
 			continue;
@@ -178,19 +212,78 @@ int getFormIndex(list_t *list, int index)
 	}
 }
 
-void delFromIndex(list_t *list, int index)
+void* getFromIndex(list_t *list, int key)
 {
 	int offset;
 
-	offset = getFormIndex(list, index);
-	assert( offset != -1 );
+	offset = getOffsetFromIndex(list, key);
 
-	delListItem(list, offset, free);
+	if( offset != -1 )
+	{
+		index_item_t *this;
+
+		this = list->list[offset];
+		return this->data;
+	}
+
+	return NULL;
+}
+
+void delFromIndex(list_t *list, int key)
+{
+	int offset;
+
+	offset = getOffsetFromIndex(list, key);
+
+	if( offset != -1 )
+	{
+		delListItem(list, offset, destroyIndexItem);
+	}
+}
+
+void delFromIndexWithObject(list_t *list, int key, void *f)
+{
+	int offset;
+
+	offset = getOffsetFromIndex(list, key);
+
+	if( offset != -1 )
+	{
+		index_item_t *this;
+		void (*fce)(void *p);
+
+		this = list->list[offset];
+
+		fce = f;
+		fce(this);
+
+		delListItem(list, offset, destroyIndexItem);
+	}
+}
+
+void actionIndexWithObject(list_t *list, void *f)
+{
+	int i;
+
+	for( i = 0 ; i < list->count ; i++)
+	{
+		index_item_t *this;
+		void (*fce)(void *p);
+
+		this = list->list[i];
+
+		fce = f;
+		fce(this);
+	}
 }
 
 void destroyIndex(list_t *list)
 {
-	assert( list != NULL);
+	destroyListItem(list, destroyIndexItem);
+}
 
-	destroyListItem(list, free);
+void destroyIndexWithObject(list_t *list, void *f)
+{
+	actionIndexWithObject(list, f);
+	destroyListItem(list, destroyIndexItem);
 }

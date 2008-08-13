@@ -125,6 +125,8 @@ void prepareArena()
 
 	//printf("getSettingAI = %s\n", getSettingAI());
 	setCurrentArena(NULL);
+	tuxWithControlRightKeyboard = NULL;
+	tuxWithControlLeftKeyboard = NULL;
 
 	switch( getNetTypeGame() )
 	{
@@ -179,7 +181,7 @@ void drawWorld()
 	if( arena != NULL )
 	{
 		drawArena(arena);
-		drawPanel(arena->spaceTux->list);
+		drawPanel(tuxWithControlRightKeyboard, tuxWithControlLeftKeyboard);
 
 		if( arena->w > WINDOW_SIZE_X || arena->h > WINDOW_SIZE_Y )
 		{
@@ -505,18 +507,16 @@ void startWorld()
 	prepareArena();
 }
 
+static void action_analyze(space_t *space, tux_t *tux, void *p)
+{
+	addAnalyze(tux->name, tux->score);
+}
+
 static void setAnalyze()
 {
-	int i;
-	tux_t *tux;
-
 	restartAnalyze();
 
-	for( i = 0 ; i < arena->spaceTux->list->count ; i++ )
-	{
-		tux = (tux_t *)(arena->spaceTux->list->list[i]);
-		addAnalyze(tux->name, tux->score);
-	}
+	actionSpace(arena->spaceTux, action_analyze, NULL);
 
 	endAnalyze();
 }

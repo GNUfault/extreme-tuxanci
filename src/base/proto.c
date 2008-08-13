@@ -90,12 +90,16 @@ void proto_send_hello_client(char *name)
 
 #endif
 
+static void action_sendItem(space_t *space, item_t *item, client_t *client)
+{
+	proto_send_additem_server(PROTO_SEND_ONE, client, item);
+}
+
 static void sendInfoCreateClient(client_t *client)
 {
 	list_t *listClient;
 	client_t *thisClient;
 	tux_t *thisTux;
-	item_t *thisItem;
 	int i;
 
 	assert( client != NULL );
@@ -120,11 +124,14 @@ static void sendInfoCreateClient(client_t *client)
 		}
 	}
 
-	for( i = 0 ; i < getCurrentArena()->spaceItem->list->count; i++)
+	actionSpace(getCurrentArena()->spaceItem, action_sendItem, client);
+/*
+	for( i = 0 ; i < getCurrentArena()->spaceItem->listIndex->count; i++)
 	{
 		thisItem = (item_t *) getCurrentArena()->spaceItem->list->list[i];
 		proto_send_additem_server(PROTO_SEND_ONE, client, thisItem);
 	}
+*/
 }
 
 void proto_recv_hello_server(client_t *client, char *msg)
@@ -203,7 +210,7 @@ void proto_send_status_server(int type, client_t *client)
 #endif
 
 	version = TUXANCI_VERSION;
-	clients = getCurrentArena()->spaceTux->list->count;
+	clients = getCurrentArena()->spaceTux->listIndex->count;
 	maxclients = getServerMaxClients();
 	uptime = (unsigned int)getUpdateServer();
 	arena = getArenaNetName( getChoiceArenaId() );

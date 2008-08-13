@@ -124,6 +124,7 @@ extern void eventConflictTuxWithShot(arena_t *arena);
 extern void eventConflictTuxWithTeleport(list_t *listTux, list_t *listTeleport);
 extern void tuxTeleport(tux_t *tux);
 extern void actionTux(tux_t *tux, int action);
+extern void eventTux(tux_t *tux);
 extern void eventListTux(list_t *listTux);
 extern tux_t* getTuxID(list_t *listTux, int id);
 extern void getTuxProportion(tux_t *tux, int *x,int *y, int *w, int *h);

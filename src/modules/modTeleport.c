@@ -159,15 +159,15 @@ static void cmd_teleport(char *line)
 	addObjectToSpace(spaceTeleport, new);
 }
 
-static teleport_t* getRandomTeleportBut(list_t *list, teleport_t *teleport)
+static teleport_t* getRandomTeleportBut(space_t *space, teleport_t *teleport)
 {
-	int x;
+	int index;
 
 	do{
-		x = random() % list->count;
-	}while( list->list[x] == teleport );
+		index = random() % getSpaceCount(space);
+	}while( getItemFromSpace(space, index) == teleport );
 
-	return (teleport_t *) list->list[x];
+	return (teleport_t *) getItemFromSpace(space, index);
 }
 
 static int getRandomPosition()
@@ -202,16 +202,16 @@ static void teleportTux(tux_t *tux, teleport_t *teleport)
 		return;
 	}
 
-	distTeleport = getRandomTeleportBut(spaceTeleport->list, teleport);
+	distTeleport = getRandomTeleportBut(spaceTeleport, teleport);
 
 	fce_move_tux(tux, distTeleport->x, distTeleport->y, distTeleport->w, distTeleport->h);
 }
 
-static void moveShotFromTeleport(shot_t *shot, teleport_t *teleport, list_t *list)
+static void moveShotFromTeleport(shot_t *shot, teleport_t *teleport, space_t *space)
 {
 	teleport_t *distTeleport;
 
-	distTeleport = getRandomTeleportBut(list, teleport);
+	distTeleport = getRandomTeleportBut(space, teleport);
 
 	fce_move_shot(shot, getRandomPosition(), teleport->x, teleport->y,
 		distTeleport->x, distTeleport->y, distTeleport->w, distTeleport->h);
@@ -277,7 +277,7 @@ static void action_eventteleportshot(space_t *space, teleport_t *teleport, shot_
 		return;
 	}
 
-	moveShotFromTeleport(shot, teleport, spaceTeleport->list);
+	moveShotFromTeleport(shot, teleport, spaceTeleport);
 }
 
 static void action_eventshot(space_t *space, shot_t *shot, space_t *spaceTeleport)

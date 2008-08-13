@@ -675,26 +675,32 @@ static void eventBonus(tux_t *tux)
 	}
 }
 
+void eventTux(tux_t *tux)
+{
+	arena_t *arena;
+
+	arena = getCurrentArena();
+
+#ifndef PUBLIC_SERVER
+	tuxControl(tux);
+#endif
+	pickUpGun(tux);
+	eventBonus(tux);
+	eventGiveTuxListItem(tux, arena->spaceItem);
+}
+
 void eventListTux(list_t *listTux)
 {
 	tux_t *thisTux;
-	arena_t *arena;
 	int i;
 
 	assert( listTux != NULL );
-	arena = getCurrentArena();
 
 	for( i = 0 ; i < listTux->count ; i++ )
 	{
 		thisTux  = (tux_t *)listTux->list[i];
 		assert( thisTux != NULL );
-
-#ifndef PUBLIC_SERVER
-		tuxControl(thisTux);
-#endif
-		pickUpGun(thisTux);
-		eventBonus(thisTux);
-		eventGiveTuxListItem(thisTux, arena->spaceItem);
+		eventTux(thisTux);
 	}
 }
 

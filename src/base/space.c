@@ -48,7 +48,6 @@ space_t *newSpace(int w, int h, int segW, int segH,
 	new->segH = segH;
 	new->getStatus = getStatus;
 	new->setStatus = setStatus;
-	new->list = newList();
 	new->listIndex = newIndex();
 
 	new->zone = malloc( new->w * sizeof(list_t **) );
@@ -78,12 +77,24 @@ static void getSegment(space_t *p, int x, int y, int w, int h,
 	*segH = ( (y+h) / p->segH + 1 ) - *segY;
 }
 
+int getSpaceCount(space_t *p)
+{
+	return p->listIndex->count;
+}
+
+void* getItemFromSpace(space_t *p, int offset)
+{
+	index_item_t *this;
+
+	this = (index_item_t *)p->listIndex->list[offset];
+	return this->data;
+}
+
 void addObjectToSpace(space_t *p, void *item)
 {
 	int segX, segY, segW, segH;
 	int id, x, y, w, h;
 	int i, j;
-	int offset;
 
 	p->getStatus(item, &id, &x, &y, &w, &h);
 	getSegment(p, x, y, w, h, &segX, &segY, &segW, &segH);
@@ -101,8 +112,7 @@ void addObjectToSpace(space_t *p, void *item)
 		}
 	}
 
-	offset = addToIndex(p->listIndex, id);
-	insList(p->list, offset, item);
+	addToIndex(p->listIndex, id, item);
 }
 
 void getObjectFromSpace(space_t *p, int x, int y, int w, int h, list_t *list)
@@ -141,11 +151,7 @@ void getObjectFromSpace(space_t *p, int x, int y, int w, int h, list_t *list)
 
 void* getObjectFromSpaceWithID(space_t *space, int id)
 {
-	int index;
-
-	index = getFormIndex(space->listIndex, id);
-
-	return ( index != -1 ? space->list->list[index] : NULL );
+	return getFromIndex(space->listIndex, id);
 }
 
 int isConflictWithObjectFromSpace(space_t *p, int x, int y, int w, int h)
@@ -249,11 +255,6 @@ void delObjectFromSpace(space_t *p, void *item)
 		}
 	}
 
-	index = getFormIndex(p->listIndex, id);
-	assert( index != -1 );
-
-	delList(p->list, index);
-
 	delFromIndex(p->listIndex, id);
 }
 
@@ -317,13 +318,13 @@ void actionSpace(space_t *space, void *f, void *p)
 	int i;
 
 	fce = f;
-	len = space->list->count;
+	len = space->listIndex->count;
 
 	for( i = 0 ; i < len ; i++ )
 	{
-		fce(space, space->list->list[i], p);
+		fce(space, getItemFromSpace(space, i), p);
 
-		if( space->list->count == len-1 )
+		if( space->listIndex->count == len-1 )
 		{
 			len--;
 			i--;
@@ -358,7 +359,6 @@ void destroySpace(space_t *p)
 {
 	int j, i;
 
-	destroyList(p->list);
 	destroyIndex(p->listIndex);
 
 	for( i = 0 ; i < p->h ; i++ )
@@ -385,33 +385,11 @@ void destroySpaceWithObject(space_t *p, void *f)
 
 	fce = f;
 
-	for( i = 0 ; i < p->list->count ; i++ )
-		fce(p->list->list[i]);
+	for( i = 0 ; i < p->listIndex->count ; i++ )
+	{
+		fce( getItemFromSpace(p, i) );
+	}
 
 	destroySpace(p);
 }
-
-#ifdef DEBUG_SPACE
-
-void test_space()
-{/*
-	space_t *space;
-	recv_t *recv;
-
-	space = newSpace(5000, 2500, 320, 240, getStatus, setStatus);
-
-	addObjectToSpace(space, newRecv(5, 0, 0, 1, 1) );
-	addObjectToSpace(space, newRecv(7, 0, 0, 1, 1) );
-	addObjectToSpace(space, newRecv(8, 0, 0, 1, 1) );
-	addObjectToSpace(space, newRecv(9, 0, 0, 1, 1) );
-	addObjectToSpace(space, newRecv(6, 0, 0, 1, 1) );
-*/
-/*
-	recv = getObjectFromSpaceWithID(space, 6);
-	if( recv != NULL )printf("id = %d\n", recv->id);
-*/
-//	printListID(space);
-}
-
-#endif
 

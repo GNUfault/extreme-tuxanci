@@ -223,6 +223,11 @@ void drawArena(arena_t *arena)
 
 #endif
 
+static void action_tux(space_t *space, tux_t *tux, void *p)
+{
+	eventTux(tux);
+}
+
 void eventArena(arena_t *arena)
 {
 	int i;
@@ -240,7 +245,7 @@ void eventArena(arena_t *arena)
 
 	eventListItem(arena->spaceItem);
 	
-	eventListTux(arena->spaceTux->list);
+	actionSpace(arena->spaceTux, action_tux, NULL);
 
 	eventTimer(arena->listTimer);
 }
