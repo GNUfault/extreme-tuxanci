@@ -22,11 +22,21 @@ widget_select_t* newWidgetSelect(int x, int y, void (*fce_event)(void *))
 	new = malloc( sizeof(widget_select_t) );
 	new->x = x;
 	new->y = y;
-	new->select = 0;
+	new->select = -1;
 	new->fce_event = fce_event;
 	new->list = newList();
 
 	return new;
+}
+
+char* getWidgetSelectItem(widget_select_t *p)
+{
+	if( p->select == -1 )
+	{
+		return NULL;
+	}
+
+	return (char *)p->list->list[p->select];
 }
 
 void addToWidgetSelect(widget_select_t *p, char *s)

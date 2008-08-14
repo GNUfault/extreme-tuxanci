@@ -61,6 +61,9 @@ arena_t* newArena(int w, int h)
 	new->spaceItem = newSpace(w, h, zone_w, zone_h, getStatusItem, setStatusItem);
 	new->spaceShot = newSpace(w, h, zone_w, zone_h, getStatusShot, setStatusShot);
 
+	new->countRound = 0;
+	new->max_countRound = 0;
+
 	return new;
 }
 

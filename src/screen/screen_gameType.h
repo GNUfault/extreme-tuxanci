@@ -10,6 +10,7 @@ extern void eventScreenGameType();
 extern void initScreenGameType();
 extern int setSettingGameType(int status);
 extern int getSettingGameType();
+extern char* getGemeTypeLoadSession();
 extern int setSettingIP(char *address);
 extern char* getSettingIP();
 extern int setSettingPort(int port);

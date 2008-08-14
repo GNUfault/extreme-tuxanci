@@ -29,6 +29,10 @@ typedef struct arena_struct
 	space_t *spaceShot;
 	space_t *spaceTux;
 	space_t *spaceItem;
+
+	int countRound;
+	int max_countRound;
+
 } arena_t;
 
 extern void setCurrentArena(arena_t *p);

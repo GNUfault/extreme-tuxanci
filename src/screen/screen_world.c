@@ -27,6 +27,8 @@
 #include "chat.h"
 #include "pauza.h"
 #include "term.h"
+#include "saveDialog.h"
+#include "saveLoad.h"
 
 #ifndef NO_SOUND
 #include "music.h"
@@ -43,8 +45,6 @@
 
 
 static arena_t *arena;
-static int count;
-static int max_count;
 static bool_t isScreenWorldInit = FALSE;
 static bool_t isEndWorld;
 
@@ -80,7 +80,12 @@ void setWorldArena(int id)
 
 void setMaxCountRound(int n)
 {
-	max_count = n;
+	arena->max_countRound = n;
+}
+
+int getMaxCountRound()
+{
+	return arena->max_countRound;
 }
 
 void setWorldEnd()
@@ -99,16 +104,16 @@ static void timer_endArena()
 
 void countRoundInc()
 {
-	if( count == WORLD_COUNT_ROUND_UNLIMITED ||
-	    count >= max_count )
+	if( arena->max_countRound == WORLD_COUNT_ROUND_UNLIMITED ||
+	    arena->countRound >= arena->max_countRound )
 	{
 		return;
 	}
 
-	count++;
+	arena->countRound++;
 	//printf("count %d/%d\n", count, max_count);
 
-	if( count >= max_count )
+	if( arena->countRound >= arena->max_countRound )
 	{
 		//printf("count %d ending\n", count);
 #ifndef NO_SOUND
@@ -128,12 +133,18 @@ void prepareArena()
 	tuxWithControlRightKeyboard = NULL;
 	tuxWithControlLeftKeyboard = NULL;
 
+	if( getGemeTypeLoadSession() != NULL )
+	{
+		loadArena(getGemeTypeLoadSession());
+		return;
+	}
+
 	switch( getNetTypeGame() )
 	{
 		case NET_GAME_TYPE_NONE :
 			setWorldArena( getChoiceArenaId() );
 			addNewItem(arena->spaceItem, ID_UNKNOWN);
-			getSettingCountRound(&max_count);
+			getSettingCountRound(&arena->max_countRound);
 
 			tux = newTux();
 			tux->control = TUX_CONTROL_KEYBOARD_RIGHT;
@@ -156,12 +167,15 @@ void prepareArena()
 					tux->control = TUX_CONTROL_AI;
 				}
 			}
+
+			//printf("getGemeTypeLoadSession = %s\n", getGemeTypeLoadSession());
+
 		break;
 
 		case NET_GAME_TYPE_SERVER :
 			setWorldArena( getChoiceArenaId() );
 			addNewItem(arena->spaceItem, ID_UNKNOWN);
-			getSettingCountRound(&max_count);
+			getSettingCountRound(&arena->max_countRound);
 
 			tux = newTux();
 			tux->control = TUX_CONTROL_KEYBOARD_RIGHT;
@@ -192,6 +206,7 @@ void drawWorld()
 	drawChat();
 	drawPauza();
 	drawTerm();
+	drawSaveDialog();
 }
 
 static void netAction(tux_t *tux, int action)
@@ -460,7 +475,7 @@ void eventWorld()
 
 	eventNetMultiplayer();
 
-	if( isPauzeActive() == FALSE )
+	if( isPauzeActive() == FALSE && isSaveDialogActive() == FALSE )
 	{
 		eventArena(arena);
 		//eventModule();
@@ -487,6 +502,8 @@ void eventWorld()
 	eventChat();
 	eventPauza();
 	eventTerm();
+	eventSaveDialog();
+
 	eventEsc();
 }
 
@@ -495,12 +512,12 @@ void startWorld()
 	arena = NULL;
 	isEndWorld = FALSE;
 
-	count = 0;
-
 	initListID();
 	initRadar();
 	initPauza();
 	initTerm();
+	initSaveDialog();
+
 	initModule();
 	setGameType();
 	initChat();
@@ -563,6 +580,8 @@ void stoptWorld()
 	quitRadar();
 	quitPauza();
 	quitTerm();
+	quitSaveDialog();
+
 
 #ifndef NO_SOUND
 	stopMusic();
