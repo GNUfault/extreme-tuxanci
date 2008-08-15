@@ -28,11 +28,8 @@
 
 static int keytable[KEY_LENGTH];
 static textFile_t *keycontrolFile;
-
 static widget_image_t *image_backgorund;
-
 static widget_button_t *button_back;
-
 // key names
 static widget_label_t *tux_right;
 static widget_label_t *tux_right_keyup;
@@ -76,6 +73,7 @@ void startScreenSettingKeys()
 static void setKeytableFromConfigFile(textFile_t *configFile)
 {
 	char val[STR_SIZE];
+
 	loadValueFromConfigFile(configFile, "TUX_RIGHT_MOVE_UP", val, STR_SIZE, "273");
 	keytable[ KEY_TUX_RIGHT_MOVE_UP ] = atoi(val);
 	loadValueFromConfigFile(configFile, "TUX_RIGHT_MOVE_RIGHT", val, STR_SIZE, "275");
@@ -110,12 +108,12 @@ void initKeyTable()
 	sprintf(path, "%s/keycontrol.conf", getHomeDirector());
 	keycontrolFile = loadTextFile(path);
 	if (keycontrolFile == NULL) {
-		fprintf(stderr, "Don't load %s\n", path);
-		fprintf(stderr, "I create %s\n", path);
+		fprintf(stderr, _("I was unable to load file: %s\n"), path);
+		fprintf(stderr, _("I try to create file: %s\n"), path);
 		keycontrolFile = newTextFile(path);
 	}
 	if (keycontrolFile == NULL) {
-		fprintf(stderr, "Don't create %s\n", path);
+		fprintf(stderr, _("I was unable to create file: %s\n"), path);
 		return;
 	}
 	setKeytableFromConfigFile(keycontrolFile);
@@ -172,7 +170,6 @@ static void refreshKeytable()
 	keytable[7] = getWidgetCatchKey(tux_left_keyright_val);
 	keytable[10] = getWidgetCatchKey(tux_left_keyfire_val);
 	keytable[11] = getWidgetCatchKey(tux_left_keyswitch_val);
-
 	keytable[0] = getWidgetCatchKey(tux_right_keyup_val);
 	keytable[3] = getWidgetCatchKey(tux_right_keydown_val);
 	keytable[2] = getWidgetCatchKey(tux_right_keyleft_val);
@@ -187,28 +184,24 @@ static void eventWidget(void *p)
 	
 	button = (widget_button_t *)(p);
 	catcher = (widget_catchkey_t *)(p);
-	if (button == button_back) {
+	if (button == button_back)
 		setScreen("setting");
-	}
 	//events on value
 	if ((catcher == tux_left_keyup_val) ||
-		(catcher == tux_left_keydown_val) ||
-		(catcher == tux_left_keyleft_val) ||
-		(catcher == tux_left_keyright_val) ||
-		(catcher == tux_left_keyfire_val) ||
-		(catcher == tux_left_keyswitch_val) ||
-		(catcher == tux_right_keyup_val) ||
-		(catcher == tux_right_keydown_val) ||
-		(catcher == tux_right_keyleft_val) ||
-		(catcher == tux_right_keyright_val) ||
-		(catcher == tux_right_keyswitch_val) ||
-		(catcher == tux_right_keyfire_val)) {
+			(catcher == tux_left_keydown_val) ||
+			(catcher == tux_left_keyleft_val) ||
+			(catcher == tux_left_keyright_val) ||
+			(catcher == tux_left_keyfire_val) ||
+			(catcher == tux_left_keyswitch_val) ||
+			(catcher == tux_right_keyup_val) ||
+			(catcher == tux_right_keydown_val) ||
+			(catcher == tux_right_keyleft_val) ||
+			(catcher == tux_right_keyright_val) ||
+			(catcher == tux_right_keyswitch_val) ||
+			(catcher == tux_right_keyfire_val)) {
 		// draw press any key picture
 			//this will be done by widget catchkey
 		// check if there is no other key with new value (what to revert if yes?)
-		// allow ony one key per time change HOW THE HELL IS THIS EVEN POSSIBLE
-			// this will fix disabling mouse while waiting for keypress
-		//printf("catcher->key = %d\n", catcher->key);
 		refreshKeytable();
 	}
 }
@@ -233,46 +226,40 @@ void stopScreenSettingKeys()
 }
 void initScreenSettingKeys()
 {
-	initKeyTable();
 	image_t *image;
+
+	initKeyTable();
 	image = getImage(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund  = newWidgetImage(0, 0, image);
-	
-	button_back = newWidgetButton(getMyText("BACK"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
-	
-	tux_left =  newWidgetLabel(getMyText("TUXLEFT"), WINDOW_SIZE_X/4, 150, WIDGET_LABEL_CENTER);
-	tux_left_keyup =  newWidgetLabel(getMyText("KEY_UP"), 50, tux_left->y+50, WIDGET_LABEL_LEFT);
-	tux_left_keydown =  newWidgetLabel(getMyText("KEY_DOWN"), tux_left_keyup->x, tux_left_keyup->y + 20, WIDGET_LABEL_LEFT);
-	tux_left_keyleft =  newWidgetLabel(getMyText("KEY_LEFT"), tux_left_keyup->x, tux_left_keydown->y + 20, WIDGET_LABEL_LEFT);
-	tux_left_keyright =  newWidgetLabel(getMyText("KEY_RIGHT"), tux_left_keyup->x, tux_left_keyleft->y + 20, WIDGET_LABEL_LEFT);
-	tux_left_keyfire =  newWidgetLabel(getMyText("KEY_FIRE"), tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
-	tux_left_keyswitch =  newWidgetLabel(getMyText("KEY_SWITCH"), tux_left_keyup->x, tux_left_keyfire->y + 20, WIDGET_LABEL_LEFT);
-	
-	tux_right =  newWidgetLabel(getMyText("TUXRIGHT"), WINDOW_SIZE_X/2 + WINDOW_SIZE_X/4, tux_left->y, WIDGET_LABEL_CENTER);
-	tux_right_keyup =  newWidgetLabel(getMyText("KEY_UP"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left->y+50, WIDGET_LABEL_LEFT);
-	tux_right_keydown =  newWidgetLabel(getMyText("KEY_DOWN"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left_keyup->y + 20, WIDGET_LABEL_LEFT);
-	tux_right_keyleft =  newWidgetLabel(getMyText("KEY_LEFT"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_right_keydown->y + 20, WIDGET_LABEL_LEFT);
-	tux_right_keyright =  newWidgetLabel(getMyText("KEY_RIGHT"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_right_keyleft->y + 20, WIDGET_LABEL_LEFT);
-	tux_right_keyfire =  newWidgetLabel(getMyText("KEY_FIRE"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
-	tux_right_keyswitch =  newWidgetLabel(getMyText("KEY_SWITCH"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left_keyfire->y + 20, WIDGET_LABEL_LEFT);
-
+	button_back = newWidgetButton(_("Back"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
+	tux_left =  newWidgetLabel(_("Player 2"), WINDOW_SIZE_X/4, 150, WIDGET_LABEL_CENTER);
+	tux_left_keyup =  newWidgetLabel(_("Up"), 50, tux_left->y+50, WIDGET_LABEL_LEFT);
+	tux_left_keydown =  newWidgetLabel(_("Down:"), tux_left_keyup->x, tux_left_keyup->y + 20, WIDGET_LABEL_LEFT);
+	tux_left_keyleft =  newWidgetLabel(_("Left:"), tux_left_keyup->x, tux_left_keydown->y + 20, WIDGET_LABEL_LEFT);
+	tux_left_keyright =  newWidgetLabel(_("Right:"), tux_left_keyup->x, tux_left_keyleft->y + 20, WIDGET_LABEL_LEFT);
+	tux_left_keyfire =  newWidgetLabel(_("Fire gun:"), tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
+	tux_left_keyswitch =  newWidgetLabel(_("Switch gun:"), tux_left_keyup->x, tux_left_keyfire->y + 20, WIDGET_LABEL_LEFT);
+	tux_right =  newWidgetLabel(_("Player 1"), WINDOW_SIZE_X/2 + WINDOW_SIZE_X/4, tux_left->y, WIDGET_LABEL_CENTER);
+	tux_right_keyup =  newWidgetLabel(_("Up:"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left->y+50, WIDGET_LABEL_LEFT);
+	tux_right_keydown =  newWidgetLabel(_("Down:"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left_keyup->y + 20, WIDGET_LABEL_LEFT);
+	tux_right_keyleft =  newWidgetLabel(_("Left:"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_right_keydown->y + 20, WIDGET_LABEL_LEFT);
+	tux_right_keyright =  newWidgetLabel(_("Right:"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_right_keyleft->y + 20, WIDGET_LABEL_LEFT);
+	tux_right_keyfire =  newWidgetLabel(_("Fire gun:"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
+	tux_right_keyswitch =  newWidgetLabel(_("Switch gun:"), WINDOW_SIZE_X/2 + tux_left_keyup->x, tux_left_keyfire->y + 20, WIDGET_LABEL_LEFT);
 	tux_left_keyup_val =  newWidgetCatchkey(keytable[6], tux_left_keyup->x+200, tux_left->y+50, eventWidget);
 	tux_left_keydown_val =  newWidgetCatchkey(keytable[9], tux_left_keyup_val->x, tux_left_keyup->y + 20, eventWidget);
 	tux_left_keyleft_val =  newWidgetCatchkey(keytable[8], tux_left_keyup_val->x, tux_left_keydown->y + 20, eventWidget);
 	tux_left_keyright_val =  newWidgetCatchkey(keytable[7], tux_left_keyup_val->x, tux_left_keyleft->y + 20, eventWidget);
 	tux_left_keyfire_val =  newWidgetCatchkey(keytable[10], tux_left_keyup_val->x, tux_left_keyright->y + 20, eventWidget);
 	tux_left_keyswitch_val =  newWidgetCatchkey(keytable[11], tux_left_keyup_val->x, tux_left_keyfire->y + 20, eventWidget);
-	
 	tux_right_keyup_val =  newWidgetCatchkey(keytable[0], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_left->y+50, eventWidget);
 	tux_right_keydown_val =  newWidgetCatchkey(keytable[3], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_left_keyup->y + 20, eventWidget);
 	tux_right_keyleft_val =  newWidgetCatchkey(keytable[2], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_right_keydown->y + 20, eventWidget);
 	tux_right_keyright_val =  newWidgetCatchkey(keytable[1], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_right_keyleft->y + 20, eventWidget);
 	tux_right_keyfire_val =  newWidgetCatchkey(keytable[4], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_left_keyright->y + 20, eventWidget);
-	tux_right_keyswitch_val =  newWidgetCatchkey(keytable[5], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_left_keyfire->y + 20, eventWidget);	
-
-
-	registerScreen( newScreen("settingKeys", startScreenSettingKeys, eventScreenSettingKeys,
-		drawScreenSettingKeys, stopScreenSettingKeys) );	
+	tux_right_keyswitch_val =  newWidgetCatchkey(keytable[5], WINDOW_SIZE_X/2 + tux_left_keyup_val->x, tux_left_keyfire->y + 20, eventWidget);
+	registerScreen(newScreen("settingKeys", startScreenSettingKeys, eventScreenSettingKeys,
+		drawScreenSettingKeys, stopScreenSettingKeys));
 }
 void quitKeyTable()
 {
@@ -280,6 +267,7 @@ void quitKeyTable()
 }
 void saveKeyTable(textFile_t *configFile) {
 	char str[STR_SIZE];
+
 	sprintf(str,"%d",tux_left_keyup_val->key);
 	setValueInConfigFile(configFile, "TUX_LEFT_MOVE_UP", str);
 	sprintf(str,"%d",tux_left_keydown_val->key);
@@ -292,7 +280,6 @@ void saveKeyTable(textFile_t *configFile) {
 	setValueInConfigFile(configFile, "TUX_LEFT_SHOOT", str);
 	sprintf(str,"%d",tux_left_keyswitch_val->key);
 	setValueInConfigFile(configFile, "TUX_LEFT_SWITCH_WEAPON", str);
-	
 	sprintf(str,"%d",tux_right_keyup_val->key);
 	setValueInConfigFile(configFile, "TUX_RIGHT_MOVE_UP", str);
 	sprintf(str,"%d",tux_right_keydown_val->key);
@@ -305,7 +292,6 @@ void saveKeyTable(textFile_t *configFile) {
 	setValueInConfigFile(configFile, "TUX_RIGHT_SHOOT", str);
 	sprintf(str,"%d",tux_right_keyswitch_val->key);
 	setValueInConfigFile(configFile, "TUX_RIGHT_SWITCH_WEAPON", str);
-
 	saveTextFile(configFile);
 }
 void quitScreenSettingKeys()
@@ -340,6 +326,5 @@ void quitScreenSettingKeys()
 	destroyWidgetCatchkey(tux_left_keyright_val);
 	destroyWidgetCatchkey(tux_left_keyswitch_val);
 	destroyWidgetCatchkey(tux_left_keyfire_val);
-	
 	destroyWidgetButton(button_back);
 }

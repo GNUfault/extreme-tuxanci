@@ -8,37 +8,42 @@
 #include "interface.h"
 
 static bool_t isAudioInit = FALSE;
-
+/*
+ * Returns state of audio
+ */
 bool_t isAudioInicialized()
 {
 	return isAudioInit;
 }
-
+/*
+ * Inicialize audio
+ */
 void initAudio()
 {
-	if( SDL_Init(SDL_INIT_AUDIO) == -1 )
-	{
-		fprintf(stderr, "Nelze inicializovat audio : %s\n", SDL_GetError());
+	if (SDL_Init(SDL_INIT_AUDIO) == -1) {
+		fprintf(stderr, _("Unable to initialize audio: %s\n"), SDL_GetError());
 		return;
 	}
-
-	if( Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) == -1 )
-	{
-        	fprintf(stderr, "Nelze inicializovat audio : %s\n", Mix_GetError());
-        	return;
+	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
+		fprintf(stderr, _("Unable to create proper audio settings: %s\n"), Mix_GetError());
+		return;
 	}
-
 	Mix_AllocateChannels(16);
 	Mix_Volume(-1, MIX_MAX_VOLUME);
-
-	printf("init audio..\n");
+#ifdef DEBUG
+	printf(_("Initializing audio system...\n"));
+#endif
 	isAudioInit = TRUE;
 }
-
+/*
+ * Quit audio
+ */
 void quitAudio()
 {
 	Mix_CloseAudio();
 	isAudioInit = TRUE;
-	printf("quit audio..\n");
+#ifdef DEBUG
+	printf(_("Quitting audio...\n"));
+#endif
 }
 

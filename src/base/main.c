@@ -129,6 +129,13 @@ int main(int argc, char *argv[])
 
 	srand( (unsigned) time(NULL) );
 
+
+#ifdef NLS
+	setlocale( LC_ALL, "" );
+	bindtextdomain( "tuxanci", PATH_LOCALE);
+	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+	textdomain( "tuxanci" );
+#endif
 #ifndef __WIN32__
 	my_argc = argc;
 	my_argv = argv;

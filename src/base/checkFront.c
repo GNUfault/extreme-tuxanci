@@ -25,23 +25,19 @@ static checkfront_t* newCheck(char *s, int type, int id)
 	checkfront_t *new;
 
 	assert( s != NULL );
-
 	new = malloc( sizeof(checkfront_t) );
 	memset(new, 0, sizeof(checkfront_t));
-
 	new->msg = strdup(s);
 	new->time = getMyTime();
 	new->id = id;
 	new->type = type;
 	new->count = 0;
-
 	return new;
 }
 
 static void destroyCheck(checkfront_t *p)
 {
 	assert( p != NULL );
-	
 	free(p->msg);
 	free(p);
 }
@@ -53,11 +49,8 @@ list_t* newCheckFront()
 
 void addMsgInCheckFront(list_t *list, char *msg, int type, int id)
 {
-	if( type == CHECK_FORNT_TYPE_CHECK )
-	{
+	if (type == CHECK_FRONT_TYPE_CHECK)
 		incID(id);
-	}
-
 	addList(list, newCheck(msg, type, id) );
 }
 
@@ -67,40 +60,31 @@ void eventMsgInCheckFront(client_t *client)
 	int i;
 
 	currentTime = getMyTime();
-
-	for( i = 0 ; i < client->listSendMsg->count ; i++ )
-	{
+	for(i = 0; i < client->listSendMsg->count; i++) {
 		checkfront_t *this;
 
 		this = (checkfront_t *)client->listSendMsg->list[i];
-
-		switch( this->type )
-		{
-			case CHECK_FORNT_TYPE_SIMPLE :
-					sendClient(client, this->msg);
-					delListItem(client->listSendMsg, i, destroyCheck);
-					i--;
-			break;
-
-			case CHECK_FORNT_TYPE_CHECK :
-				if( this->count == 0 || currentTime - this->time > CHECK_FRONT_SEND_TIME_INTERVAL )
-				{
+		switch (this->type) {
+			case CHECK_FRONT_TYPE_SIMPLE :
+				sendClient(client, this->msg);
+				delListItem(client->listSendMsg, i, destroyCheck);
+				i--;
+				break;
+			case CHECK_FRONT_TYPE_CHECK :
+				if (this->count == 0 || currentTime - this->time > CHECK_FRONT_SEND_TIME_INTERVAL) {
 					sendClient(client, this->msg);
 					this->time = currentTime;
 					this->count++;
 				}
-		
-				if( this->count > CHECK_FRONT_MAX_COUNT_SEND )
-				{
+				if (this->count > CHECK_FRONT_MAX_COUNT_SEND) {
 					delID(this->id);
 					delListItem(client->listSendMsg, i, destroyCheck);
 					i--;
 				}
-			break;
-
+				break;
 			default :
-				assert( ! "Zly typ !" );
-			break;
+				assert(! _("Bad type of front!"));
+				break;
 		}
 	}
 }
@@ -109,14 +93,11 @@ void delMsgInCheckFront(list_t *listCheckFront, int id)
 {
 	int i;
 
-	for( i = 0 ; i < listCheckFront->count ; i++ )
-	{
+	for( i = 0 ; i < listCheckFront->count ; i++ ) {
 		checkfront_t *this;
 
 		this = (checkfront_t *)listCheckFront->list[i];
-
-		if( this->id == id )
-		{
+		if (this->id == id) {
 			delID(this->id);
 			delListItem(listCheckFront, i, destroyCheck);
 			return;
@@ -127,7 +108,6 @@ void delMsgInCheckFront(list_t *listCheckFront, int id)
 void destroyCheckFront(list_t *p)
 {
 	assert( p != NULL );
-
 	destroyListItem(p, destroyCheck);
 }
 

@@ -49,6 +49,10 @@ IF ( Win )
 	SET ( CMAKE_RC_COMPILER "C:/MinGW/bin/windres.exe" ) # toto neni vubec dobre vuubec
 	ENABLE_LANGUAGE ( RC )
 ENDIF ( Win )
+#gettext
+IF ( NLS )
+	ADD_DEFINITIONS ( -DNLS )
+ENDIF ( NLS)
 SET ( CMAKE_COLOR_MAKEFILE ON )
 ## balickovani 
 SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README" )
@@ -73,6 +77,7 @@ PROJECT ( tuxanci )
 IF ( Debug )
 	SET( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 -Wall -pipe")
 	SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 -Wall -pipe")
+	ADD_DEFINITIONS ( -DDEBUG )
 	#SET ( CMAKE_VERBOSE_MAKEFILE on )
 ENDIF ( Debug)
 MESSAGE ( "EXTRA Cflags:${CMAKE_C_FLAGS}" )

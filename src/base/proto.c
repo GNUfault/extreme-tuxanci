@@ -44,7 +44,7 @@ void proto_send_error_server(int type, client_t *client, int errorcode)
 	
 	snprintf(msg, STR_PROTO_SIZE, "error %d\n", errorcode);
 
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -226,7 +226,7 @@ void proto_send_status_server(int type, client_t *client)
 		name, version, clients,
 		maxclients, uptime, arena);
 
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 	//proto_send(type, client, msg);
 }
 
@@ -260,7 +260,7 @@ void proto_send_listscore_server(int type, client_t *client, int max)
 	}
 
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 	free(msg);
 }
 
@@ -337,7 +337,7 @@ void proto_send_init_server(int type, client_t *client, client_t *client2)
 		count, getArenaNetName( getChoiceArenaId() ), check_id);
 	
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_CHECK, check_id);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
 }
 
 #ifndef PUBLIC_SERVER
@@ -393,7 +393,7 @@ void proto_send_event_server(int type, client_t *client, tux_t *tux, int action)
 	snprintf(msg, STR_PROTO_SIZE, "event %d %d\n", tux->id, action);
 	
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -492,7 +492,7 @@ void proto_send_newtux_server(int type, client_t *client, tux_t *tux)
 		tux->bonus_time, tux->pickup_time);
 	
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -582,7 +582,7 @@ void proto_send_kill_server(int type, client_t *client, tux_t *tux)
 	snprintf(msg, STR_PROTO_SIZE, "kill %d\n", tux->id);
 	
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -623,7 +623,7 @@ void proto_send_del_server(int type, client_t *client, int id)
 	snprintf(msg, STR_PROTO_SIZE, "del %d %d\n",
 		id, check_id);
 
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_CHECK, check_id);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
 	//proto_check(type, client, msg, check_id);
 }
 
@@ -696,7 +696,7 @@ void proto_send_additem_server(int type, client_t *client, item_t *p)
 
 	//proto_send(type, client, msg);
 	//proto_check(type, client, msg, check_id);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_CHECK, check_id);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
 }
 
 #ifndef PUBLIC_SERVER
@@ -757,7 +757,7 @@ void proto_send_shot_server(int type, client_t *client, shot_t *p)
 
 	//proto_send(type, client, msg);
 	//proto_check(type, client, msg, check_id);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -833,7 +833,7 @@ void proto_recv_chat_server(client_t *client, char *msg)
 
 void proto_send_chat_server(int type, client_t *client, char *msg)
 {
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 
 #ifndef PUBLIC_SERVER
 	proto_recv_chat_client(msg);
@@ -889,7 +889,7 @@ void proto_send_module_server(int type, client_t *client, char *msg)
 	strcat(out, "\n");
 */
 
-	protoSendClient(type, client, out, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, out, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -921,7 +921,7 @@ void proto_send_ping_server(int type, client_t *client)
 	char msg[STR_PROTO_SIZE];
 	snprintf(msg, STR_PROTO_SIZE, "ping\n");
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -943,7 +943,7 @@ void proto_send_echo_server(int type, client_t *client, char *s)
 
 	snprintf(msg, STR_PROTO_SIZE, "echo%s", s);
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 void proto_send_end_server(int type, client_t *client)
@@ -952,7 +952,7 @@ void proto_send_end_server(int type, client_t *client)
 
 	snprintf(msg, STR_PROTO_SIZE, "end\n");
 	//proto_send(type, client, msg);
-	protoSendClient(type, client, msg, CHECK_FORNT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	protoSendClient(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER

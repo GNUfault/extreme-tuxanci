@@ -27,7 +27,7 @@ ABOUT
 			Shoots fast and long coherent light
 		Mine
 		~~~~
-			Put them around, stem on them *KABOOM*
+			Put them around, step on them *KABOOM*
 		Bomb ball
 		~~~~~~~~~
 			Fires bomb which mirrors any obstacles and explodes only if it
@@ -66,7 +66,7 @@ HOWTO COMPILE
 	--------------
 		$ cmake . -DServer=1
 		$ make
-		$ make install
+		# make install
 	Removing current install
 	-----------------------
 		Same for both client and server
@@ -107,7 +107,7 @@ GAME USAGE
 	(eg.: "$ cd tuxanci/bin && ./tuxanci").
 
 	For client we create some configuration files in $HOME. There is created
-	".tuxanci" directory and in there are pretty explaining .conf files.
+	".tuxanci" directory and in there are pretty selfexplaining .conf files.
 
 	For server we create directory /etc/tuxanci/server.conf where you could
 	do some changes for it (again pretty selfexplaining).

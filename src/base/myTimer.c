@@ -5,55 +5,17 @@
 #include <string.h>
 #include <sys/time.h>
 #include <signal.h>
+#ifdef __WIN32__
+#include <time.h>
+#endif
 
 #include "main.h"
 #include "list.h"
 #include "myTimer.h"
-
 #ifndef PUBLIC_SERVER
 #include "interface.h"
 #endif
-#ifdef __WIN32__
-#include <windows.h>
-#include <time.h>
-#endif
-/* // uncoment when having issues with gettimeofday in Windows
-#ifdef __WIN32__
-#define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 
-struct timezone 
-{
-  int  tz_minuteswest;
-  int  tz_dsttime;
-};
- 
-int gettimeofday(struct timeval *tv, struct timezone *tz)
-{
-	FILETIME ft;
-	unsigned __int64 tmpres = 0;
-	static int tzflag;
-	if (NULL != tv) {
-		GetSystemTimeAsFileTime(&ft);
-	    tmpres |= ft.dwHighDateTime;
-	    tmpres <<= 32;
-	    tmpres |= ft.dwLowDateTime;
-	    tmpres /= 10;
-	    tmpres -= DELTA_EPOCH_IN_MICROSECS; 
-	    tv->tv_sec = (long)(tmpres / 1000000UL);
-	    tv->tv_usec = (long)(tmpres % 1000000UL);
-	}
-	if (NULL != tz) {
-	    if (!tzflag) {
-	      _tzset();
-	      tzflag++;
-	    }
-	    tz->tz_minuteswest = _timezone / 60;
-	    tz->tz_dsttime = _daylight;
-	}
-	return 0;
-}
-#endif
-*/
 static struct timeval start = { .tv_sec = 0, .tv_usec = 0 };
 
 list_t* newTimer()
@@ -72,15 +34,10 @@ my_time_t getMyTime()
 	struct timeval now;
 	my_time_t ticks;
 
-	if(  start.tv_sec == 0 && start.tv_usec == 0 )
-	{
+	if (start.tv_sec == 0 && start.tv_usec == 0)
 		restartTimer();
-	}
-
 	gettimeofday(&now, NULL);
-
 	ticks = (now.tv_sec-start.tv_sec)*1000+(now.tv_usec-start.tv_usec)/1000;
-
 	//printf("-> %d\n", ticks);
 	return ticks;
 }
@@ -90,16 +47,10 @@ my_time_t getMyTimeMicro()
 	static struct timeval start = { .tv_sec = 0, .tv_usec = 0 };
 	struct timeval now;
 	my_time_t ticks;
-
-	if(  start.tv_sec == 0 && start.tv_usec == 0 )
-	{
+	if (start.tv_sec == 0 && start.tv_usec == 0)
 		gettimeofday(&start, NULL);
-	}
-
 	gettimeofday(&now, NULL);
-
 	ticks = (now.tv_sec-start.tv_sec)*1000*1000+(now.tv_usec-start.tv_usec);
-
 	//printf("-> %d\n", ticks);
 	return ticks;
 }
@@ -108,20 +59,15 @@ my_timer_t* newTimerItem(int type, void (*fce)(void *p), void *arg, my_time_t my
 {
 	static int new_id = 0;
 	my_timer_t *new;
-	
 	assert( fce != NULL );
-
 	new = malloc( sizeof(my_timer_t) );
 	memset(new, 0, sizeof(my_timer_t));
-
 	new->id = new_id++;
 	new->type = type;
 	new->fce = fce;
 	new->arg = arg;
-
 	new->createTime = getMyTime();
 	new->time = my_time;
-
 	return new;
 }
 
@@ -137,7 +83,6 @@ int addTaskToTimer(list_t *listTimer, int type, void (*fce)(void *p), void *arg,
 
 	new = newTimerItem(type, fce, arg, my_time);
 	addList(listTimer, new);
-
 	return new->id;
 }
 
@@ -146,37 +91,28 @@ void eventTimer(list_t *listTimer)
 	int i;
 	my_timer_t *thisTimer;
 	my_time_t currentTime;
-
  	currentTime = getMyTime();
-
-	for( i = 0 ; i < listTimer->count ; i++ )
-	{
+	for (i = 0; i < listTimer->count; i++) {
 		thisTimer = (my_timer_t *)listTimer->list[i];
-		assert( thisTimer != NULL );
-
-		switch( thisTimer->type )
-		{
+		assert(thisTimer != NULL);
+		switch (thisTimer->type) {
 			case TIMER_ONE:
-				if( currentTime >= thisTimer->createTime + thisTimer->time )
-				{
+				if (currentTime >= thisTimer->createTime + thisTimer->time) {
 					thisTimer->fce(thisTimer->arg);
-		
 					delListItem(listTimer, i, free);
 					i--;
 				}
-			break;
+				break;
 			case TIMER_PERIODIC:
-				if( currentTime >= thisTimer->createTime + thisTimer->time )
-				{
+				if (currentTime >= thisTimer->createTime + thisTimer->time) {
 					thisTimer->fce(thisTimer->arg);
 					thisTimer->createTime = getMyTime();
 				}
-			break;
+				break;
 			default :
-				assert( ! "bad timer type !" );
-			break;
+				assert(! _("Timer is really wierdly set!"));
+				break;
 		}
-
 	}
 }
 
@@ -185,19 +121,15 @@ void delTimer(list_t *listTimer, int id)
 	int i;
 	my_timer_t *thisTimer;
 
-	for( i = 0 ; i < listTimer->count ; i++ )
-	{
+	for (i = 0; i < listTimer->count; i++) {
 		thisTimer = (my_timer_t *)listTimer->list[i];
-		assert( thisTimer != NULL );
-
-		if( thisTimer->id == id )
-		{
+		assert(thisTimer != NULL);
+		if (thisTimer->id == id ) {
 			delListItem(listTimer, i, free);
 			return;
 		}
 	}
-
-	assert( ! "Uloha s id nenajdena !" );
+	assert(! _("There is no such ID!"));
 }
 
 

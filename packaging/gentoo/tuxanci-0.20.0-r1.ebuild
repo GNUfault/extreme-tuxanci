@@ -2,12 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-ESVN_REPO_URI="http://opensvn.csie.org/tuxanci_ng"
-inherit games cmake-utils subversion
+inherit games cmake-utils
 
 DESCRIPTION="Tuxanci is first cushion shooter based on well-known Czech game Bulanci."
 HOMEPAGE="http://www.tuxanci.org/"
-#SRC_URI="http://download.${PN}.org/${PV}/${P}-src.tar.bz2"
+SRC_URI="http://download.${PN}.org/${PV}/${P}-src.tar.bz2"
 LICENSE="GPL-2"
 
 SLOT="0"
@@ -24,10 +23,10 @@ DEPEND="!dedicated? (
 			)
 		)"
 
-S="${WORKDIR}"/"${PN}"
+S="${WORKDIR}/pkgs/${P}-src/"
 
 src_unpack() {
-	subversion_src_unpack
+	unpack ${A}
 	cd "${S}"
 	# setting proper prefix
 	sed -i \

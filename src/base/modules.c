@@ -16,7 +16,6 @@
 #include "arenaFile.h"
 #include "proto.h"
 #include "shareFunction.h"
-
 #ifndef PUBLIC_SERVER
 #include "interface.h"
 #include "image.h"
@@ -51,37 +50,30 @@ static export_fce_t export_fce =
 #ifndef PUBLIC_SERVER
 		.fce_proto_send_module_client = proto_send_module_client,
 #endif
-
 		.fce_destroyShot = destroyShot,
 		.fce_boundBombBall = boundBombBall,
 		.fce_transformOnlyLasser = transformOnlyLasser
 	};
-
 static list_t *listModule;
 
 static void* getFce(module_t *p, char *s)
 {
 #ifndef __WIN32__
-
 	void *ret;
 	char *error;
 
-	assert( p != NULL );
-	assert( s != NULL );
-	
+	assert(p != NULL);
+	assert(s != NULL);
 	ret = dlsym(p->image, s);
 
-	if( ( error = dlerror() ) != NULL)
-	{
-		fprintf (stderr, "error = %s\n", error);
+	if ((error = dlerror()) != NULL) {
+		fprintf (stderr, _("Error %s occured when using getFce function!\n"), error);
 		return NULL;
 	}
 #else
 	FARPROC ret = GetProcAddress((HMODULE)p->image,(LPCSTR)s);
-	if ( !ret )
-		fprintf(stderr, "n_dllsymbol(%s) failed!\n", s);
-
-	
+	if (!ret)
+		fprintf(stderr, _("Error %s occured when using getFce function!\n"), s);
 #endif
 	return (void *)ret;
 }
@@ -91,9 +83,7 @@ static void* mapImage(char *name)
 #ifndef __WIN32__
 	void *image;
 	image = dlopen (name, RTLD_LAZY);
-
-	if( image == NULL )
-	{
+	if( image == NULL ) {
 		fputs (dlerror(), stderr);
 		return NULL;
 	}
@@ -101,8 +91,7 @@ static void* mapImage(char *name)
 	HINSTANCE image;
 	image = LoadLibrary((LPCSTR) name);
 
-	if (!image)
-	{
+	if (!image) {
 		LPVOID msg;
 		FormatMessage(
 			FORMAT_MESSAGE_ALLOCATE_BUFFER |
@@ -120,9 +109,8 @@ static void* mapImage(char *name)
 		FreeLibrary(image);
 		return NULL;
 	}
-	//FreeLibrary(image); //to tu nema bejt
+	//FreeLibrary(image); //never ever untag this
 #endif
-
 	return image;
 }
 
@@ -152,22 +140,16 @@ static module_t* newModule(char *name)
 	void *image;
 	module_t *ret;
 
-	assert( name != NULL );
-
+	assert(name != NULL);
 	setModulePath(name, path);
 	image = mapImage(path);
-
-	if( image == NULL )
-	{
-		fprintf(stderr, "I dont map %s file  !\n", name);
+	if (image == NULL) {
+		fprintf(stderr, _("Unable to map file %s!\n"), name);
 		return NULL;
 	}
-
-	ret = malloc( sizeof(module_t) );
-
+	ret = malloc(sizeof(module_t));
 	ret->image = image;
 	ret->name = strdup(name);
-
 	ret->fce_init = getFce(ret, "init");
 #ifndef PUBLIC_SERVER
 	ret->fce_draw = getFce(ret, "draw");
@@ -177,33 +159,29 @@ static module_t* newModule(char *name)
 	ret->fce_isConflict = getFce(ret, "isConflict");
 	ret->fce_cmd = getFce(ret, "cmdArena");
 	ret->fce_recvMsg = getFce(ret, "recvMsg");
-
-	printf("load module: (%s)\n", name);
-
-	if( ret->fce_init(&export_fce) != 0 )
-	{
-		fprintf(stderr, "init module failed !\n");
+#ifdef DEBUG
+	printf(_("Loading module: \"%s\""), name);
+#endif
+	if (ret->fce_init(&export_fce) != 0) {
+		fprintf(stderr, _("Failed initialization of module \"%s\""), name);
 		unmapImage(image);
 		free(ret->name);
 		free(ret);
-
 		return NULL;
 	}
-
 	return ret;
 }
 
 static int destroyModule(module_t *p)
 {
 	assert( p != NULL );
-
 	p->fce_destroy();
 	unmapImage(p->image);
 	free(p->name);
 	free(p);
-
-	printf("destroy module..\n");
-
+#ifdef DEBUG
+	printf(_("Destroing module...\n"));
+#endif
 	return 0;
 }
 
@@ -217,18 +195,13 @@ int isModuleLoaded(char *name)
 {
 	int i;
 
-	for( i = 0 ; i < listModule->count ; i++ )
-	{
+	for (i = 0; i < listModule->count; i++) {
 		module_t *this;
 
 		this = (module_t *)listModule->list[i];
-
-		if( strcmp(this->name, name) == 0 )
-		{
+		if (strcmp(this->name, name) == 0)
 			return 1;
-		}
 	}
-
 	return 0;
 }
 
@@ -236,32 +209,23 @@ int loadModule(char *name)
 {
 	module_t *module;
 
-	if( isModuleLoaded(name) )
-	{
-		fprintf(stderr, "dupicit loaded module %s !\n", name);
+	if (isModuleLoaded(name)) {
+		fprintf(stderr, _("I've done this once, dont want to mess memory with module %s again!\n"), name);
 		return -1;
 	}
-
 	module = newModule(name);
-
-	if( module == NULL )
-	{
-		fprintf(stderr, "load module %s failed !\n", name);
+	if (module == NULL) {
+		fprintf(stderr, _("Loading module %s failed!\n"), name);
 		return -1;
 	}
-
 	addList(listModule, module);
-
 	return 0;
 }
 
 int loadDepModule(char *name)
 {
-	if( isModuleLoaded(name) )
-	{
+	if (isModuleLoaded(name))
 		return 0;
-	}
-
 	return loadModule(name);
 }
 
@@ -269,8 +233,7 @@ void cmdModule(char *s)
 {
 	int i;
 
-	for( i = 0 ; i < listModule->count ; i++ )
-	{
+	for (i = 0; i < listModule->count; i++) {
 		module_t *this;
 		this = (module_t *)listModule->list[i];
 		this->fce_cmd(s);
@@ -278,27 +241,23 @@ void cmdModule(char *s)
 }
 
 #ifndef PUBLIC_SERVER
-
 void drawModule(int x, int y, int w, int h)
 {
 	int i;
 
-	for( i = 0 ; i < listModule->count ; i++ )
-	{
+	for (i = 0; i < listModule->count; i++ ) {
 		module_t *this;
 		this = (module_t *)listModule->list[i];
 		this->fce_draw(x, y, w, h);
 	}
 }
-
 #endif
 
 void eventModule()
 {
 	int i;
 
-	for( i = 0 ; i < listModule->count ; i++ )
-	{
+	for (i = 0; i < listModule->count; i++ ) {
 		module_t *this;
 		this = (module_t *)listModule->list[i];
 		this->fce_event();
@@ -309,17 +268,13 @@ int isConflictModule(int x, int y, int w, int h)
 {
 	int i;
 
-	for( i = 0 ; i < listModule->count ; i++ )
-	{
+	for (i = 0; i < listModule->count; i++) {
 		module_t *this;
+
 		this = (module_t *)listModule->list[i];
-
-		if( this->fce_isConflict(x, y, w, h) == 1 )
-		{
+		if (this->fce_isConflict(x, y, w, h) == 1)
 			return 1;
-		}
 	}
-
 	return 0;
 }
 
@@ -327,14 +282,12 @@ int recvMsgModule(char *msg)
 {
 	int i;
 
-	for( i = 0 ; i < listModule->count ; i++ )
-	{
+	for (i = 0; i < listModule->count; i++) {
 		module_t *this;
 
 		this = (module_t *)listModule->list[i];
 		this->fce_recvMsg(msg);
 	}
-
 	return 0;
 }
 

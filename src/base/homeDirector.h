@@ -1,13 +1,10 @@
 
 #ifndef HOMEDIRECTOR_H
+	#define HOMEDIRECTOR_H
+	#define HOMEDIRECTOR_NAME ".tuxanci"
 
-#define HOMEDIRECTOR_H
+	#include "main.h"
 
-#include "main.h"
-
-#define HOMEDIRECTOR_NAME ".tuxanci"
-
-extern void createHomeDirector();
-extern char *getHomeDirector();
- 
+	extern void createHomeDirector();
+	extern char *getHomeDirector();
 #endif
