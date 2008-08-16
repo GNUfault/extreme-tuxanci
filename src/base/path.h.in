@@ -1,0 +1,34 @@
+
+#ifndef PATH_H
+	#cmakedefine USE_MAGICK
+	  #define TUXANCI_VERSION				"@TUXANCI_VERSION@"
+	#define PATH_H
+	#ifndef __WIN32__
+		#define PREFIX					"@CMAKE_INSTALL_PREFIX@"
+	#else
+		#define PREFIX 					".."
+	#endif
+	#ifdef PUBLIC_SERVER
+		#define APPNAME					"tuxanci-server"
+	#else
+		#define APPNAME					"tuxanci"
+	#endif
+	#define PATH_DIR	PREFIX			"/share/"	APPNAME	"/"
+	#ifndef __WIN32__
+		#define PATH_MODULES 	PREFIX	"/lib/"	APPNAME
+		#define SERVER_CONFIG	"/etc/tuxanci-server/server.conf"
+	#else
+		#define PATH_MODULES 	PREFIX	"/bin/"
+		#define SERVER_CONFIG	PREFIX	"/etc/tuxanci-server/server.conf"
+	#endif
+	#define PATH_IMAGE	PATH_DIR	"image/"
+	#define PATH_FONT	PATH_DIR	"font/"
+	#define PATH_ARENA	PATH_DIR	"arena/"
+	#define PATH_SOUND	PATH_DIR	"sound/"
+	#define PATH_MUSIC	PATH_DIR	"music/"
+	#define PATH_CONFIG	PATH_DIR	"conf/"
+	#define PATH_LANG	PATH_DIR	"lang/"
+	#define PATH_DATA	PATH_DIR	"doc/"
+	#define PATH_LOCALE	PREFIX		"share/locale/"
+	#include "main.h"
+#endif

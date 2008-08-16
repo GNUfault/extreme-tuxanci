@@ -52,7 +52,7 @@ SET ( SRC_modAI
 	modAI.c
 )
 ###############################################################################
-# COMPILATION ITSELF
+# COMPILATION AND INSTALLATION ITSELF
 ###############################################################################
 ADD_LIBRARY ( modWall SHARED ${SRC_modWall} )
 ADD_LIBRARY ( modPipe SHARED ${SRC_modPipe} )

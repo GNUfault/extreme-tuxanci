@@ -16,9 +16,9 @@
 # ALSO CONTAINS IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
 ADD_DEFINITIONS ( -DSUPPORT_NET_UNIX_UDP )
-IF ( PREFIX )
-	ADD_DEFINITIONS ( -DPREFIX="${PREFIX}" )
-ENDIF ( PREFIX )
+SET ( TUXANCI_VERSION "9999" )
+SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
+CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${WORKDIR}/base/path.h )
 ###############################################################################
 # BASIC PROJECT VALUES
 ###############################################################################
@@ -32,7 +32,6 @@ SET ( APPNAME "tuxanci")
 IF ( Server )
 	SET ( APPNAME "tuxanci-server" )
 ENDIF ( Server )
-SET ( VERSION "9999" )
 MESSAGE ( "<******************************>" )
 MESSAGE ( "Configure for ${APPNAME} Started" )
 MESSAGE ( "<******************************>" )
@@ -49,7 +48,6 @@ SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 #various variables
 SET ( CMAKE_INSTALL_DATADIR share/ )
 SET ( CMAKE_INSTALL_ETCDIR /etc )
-SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 SET ( CMAKE_INSTALL_BINDIR bin )
 SET ( CMAKE_INSTALL_LIBDIR lib )
 # uninstall
@@ -62,16 +60,16 @@ ADD_CUSTOM_TARGET ( uninstall "${CMAKE_COMMAND}"
 ###############################################################################
 # CPACK (Not used for now)
 ###############################################################################
-SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README" )
-SET ( CPACK_GENERATOR "TBZ2" )
-SET ( CPACK_SOURCE_GENERATOR "TBZ2" )
-SET ( CPACK_PACKAGE_VERSION_MAJOR "0" )
-SET ( CPACK_PACKAGE_VERSION_MINOR "2" )
-SET ( CPACK_PACKAGE_VERSION_PATCH "0" )
-SET ( TUXANCI_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}" )
-SET ( TUXANCI_VERSION_FULL "${TUXANCI_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}" )
-SET ( CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${TUXANCI_VERSION_FULL}" )
-INCLUDE ( CPack )
+#SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README" )
+#SET ( CPACK_GENERATOR "TBZ2" )
+#SET ( CPACK_SOURCE_GENERATOR "TBZ2" )
+#SET ( CPACK_PACKAGE_VERSION_MAJOR "0" )
+#SET ( CPACK_PACKAGE_VERSION_MINOR "2" )
+#SET ( CPACK_PACKAGE_VERSION_PATCH "0" )
+#SET ( TUXANCI_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}" )
+#SET ( TUXANCI_VERSION_FULL "${TUXANCI_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}" )
+#SET ( CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${TUXANCI_VERSION_FULL}" )
+#INCLUDE ( CPack )
 ###############################################################################
 # DEBUG STUFF
 ###############################################################################
@@ -171,19 +169,13 @@ ADD_SUBDIRECTORY ( src )
 ###############################################################################
 # path which user send us
 ADD_SUBDIRECTORY ( data )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/LICENCE DESTINATION doc/${APPNAME}-${VERSION}/ )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS DESTINATION doc/${APPNAME}-${VERSION}/ )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README DESTINATION doc/${APPNAME}-${VERSION}/ )
+INSTALL ( FILES ${CMAKE_SOURCE_DIR}/LICENCE DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
+INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
+INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
 # windows quirk
 IF ( NOT Server )
 	IF ( Win )
 		FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/*.dll" )
-		INSTALL ( FILES ${files} DESTINATION ${APPNAME}/bin/ )
-		FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/*.lib" )
-		INSTALL ( FILES ${files} DESTINATION ${APPNAME}/bin/ )
-		FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/*.a" )
-		INSTALL ( FILES ${files} DESTINATION ${APPNAME}/bin/ )
-		FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/*.la" )
 		INSTALL ( FILES ${files} DESTINATION ${APPNAME}/bin/ )
 	ENDIF ( Win )
 ENDIF ( NOT Server )

@@ -13,7 +13,6 @@
 	#include <libintl.h>
 	#include <locale.h>
 #endif
-	#include "../../config.h"
 	#include "bool.h"
 	#include "string_length.h"
 	#include "path.h"

@@ -14,10 +14,11 @@ ADD_SUBDIRECTORY ( sound )
 # CURRENT DIRECTORY FILES
 ###############################################################################
 IF ( NOT Server )
-	INSTALL ( FILES tuxanci.desktop DESTINATION doc/${APPNAME}-${VERSION}/)
+	INSTALL ( FILES tuxanci.desktop
+		DESTINATION doc/${APPNAME}-${TUXANCI_VERSION}/)
 	IF ( NOT Win )
 		INSTALL ( FILES tuxanci.ico
-			DESTINATION doc/${APPNAME}-${VERSION}/)
+			DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
 	ENDIF ( NOT Win )
 ENDIF ( NOT Server )
 ###############################################################################
