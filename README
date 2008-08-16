@@ -59,12 +59,12 @@ HOWTO COMPILE
 	(all commands are supposed to be written in tuxanci sources directory)
 	Building Client
 	---------------
-		$ cmake . -DNO_Audio=1	
+		$ cmake . -DNO_Audio=1 -DCMAKE_INSTALL_PREFIX=/usr/local/
 		$ make
 		# make install
 	Building Server
 	--------------
-		$ cmake . -DServer=1
+		$ cmake . -DServer=1 -DCMAKE_INSTALL_PREFIX=/usr/local/
 		$ make
 		# make install
 	Removing current install
@@ -92,8 +92,7 @@ HOWTO COMPILE
 		On Apple use please -DApple=1 variable for cmake.
 		
 		If you want another prefix than /usr/local/, you can achieve this by
-		adding "-DCMAKE_INSTALL_PREFIX=/what/ever/you/want" Change /usr/games/
-		to path you want to use.
+		adding "-DCMAKE_INSTALL_PREFIX=/what/ever/you/want" as cmake argument.
 
 GAME USAGE
 ==========
