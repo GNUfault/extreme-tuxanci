@@ -1,5 +1,5 @@
 ###############################################################################
-# tuxanci/data/sound/CMakeLists.txt
+# tuxanci/data/font/CMakeLists.txt
 ###############################################################################
 # DIRECTORIES
 ###############################################################################
@@ -7,9 +7,7 @@
 ###############################################################################
 # CURRENT DIRECTORY FILES
 ###############################################################################
-IF ( NOT NO_Audio )
-	FILE ( GLOB files "*.lang" )
-	INSTALL ( FILES ${files}
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/lang/ )
-ENDIF ( NOT NO_Audio )
+FILE ( GLOB files "*.ttf" )
+INSTALL ( FILES ${files}
+	DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/font/ )
 ###############################################################################

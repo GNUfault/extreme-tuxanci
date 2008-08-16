@@ -1,5 +1,5 @@
 ###############################################################################
-# tuxanci/data/sound/CMakeLists.txt
+# tuxanci/data/conf/CMakeLists.txt
 ###############################################################################
 # DIRECTORIES
 ###############################################################################
@@ -7,9 +7,8 @@
 ###############################################################################
 # CURRENT DIRECTORY FILES
 ###############################################################################
-IF ( NOT NO_Audio )
-	FILE ( GLOB files "*.lang" )
-	INSTALL ( FILES ${files}
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/lang/ )
-ENDIF ( NOT NO_Audio )
+IF ( Server )
+	INSTALL ( FILES server.conf
+ 		DESTINATION ${CMAKE_INSTALL_ETCDIR}/${APPNAME} )
+ENDIF ( Server )
 ###############################################################################

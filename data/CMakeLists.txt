@@ -1,15 +1,23 @@
 ###############################################################################
-# tuxanci/data/sound/CMakeLists.txt
+# tuxanci/data/CMakeLists.txt
 ###############################################################################
 # DIRECTORIES
 ###############################################################################
-# nada :P
+ADD_SUBDIRECTORY ( arena )
+ADD_SUBDIRECTORY ( conf )
+ADD_SUBDIRECTORY ( font )
+ADD_SUBDIRECTORY ( image )
+ADD_SUBDIRECTORY ( lang )
+ADD_SUBDIRECTORY ( music )
+ADD_SUBDIRECTORY ( sound )
 ###############################################################################
 # CURRENT DIRECTORY FILES
 ###############################################################################
-IF ( NOT NO_Audio )
-	FILE ( GLOB files "*.lang" )
-	INSTALL ( FILES ${files}
-		DESTINATION ${CMAKE_INSTALL_DATADIR}/${APPNAME}/lang/ )
-ENDIF ( NOT NO_Audio )
+IF ( NOT Server )
+	INSTALL ( FILES tuxanci.desktop DESTINATION doc/${APPNAME}-${VERSION}/)
+	IF ( NOT Win )
+		INSTALL ( FILES tuxanci.ico
+			DESTINATION doc/${APPNAME}-${VERSION}/)
+	ENDIF ( NOT Win )
+ENDIF ( NOT Server )
 ###############################################################################
