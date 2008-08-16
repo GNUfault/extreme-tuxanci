@@ -148,6 +148,15 @@ IF ( NOT Win )
 		FIND_PACKAGE ( SDL_mixer REQUIRED )
 	ENDIF ( NOT NO_Audio )
 ENDIF ( NOT Win )
+INCLUDE_DIRECTORIES (
+	${SDL_INCLUDE_DIR}
+	${SDLIMAGE_INCLUDE_DIR}
+	${SDL_INCLUDE_DIR}
+	${SDLIMAGE_INCLUDE_DIR}
+)
+IF ( NOT NO_Audio )
+	INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
+ENDIF ( NOT NO_Audio )
 ###############################################################################
 # GETTEXT SUPPORT
 ###############################################################################
@@ -170,9 +179,12 @@ ADD_SUBDIRECTORY ( src )
 ###############################################################################
 # path which user send us
 ADD_SUBDIRECTORY ( data )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/LICENCE DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
+INSTALL ( FILES ${CMAKE_SOURCE_DIR}/LICENCE
+	DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
+INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS
+	DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
+INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README
+	DESTINATION share/doc/${APPNAME}-${TUXANCI_VERSION}/ )
 # windows quirk
 IF ( NOT Server )
 	IF ( Win )
