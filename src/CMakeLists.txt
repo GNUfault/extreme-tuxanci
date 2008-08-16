@@ -1,6 +1,21 @@
 ###############################################################################
 # tuxanci/src/CMakeLists.txt
 ###############################################################################
+# LINKING ( for binary )
+###############################################################################
+IF ( Server )
+	LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
+ELSE ( Server )
+	IF  ( NO_Audio )
+		LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY})
+	ELSE ( NO_Audio )
+		LINK_LIBRARIES ( ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY})
+	ENDIF ( NO_Audio )
+ENDIF ( Server )
+IF ( Win )
+	LINK_LIBRARIES ( wsock32 )
+ENDIF ( Win )
+###############################################################################
 # SOURCE SPECIFICATION
 ###############################################################################
 # Command for finding correct file names in directory, replace DIR with
