@@ -25,26 +25,22 @@ SET ( SRC_base_modules
 	${WORKDIR}/base/main.h	${WORKDIR}/base/modules.h
 	${WORKDIR}/base/shot.h	${WORKDIR}/base/tux.h
 	${WORKDIR}/base/list	${WORKDIR}/base/gun.h
-	${WORKDIR}/base/space
+	${WORKDIR}/base/space	${WORKDIR}/base/index
 )
 SET ( SRC_modWall
 	${SRC_base_modules}
-	${WORKDIR}/base/index
 	modWall.c
 )
 SET ( SRC_modPipe
 	${SRC_base_modules}
-	${WORKDIR}/base/index
 	modPipe.c
 )
 SET ( SRC_modTeleport
 	${SRC_base_modules}
-	${WORKDIR}/base/index
 	modTeleport.c
 )
 SET ( SRC_modMove
 	${SRC_base_modules}
-	${WORKDIR}/base/index
 	modMove.c
 )
 SET ( SRC_modAI
