@@ -18,6 +18,7 @@
 ADD_DEFINITIONS ( -DSUPPORT_NET_UNIX_UDP )
 SET ( TUXANCI_VERSION "9999" )
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
+SET ( CMAKE_INSTALL_PREFIX "/usr/local/" CACHE PATH "Install path prefix" )
 CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${WORKDIR}/base/path.h )
 ###############################################################################
 # BASIC PROJECT VALUES
