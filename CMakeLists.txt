@@ -52,9 +52,10 @@ SET ( CMAKE_CXX_FLAGS $ENV{CXXFLAGS} )
 # this specify location of additional cmake sources
 SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 #various variables
-SET ( CMAKE_INSTALL_ETCDIR /etc )
+SET ( CMAKE_INSTALL_ETCDIR ${CMAKE_CONF_PATH} )
 SET ( CMAKE_INSTALL_BINDIR bin )
-SET ( CMAKE_INSTALL_LIBDIR lib )
+SET ( CMAKE_INSTALL_DATADIR ${CMAKE_DATA_PATH} )
+SET ( CMAKE_INSTALL_LIBDIR ${LIB_INSTALL_DIR} )
 # uninstall
 CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
@@ -169,8 +170,8 @@ ENDIF ( NOT NO_Audio )
 ###############################################################################
 IF ( Bundle )
 	SET ( CMAKE_CONF_PATH "../etc")
-	SET ( CMAKE_DATA_PATH "../share/")
-	SET ( LIB_INSTALL_DIR "../lib/")
+	SET ( CMAKE_DATA_PATH "../share")
+	SET ( LIB_INSTALL_DIR "../lib")
 	SET ( CMAKE_INSTALL_PREFIX "/")
 	SET ( CMAKE_INSTALL_BINDIR bin )
 	SET ( CMAKE_INSTALL_LIBDIR lib )
