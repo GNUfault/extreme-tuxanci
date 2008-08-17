@@ -3,11 +3,10 @@
 ###############################################################################
 # LINKING ( for modules )
 ###############################################################################
-IF ( NOT Win )
-	LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
-ELSE ( NOT Win )
-	LINK_LIBRARIES ( ${CMAKE_DL_LIBS} wsock32 )
-ENDIF ( NOT Win )
+LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
+IF ( Win )
+	LINK_LIBRARIES ( wsock32 )
+ENDIF ( Win )
 ###############################################################################
 # SOURCE SPECIFICATION
 ###############################################################################

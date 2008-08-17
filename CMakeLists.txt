@@ -134,6 +134,8 @@ IF ( WIN )
 		SET ( SDLIMAGE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
 		SET ( SDLTTF_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
 	ENDIF ( NOT Server )
+	# noone wants to debug in windows
+	SET ( CMAKE_BUILD_TYPE Release )
 	# override basic directory placement
 	SET ( CMAKE_CONF_PATH "../${APPNAME}/etc/" )
 	SET ( CMAKE_DATA_PATH "../${APPNAME}/share/" )
