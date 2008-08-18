@@ -15,10 +15,10 @@ ADD_SUBDIRECTORY ( sound )
 ###############################################################################
 IF ( NOT Server )
 	INSTALL ( FILES tuxanci.desktop
-		DESTINATION doc/${APPNAME}-${TUXANCI_VERSION}/)
+		DESTINATION ${CMAKE_INSTALL_DOCDIR}/doc/${APPNAME}-${TUXANCI_VERSION}/)
 	IF ( NOT Win )
 		INSTALL ( FILES tuxanci.ico
-			DESTINATION doc/${APPNAME}-${TUXANCI_VERSION}/ )
+			DESTINATION ${CMAKE_INSTALL_DOCDIR}/doc/${APPNAME}-${TUXANCI_VERSION}/ )
 	ENDIF ( NOT Win )
 ENDIF ( NOT Server )
 ###############################################################################

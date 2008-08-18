@@ -13,8 +13,9 @@
 # -DApple=1			# build apple port
 # -DCMAKE_INSTALL_PREFIX=/bla/	# install prefix
 # -DCMAKE_DATA_PATH=/other/bla/	# install path for data
-# -DCMAKE_CONF_PATH=/etc	# install path for data
-# -DLIB_INSTALL_DIR=/other/bla	# install path for data
+# -DCMAKE_CONF_PATH=/etc	# install path for conf
+# -DLIB_INSTALL_DIR=/other/bla	# install path for lib
+# -DCMAKE_DOC_PATH=/other/bla	# install path for doc
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
@@ -22,6 +23,7 @@ SET ( TUXANCI_VERSION "9999" CACHE STRING "Version" )
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
 SET ( CMAKE_CONF_PATH "/etc" CACHE PATH "Config path prefix" )
+SET ( CMAKE_DOC_PATH "/usr/local/" CACHE PATH "Data path prefix" )
 SET ( CMAKE_DATA_PATH "/usr/local/share/" CACHE PATH "Data path prefix" )
 SET ( LIB_INSTALL_DIR "/usr/local/lib/" CACHE PATH "Library path prefix" )
 SET ( CMAKE_INSTALL_PREFIX "/usr/local/" CACHE PATH "Install path prefix" )
@@ -56,6 +58,7 @@ SET ( CMAKE_INSTALL_ETCDIR ${CMAKE_CONF_PATH} )
 SET ( CMAKE_INSTALL_BINDIR bin )
 SET ( CMAKE_INSTALL_DATADIR ${CMAKE_DATA_PATH} )
 SET ( CMAKE_INSTALL_LIBDIR ${LIB_INSTALL_DIR} )
+SET ( CMAKE_INSTALL_DOCDIR ${CMAKE_DOC_PATH} )
 # uninstall
 CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in"
@@ -138,11 +141,13 @@ IF ( WIN )
 	# noone wants to debug in windows
 	SET ( CMAKE_BUILD_TYPE Release )
 	# override basic directory placement
-	SET ( CMAKE_CONF_PATH "../${APPNAME}/etc/" )
-	SET ( CMAKE_DATA_PATH "../${APPNAME}/share/" )
-	SET ( LIB_INSTALL_DIR "../${APPNAME}/bin/" )
-	SET ( CMAKE_INSTALL_PREFIX "../")
+	SET ( CMAKE_CONF_PATH "${APPNAME}/etc/" )
+	SET ( CMAKE_DATA_PATH "${APPNAME}/share/" )
+	SET ( CMAKE_DOC_PATH "${APPNAME}/doc/" )
+	SET ( LIB_INSTALL_DIR "${APPNAME}/bin/" )
+	SET ( CMAKE_INSTALL_PREFIX "./")
 	SET ( CMAKE_INSTALL_BINDIR ${APPNAME}/bin )
+	SET ( CMAKE_INSTALL_DOCDIR ${APPNAME}/doc )
 	SET ( CMAKE_INSTALL_LIBDIR ${APPNAME}/bin )
 	SET ( CMAKE_INSTALL_DATADIR ${APPNAME}/share/ )
 	SET ( CMAKE_INSTALL_ETCDIR ${APPNAME}/etc )
@@ -174,12 +179,14 @@ ENDIF ( NOT NO_Audio )
 IF ( Bundle )
 	SET ( CMAKE_CONF_PATH "../etc")
 	SET ( CMAKE_DATA_PATH "../share")
+	SET ( CMAKE_DOC_PATH "../doc")
 	SET ( LIB_INSTALL_DIR "../lib")
 	SET ( CMAKE_INSTALL_PREFIX "/")
 	SET ( CMAKE_INSTALL_BINDIR bin )
 	SET ( CMAKE_INSTALL_LIBDIR lib )
 	SET ( CMAKE_INSTALL_DATADIR share )
 	SET ( CMAKE_INSTALL_ETCDIR etc )
+	SET ( CMAKE_INSTALL_DOCDIR doc )
 	CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${WORKDIR}/base/path.h )
 ENDIF ( Bundle )
 ###############################################################################
@@ -208,11 +215,11 @@ ADD_SUBDIRECTORY ( src )
 # path which user send us
 ADD_SUBDIRECTORY ( data )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/LICENCE
-	DESTINATION doc/${APPNAME}-${TUXANCI_VERSION}/ )
+	DESTINATION ${CMAKE_INSTALL_DOCDIR}/doc/${APPNAME}-${TUXANCI_VERSION}/ )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS
-	DESTINATION doc/${APPNAME}-${TUXANCI_VERSION}/ )
+	DESTINATION ${CMAKE_INSTALL_DOCDIR}/doc/${APPNAME}-${TUXANCI_VERSION}/ )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README
-	DESTINATION doc/${APPNAME}-${TUXANCI_VERSION}/ )
+	DESTINATION ${CMAKE_INSTALL_DOCDIR}/doc/${APPNAME}-${TUXANCI_VERSION}/ )
 # windows quirk
 IF ( NOT Server )
 	IF ( Win )

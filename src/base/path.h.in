@@ -4,16 +4,16 @@
 	#define TUXANCI_VERSION				"@TUXANCI_VERSION@"
 	#define PATH_H
 	#define PREFIX					"@CMAKE_INSTALL_PREFIX@"
-	#define PATH_DIR	"@CMAKE_DATA_PATH@"	"/"	APPNAME	"/"
 	#ifdef PUBLIC_SERVER
 		#define APPNAME					"tuxanci-server"
 		#define SERVER_CONFIG	"@CMAKE_CONF_PATH@" "/"	APPNAME	"/server.conf"
 	#else
 		#define APPNAME					"tuxanci"
 	#endif
+	#define PATH_DIR	"@CMAKE_DATA_PATH@"	"/"	APPNAME	"-" "@TUXANCI_VERSION@" "/"
 	// windows bug
 	#ifndef __WIN32__
-		#define PATH_MODULES 	"@LIB_INSTALL_DIR@" "/"	APPNAME	"/"
+		#define PATH_MODULES 	"@LIB_INSTALL_DIR@" "/"	APPNAME	"-" "@TUXANCI_VERSION@" "/"
 	#else
 		#define PATH_MODULES 	PREFIX	"/bin/"
 	#endif
@@ -24,7 +24,7 @@
 	#define PATH_MUSIC	PATH_DIR	"music/"
 	#define PATH_CONFIG	PATH_DIR	"conf/"
 	#define PATH_LANG	PATH_DIR	"lang/"
-	#define PATH_DATA	PATH_DIR	"doc/"
+	#define PATH_DOC	"@CMAKE_DOC_PATH@"	"doc/"	APPNAME	"-" "@TUXANCI_VERSION@" "/"
 	#define PATH_LOCALE	PREFIX		"share/locale/"
 	#include "main.h"
 #endif
