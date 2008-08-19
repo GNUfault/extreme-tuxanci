@@ -46,7 +46,7 @@ static void initGame()
 	createHomeDirector();
 
 	initSDL();
-
+	initFont("DejaVuSans.ttf", 16);
 	initLayer();
 	initImageData();
 #ifndef NO_SOUND

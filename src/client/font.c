@@ -56,6 +56,8 @@ void drawFont(char *s, int x, int y, int r, int g, int b)
 	SDL_Surface *p;
 	SDL_Color farba_pisma = {r, g, b, 0};
 
+	//printf("drawFont %s\n", s);
+
 	assert( s != NULL );
 
 	p = getSDL_Screen();
