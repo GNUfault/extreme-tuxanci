@@ -15,7 +15,8 @@
 #define COLOR_BLUE	0, 0, 255
 
 #define COLOR_YELLOW	255, 255, 0
-
+#define FONT_SIZE	16
+#define FONT_FILE	"DejaVuSans.ttf"
 extern bool_t isFontInicialized();
 extern void initFont(char *file,int size);
 extern void drawFont(char *s,int x,int y,int r,int g,int b);

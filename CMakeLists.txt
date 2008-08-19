@@ -161,8 +161,6 @@ ENDIF ( WIN )
 # SDL SEARCH
 ###############################################################################
 IF ( NOT Win )
-	MESSAGE ( STATUS "<Checking for SDL>" )
-	MESSAGE ( STATUS "<******************************>" )
 	FIND_PACKAGE ( SDL REQUIRED )
 	FIND_PACKAGE ( SDL_image REQUIRED )
 	FIND_PACKAGE ( SDL_ttf REQUIRED )
@@ -200,7 +198,7 @@ ENDIF ( Bundle )
 # GETTEXT SUPPORT
 ###############################################################################
 IF ( NLS )
-	MESSAGE ( STATUS "<Compiling LANGUAGES>" )
+	MESSAGE ( STATUS "<Building with NLS as requested>" )
 	MESSAGE ( STATUS "<******************************>" )
 	ADD_DEFINITIONS ( -DNLS )
 	SET ( GETTEXT_PACKAGE "tuxanci" )

@@ -79,7 +79,7 @@ static void cmd_arena(arena_t **arena, char *line)
 	//(*arena)->w = atoi(str_w);
 	//(*arena)->h = atoi(str_h);
 	setCurrentArena(*arena);
-#ifndef DEBUG
+#ifdef DEBUG
 	printf(_("Loaded new arena...\n"));
 #endif
 }
