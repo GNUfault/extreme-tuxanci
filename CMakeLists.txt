@@ -25,7 +25,7 @@ SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
 SET ( CMAKE_CONF_PATH "/etc" CACHE PATH "Config path prefix" )
 SET ( CMAKE_INSTALL_PREFIX "/usr/local/" CACHE PATH "Install path prefix" )
-SET ( CMAKE_DOC_PATH "/usr/local/doc" CACHE PATH "Data path prefix" )
+SET ( CMAKE_DOC_PATH "${CMAKE_INSTALL_PREFIX}share/doc" CACHE PATH "Data path prefix" )
 SET ( CMAKE_LOCALE_PATH "${CMAKE_INSTALL_PREFIX}/share/locale" CACHE PATH "Locale path prefix" )
 SET ( CMAKE_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/" CACHE PATH "Data path prefix" )
 SET ( LIB_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/lib/" CACHE PATH "Library path prefix" )

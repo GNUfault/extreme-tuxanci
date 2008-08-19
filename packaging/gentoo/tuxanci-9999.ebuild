@@ -12,7 +12,7 @@ LICENSE="GPL-2"
 
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="alsa dedicated"
+IUSE="alsa debug dedicated nls"
 # alsa is used only when building client
 
 DEPEND="!dedicated? (
@@ -22,15 +22,18 @@ DEPEND="!dedicated? (
 			alsa? (
 				>=media-libs/sdl-mixer-1.2.7
 			)
-		)"
+		)
+	nls? ( sys-devel/gettext )"
 
 S="${WORKDIR}"/"${PN}"
 
 src_compile() {
 	local mycmakeargs
 	use alsa || mycmakeargs="${mycmakeargs} -DNO_Audio=1"
+	use debug && mycmakeargs="${mycmakeargs} -DDebug=1"
 	use dedicated && mycmakeargs="${mycmakeargs} -DServer=1"
-	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=/usr/games -DCMAKE_DATA_PATH=/usr/share/games/"
+	use nls && mycmakeargs="${mycmakeargs} -DNLS=1"
+	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=/usr/games -DCMAKE_DATA_PATH=/usr/share/games/ -DCMAKE_LOCALE_PATH=/usr/share/locale/ -DCMAKE_DOC_PATH=/usr/share/doc/ "
 	cmake-utils_src_compile
 }
 
