@@ -201,7 +201,6 @@ IF ( NLS )
 	MESSAGE ( STATUS "<Building with NLS as requested>" )
 	MESSAGE ( STATUS "<******************************>" )
 	ADD_DEFINITIONS ( -DNLS )
-	SET ( GETTEXT_PACKAGE "tuxanci" )
 	ADD_SUBDIRECTORY ( po )
 ENDIF ( NLS )
 ###############################################################################

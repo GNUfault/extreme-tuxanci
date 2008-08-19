@@ -132,9 +132,9 @@ int main(int argc, char *argv[])
 
 #ifdef NLS
 	setlocale( LC_ALL, "" );
-	bindtextdomain( "tuxanci", PATH_LOCALE);
-	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
-	textdomain( "tuxanci" );
+	bindtextdomain( PACKAGE, PATH_LOCALE);
+	bind_textdomain_codeset (PACKAGE, "UTF-8");
+	textdomain( PACKAGE );
 #endif
 #ifndef __WIN32__
 	my_argc = argc;

@@ -24,6 +24,6 @@
 	#define PATH_MUSIC	PATH_DIR	"music/"
 	#define PATH_LOCALE	"@CMAKE_LOCALE_PATH@"	"/"
 	#define PATH_DOC	"@CMAKE_DOC_PATH@"	"/"		APPNAME	"-" "@TUXANCI_VERSION@" "/"
-	#define GETTEXT_PACKAGE	"@GETTEXT_PACKAGE@"
+	#define PACKAGE		"tuxanci"
 	#include "main.h"
 #endif
