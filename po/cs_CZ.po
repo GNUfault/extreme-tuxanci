@@ -1,139 +1,139 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Copyright (C) 2008
+# This file is distributed under the same license as the tuxanci package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2008.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: tuxanci\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-08-19 14:46+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2008-08-19 00:37+0200\n"
+"PO-Revision-Date: 2008-08-19 13:20+0200\n"
+"Last-Translator: tilyan"
+"Language-Team: CZECH <cs@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/client/client.c:105
+#: src/client/client.c:106
 #, c-format
 msgid "Connected to: %s on port: %d via UDP\n"
-msgstr ""
+msgstr "Připojeno k: %s na portu %d přes UDP\n"
 
-#: src/client/client.c:123
+#: src/client/client.c:124
 #, c-format
 msgid "Connected to: %s on port: %d via TCP\n"
-msgstr ""
-
-#: src/client/client.c:184
-#, c-format
-msgid "Server did not respond!\n"
-msgstr ""
+msgstr "Připojeno k: %s na portu %d přes TCP\n"
 
 #: src/client/client.c:185
-msgid "Server is not running or being blocked. I was unable to connect."
-msgstr ""
+#, c-format
+msgid "Server did not respond!\n"
+msgstr "Server neodpověděl!\n"
 
-#: src/client/client.c:224 src/base/server.c:311
+#: src/client/client.c:186
+msgid "Server is not running or being blocked. I was unable to connect."
+msgstr "Server neběží, nebo je blokován. Nemohl jsem se připojit."
+
+#: src/client/client.c:225 src/base/server.c:311
 #, c-format
 msgid "Sending: \"%s\""
-msgstr ""
+msgstr "Posílám: \"%s\""
 
-#: src/client/client.c:313 src/base/server.c:353
+#: src/client/client.c:314 src/base/server.c:353
 #, c-format
 msgid "Recieved: \"%s\""
-msgstr ""
-
-#: src/client/client.c:416
-#, c-format
-msgid "down: %d\n"
-msgstr ""
+msgstr "Přijato: \"%s\""
 
 #: src/client/client.c:417
 #, c-format
-msgid "up  : %d\n"
-msgstr ""
+msgid "down: %d\n"
+msgstr "dolů: %d\n"
 
-#: src/client/client.c:444
+#: src/client/client.c:418
+#, c-format
+msgid "up  : %d\n"
+msgstr "nahoru: %d\n"
+
+#: src/client/client.c:445
 #, c-format
 msgid "Closing UDP connection.\n"
-msgstr ""
+msgstr "Zavírám UDP spojení.\n"
 
-#: src/client/client.c:453
+#: src/client/client.c:454
 #, c-format
 msgid "Closing TCP connection.\n"
-msgstr ""
+msgstr "Zavírám TCP spojení.\n"
 
 #: src/client/interface.c:55
 #, c-format
 msgid "Initializing SDL system\n"
-msgstr ""
+msgstr "Inicializuji SDL systém\n"
 
 #: src/client/interface.c:122
 #, c-format
 msgid "Unable to switch to FULLSCREEN mode!\n"
-msgstr ""
+msgstr "Nemohu přepnout do režimu celé obrazovky!\n"
 
 #: src/client/interface.c:129
 #, c-format
 msgid "Unable to switch to WINDOW mode! Error: %s\n"
-msgstr ""
+msgstr "Nemohu přepnout do okeníího režimu! Chyba: %s\n"
 
 #: src/client/interface.c:173
 #, c-format
 msgid "Pressed key with SDL value: %d\n"
-msgstr ""
+msgstr "Stisknuta klávesa s SDL hodnotou: %d\n"
 
 #: src/client/interface.c:245
 #, c-format
 msgid "Unable to change WINDOW resolution! Error: %s\n"
-msgstr ""
+msgstr "Nemohu změnit rozlišení! Chyba: %s\n"
 
 #: src/client/interface.c:274
 #, c-format
 msgid "Quitting SDL\n"
-msgstr ""
+msgstr "Končím SDL\n"
 
 #: src/client/configFile.c:135
 #, c-format
 msgid "ADDING: \"%s\" into config file.\n"
-msgstr ""
+msgstr "PŘIDÁVÁM: \"%s\" do konfiguračního souboru.\n"
 
 #: src/client/image.c:29
 #, c-format
 msgid "Initializing image database\n"
-msgstr ""
+msgstr "Inicializuji databázi obrázků\n"
 
 #: src/client/image.c:105
 #, c-format
 msgid "Loading image %s\n"
-msgstr ""
+msgstr "Nahrávám obrázek %s\n"
 
 #: src/client/image.c:164
 #, c-format
 msgid "Quitting image database\n"
-msgstr ""
+msgstr "Zavírám databázi obrázků\n"
 
-#: src/client/font.c:140
+#: src/client/font.c:138
 #, c-format
 msgid "Unloading font\n"
-msgstr ""
+msgstr "Uvolňuji font\n"
 
 #: src/client/keyboardBuffer.c:64
 #, c-format
 msgid "Keyboard Buffer overrun! Dropping key: %02x\n"
-msgstr ""
+msgstr "Přetečení bufferu klávesnice! Zahazuji klávesu: %02x\n"
 
 #: src/client/keyboardBuffer.c:87
 #, c-format
 msgid "Keyboard Buffer underrun!\n"
-msgstr ""
+msgstr "Podtečení bufferu klávesnice!\n"
 
 #: src/client/keyboardBuffer.c:132
 #, c-format
 msgid "Keyboard buffer is not empty!\n"
-msgstr ""
+msgstr "Buffer klávesnice není prázdný!\n"
 
 #: src/client/screen.c:61
 #, c-format
@@ -153,49 +153,56 @@ msgstr ""
 #: src/client/saveLoad.c:82
 #, c-format
 msgid "Saving game to: \"%s\"\n"
-msgstr ""
+msgstr "Ukládám hru do: \"%s\"\n"
 
 #: src/client/saveLoad.c:94
 #, c-format
 msgid "I was unable to save: \"%s\"\n"
-msgstr ""
+msgstr "Nemohl jsem uložit: \"%s\"\n"
 
 #: src/client/saveLoad.c:255
 #, c-format
 msgid "Loadig game from file: \"%s\"\n"
-msgstr ""
+msgstr "Nahrávám hru ze souboru: \"%s\"\n"
 
 #: src/client/saveLoad.c:266
 #, c-format
 msgid "Unable to load save: \"%s\"\n"
-msgstr ""
+msgstr "Nemohu nahrát uložení: \"%s\"\n"
 
-#: src/client/game.c:106
+#: src/client/game.c:52
+#, c-format
+msgid ""
+"I was unable to initialize old nls system (if you see this something wierd "
+"is happening)!\n"
+msgstr "Nemohl jsem inicializovat starý nls systém (vidíte-li toto, něco tu smrdí)!\n"
+
+#: src/client/game.c:117
 #, c-format
 msgid "Quitting TUXANCI...\n"
-msgstr ""
+msgstr "Končím TUXANCI...\n"
 
 #: src/base/textFile.c:85
 #, c-format
 msgid "ERROR: unable to get file status for %s!\n"
-msgstr ""
+msgstr "CHYBA: nemohu získat status souboru %s!\n"
 
 #: src/base/textFile.c:92
 #, c-format
 msgid "ERROR: unable to open file %s for reading\n"
-msgstr ""
+msgstr "CHYBA: nemohu otevřít soubor %s pro čtení\n"
 
 #: src/base/textFile.c:100
 #, c-format
 msgid "ERROR: unable to read data from file %s\n"
-msgstr ""
+msgstr "CHYBA: nemohu číst data ze souboru %s\n"
 
 #: src/base/textFile.c:125
 #, c-format
 msgid ""
 "Printing file: \"%s\"\n"
 "\n"
-msgstr ""
+msgstr "Tisknu soubor: \"%s\"\n"
 
 #: src/base/checkFront.c:86
 msgid "Bad type of front!"
@@ -203,134 +210,134 @@ msgstr ""
 
 #: src/base/serverSendMsg.c:142 src/base/shot.c:128 src/base/tux.c:157
 msgid "Type variable has a really wierd value!"
-msgstr ""
+msgstr "Type variable má hodně divnou hodnotu!"
 
 #: src/base/tux.c:196
 msgid "p->control has a really wierd value!"
-msgstr ""
+msgstr "p->control má taky hodně divnou hodnotu!"
 
 #: src/base/storage.c:71
 #, c-format
 msgid "%s %s was not found in storage!\n"
-msgstr ""
+msgstr "%s %s nebylo na skladě nalezeno!\n"
 
 #: src/base/udp_server.c:64 src/base/tcp_server.c:66
 #, c-format
 msgid "New client \"%s\" on port \"%d\" connected"
-msgstr ""
+msgstr "Nový klient \"%s\" připojen na portu \"%d\""
 
 #: src/base/udp_server.c:80 src/base/tcp_server.c:110
 #, c-format
 msgid "Client \"%s\" on port \"%d\" disconnected"
-msgstr ""
+msgstr "Klient \"%s\" na portu \"%d\" je odpojen"
 
 #: src/base/udp_server.c:103 src/base/udp_server.c:122
 #: src/base/tcp_server.c:136 src/base/tcp_server.c:156
 #, c-format
 msgid "Starting server: \"%s\" on port: \"%d\"\n"
-msgstr ""
+msgstr "Spouštím server: \"%s\" na portu: \"%d\"\n"
 
 #: src/base/udp_server.c:109 src/base/udp_server.c:128
 #: src/base/tcp_server.c:142 src/base/tcp_server.c:162
 #, c-format
 msgid "Starting server: \"%s\" on port: \"%d\" FAILED!\n"
-msgstr ""
+msgstr "Spouštění serveru: \"%s\" na portu: \"%d\" SELHALO\n"
 
 #: src/base/udp_server.c:208
 #, c-format
 msgid "Client was not FOUND!\n"
-msgstr ""
+msgstr "Klient NENALEZEN!\n"
 
 #: src/base/udp_server.c:272 src/base/udp_server.c:280
 #: src/base/tcp_server.c:309 src/base/tcp_server.c:317
 #, c-format
 msgid "Closing port: \"%d\"\n"
-msgstr ""
+msgstr "Zavírám port: \"%d\"\n"
 
 #: src/base/udp_server.c:285
 #, c-format
 msgid "Quitting UDP\n"
-msgstr ""
+msgstr "Končím UDP\n"
 
 #: src/base/idManager.c:42
 #, c-format
 msgid "Starting ID manger\n"
-msgstr ""
+msgstr "Spouštím ID manger\n"
 
 #: src/base/idManager.c:75
 msgid "No free ID left!"
-msgstr ""
+msgstr "Nezbývá žádné volné ID!"
 
 #: src/base/idManager.c:115 src/base/idManager.c:138
 msgid "This kind of ID was never registered!"
-msgstr ""
+msgstr "Tento druh ID nebyl nikdy registrován!"
 
 #: src/base/idManager.c:189
 #, c-format
 msgid "ID %d does not exist\n"
-msgstr ""
+msgstr "ID %d neexistuje\n"
 
 #: src/base/idManager.c:196
 #, c-format
 msgid "ID %d (count %d)\n"
-msgstr ""
+msgstr "ID %d (počet %d)\n"
 
 #: src/base/idManager.c:204
 #, c-format
 msgid "Quitting ID manger\n"
-msgstr ""
+msgstr "Končím ID manger\n"
 
 #: src/base/server.c:162 src/base/server.c:324
 msgid "Bad client type (TCP/UDP)!"
-msgstr ""
+msgstr "Špatný typ klienta (TCP/UDP)!"
 
 #: src/base/myTimer.c:113
 msgid "Timer is really wierdly set!"
-msgstr ""
+msgstr "Časovač je nějakej ujetej, asi divně nastavenej!"
 
 #: src/base/myTimer.c:132
 msgid "There is no such ID!"
-msgstr ""
+msgstr "Takové ID tu fakt není!"
 
 #: src/base/modules.c:70 src/base/modules.c:76
 #, c-format
 msgid "Error %s occured when using getFce function!\n"
-msgstr ""
+msgstr "Při použití getFce nastala chyba %s!\n"
 
 #: src/base/modules.c:147
 #, c-format
 msgid "Unable to map file %s!\n"
-msgstr ""
+msgstr "Nemohu [zmapovat] soubor %s!\n"
 
 #: src/base/modules.c:163
 #, c-format
 msgid "Loading module: \"%s\"\n"
-msgstr ""
+msgstr "Načítám modul: \"%s\"\n"
 
 #: src/base/modules.c:166
 #, c-format
 msgid "Failed initialization of module \"%s\""
-msgstr ""
+msgstr "Inicializace modulu \"%s\" selhala."
 
 #: src/base/modules.c:183
 #, c-format
 msgid "Destroing module...\n"
-msgstr ""
+msgstr "Ničím modul...\n"
 
 #: src/base/modules.c:213
 #, c-format
 msgid "I've done this once, dont want to mess memory with module %s again!\n"
-msgstr ""
+msgstr "Tohle už jsem udělal, nepras mi tim tu paměť znova!\n"
 
 #: src/base/modules.c:218
 #, c-format
 msgid "Loading module %s failed!\n"
-msgstr ""
+msgstr "Načítání modulu % selhalo!\n"
 
 #: src/base/shareFunction.c:42
 #, c-format
 msgid "Adding  \"%s\" to share function.\n"
-msgstr ""
+msgstr "Přidávám \"%s\" do sdílené funkce.\n"
 
 #: src/base/net_multiplayer.c:61 src/base/net_multiplayer.c:69
 #, c-format
@@ -345,7 +352,7 @@ msgstr ""
 #: src/base/net_multiplayer.c:88 src/base/net_multiplayer.c:112
 #: src/base/net_multiplayer.c:134
 msgid "Variable netGameType has a really wierd value!"
-msgstr ""
+msgstr "Promněnna netGameType má hodně ujetou hodnotu!"
 
 #: src/base/main.c:102
 #, c-format
@@ -353,6 +360,8 @@ msgid ""
 "File %s not found !\n"
 "Program shutdown !\n"
 msgstr ""
+"Soubor %nenalezen !\n"
+"Vypnutí programu !\n"
 
 #: src/base/main.c:155
 #, c-format
@@ -360,71 +369,73 @@ msgid ""
 "WinSock initialization failed !\n"
 "Program shutdown !\n"
 msgstr ""
+"Inicializace WinPonožky selhala !\n"
+"Vypnutí programu !\n"
 
 #: src/base/arenaFile.c:83
 #, c-format
 msgid "Loaded new arena...\n"
-msgstr ""
+msgstr "Nahrána nová aréna...\n"
 
 #: src/base/arenaFile.c:242
 #, c-format
 msgid "Loading map file: %s\n"
-msgstr ""
+msgstr "Nahrávám map file: %s\n"
 
 #: src/base/homeDirector.c:22
 #, c-format
 msgid "Environment variable HOME not found!\n"
-msgstr ""
+msgstr "Proměnná prostředí HOME nenalezena!\n"
 
 #: src/base/homeDirector.c:30
 #, c-format
 msgid "Creating home directory %s.\n"
-msgstr ""
+msgstr "Vytvářím domovský adresář %s.\n"
 
 #: src/base/homeDirector.c:37
 #, c-format
 msgid "Unable to create home directory!\n"
-msgstr ""
+msgstr "Nemohu vytvořit domovský adresář!\n"
 
 #: src/base/gun.c:50
 msgid "There is wrong value in course variable!"
-msgstr ""
+msgstr "V proměnné course je divná hodnota!"
 
-#: src/base/proto.c:67
+#: src/base/proto.c:68
 #, c-format
 msgid "Proto error code: \"%d\"\n"
-msgstr ""
+msgstr "Proto error code: \"%d\"\n"
 
-#: src/base/proto.c:72
+#: src/base/proto.c:73
 msgid "Version of your client isn't supported by the server."
 msgstr ""
 
-#: src/screen/screen_table.c:98
+#: src/screen/screen_table.c:99
 #, c-format
 msgid "Highscore file: \"%s\" was not loaded!"
 msgstr ""
 
-#: src/screen/screen_table.c:151 src/screen/screen_setting.c:225
+#: src/screen/screen_table.c:152 src/screen/screen_setting.c:226
 #: src/server/heightScore.c:22
 #, c-format
 msgid "I am unable to load: \"%s\" !\n"
 msgstr ""
 
-#: src/screen/screen_table.c:152 src/screen/screen_setting.c:226
+#: src/screen/screen_table.c:153 src/screen/screen_setting.c:227
 #: src/server/heightScore.c:23
 #, c-format
 msgid "Creating: \"%s\"\n"
 msgstr ""
 
-#: src/screen/screen_table.c:162 src/screen/screen_setting.c:233
+#: src/screen/screen_table.c:163 src/screen/screen_setting.c:234
 #: src/server/heightScore.c:36
 #, c-format
 msgid "I was unable to create: \"%s\" !\n"
 msgstr ""
 
-#: src/screen/screen_table.c:210 src/screen/screen_browser.c:680
-#: src/screen/screen_setting.c:337 src/screen/screen_choiceArena.c:142
-#: src/screen/screen_credits.c:105 src/screen/screen_gameType.c:231
+#: src/screen/screen_table.c:211 src/screen/screen_browser.c:681
+#: src/screen/screen_setting.c:338 src/screen/screen_choiceArena.c:143
+#: src/screen/screen_credits.c:106 src/screen/screen_gameType.c:232
 msgid "back"
 msgstr ""
 
@@ -442,178 +453,178 @@ msgstr ""
 msgid "Quitting screen world\n"
 msgstr ""
 
-#: src/screen/screen_mainMenu.c:104
+#: src/screen/screen_mainMenu.c:105
 msgid "Start game"
 msgstr ""
 
-#: src/screen/screen_mainMenu.c:105
+#: src/screen/screen_mainMenu.c:106
 msgid "Settings"
 msgstr ""
 
-#: src/screen/screen_mainMenu.c:106
+#: src/screen/screen_mainMenu.c:107
 msgid "Highscore"
 msgstr ""
 
-#: src/screen/screen_mainMenu.c:107
+#: src/screen/screen_mainMenu.c:108
 msgid "Credits"
 msgstr ""
 
-#: src/screen/screen_mainMenu.c:108
+#: src/screen/screen_mainMenu.c:109
 msgid "Quit game"
 msgstr ""
 
-#: src/screen/screen_browser.c:681
+#: src/screen/screen_browser.c:682
 msgid "Play"
 msgstr ""
 
-#: src/screen/screen_browser.c:682
+#: src/screen/screen_browser.c:683
 msgid "Refresh"
 msgstr ""
 
-#: src/screen/screen_browser.c:684
+#: src/screen/screen_browser.c:685
 msgid "server"
 msgstr ""
 
-#: src/screen/screen_browser.c:685
+#: src/screen/screen_browser.c:686
 msgid "version"
 msgstr ""
 
-#: src/screen/screen_browser.c:686 src/screen/screen_gameType.c:259
+#: src/screen/screen_browser.c:687 src/screen/screen_gameType.c:260
 msgid "IP"
 msgstr ""
 
-#: src/screen/screen_browser.c:687
+#: src/screen/screen_browser.c:688
 msgid "arena"
 msgstr ""
 
-#: src/screen/screen_browser.c:688
+#: src/screen/screen_browser.c:689
 msgid "clients"
 msgstr ""
 
-#: src/screen/screen_browser.c:689
+#: src/screen/screen_browser.c:690
 msgid "ping"
 msgstr ""
 
-#: src/screen/screen_setting.c:293
+#: src/screen/screen_setting.c:294
 #, c-format
 msgid ""
 "I am unable to save configure file, because config file was not "
 "initialised!\n"
 msgstr ""
 
-#: src/screen/screen_setting.c:338
+#: src/screen/screen_setting.c:339
 msgid "controls"
 msgstr ""
 
-#: src/screen/screen_setting.c:341
+#: src/screen/screen_setting.c:342
 msgid "Music:"
 msgstr ""
 
-#: src/screen/screen_setting.c:344
+#: src/screen/screen_setting.c:345
 msgid "Sound:"
 msgstr ""
 
-#: src/screen/screen_setting.c:355
+#: src/screen/screen_setting.c:356
 msgid "No. of rounds:"
 msgstr ""
 
-#: src/screen/screen_setting.c:356
+#: src/screen/screen_setting.c:357
 msgid "Player 1:"
 msgstr ""
 
-#: src/screen/screen_setting.c:357
+#: src/screen/screen_setting.c:358
 msgid "Player 2:"
-msgstr ""
-
-#: src/screen/screen_settingKeys.c:112
-#, c-format
-msgid "I was unable to load file: %s\n"
 msgstr ""
 
 #: src/screen/screen_settingKeys.c:113
 #, c-format
+msgid "I was unable to load file: %s\n"
+msgstr ""
+
+#: src/screen/screen_settingKeys.c:114
+#, c-format
 msgid "I try to create file: %s\n"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:117
+#: src/screen/screen_settingKeys.c:118
 #, c-format
 msgid "I was unable to create file: %s\n"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:235
+#: src/screen/screen_settingKeys.c:236
 msgid "Back"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:236
+#: src/screen/screen_settingKeys.c:237
 msgid "Player 2"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:237
+#: src/screen/screen_settingKeys.c:238
 msgid "Up"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:238 src/screen/screen_settingKeys.c:245
+#: src/screen/screen_settingKeys.c:239 src/screen/screen_settingKeys.c:246
 msgid "Down:"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:239 src/screen/screen_settingKeys.c:246
+#: src/screen/screen_settingKeys.c:240 src/screen/screen_settingKeys.c:247
 msgid "Left:"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:240 src/screen/screen_settingKeys.c:247
+#: src/screen/screen_settingKeys.c:241 src/screen/screen_settingKeys.c:248
 msgid "Right:"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:241 src/screen/screen_settingKeys.c:248
+#: src/screen/screen_settingKeys.c:242 src/screen/screen_settingKeys.c:249
 msgid "Fire gun:"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:242 src/screen/screen_settingKeys.c:249
+#: src/screen/screen_settingKeys.c:243 src/screen/screen_settingKeys.c:250
 msgid "Switch gun:"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:243
+#: src/screen/screen_settingKeys.c:244
 msgid "Player 1"
 msgstr ""
 
-#: src/screen/screen_settingKeys.c:244
+#: src/screen/screen_settingKeys.c:245
 msgid "Up:"
 msgstr ""
 
-#: src/screen/screen_choiceArena.c:143 src/screen/screen_gameType.c:232
+#: src/screen/screen_choiceArena.c:144 src/screen/screen_gameType.c:233
 msgid "play"
 msgstr ""
 
-#: src/screen/screen_credits.c:131
+#: src/screen/screen_credits.c:132
 #, c-format
 msgid "Credit file not found... %s/%s"
 msgstr ""
 
-#: src/screen/screen_gameType.c:233
+#: src/screen/screen_gameType.c:234
 msgid "browser"
 msgstr ""
 
-#: src/screen/screen_gameType.c:254
+#: src/screen/screen_gameType.c:255
 msgid "Local game"
 msgstr ""
 
-#: src/screen/screen_gameType.c:255
+#: src/screen/screen_gameType.c:256
 msgid "Set up a server"
 msgstr ""
 
-#: src/screen/screen_gameType.c:256
+#: src/screen/screen_gameType.c:257
 msgid "Network game"
 msgstr ""
 
-#: src/screen/screen_gameType.c:260
+#: src/screen/screen_gameType.c:261
 msgid "port"
 msgstr ""
 
-#: src/screen/screen_gameType.c:320
+#: src/screen/screen_gameType.c:321
 msgid "Unknown game type!"
 msgstr ""
 
-#: src/screen/screen_gameType.c:377
+#: src/screen/screen_gameType.c:378
 #, c-format
 msgid "Unknown IP protocol!\n"
 msgstr ""
@@ -627,17 +638,21 @@ msgstr ""
 msgid "Bad filter!"
 msgstr ""
 
-#: src/modules/modTeleport.c:190
+#: src/modules/modTeleport.c:195
 msgid "When generating random value in range 0 to 3 i got some other value?!"
 msgstr ""
 
-#: src/modules/modPipe.c:179
+#: src/modules/modPipe.c:184
 #, c-format
 msgid "Pipe ID for pipe \"%d\" was not found\n"
 msgstr ""
 
-#: src/modules/modPipe.c:244
+#: src/modules/modPipe.c:249
 msgid "Tux is moving in another dimension maybe!"
+msgstr ""
+
+#: src/modules/modMove.c:67
+msgid "Variable p->control has a really wierd value!"
 msgstr ""
 
 #: src/audio/sound.c:41
@@ -668,7 +683,7 @@ msgstr ""
 #: src/audio/music.c:43
 #, c-format
 msgid "Initializing music...\n"
-msgstr "Startuji hudbu\n"
+msgstr ""
 
 #: src/audio/music.c:54
 #, c-format
@@ -683,7 +698,7 @@ msgstr ""
 #: src/audio/music.c:108
 #, c-format
 msgid "Stopping music...\n"
-msgstr "Vypinam hudbu\n"
+msgstr ""
 
 #: src/audio/music.c:148
 #, c-format
@@ -693,7 +708,7 @@ msgstr ""
 #: src/audio/music.c:206
 #, c-format
 msgid "Quitting music...\n"
-msgstr "Vypinam hudbu\n"
+msgstr ""
 
 #: src/audio/audio.c:29
 #, c-format
