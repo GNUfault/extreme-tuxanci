@@ -33,11 +33,12 @@ src_compile() {
 	use debug && mycmakeargs="${mycmakeargs} -DDebug=1"
 	use dedicated && mycmakeargs="${mycmakeargs} -DServer=1"
 	use nls && mycmakeargs="${mycmakeargs} -DNLS=1"
-	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=/usr/games -DCMAKE_DATA_PATH=/usr/share/games/ -DCMAKE_LOCALE_PATH=/usr/share/locale/ -DCMAKE_DOC_PATH=/usr/share/doc/ "
+	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=${GAMES_PREFIX} -DCMAKE_DATA_PATH=${GAMES_DATADIR} -DCMAKE_LOCALE_PATH=${GAMES_DATADIR_BASE}/locale/ -DCMAKE_DOC_PATH=${GAMES_DATADIR_BASE}/doc/ -DCMAKE_ETC_PATH=${GAMES_SYSCONFDIR}"
 	cmake-utils_src_compile
 }
 
 src_install() {
 	cmake-utils_src_install
+	make_desktop_entry ${PN}-svn "Tuxanci"
 	prepgamesdirs
 }
