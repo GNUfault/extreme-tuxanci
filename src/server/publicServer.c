@@ -273,7 +273,7 @@ int initPublicServer()
 
 	if (registerPublicServer() < 0)
 	{
-		printf(_("Unable to contact MasterServer!)\n");
+		printf(_("Unable to contact MasterServer!)\n"));
 	}
 
 	return 0;

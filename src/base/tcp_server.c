@@ -63,7 +63,7 @@ client_t* newTcpClient(sock_tcp_t *sock_tcp)
 	char str_ip[STR_IP_SIZE];
 
 	getSockTcpIp(sock_tcp, str_ip, STR_IP_SIZE);
-	sprintf(str_log, _("New client \"%s\" on port \"%d\" connected"), str_ip, getSockTCPPort(sock_tcp));
+	sprintf(str_log, _("New client \"%s\" on port \"%d\" connected"), str_ip, getSockTcpPort(sock_tcp));
 	addToLog(LOG_INF, str_log);
 #endif
 

@@ -21,7 +21,7 @@ int initLog(char *name)
 		return -1;
 	}
 #ifdef DEBUG
-	printf(_("I use logfile: \"%s\")\n", name);
+	printf(_("I use logfile: \"%s\")\n"), name);
 #endif
 	addToLog(LOG_INF, "open log file");
 
