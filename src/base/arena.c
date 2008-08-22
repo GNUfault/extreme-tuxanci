@@ -106,14 +106,14 @@ void findFreeSpace(arena_t *arena, int *x, int *y, int w, int h)
 	*y = z_y;
 }
 
-void getCenterScreen(int *screen_x, int *screen_y, int x, int y)
+void getCenterScreen(int *screen_x, int *screen_y, int x, int y, int screen_size_x, int screen_size_y)
 {
 	arena_t *arena;
 
 	arena = getCurrentArena();
 
-	*screen_x = x - WINDOW_SIZE_X/2;
-	*screen_y = y - WINDOW_SIZE_Y/2;
+	*screen_x = x - screen_size_x/2;
+	*screen_y = y - screen_size_y/2;
 
 	if( *screen_x < 0 )
 	{
@@ -125,18 +125,38 @@ void getCenterScreen(int *screen_x, int *screen_y, int x, int y)
 		*screen_y = 0;
 	}
 
-	if( *screen_x + WINDOW_SIZE_X >= arena->w )
+	if( *screen_x + screen_size_x >= arena->w )
 	{
-		*screen_x = arena->w - WINDOW_SIZE_X;
+		*screen_x = arena->w - screen_size_x;
 	}
 
-	if( *screen_y + WINDOW_SIZE_Y >= arena->h )
+	if( *screen_y + screen_size_y >= arena->h )
 	{
-		*screen_y = arena->h - WINDOW_SIZE_Y;
+		*screen_y = arena->h - screen_size_y;
 	}
 }
 
 #ifndef PUBLIC_SERVER
+
+static void drawBackground(arena_t *arena, int screen_x, int screen_y)
+{
+	int i, j;
+
+	for( i = screen_y/arena->background->h ;
+	     i <= screen_y/arena->background->h + WINDOW_SIZE_Y/arena->background->h+1 ; i++ )
+	{
+		for( j = screen_x/arena->background->w ;
+		     j <= screen_x/arena->background->w + WINDOW_SIZE_X/arena->background->w+1 ; j++ )
+		{
+			addLayer(arena->background,
+				j * arena->background->w,
+				i * arena->background->h,
+				0, 0, arena->background->w, arena->background->h, -100);
+
+			//count++;
+		}
+	}
+}
 
 static void action_drawTux(space_t *space, tux_t *tux, void *p)
 {
@@ -153,47 +173,8 @@ static void action_drawShot(space_t *space, shot_t *shot, void *p)
 	drawShot(shot);
 }
 
-#if 0
-
-#endif
-
-void drawArena(arena_t *arena)
+static void drawObjects(arena_t *arena, int screen_x, int screen_y)
 {
-	int screen_x, screen_y;
-	tux_t *tux = NULL;
-	int i, j;
-	//int count = 0;
-
-	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
-
-	if( tux == NULL )
-	{
-		return;
-	}
-
-	screen_x = tux->x - WINDOW_SIZE_X/2;
-	screen_y = tux->y - WINDOW_SIZE_Y/2;
-
-
-	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y);
-
-	for( i = screen_y/arena->background->h ;
-	     i <= screen_y/arena->background->h + WINDOW_SIZE_Y/arena->background->h+1 ; i++ )
-	{
-		for( j = screen_x/arena->background->w ;
-		     j <= screen_x/arena->background->w + WINDOW_SIZE_X/arena->background->w+1 ; j++ )
-		{
-			addLayer(arena->background,
-				j * arena->background->w,
-				i * arena->background->h,
-				0, 0, arena->background->w, arena->background->h, -100);
-
-			//count++;
-		}
-	}
-
-	//printf("arena count = %d\n", count);
-
 	actionSpaceFromLocation(arena->spaceTux, action_drawTux, NULL,
 		screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
@@ -203,25 +184,107 @@ void drawArena(arena_t *arena)
 	actionSpaceFromLocation(arena->spaceShot, action_drawShot, NULL,
 		screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
-	//printSpace(arena->spaceShot);
-
 	drawModule(screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
-/*
-	my_time_t t;
+}
 
-	t = getMyTime();
-*/
+static void drawSplitArenaForTux(arena_t *arena, tux_t *tux, int location_x, int location_y)
+{
+	int screen_x, screen_y;
+
+	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+	
+	drawBackground(arena, screen_x, screen_y);
+	drawObjects(arena, screen_x, screen_y);
+
+	drawLayerSplit(location_x, location_y, screen_x, screen_y, WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+}
+
+void drawSplitArena(arena_t *arena)
+{
+	tux_t *tux = NULL;
+
+	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
+
+	if( tux != NULL )
+	{
+		drawSplitArenaForTux(arena, tux, WINDOW_SIZE_X/2, 0);
+	}
+
+	tux = getControlTux(TUX_CONTROL_KEYBOARD_LEFT);
+
+	if( tux != NULL )
+	{
+		drawSplitArenaForTux(arena, tux, 0, 0);
+	}
+}
+
+void drawCenterArena(arena_t *arena)
+{
+	int screen_x, screen_y;
+	tux_t *tux = NULL;
+
+	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
 
 	if( tux == NULL )
 	{
-		drawLayerCenter(WINDOW_SIZE_X/2, WINDOW_SIZE_Y/2);
+		return;
+	}
+
+	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+
+	drawBackground(arena, screen_x, screen_y);
+	drawObjects(arena, screen_x, screen_y);
+	drawLayerCenter(tux->x, tux->y);
+}
+
+void drawSimpleArena(arena_t *arena)
+{
+	int screen_x, screen_y;
+	tux_t *tux = NULL;
+
+	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
+
+	if( tux == NULL )
+	{
+		return;
+	}
+
+	screen_x = 0;
+	screen_y = 0;
+
+	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
+	drawBackground(arena, screen_x, screen_y);
+	drawObjects(arena, screen_x, screen_y);
+	drawLayer(tux->x, tux->y);
+}
+
+static int isBigArena(arena_t *arena)
+{
+	if( arena->w > WINDOW_SIZE_X || arena->h > WINDOW_SIZE_Y )
+	{
+		return 1;
 	}
 	else
 	{
-		drawLayerCenter(tux->x, tux->y);
+		return 0;
+	}
+}
+
+void drawArena(arena_t *arena)
+{
+	if( isBigArena(arena) && getNetTypeGame() == NET_GAME_TYPE_NONE )
+	{
+		drawSplitArena(arena);
+		return;
 	}
 
-//	printf("time = %d\n", getMyTime() - t );
+	if( isBigArena(arena) )
+	{
+		drawCenterArena(arena);
+		return;
+	}
+
+	drawSimpleArena(arena);
 }
 
 #endif

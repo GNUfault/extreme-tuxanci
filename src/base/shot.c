@@ -346,7 +346,7 @@ void checkShotIsInTuxScreen(arena_t *arena)
 			continue;
 		}
 
-		getCenterScreen(&screen_x, &screen_y, thisTux->x, thisTux->y);
+		getCenterScreen(&screen_x, &screen_y, thisTux->x, thisTux->y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 		actionSpaceFromLocation(arena->spaceShot, action_check,
 			thisClient, screen_x, screen_y,  WINDOW_SIZE_X, WINDOW_SIZE_Y);

@@ -48,6 +48,7 @@ extern void addLayer(image_t *img,
  */
 extern void drawLayer();
 extern void drawLayerCenter(int x, int y);
+extern void drawLayerSplit(int local_x, int local_y, int x, int y, int w, int h);
 extern void flushLayer();
 extern void quitLayer();
 

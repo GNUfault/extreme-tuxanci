@@ -41,7 +41,7 @@ extern arena_t* newArena(int w, int h);
 extern int conflictSpace(int x1,int y1,int w1,int h1,int x2,int y2,int w2,int h2);
 extern int isFreeSpace(arena_t *arena, int x, int y, int w, int h);
 extern void findFreeSpace(arena_t *arena, int *x, int *y, int w, int h);
-extern void getCenterScreen(int *screen_x, int *screen_y, int x, int y);
+extern void getCenterScreen(int *screen_x, int *screen_y, int x, int y, int screen_size_x, int screen_size_y);
 #ifndef PUBLIC_SERVER
 extern void drawArena(arena_t *arena);
 #endif

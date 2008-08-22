@@ -110,19 +110,12 @@ void drawLayerCenter(int x, int y)
 	int i;
 	//int count = 0;
 
-	getCenterScreen(&screen_x, &screen_y, x, y);
+	getCenterScreen(&screen_x, &screen_y, x, y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 	for( i = 0 ; i < listLayer->count ; i++ )
 	{
 		this = (layer_t *)listLayer->list[i];
 
-/*
-		if( (this->x - screen_x) + this->w < 0 || (this->x - screen_x) > WINDOW_SIZE_X ||
-		    (this->y - screen_y) + this->h < 0 || (this->y - screen_y) > WINDOW_SIZE_Y )
-		{
-			continue;
-		}
-*/
 		if( this->x + this->w  < screen_x || this->x > screen_x + WINDOW_SIZE_X ||
 		    this->y + this->h  < screen_y || this->y > screen_y + WINDOW_SIZE_Y )
 		{
@@ -133,6 +126,55 @@ void drawLayerCenter(int x, int y)
 
 		drawImage(this->image,
 			this->x - screen_x, this->y - screen_y,
+			this->px, this->py,
+			this->w, this->h);
+
+		//printf("%d %d\n", this->x - screen_x, this->y - screen_y);
+	}
+
+	//printf("count = %d\n", count);
+
+	destroyListItem(listLayer, free);
+	listLayer = newList();
+}
+
+void drawLayerSplit(int local_x, int local_y, int x, int y, int w, int h)
+{
+	layer_t *this;
+	int i;
+	//int count = 0;
+
+	for( i = 0 ; i < listLayer->count ; i++ )
+	{
+		this = (layer_t *)listLayer->list[i];
+
+		if( this->x + this->w  < x || this->x > x + w ||
+		    this->y + this->h  < y || this->y > y + h )
+		{
+			continue;
+		}
+
+		//count++;
+
+		if( local_x + (this->x - x) < local_x )
+		{
+			//this->x = local_x;
+			int z;
+			z = ( local_x + (this->x - x) + this->w ) - local_x;
+			z = local_x - ( local_x + (this->x - x) );
+
+			this->x += z;
+			this->px += z;
+			this->w -= z;
+		}
+
+		if( local_x + (this->x - x) + this->w > local_x+w )
+		{
+			this->w -= ( local_x + (this->x - x) + this->w ) - (local_x + w);
+		}
+
+		drawImage(this->image,
+			local_x + (this->x - x), local_y + (this->y - y),
 			this->px, this->py,
 			this->w, this->h);
 
