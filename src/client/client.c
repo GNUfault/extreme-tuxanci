@@ -57,7 +57,6 @@ static int traffic_down;
 static int traffic_up;
 #endif
 
-
 typedef struct proto_cmd_client_struct
 {
 	char *name;
@@ -229,6 +228,8 @@ void sendServer(char *msg)
 
 	assert( msg != NULL );
 
+	ret = -1;
+
 #ifndef PUBLIC_SERVER
 	if( isParamFlag("--send") )
 	{
@@ -269,7 +270,8 @@ static int eventServerSelect()
 	int ret;
 
 	memset(buffer, 0, STR_PROTO_SIZE);
-
+	ret = -1;
+	
 #ifdef SUPPORT_UDP
 	if( sock_server_udp != NULL )
 	{
@@ -381,6 +383,9 @@ static void selectClientSocket()
 	int max_fd;
 	int sock;
 	bool_t isNext;
+
+	max_fd = 0;
+	sock = 0;
 
 #ifdef SUPPORT_UDP
 	if( sock_server_udp != NULL )

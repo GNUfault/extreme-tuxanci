@@ -15,7 +15,6 @@
 #include "arenaFile.h"
 #include "myTimer.h"
 #include "server.h"
-#include "proto.h"
 #include "net_multiplayer.h"
 
 #ifndef PUBLIC_SERVER

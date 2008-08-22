@@ -215,6 +215,8 @@ static arena_t* loadContextArenaFromTextFile(textFile_t *textFile)
 	arena_t *arena;
 	int i;
 
+	arena = NULL;
+
 	for( i = 0 ; i < textFile->text->count ; i++ )
 	{
 		char *line;

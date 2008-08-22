@@ -127,8 +127,8 @@ void initScreenCredits()
 		{
 			creditExists = 0;
 			widget_t *label;
-			char *line;
-			line = _("Credit file not found... %s/%s"),PATH_DOC,SCREEN_CREDITS_FILE;
+			char line[STR_SIZE];
+			sprintf(line, _("Credit file not found... %s/%s"),PATH_DOC,SCREEN_CREDITS_FILE);
 			label = newWidgetLabel(line, WINDOW_SIZE_X/2, (WINDOW_SIZE_Y-100)+i*20,
 				WIDGET_LABEL_CENTER);
 
