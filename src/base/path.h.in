@@ -15,7 +15,7 @@
 	#ifndef __WIN32__
 		#define PATH_MODULES 	"@LIB_INSTALL_DIR@" "/"	APPNAME	"-" "@TUXANCI_VERSION@" "/"
 	#else
-		#define PATH_MODULES 	PREFIX	"/bin/"
+		#define PATH_MODULES 	PREFIX
 	#endif
 	#define PATH_IMAGE	PATH_DIR	"images/"
 	#define FONT_FILE	"@CMAKE_FONT@"

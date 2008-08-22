@@ -9,8 +9,13 @@
 #include "tux.h"
 #include "myTimer.h"
 #include "protect.h"
+#ifdef SUPPORT_UDP
 #include "udp.h"
+#endif
+
+#ifdef SUPPORT_TCP
 #include "tcp.h"
+#endif
 #include "buffer.h"
 
 #ifndef PUBLIC_SERVER
@@ -31,9 +36,12 @@
 typedef struct client_struct
 {
 	int type;
+#ifdef SUPPORT_UDP
 	sock_udp_t *socket_udp;
+#endif
+#ifdef SUPPORT_TCP
 	sock_tcp_t *socket_tcp;
-
+#endif
 	buffer_t *recvBuffer;
 	buffer_t *sendBuffer;
 

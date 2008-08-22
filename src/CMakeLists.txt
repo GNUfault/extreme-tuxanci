@@ -23,6 +23,19 @@ ENDIF ( Win )
 # Command for finding correct file names in directory, replace DIR with
 # directory name you want eg: base
 # find ./ -maxdepth 1 -type f -name \*.c |grep "$" |sed -e 's/^\.\//\$\{WORKDIR\}\/DIR\//' -e 's/\.c//' |tr '\n' ' '
+
+# ugly hack
+IF ( Win )
+	SET ( SRC_base
+		${SRC_base}
+		${WORKDIR}/net/udp
+		${WORKDIR}/base/udp_server )
+ELSE ( Win )
+	SET ( SRC_base
+		${SRC_base}
+		${WORKDIR}/net/tcp
+		${WORKDIR}/base/tcp_server )
+ENDIF ( Win )
 SET ( SRC_base
 	${SRC_base}
 	${WORKDIR}/base/main	${WORKDIR}/base/shot
@@ -30,7 +43,6 @@ SET ( SRC_base
 	${WORKDIR}/base/storage	${WORKDIR}/base/myTimer
 	${WORKDIR}/base/protect	${WORKDIR}/base/list
 	${WORKDIR}/base/arena	${WORKDIR}/base/server
-	${WORKDIR}/base/udp_server ${WORKDIR}/base/tcp_server
 	${WORKDIR}/base/serverSelect	${WORKDIR}/base/serverSendMsg
 	${WORKDIR}/base/textFile ${WORKDIR}/base/gun
 	${WORKDIR}/base/arenaFile	${WORKDIR}/base/modules
@@ -40,7 +52,6 @@ SET ( SRC_base
 	${WORKDIR}/base/homeDirector	${WORKDIR}/base/proto
 	${WORKDIR}/base/shareFunction	${WORKDIR}/base/buffer
 
-	${WORKDIR}/net/udp	${WORKDIR}/net/tcp
 	${WORKDIR}/net/dns
 )
 

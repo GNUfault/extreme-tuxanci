@@ -21,6 +21,12 @@
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
+# our ugly choicer for networking type
+IF ( Win )
+	ADD_DEFINITIONS ( -DSUPPORT_UDP )
+ELSE ( Win )
+	ADD_DEFINITIONS ( -DSUPPORT_TCP )
+ENDIF ( Win )
 SET ( TUXANCI_VERSION "svn" CACHE STRING "Version" )
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
@@ -145,11 +151,12 @@ IF ( Win )
 	# noone wants to debug in windows
 	SET ( CMAKE_BUILD_TYPE Release )
 	# override basic directory placement
-	SET ( CMAKE_CONF_PATH "${APPNAME}/etc/" )
-	SET ( CMAKE_DATA_PATH "${APPNAME}/share/" )
-	SET ( CMAKE_LOCALE_PATH "${APPNAME}/share/locale/")
-	SET ( CMAKE_DOC_PATH "${APPNAME}/doc/" )
-	SET ( LIB_INSTALL_DIR "${APPNAME}/bin/" )
+	SET ( CMAKE_CONF_PATH "../etc/" )
+	SET ( CMAKE_DATA_PATH "../share/" )
+	SET ( CMAKE_LOCALE_PATH "../share/locale/")
+	SET ( CMAKE_DOC_PATH "../doc/" )
+	#SET ( LIB_INSTALL_DIR "../" )
+	SET ( CMAKE_FONT "../share/${APPNAME}/font/DejaVuSans.ttf" )
 	SET ( CMAKE_INSTALL_PREFIX "./")
 	SET ( CMAKE_INSTALL_BINDIR ${APPNAME}/bin )
 	SET ( CMAKE_INSTALL_DOCDIR ${APPNAME}/doc )
@@ -184,6 +191,7 @@ IF ( Bundle )
 	SET ( CMAKE_CONF_PATH "../etc")
 	SET ( CMAKE_DATA_PATH "../share")
 	SET ( CMAKE_LOCALE_PATH "../share/locale/")
+	SET ( CMAKE_FONT "../share/font/DejaVuSans.ttf" )
 	SET ( CMAKE_DOC_PATH "../doc")
 	SET ( LIB_INSTALL_DIR "../lib")
 	SET ( CMAKE_INSTALL_PREFIX "/")
