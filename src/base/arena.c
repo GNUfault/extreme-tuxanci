@@ -18,6 +18,7 @@
 #endif
 
 static arena_t *currentArena;
+static int splitType;
 
 void setCurrentArena(arena_t *p)
 {
@@ -27,6 +28,23 @@ void setCurrentArena(arena_t *p)
 arena_t* getCurrentArena()
 {
 	return currentArena;
+}
+
+void initArena()
+{
+	splitType = SCREEN_SPLIT_VERTICAL;
+
+	if( getParam("--split-vertical") )
+	{
+		splitType = SCREEN_SPLIT_VERTICAL;
+		printf("SCREEN_SPLIT_VERTICAL\n");
+	}
+
+	if( getParam("--split-horizontal") )
+	{
+		splitType = SCREEN_SPLIT_HORIZONTAL;
+		printf("SCREEN_SPLIT_HORIZONTAL\n");
+	}
 }
 
 arena_t* newArena(int w, int h)
@@ -191,12 +209,28 @@ static void drawSplitArenaForTux(arena_t *arena, tux_t *tux, int location_x, int
 {
 	int screen_x, screen_y;
 
-	getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
-	
+	switch( splitType )
+	{
+		case SCREEN_SPLIT_HORIZONTAL :
+			getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X, WINDOW_SIZE_Y/2);
+		break;
+		case SCREEN_SPLIT_VERTICAL :
+			getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+		break;
+	}
+
 	drawBackground(arena, screen_x, screen_y);
 	drawObjects(arena, screen_x, screen_y);
 
-	drawLayerSplit(location_x, location_y, screen_x, screen_y, WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+	switch( splitType )
+	{
+		case SCREEN_SPLIT_HORIZONTAL :
+			drawLayerSplit(location_x, location_y, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y/2);
+		break;
+		case SCREEN_SPLIT_VERTICAL :
+			drawLayerSplit(location_x, location_y, screen_x, screen_y, WINDOW_SIZE_X/2, WINDOW_SIZE_Y);
+		break;
+	}
 }
 
 void drawSplitArena(arena_t *arena)
@@ -207,7 +241,15 @@ void drawSplitArena(arena_t *arena)
 
 	if( tux != NULL )
 	{
-		drawSplitArenaForTux(arena, tux, WINDOW_SIZE_X/2, 0);
+		switch( splitType )
+		{
+			case SCREEN_SPLIT_HORIZONTAL :
+				drawSplitArenaForTux(arena, tux, 0, WINDOW_SIZE_Y/2);
+			break;
+			case SCREEN_SPLIT_VERTICAL :
+				drawSplitArenaForTux(arena, tux, WINDOW_SIZE_X/2, 0);
+			break;
+		}
 	}
 
 	tux = getControlTux(TUX_CONTROL_KEYBOARD_LEFT);

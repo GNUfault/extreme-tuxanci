@@ -158,9 +158,8 @@ void drawLayerSplit(int local_x, int local_y, int x, int y, int w, int h)
 
 		if( local_x + (this->x - x) < local_x )
 		{
-			//this->x = local_x;
 			int z;
-			z = ( local_x + (this->x - x) + this->w ) - local_x;
+
 			z = local_x - ( local_x + (this->x - x) );
 
 			this->x += z;
@@ -171,6 +170,22 @@ void drawLayerSplit(int local_x, int local_y, int x, int y, int w, int h)
 		if( local_x + (this->x - x) + this->w > local_x+w )
 		{
 			this->w -= ( local_x + (this->x - x) + this->w ) - (local_x + w);
+		}
+
+		if( local_y + (this->y - y) < local_y )
+		{
+			int z;
+
+			z = local_y - ( local_y + (this->y - y) );
+
+			this->y += z;
+			this->py += z;
+			this->h -= z;
+		}
+
+		if( local_y + (this->y - y) + this->h > local_y+h )
+		{
+			this->h -= ( local_y + (this->y - y) + this->h ) - (local_y + h);
 		}
 
 		drawImage(this->image,
