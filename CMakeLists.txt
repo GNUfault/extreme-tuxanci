@@ -56,7 +56,7 @@ SET ( CMAKE_CXX_FLAGS $ENV{CXXFLAGS} )
 # this specify location of additional cmake sources
 SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 #various variables
-SET ( CMAKE_FONT "${CMAKE_INSTALL_PREFIX}/share/${appname}/font/DejavVuSans.ttf" CACHE PATH "Font" )
+SET ( CMAKE_FONT "${CMAKE_DATA_PATH}/${APPNAME}/font/DejaVuSans.ttf" CACHE PATH "Font" )
 SET ( CMAKE_INSTALL_ETCDIR ${CMAKE_CONF_PATH} )
 SET ( CMAKE_INSTALL_BINDIR bin )
 SET ( CMAKE_INSTALL_LOCALEDIR ${CMAKE_LOCALE_PATH} )

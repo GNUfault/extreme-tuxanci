@@ -21,7 +21,7 @@ void initFont(char *file,int size)
 
 	assert( isInterfaceInicialized() == TRUE );
 
-	sprintf(str, PATH_FONT "%s", file);
+	sprintf(str, "%s", file);
 
 	if( TTF_Init() == -1 )
 	{
