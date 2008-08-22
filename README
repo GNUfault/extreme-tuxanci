@@ -95,6 +95,7 @@ HOWTO COMPILE
 		# -DLIB_INSTALL_DIR=/other/bla	# install path for libraries
 		# -DCMAKE_DOC_PATH=/other/bla	# install path for doc
 		# -DCMAKE_LOCALE_PATH=/bla	# install path for locale
+		# -DCMAKE_FONT=/bla/font.ttf	# install path for locale
 GAME USAGE
 ==========
 	Starting game is simple tuxanci-VERSION or tuxanci-server-V. based on what we

@@ -17,6 +17,7 @@
 # -DLIB_INSTALL_DIR=/other/bla	# install path for lib
 # -DCMAKE_DOC_PATH=/other/bla	# install path for doc
 # -DCMAKE_LOCALE_PATH=/other/bla	# install path for locale
+# -DCMAKE_FONT=/bla/font.ttf	# install path for locale
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
@@ -55,6 +56,7 @@ SET ( CMAKE_CXX_FLAGS $ENV{CXXFLAGS} )
 # this specify location of additional cmake sources
 SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 #various variables
+SET ( CMAKE_FONT "${CMAKE_INSTALL_PREFIX}/share/${appname}/font/DejavVuSans.ttf" CACHE PATH "Font" )
 SET ( CMAKE_INSTALL_ETCDIR ${CMAKE_CONF_PATH} )
 SET ( CMAKE_INSTALL_BINDIR bin )
 SET ( CMAKE_INSTALL_LOCALEDIR ${CMAKE_LOCALE_PATH} )

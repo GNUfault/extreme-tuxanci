@@ -12,11 +12,6 @@ bool_t isFontInicialized()
 	return isFontInit;
 }
 
-/*
- * Inicialuzuje font.
- * nacita font zo suboru *file o  velkosti size
- * Automaticky sa styk nastavy ako TTF_STYLE_BOLD
- */
 void initFont(char *file,int size)
 {
 	char str[STR_PATH_SIZE];
@@ -41,7 +36,7 @@ void initFont(char *file,int size)
 
 	fontSize = size;
 #ifdef DEBUG
-	printf("Loading font: \"%s\"\n", file);
+	printf(_("Loading font: \"%s\"\n"), file);
 #endif
 	isFontInit = TRUE;
 }
