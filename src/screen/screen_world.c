@@ -18,7 +18,6 @@
 #include "serverSendMsg.h"
 
 #include "interface.h"
-#include "screen_settingKeys.h"
 #include "layer.h"
 #include "image.h"
 #include "font.h"
@@ -42,6 +41,7 @@
 #include "screen_analyze.h"
 #include "screen_setting.h"
 #include "screen_gameType.h"
+#include "screen_settingKeys.h"
 #include "screen_choiceArena.h"
 #include "screen_table.h"
 

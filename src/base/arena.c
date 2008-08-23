@@ -15,6 +15,7 @@
 
 #ifndef PUBLIC_SERVER
 #include "screen_world.h"
+#include "screen_setting.h"
 #include "layer.h"
 #endif
 
@@ -334,7 +335,9 @@ static int isBigArena(arena_t *arena)
 
 void drawArena(arena_t *arena)
 {
-	if( isBigArena(arena) && getNetTypeGame() == NET_GAME_TYPE_NONE )
+	if( isBigArena(arena) && 
+	    getNetTypeGame() == NET_GAME_TYPE_NONE &&
+	    ! isSettingAI() )
 	{
 		drawSplitArena(arena);
 		return;
