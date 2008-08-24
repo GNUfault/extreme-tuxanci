@@ -313,9 +313,6 @@ static void action_check(space_t *space, shot_t *shot, client_t *client)
 	if( isValueInList(client->listSeesShot, shot->id) == 0 )
 	{
 		addList(client->listSeesShot, newInt(shot->id) );
-#ifdef DEBUG
-		printf("proto_send_shot_server(PROTO_SEND_ONE, client, shot);\n");
-#endif
 		proto_send_shot_server(PROTO_SEND_ONE, client, shot);
 	}
 }

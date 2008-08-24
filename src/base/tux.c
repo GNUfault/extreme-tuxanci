@@ -225,7 +225,7 @@ void drawTux(tux_t *tux)
 		(tux->frame/TUX_KEY) * TUX_IMG_WIDTH, 0,
 		TUX_IMG_WIDTH, TUX_IMG_HEIGHT, TUX_LAYER);
 }
-
+/*
 void drawListTux(list_t *listTux)
 {
 	tux_t *thisTux;
@@ -240,7 +240,7 @@ void drawListTux(list_t *listTux)
 		drawTux(thisTux);
 	}
 }
-
+*/
 #endif
 
 void replaceTuxID(tux_t *tux, int id)
@@ -688,7 +688,7 @@ void eventTux(tux_t *tux)
 	eventBonus(tux);
 	eventGiveTuxListItem(tux, arena->spaceItem);
 }
-
+/*
 void eventListTux(list_t *listTux)
 {
 	tux_t *thisTux;
@@ -703,7 +703,7 @@ void eventListTux(list_t *listTux)
 		eventTux(thisTux);
 	}
 }
-
+*/
 void getTuxProportion(tux_t *tux, int *x,int *y, int *w, int *h)
 {
 	assert( tux != NULL );

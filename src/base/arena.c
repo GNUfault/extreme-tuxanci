@@ -11,9 +11,9 @@
 #include "item.h"
 #include "myTimer.h"
 #include "modules.h"
-#include "hotKey.h"
 
 #ifndef PUBLIC_SERVER
+#include "hotKey.h"
 #include "screen_world.h"
 #include "screen_setting.h"
 #include "layer.h"
@@ -44,6 +44,7 @@ void hotkey_splitArena()
 	}
 }
 
+#ifndef PUBLIC_SERVER
 void initArena()
 {
 	splitType = SCREEN_SPLIT_VERTICAL;
@@ -67,6 +68,7 @@ void quitArena()
 {
 	unregisterHotKey(SDLK_F3);
 }
+#endif
 
 arena_t* newArena(int w, int h)
 {
