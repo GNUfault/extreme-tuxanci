@@ -22,11 +22,11 @@
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
 # our ugly choicer for networking type
-IF ( Win )
+#IF ( Win )
 	ADD_DEFINITIONS ( -DSUPPORT_UDP )
-ELSE ( Win )
-	ADD_DEFINITIONS ( -DSUPPORT_TCP )
-ENDIF ( Win )
+#ELSE ( Win )
+#	ADD_DEFINITIONS ( -DSUPPORT_TCP )
+#ENDIF ( Win )
 SET ( TUXANCI_VERSION "svn" CACHE STRING "Version" )
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement

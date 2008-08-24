@@ -25,17 +25,17 @@ ENDIF ( Win )
 # find ./ -maxdepth 1 -type f -name \*.c |grep "$" |sed -e 's/^\.\//\$\{WORKDIR\}\/DIR\//' -e 's/\.c//' |tr '\n' ' '
 
 # ugly hack
-IF ( Win )
+#IF ( Win )
 	SET ( SRC_base
 		${SRC_base}
 		${WORKDIR}/net/udp
 		${WORKDIR}/base/udp_server )
-ELSE ( Win )
-	SET ( SRC_base
-		${SRC_base}
-		${WORKDIR}/net/tcp
-		${WORKDIR}/base/tcp_server )
-ENDIF ( Win )
+#ELSE ( Win )
+#	SET ( SRC_base
+#		${SRC_base}
+#		${WORKDIR}/net/tcp
+#		${WORKDIR}/base/tcp_server )
+#ENDIF ( Win )
 SET ( SRC_base
 	${SRC_base}
 	${WORKDIR}/base/main	${WORKDIR}/base/shot
