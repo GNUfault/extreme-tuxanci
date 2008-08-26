@@ -286,17 +286,8 @@ void drawSplitArena(arena_t *arena)
 void drawCenterArena(arena_t *arena, int x, int y)
 {
 	int screen_x, screen_y;
-	tux_t *tux = NULL;
-
-	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
-
-	if( tux == NULL )
-	{
-		return;
-	}
 
 	getCenterScreen(&screen_x, &screen_y, x, y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
-
 	drawBackground(arena, screen_x, screen_y);
 	drawObjects(arena, screen_x, screen_y);
 	drawLayerCenter(x, y);
@@ -317,7 +308,6 @@ void drawSimpleArena(arena_t *arena)
 	screen_x = 0;
 	screen_y = 0;
 
-	tux = getControlTux(TUX_CONTROL_KEYBOARD_RIGHT);
 	drawBackground(arena, screen_x, screen_y);
 	drawObjects(arena, screen_x, screen_y);
 	drawLayer(tux->x, tux->y);
