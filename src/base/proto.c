@@ -72,6 +72,14 @@ void proto_recv_error_client(char *msg)
 			setMsgToAnalyze(_("Version of your client isn't supported by the server."));
 			setWorldEnd();
 		break;
+		case PROTO_ERROR_CODE_TIMEOUT :
+			setMsgToAnalyze(_("The timeout of ping from server is out"));
+			setWorldEnd();
+		break;
+		case PROTO_ERROR_LIMIT_MAX_CLIENT :
+			setMsgToAnalyze(_("The maximum amount of connected players has been exceeded!"));
+			setWorldEnd();
+		break;
 	}
 }
 
@@ -143,6 +151,14 @@ void proto_recv_hello_server(client_t *client, char *msg)
 
 	assert( client != NULL );
 	
+	if( getSpaceCount(getCurrentArena()->spaceTux)+1 > getServerMaxClients() )
+	{
+		proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_LIMIT_MAX_CLIENT);
+		eventMsgInCheckFront(client);
+		client->status = NET_STATUS_ZOMBIE;
+		return;
+	}
+
 	strcpy(version, "");
 	strcpy(name, "");
 	

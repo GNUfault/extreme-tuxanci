@@ -192,12 +192,6 @@ static void eventClientUdpSelect(sock_udp_t *sock_server)
 
 	if( client == NULL )
 	{
-		if( getSpaceCount(getCurrentArena()->spaceTux)+1 > getServerMaxClients() )
-		{
-			destroySockUdp(sock_client);
-			return;
-		}
-
 		eventCreateNewUdpClient(sock_client);
 		client = findUdpClient(sock_client);
 		isCreateNewClient = TRUE;

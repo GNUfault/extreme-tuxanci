@@ -33,6 +33,7 @@
 #define PROTO_ERROR_CODE_BAD_NAME	2
 #define PROTO_ERROR_CODE_BAD_COMMAND	3
 #define PROTO_ERROR_CODE_TIMEOUT	4
+#define PROTO_ERROR_LIMIT_MAX_CLIENT	5
 
 extern void proto_send_error_server(int type, client_t *client, int errorcode);
 extern void proto_recv_error_client(char *msg);
