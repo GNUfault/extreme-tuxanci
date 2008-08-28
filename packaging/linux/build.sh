@@ -109,7 +109,8 @@ cd "${DEST_DEB}"/
 `which strip` --strip-unneeded usr/games/lib/${APPNAME}-${Y}-${VERSION}/* usr/games/bin/* >> "${LOG}"
 md5sum `find . -type f | awk '/.\// { print substr($0, 3) }'` > DEBIAN/md5sums
 cd "${BUNDLE_PREFIX}"
-dpkg-deb -b "${DEST_DEB}" ${APPNAME}_${Y}_${VERSION}-1_${ARCH}.deb
+Y_N=$(echo ${Y} |tr s S |tr c C)
+dpkg-deb -b "${DEST_DEB}" ${APPNAME}${Y_N}_${VERSION}-1_${ARCH}.deb
 rm -rf "${DEST_DEB}"
 done
 CMAKE_PARAMS="-DBundle=1 -DNLS=1 -DTUXANCI_VERSION=${VERSION} -DCMAKE_BUILD_TYPE=Release" # duplicating due to override
