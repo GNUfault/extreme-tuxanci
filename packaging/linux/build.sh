@@ -21,7 +21,7 @@ fi
 ###############################################################################
 # ARGUMENT PASSING
 ###############################################################################
-VERSION="9999"
+VERSION="svn"
 ARCH="amd64"
 SVN_REV=""
 while getopts v:a:r: arg ; do
@@ -35,12 +35,11 @@ done
 # VARIABLES
 ###############################################################################
 APPNAME="tuxanci"
-SVN="https://opensvn.csie.org/tuxanci_ng/"
+SVN="http://opensvn.csie.org/tuxanci_ng/"
 BUNDLE_PREFIX="${HOME}"/tuxanci-bundle
 LOG="${BUNDLE_PREFIX}"/linux.log
 SOURCE="${BUNDLE_PREFIX}"/"${APPNAME}"_source_"${VERSION}"
 D="${BUNDLE_PREFIX}"/"${APPNAME}"
-DEST_DEB="${BUNDLE_PREFIX}"/"${APPNAME}"-deb
 OPTIONS="client server"
 ERROR_MESSAGE="Check ${LOG}, cause i was unable to finish my stuff correctly!"
 CMAKE_PARAMS="-DNLS=1 -DTUXANCI_VERSION=${VERSION} -DCMAKE_BUILD_TYPE=Release"
@@ -63,13 +62,18 @@ tar cjf "${APPNAME}"_source_"${VERSION}".tar.bz2 "${APPNAME}"_source_"${VERSION}
 ###############################################################################
 # DEBIAN PACKAGE ENVIROMENT CREATION
 ###############################################################################
+for Y in ${OPTIONS}; do
+DEST_DEB="${BUNDLE_PREFIX}"/"${APPNAME}-${Y}"-deb
+echo "<******************************>"
+echo "<Building ${Y} ${ARCH} DEBPKG>"
+echo "<******************************>"
 mkdir "${DEST_DEB}"
 mkdir -p "${DEST_DEB}"/DEBIAN
 mkdir -p "${DEST_DEB}"/usr/share/applications/
 # create desktop file and other debian related
 echo "2.0" > "${DEST_DEB}"/DEBIAN/debian-binary
 echo "[Desktop Entry]
-Name=${APPNAME}-${VERSION}
+Name=${APPNAME}-${Y}-${VERSION}
 Comment=game tuxanci
 Exec=/usr/games/bin/${APPNAME}-${VERSION}
 Terminal=false
@@ -77,24 +81,20 @@ Type=Application
 Icon=/usr/games/share/tuxanci-svn/images/tuxanci.png
 Encoding=UTF-8
 Categories=Game" > "${DEST_DEB}"/usr/share/applications/tuxanci.desktop
-echo"Package: tuxanci
-Version: ${VERSION}
+echo "Package: ${APPNAME}-${Y}-${VERSION}
+Version: 0.2.1
 Section: Game
 Priority: optional
 Depends: libc6 (>= 2.2.4-4), libsdl1.2debian (>= 1.2), libsdl-image1.2 (>= 1.2), libsdl-mixer1.2 (>= 1.2), libsdl-ttf2.0-0 (>= 2.0), gettext
 Architecture: ${ARCH}
 Installed-Size: 4993
 Maintainer: Tomas Chvatal <tomas.chvatal@gmail.com>
-Description: Game tuxanci next generation version ${VERSION}
+Description: Game tuxanci next generation version 0.2.1
  .
  http://www.tuxanci.org" > "${DEST_DEB}"/DEBIAN/control
 ###############################################################################
 # BUILDING DEBIAN PACKAGES
 ###############################################################################
-for Y in ${OPTIONS}; do
-echo "<******************************>"
-echo "<Building ${Y} ${ARCH}>"
-echo "<******************************>"
 CMAKE_PARAMS="${CMAKE_PARAMS} -DCMAKE_INSTALL_PREFIX=/usr/games/"
 if [[ ${Y} == "server" ]]; then
 	CMAKE_PARAMS="${CMAKE_PARAMS} -DServer=1"
@@ -106,10 +106,11 @@ cmake . ${CMAKE_PARAMS}  >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
 make >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
 make install DESTDIR="${DEST_DEB}" >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
 cd "${DEST_DEB}"/
-`which strip` --strip-unneeded lib/tuxanci/* bin/* >> "${LOG}"
+`which strip` --strip-unneeded usr/games/lib/${APPNAME}-${Y}-${VERSION}/* usr/games/bin/* >> "${LOG}"
 md5sum `find . -type f | awk '/.\// { print substr($0, 3) }'` > DEBIAN/md5sums
 cd "${BUNDLE_PREFIX}"
-dpkg-deb -b "${DEST_DEB}" ${APPNAME}_${VERSION}-1_${ARCH}.deb
+dpkg-deb -b "${DEST_DEB}" ${APPNAME}_${Y}_${VERSION}-1_${ARCH}.deb
+rm -rf "${DEST_DEB}"
 done
 CMAKE_PARAMS="-DBundle=1 -DNLS=1 -DTUXANCI_VERSION=${VERSION} -DCMAKE_BUILD_TYPE=Release" # duplicating due to override
 ###############################################################################
@@ -129,7 +130,7 @@ cmake . ${CMAKE_PARAMS} >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
 make >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
 make install DESTDIR="${D}_${Y}_${VERSION}-${ARCH}/" >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
 cd "${D}"_"${Y}"_"${VERSION}"-"${ARCH}"/
-`which strip` --strip-unneeded lib/tuxanci/* bin/* >> "${LOG}"
+`which strip` --strip-unneeded lib/${APPNAME}-${Y}-${VERSION}/* bin/* >> "${LOG}"
 done
 ###############################################################################
 # DESTRUCTION OF SRC
@@ -155,7 +156,7 @@ done
 ###############################################################################
 echo "<What have i created :>"
 echo "<******************************>"
-find ./ -maxdepth 1 -type f \( -name \*.tar.bz2 , -name *.deb \) -print | while read FILE ; do
+find ./ -maxdepth 1 -type f \( -name \*.tar.bz2 -print , -name \*.deb -print \) | while read FILE ; do
 	echo "FILE: ${FILE}"
 	echo "      SIZE: $(`which du` -h ${FILE} |`which awk` -F' ' '{print $1}')"
 	echo "    MD5SUM: $(`which md5sum` ${FILE} |`which awk` -F' ' '{print $1}')"
