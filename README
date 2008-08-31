@@ -50,7 +50,7 @@ HOWTO COMPILE
 	This howto is written for linux. For other platforms please think about
 	rather using binary modules.
 	First of all we need some libraries:
-		(g)libc, SDL, SDL_image, SDL_ttf, optionally SDL_mixer
+		(g)libc, SDL, SDL_image, SDL_ttf, optionally SDL_mixer, gettext
 
 	And some applications:
 		cmake version 2.4.6 and above
@@ -137,7 +137,20 @@ HAVE PROBLEM/FOUND BUG/ETC...
 	You need some help with install/etc... feel free to join us on our irc
 	channel which is #tuxanci on server irc.tuxportal.cz. If you don't like
 	irc you can can contact us on our forum also: http://czf.tuxanci.org.
-
+INFORMATIONS FOR TRANSLATORS
+============================
+	So you want to help us translating our perfect game :] What should you
+	do is question you are asking i guess. It is pretty simple. We are using
+	gettext so you only have to download our .pot file from svn
+	<http://opensvn.csie.org/tuxanci_ng/po/tuxanci.pot> and translate every
+	line into your desired language. MSGID is orginal message and MSGSTR is
+	translated one. When you are done you rename tuxanci.pot to langcode.po
+	(cs.po). For translating is needed only some text editor (advanced are
+	kbabel, lokalize...) and some skills in your and english language. Final
+	product of your effort mail onto our mail (team<-at->tuxanci.org). Ah and
+	before I forget update some relevant informations into header of your .po
+	file, examples can be found in our svn too
+	<http://opensvn.csie.org/tuxanci_ng/po/>.
 MORE
 ====
 	More informations you can find on our website: http://www.tuxanci.org/
