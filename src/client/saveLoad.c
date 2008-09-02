@@ -59,11 +59,13 @@ static void action_saveItem(space_t *space, item_t *item, textFile_t *textFile)
 static void saveContextArenaToTextFile(textFile_t *textFile, arena_t *arena)
 {
 	char str[STR_PROTO_SIZE];
-
+/*
 	sprintf(str, "ARENA %s %d %d",
 		getArenaNetName(getChoiceArenaId()),
 		arena->countRound,
 		arena->max_countRound);
+*/
+	//TODO
 
 	addList(textFile->text, strdup(str));
 
@@ -105,7 +107,8 @@ static arena_t* loadArenaFromLine(char *line)
 
 	sscanf(line, "%s %s %d %d", cmd, name, &countRound, &max_countRound);
 
-	setWorldArena( getArenaIdFormNetName(name) );
+	//setWorldArena( getArenaIdFormNetName(name) );
+	//TODO
 
 	arena = getCurrentArena();
 	arena->max_countRound = max_countRound;

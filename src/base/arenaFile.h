@@ -5,15 +5,27 @@
 	
 	#include "main.h"
 	#include "arena.h"
+	#include "textFile.h"
 	
-	extern int getArenaValue(char *line, char *env, char *val, int len);
-	extern bool_t isArenaFileInicialized();
-	extern void initArenaFile();
-	extern int getArenaCount();
-	extern char *getArenaName(int id);
-	extern char *getArenaNetName(int id);
-	extern int getArenaIdFormNetName(char *s);
-	extern char *getArenaImage(int id);
-	extern arena_t* getArena(int id);
-	extern void quitArenaFile();
+
+typedef struct
+{
+	char *path;
+	textFile_t *map;
+} arenaFile_t;
+
+extern bool_t isAreaFileInicialized();
+extern int getArenaValue(char *line, char *env, char *val, int len);
+extern int getArenaCount();
+extern char *getArenaName(arenaFile_t *arenaFile);
+extern char *getArenaNetName(arenaFile_t *arenaFile);
+extern arenaFile_t* getArenaFileFormNetName(char *s);
+extern char *getArenaImage(arenaFile_t *arenaFile);
+extern image_t* loadImageFromArena(arenaFile_t *arenaFile, char *filename, char *group, char *name, int alpha);
+extern arenaFile_t* getArenaFile(int n);
+extern arena_t* getArena(arenaFile_t *arenaFile);
+extern arenaFile_t* newArenaFile(char *path);
+extern void initArenaFile();
+extern void quitArenaFile();
+
 #endif

@@ -4,13 +4,14 @@
 #define SCREEN_CHOICE_ARENA
 
 #include "main.h"
+#include "arenaFile.h"
 
 #define SCREENSHOT_ARENA_WIDTH		160
 #define SCREENSHOT_ARENA_HEIGHT		107
 
 extern void drawScreenChoiceArena();
 extern void eventScreenChoiceArena();
-extern int getChoiceArenaId();
+extern arenaFile_t* getChoiceArenaId();
 extern void setChoiceArenaId(int n);
 extern void initScreenChoiceArena();
 extern void quitScreenChoiceArena();

@@ -71,9 +71,9 @@ void setGameType()
 	}
 }
 
-void setWorldArena(int id)
+void setWorldArena(arenaFile_t *arenaFile)
 {
-	arena = getArena(id);
+	arena = getArena(arenaFile);
 
 #ifndef NO_SOUND
 	playMusic(arena->music, MUSIC_GROUP_USER);

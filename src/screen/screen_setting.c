@@ -281,7 +281,8 @@ static void initSettingFile()
 #endif
 
 	loadValueFromConfigFile(configFile, "ARENA", val, STR_SIZE, "FAGN");
-	setChoiceArenaId( getArenaIdFormNetName(val) );
+	//setChoiceArenaId( getArenaIdFormNetName(val) );
+	//TODO
 
 	saveTextFile(configFile);
 }
@@ -320,7 +321,8 @@ static void saveAndDestroyConfigFile()
 	setValueInConfigFile(configFile, "SOUND", getYesOrNo(getWidgetCheckStatus(check_sound)));
 #endif
 
-	setValueInConfigFile(configFile, "ARENA", getArenaNetName(getChoiceArenaId()));
+	//setValueInConfigFile(configFile, "ARENA", getArenaNetName(getChoiceArenaId()));
+	//TODO
 
 	saveTextFile(configFile);
 	destroyTextFile(configFile);

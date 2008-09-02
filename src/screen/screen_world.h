@@ -6,6 +6,7 @@
 #include "main.h"
 #include "myTimer.h"
 #include "tux.h"
+#include "arenaFile.h"
 #include "arena.h"
 
 #define TIMER_END_ARENA 5000
@@ -14,7 +15,7 @@
 
 extern bool_t isScreenWorldInicialized();
 extern void initWorld();
-extern void setWorldArena(int id);
+extern void setWorldArena(arenaFile_t *arenaFile);
 extern void setWorldEnd();
 extern void countRoundInc();
 extern tux_t* getControlTux(int control_type);

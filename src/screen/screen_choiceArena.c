@@ -29,7 +29,7 @@ static widget_t *button_play;
 static widget_t *button_back;
 
 static list_t *listWidgetButtonimage;
-static int choiceArenaId;
+static arenaFile_t* currentArena;
 
 void startScreenChoiceArena()
 {
@@ -90,7 +90,7 @@ static void eventWidgetButtonImage(void *p)
 		if( buttonimage == this )
 		{
 			setWidgetButtonimageActive(this, TRUE);
-			choiceArenaId = i;
+			currentArena = getArenaFile(i);
 		}
 		else
 		{
@@ -99,18 +99,23 @@ static void eventWidgetButtonImage(void *p)
 	}
 }
 
-int getChoiceArenaId()
+arenaFile_t* getChoiceArenaId()
 {
-	return choiceArenaId;
+	return currentArena;
 }
 
 void setChoiceArenaId(int n)
 {
 	widget_t *widget_buttonimage;
 
-	choiceArenaId = n;
+	if( n < 0 )
+	{
+		return;
+	}
 
-	widget_buttonimage = (widget_t *)listWidgetButtonimage->list[choiceArenaId];
+	currentArena = getArenaFile(n);
+
+	widget_buttonimage = (widget_t *)listWidgetButtonimage->list[n];
 	setWidgetButtonimageActive(widget_buttonimage, TRUE);
 }
 
@@ -143,14 +148,21 @@ void initScreenChoiceArena()
 	button_play = newWidgetButton(_("play"), WINDOW_SIZE_X-200, WINDOW_SIZE_Y-100, eventWidget);
 	
 	listWidgetButtonimage = newList();
-	choiceArenaId = 0;
+	currentArena = NULL;
 
 	for( i = 0 ; i < getArenaCount() ; i++ )
 	{
 		widget_t *widget_buttonimage;
+		arenaFile_t* arenaFile;
 		int x, y;
 
-		image = addImageData(getArenaImage(i), IMAGE_NO_ALPHA, "none", IMAGE_GROUP_BASE);
+		arenaFile = getArenaFile(i);
+		//image = addImageData(getArenaImage(i), IMAGE_NO_ALPHA, "none", IMAGE_GROUP_BASE);
+		image = loadImageFromArena(arenaFile,
+			getArenaImage(arenaFile),
+			IMAGE_GROUP_BASE,
+			"none",
+			IMAGE_NO_ALPHA);
 
 		x = 100 + 200 * ( i -  3 * ( i/3 ) );
 		y = 150 + 200 * ( i/3 );
