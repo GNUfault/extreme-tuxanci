@@ -207,7 +207,8 @@ static void eventWidget(void *p)
 
 		if( getSettingGameType() == NET_GAME_TYPE_CLIENT )
 		{
-			setScreen("world");
+			setScreen("downArena");
+			//setScreen("world");
 		}
 		else
 		{

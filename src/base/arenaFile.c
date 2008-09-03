@@ -15,6 +15,7 @@
 #include "director.h"
 #include "modules.h"
 #include "archive.h"
+#include "homeDirector.h"
 
 #ifndef PUBLIC_SERVER
 #include "configFile.h"
@@ -301,6 +302,11 @@ void destroyArenaFile(arenaFile_t *p)
 	free(p);
 }
 
+void loadArenaFile(char *path)
+{
+	addList(listArenaFile, newArenaFile(path) );
+}
+
 void initArenaFile()
 {
 	director_t *p;
@@ -311,7 +317,10 @@ void initArenaFile()
 #endif
 	isArenaFileInit = TRUE;
 	listArenaFile  = newList();
+
 	p = loadDirector(PATH_ARENA);
+	//p = loadDirector( getHomeDirector() );
+
 	for (i = 0; i < p->list->count; i++) {
 		char *line;
 	
@@ -326,8 +335,7 @@ void initArenaFile()
 			printf(_("Loading arena: %s\n"), line);
 #endif
 			accessExistFile(path);
-
-			addList(listArenaFile, newArenaFile(path));
+			loadArenaFile(path);
 		}
 	}
 	//printf("No. of Arens: %d\n", listArenaFile->count);

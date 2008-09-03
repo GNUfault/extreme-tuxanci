@@ -25,6 +25,7 @@
 #include "screen_setting.h"
 #include "screen_choiceArena.h"
 #include "screen_analyze.h"
+#include "screen_downArena.h"
 #include "client.h"
 #include "term.h"
 #include "radar.h"
@@ -379,7 +380,7 @@ void proto_recv_init_client(char *msg)
 	}
 
 	proto_send_check_client(check_id);
-	
+
 	if( getCurrentArena() != NULL )
 	{
 		return;

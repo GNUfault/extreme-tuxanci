@@ -28,6 +28,7 @@ extern arenaFile_t* getArenaFile(int n);
 extern int getArenaFileID(arenaFile_t *arenaFile);
 extern arena_t* getArena(arenaFile_t *arenaFile);
 extern arenaFile_t* newArenaFile(char *path);
+extern void loadArenaFile(char *path);
 extern void initArenaFile();
 extern void quitArenaFile();
 

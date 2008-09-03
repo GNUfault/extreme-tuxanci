@@ -112,8 +112,11 @@ void setChoiceArena(arenaFile_t *arenaFile)
 	id = getArenaFileID(arenaFile);
 	currentArena = arenaFile;
 
-	widget_buttonimage = (widget_t *)listWidgetButtonimage->list[id];
-	setWidgetButtonimageActive(widget_buttonimage, TRUE);
+	if( id >= 0 )
+	{
+		widget_buttonimage = (widget_t *)listWidgetButtonimage->list[id];
+		setWidgetButtonimageActive(widget_buttonimage, TRUE);
+	}
 }
 
 static void eventWidget(void *p)

@@ -36,6 +36,7 @@
 #include "screen_setting.h"
 #include "screen_settingKeys.h"
 #include "screen_gameType.h"
+#include "screen_downArena.h"
 #include "screen_choiceArena.h"
 #include "screen_table.h"
 #include "screen_credits.h"
@@ -68,6 +69,7 @@ static void initGame()
 	initScreenSetting();
 	initScreenSettingKeys();
 	initScreenGameType();
+	initScreenDownArena();
 	initScreenCredits();
 	initScreenTable();
 	initScreenBrowser();
@@ -82,6 +84,7 @@ void quitGame()
 	quitScreenSetting();
 	quitScreenSettingKeys();
 	quitScreenGameType();
+	quitScreenDownArena();
 	quitScreenChoiceArena();
 	quitScreenCredits();
 	quitScreenTable();

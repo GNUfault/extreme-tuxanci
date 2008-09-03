@@ -31,7 +31,7 @@ ENDIF ( Win )
 #IF ( Win )
 	SET ( SRC_base
 		${SRC_base}
-		${WORKDIR}/net/udp
+		${WORKDIR}/net/udp ${WORKDIR}/net/tcp
 		${WORKDIR}/base/udp_server )
 #ELSE ( Win )
 #	SET ( SRC_base
@@ -74,7 +74,7 @@ SET ( SRC_client
 	${WORKDIR}/screen/screen_setting	${WORKDIR}/screen/screen_credits
 	${WORKDIR}/screen/screen_world	${WORKDIR}/screen/screen_analyze
 	${WORKDIR}/screen/screen_mainMenu	${WORKDIR}/screen/screen_browser
-	${WORKDIR}/screen/screen_gameType
+	${WORKDIR}/screen/screen_gameType	${WORKDIR}/screen/screen_downArena
 
 	${WORKDIR}/widget/widget_check	${WORKDIR}/widget/widget_button
 	${WORKDIR}/widget/widget_textfield	${WORKDIR}/widget/widget_label
