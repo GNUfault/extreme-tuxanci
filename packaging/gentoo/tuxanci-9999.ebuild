@@ -42,6 +42,9 @@ src_compile() {
 
 src_install() {
 	cmake-utils_src_install
-	make_desktop_entry ${PN}-svn "Tuxanci"
+
+	doicon data/${PN}.svg
+	domenu data/${PN}.desktop
+
 	prepgamesdirs
 }

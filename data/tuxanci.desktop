@@ -1,9 +1,11 @@
 [Desktop Entry]
 Name=tuxanci
-Comment=game tuxanci next generation
-Exec=/usr/bin/tuxanci
+Comment=Tuxanci first cushion shooter
+Exec=tuxanci
 Terminal=false
 Type=Application
-Icon=/usr/share/tuxanci/image/tuxanci.ico
+Icon=tuxanci.svg
 Encoding=UTF-8
-Categories=Game
+Terminal=false
+StartupNotify=true
+Categories=Game;ActionGame;
