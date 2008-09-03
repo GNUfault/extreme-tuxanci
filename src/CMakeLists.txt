@@ -116,6 +116,7 @@ IF ( Server )
 	MESSAGE ( STATUS "<******************************>" )
 	SET ( SRC_compile ${SRC_base} ${SRC_server} )
 	ADD_EXECUTABLE ( ${APPNAME} ${SRC_compile} )
+	ADD_SUBDIRECTORY ( downserver )
 ENDIF ( Server )
 ###############################################################################
 # CLIENT COMPILATION
