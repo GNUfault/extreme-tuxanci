@@ -12,6 +12,7 @@ ADD_SUBDIRECTORY ( sound )
 ###############################################################################
 # CURRENT DIRECTORY FILES
 ###############################################################################
+CONFIGURE_FILE ( tuxanci.desktop.in tuxanci.desktop )
 # dont instal those let packagers handle it
 #IF ( NOT Server )
 #	INSTALL ( FILES tuxanci.desktop
