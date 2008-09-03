@@ -75,17 +75,17 @@ echo "2.0" > "${DEST_DEB}"/DEBIAN/debian-binary
 echo "[Desktop Entry]
 Name=${APPNAME}-${Y}-${VERSION}
 Comment=game tuxanci
-Exec=/usr/games/bin/${APPNAME}-${VERSION}
+Exec=${APPNAME}-${Y}-${VERSION}
 Terminal=false
 Type=Application
-Icon=/usr/games/share/tuxanci-svn/images/tuxanci.png
+Icon=/usr/games/share/doc/${APPNAME}-${Y}-${VERSION}/tuxanci.svg
 Encoding=UTF-8
-Categories=Game" > "${DEST_DEB}"/usr/share/applications/tuxanci.desktop
+Categories=Game;" > "${DEST_DEB}"/usr/share/applications/tuxanci.desktop
 echo "Package: ${APPNAME}-${Y}-${VERSION}
 Version: 0.2.1
 Section: Game
 Priority: optional
-Depends: libc6 (>= 2.2.4-4), libsdl1.2debian (>= 1.2), libsdl-image1.2 (>= 1.2), libsdl-mixer1.2 (>= 1.2), libsdl-ttf2.0-0 (>= 2.0), gettext
+Depends: libc6 (>= 2.2.4-4), libsdl1.2debian (>= 1.2), libsdl-image1.2 (>= 1.2), libsdl-mixer1.2 (>= 1.2), libsdl-ttf2.0-0 (>= 2.0)
 Architecture: ${ARCH}
 Installed-Size: 4993
 Maintainer: Tomas Chvatal <tomas.chvatal@gmail.com>

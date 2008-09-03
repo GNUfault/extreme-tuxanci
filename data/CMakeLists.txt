@@ -13,13 +13,8 @@ ADD_SUBDIRECTORY ( sound )
 # CURRENT DIRECTORY FILES
 ###############################################################################
 CONFIGURE_FILE ( tuxanci.desktop.in data/tuxanci.desktop )
-# dont instal those let packagers handle it
-#IF ( NOT Server )
-#	INSTALL ( FILES tuxanci.desktop
-#		DESTINATION ${CMAKE_INSTALL_DOCDIR}/${APPNAME}/)
-#	IF ( NOT Win )
-#		INSTALL ( FILES tuxanci.svg
-#			DESTINATION ${CMAKE_INSTALL_DOCDIR}/${APPNAME}/ )
-#	ENDIF ( NOT Win )
-#ENDIF ( NOT Server )
+IF ( NOT Server )
+	INSTALL ( FILES tuxanci.svg
+		DESTINATION ${CMAKE_INSTALL_DOCDIR}/${APPNAME}/ )
+ENDIF ( NOT Server )
 ###############################################################################
