@@ -36,7 +36,11 @@ src_compile() {
 	use debug && mycmakeargs="${mycmakeargs} -DDebug=1"
 	use dedicated && mycmakeargs="${mycmakeargs} -DServer=1"
 	use nls && mycmakeargs="${mycmakeargs} -DNLS=1"
-	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=${GAMES_PREFIX} -DCMAKE_DATA_PATH=${GAMES_DATADIR} -DCMAKE_LOCALE_PATH=${GAMES_DATADIR_BASE}/locale/ -DCMAKE_DOC_PATH=${GAMES_DATADIR_BASE}/doc/ -DCMAKE_ETC_PATH=${GAMES_SYSCONFDIR}"
+	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=${GAMES_PREFIX}
+	-DCMAKE_DATA_PATH=${GAMES_DATADIR}
+	-DCMAKE_LOCALE_PATH=${GAMES_DATADIR_BASE}/locale/
+	-DCMAKE_DOC_PATH=${GAMES_DATADIR_BASE}/doc/
+	-DCMAKE_ETC_PATH=${GAMES_SYSCONFDIR} -DLIB_INSTALL_DIR=$(games_get_libdir)"
 	cmake-utils_src_compile
 }
 
