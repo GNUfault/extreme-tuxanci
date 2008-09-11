@@ -26,6 +26,7 @@ DEPEND="!dedicated? (
 			)
 		)
 	dev-libs/zziplib[sdl]
+	>=dev-util/cmake-2.6.0
 	nls? ( sys-devel/gettext )"
 
 S="${WORKDIR}"/"${PN}"
