@@ -31,7 +31,7 @@ DEPEND="!dedicated? (
 
 S="${WORKDIR}"/"${PN}"
 
-src_compile() {
+src_configure() {
 	local mycmakeargs
 	use alsa || mycmakeargs="${mycmakeargs} -DNO_Audio=1"
 	use debug && mycmakeargs="${mycmakeargs} -DDebug=1"
@@ -42,7 +42,7 @@ src_compile() {
 	-DCMAKE_LOCALE_PATH=${GAMES_DATADIR_BASE}/locale/
 	-DCMAKE_DOC_PATH=${GAMES_DATADIR_BASE}/doc/
 	-DCMAKE_ETC_PATH=${GAMES_SYSCONFDIR} -DLIB_INSTALL_DIR=$(games_get_libdir)"
-	cmake-utils_src_compile
+	cmake-utils_src_configure
 }
 
 src_install() {
