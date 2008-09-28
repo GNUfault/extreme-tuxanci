@@ -8,7 +8,6 @@
 # -DNO_Audio=1 			# disable audio
 # -DDebug=1			# enable debug
 # -DCMAKE_C_FLAGS=-Wall		# modification for CFLAGS
-# -DWin=1			# build windows port
 # -DNLS=1			# enable Gettext NLS
 # -DApple=1			# build apple port
 # -DCMAKE_INSTALL_PREFIX=/bla/	# install prefix
@@ -21,12 +20,7 @@
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
-# our ugly choicer for networking type
-#IF ( Win )
-	ADD_DEFINITIONS ( -DSUPPORT_UDP )
-#ELSE ( Win )
-#	ADD_DEFINITIONS ( -DSUPPORT_TCP )
-#ENDIF ( Win )
+ADD_DEFINITIONS ( -DSUPPORT_UDP )
 SET ( TUXANCI_VERSION "svn" CACHE STRING "Version" )
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
@@ -130,69 +124,23 @@ IF ( Apple )
 	ADD_DEFINITIONS ( -DAPPLE )
 ENDIF ( Apple )
 ###############################################################################
-# WINDOWS QUIRKS
-###############################################################################
-IF ( Win )
-	# icon into exe, this is ugly hack cause there is bug in CMAKE
-	SET ( CMAKE_RC_COMPILER "C:/MinGW/bin/windres.exe" )
-	ENABLE_LANGUAGE ( RC )
-	SET ( SRC_base ${WORKDIR}/tuxanci.rc )
-	# directories and dlls for sdl (we bundle them, just don't want cmake
-	# to look for them)
-	IF ( NOT Server )
-		SET ( SDL_LIBRARY "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/SDL.dll" )
-		SET ( SDLMIXER_LIBRARY "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/SDL_mixer.dll" )
-		SET ( SDLTTF_LIBRARY "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/SDL_ttf.dll" )
-		SET ( SDLIMAGE_LIBRARY "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/SDL_image.dll" )
-		SET ( SDL_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
-		SET ( SDLMIXER_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
-		SET ( SDLIMAGE_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
-		SET ( SDLTTF_INCLUDE_DIR "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/include/" )
-	ENDIF ( NOT Server )
-	IF ( NLS )
-		SET ( LIB_GETTEXT "${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/lib/libgettextlib.dll" )
-		SET ( LIB_INTL "${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/lib/libintl3.dll" )
-		SET ( LIB_GETTEXTPO "${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/lib/libgettextpo.dll" )
-		SET ( LIBGETTEXTSRC "${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/lib/libgettextsrc.dll" )
-	ENDIF ( NLS )
-	# noone wants to debug in windows
-	SET ( CMAKE_BUILD_TYPE Release )
-	# override basic directory placement
-	SET ( CMAKE_CONF_PATH "../etc/" )
-	SET ( CMAKE_DATA_PATH "../share/" )
-	SET ( CMAKE_LOCALE_PATH "../share/locale/")
-	SET ( CMAKE_DOC_PATH "../doc/" )
-	#SET ( LIB_INSTALL_DIR "../" )
-	SET ( CMAKE_FONT "../share/${APPNAME}/font/DejaVuSans.ttf" )
-	SET ( CMAKE_INSTALL_PREFIX "./")
-	SET ( CMAKE_INSTALL_BINDIR ${APPNAME}/bin )
-	SET ( CMAKE_INSTALL_DOCDIR ${APPNAME}/doc )
-	SET ( CMAKE_INSTALL_LOCALEDIR ${APPNAME}/share/locale/ )
-	SET ( CMAKE_INSTALL_LIBDIR ${APPNAME}/bin )
-	SET ( CMAKE_INSTALL_DATADIR ${APPNAME}/share/ )
-	SET ( CMAKE_INSTALL_ETCDIR ${APPNAME}/etc )
-ENDIF ( Win )
-###############################################################################
 # SDL SEARCH
 ###############################################################################
 FIND_PACKAGE ( ZZIP REQUIRED )
 
-IF ( NOT Win AND NOT Server )
+IF ( NOT Server )
 	FIND_PACKAGE ( SDL REQUIRED )
 	FIND_PACKAGE ( SDL_image REQUIRED )
 	FIND_PACKAGE ( SDL_ttf REQUIRED )
 	IF ( NOT NO_Audio )
 		FIND_PACKAGE ( SDL_mixer REQUIRED )
 	ENDIF ( NOT NO_Audio )
-ENDIF ( NOT Win AND NOT Server )
+ENDIF ( NOT Server )
 INCLUDE_DIRECTORIES (
 	${SDL_INCLUDE_DIR}
 	${SDLTTF_INCLUDE_DIR}
 	${SDLIMAGE_INCLUDE_DIR}
 )
-IF ( Win )
-INCLUDE_DIRECTORIES ( "${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/include/" )
-ENDIF ( Win )
 IF ( NOT NO_Audio )
 	INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
 ENDIF ( NOT NO_Audio )
@@ -246,13 +194,4 @@ INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS
 	DESTINATION ${CMAKE_INSTALL_DOCDIR}/${APPNAME}/ )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README
 	DESTINATION ${CMAKE_INSTALL_DOCDIR}/${APPNAME}/ )
-# windows quirk
-IF ( NOT Server )
-	IF ( Win )
-		FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/SDL/lib/*.dll" )
-		INSTALL ( FILES ${files} DESTINATION ${APPNAME}/bin/ )
-		FILE ( GLOB files "${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/lib/*.dll" )
-		INSTALL ( FILES ${files} DESTINATION ${APPNAME}/bin/ )
-	ENDIF ( Win )
-ENDIF ( NOT Server )
 ###############################################################################

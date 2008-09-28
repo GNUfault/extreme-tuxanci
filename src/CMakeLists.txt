@@ -11,34 +11,23 @@ ELSE ( Server )
 	ELSE ( NO_Audio )
 		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} )
 	ENDIF ( NO_Audio )
-ENDIF ( Server )
-IF ( Win )
-	IF ( NLS )
-		LINK_LIBRARIES ( ${LIB_ZZIP} {LIB_GETTEXT} ${LIB_INTL} ${LIB_GETTEXTPO} ${LIBGETTEXTSRC} )
-	ENDIF ( NLS )
-	LINK_LIBRARIES ( wsock32 )
-ELSE ( Win )
 	LINK_LIBRARIES ( SDLmain )
-ENDIF ( Win )
+ENDIF ( Server )
+
 ###############################################################################
 # SOURCE SPECIFICATION
 ###############################################################################
 # Command for finding correct file names in directory, replace DIR with
 # directory name you want eg: base
 # find ./ -maxdepth 1 -type f -name \*.c |grep "$" |sed -e 's/^\.\//\$\{WORKDIR\}\/DIR\//' -e 's/\.c//' |tr '\n' ' '
-
-# ugly hack
-#IF ( Win )
 	SET ( SRC_base
 		${SRC_base}
 		${WORKDIR}/net/udp ${WORKDIR}/net/tcp
 		${WORKDIR}/base/udp_server )
-#ELSE ( Win )
 #	SET ( SRC_base
 #		${SRC_base}
 #		${WORKDIR}/net/tcp
 #		${WORKDIR}/base/tcp_server )
-#ENDIF ( Win )
 SET ( SRC_base
 	${SRC_base}
 	${WORKDIR}/base/main	${WORKDIR}/base/shot
