@@ -1,15 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env bash
  
 make clean
-rm -rf CMakeCache.txt \
-       CMakeFiles \
-       cmake_install.cmake \
-       cmake_uninstall.cmake \
-       Makefile \
-			 install_manifest.txt \
-			 data/tuxanci.desktop \
-			 src/base/path.h \
-			 {data,po}/{CMakeFiles,Makefile,cmake_install.cmake} \
-			 data/{arena,conf,font,images,music,sound}/{CMakeFiles,Makefile,cmake_install.cmake} \
-       src/{CMakeFiles,cmake_install.cmake,Makefile,modules/{CMakeFiles,cmake_install.cmake,Makefile}}
+# remove folders
+find ./ -type d -name CMakeFiles -print |xargs -i rm {} -rf
+# remove cmake files
+find ./ \( -type f -name \*.cmake -print , -type f -name CMakeCache.txt -print , -type f -name Makefile -print \) |grep -v "./cmake" |xargs -i rm {} -rf
+find ./ -type f -name cmake_install.cmake |xargs -i rm {} -rf
+# remove precompiled in files
+find ./ -name \*.in -print |while read r; do rm -rf ${r/\.in/}; done
 
