@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
  
 # remove compiled files
-if [ -e "Makefile" ]; then
-	make clean
-fi
+[ -e "[Mm]akefile" ] && make clean
 
 # remove folders
 find ./ -type d -name CMakeFiles -print | xargs -i rm {} -rf
