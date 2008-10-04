@@ -21,7 +21,7 @@
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
 ADD_DEFINITIONS ( -DSUPPORT_UDP )
-SET ( TUXANCI_VERSION "svn" CACHE STRING "Version" )
+SET ( TUXANCI_VERSION "dev" CACHE STRING "Version" )
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
 SET ( CMAKE_CONF_PATH "/etc" CACHE PATH "Config path prefix" )

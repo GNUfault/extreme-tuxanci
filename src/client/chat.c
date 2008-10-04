@@ -1,5 +1,6 @@
 
 #include <stdlib.h>
+#include <ctype.h>
 #include <assert.h>
 #include <SDL.h>
 
@@ -64,8 +65,7 @@ void drawChat()
 	char str[STR_SIZE];
 	int i;
 
-	if( chat_active == FALSE )
-	{
+	if (chat_active == FALSE) {
 		return;
 	}
 
@@ -73,32 +73,29 @@ void drawChat()
 		CHAT_LOCATION_X, CHAT_LOCATION_Y,
 		0, 0, CHAT_SIZE_X, CHAT_SIZE_Y);
 
-	for( i = 0 ; i < listText->count ; i++ )
-	{
+	for (i = 0; i < listText->count; i++) {
 		char *s;
 
 		s = (char *)listText->list[i];
 
 		drawFontMaxSize(s,
-			CHAT_LOCATION_X+5, CHAT_LOCATION_Y+5 + i*20,
-			CHAT_SIZE_X-10, 20, COLOR_WHITE);
+			CHAT_LOCATION_X + 5, CHAT_LOCATION_Y + 5 + i * 20,
+			CHAT_SIZE_X - 10, 20, COLOR_WHITE);
 	}
 
 	strcpy(str, line);
 
-	if( timeBlick > CHAT_TIME_BLICK_CURSOR/2 )
-	{
+	if (timeBlick > CHAT_TIME_BLICK_CURSOR / 2) {
 		strcat(str, "\f");
 	}
 
 	timeBlick++;
 
-	if( timeBlick == CHAT_TIME_BLICK_CURSOR )
-	{
+	if (timeBlick == CHAT_TIME_BLICK_CURSOR) {
 		timeBlick = 0;
 	}
 
-	drawFont(str, CHAT_LOCATION_X+5, CHAT_LOCATION_Y+5 + CHAT_MAX_LINES*20, COLOR_WHITE);
+	drawFont(str, CHAT_LOCATION_X + 5, (CHAT_LOCATION_Y + 5) + (CHAT_MAX_LINES * 20), COLOR_WHITE);
 }
 
 static void processMessageKey(SDL_keysym keysym)
@@ -113,31 +110,35 @@ static void processMessageKey(SDL_keysym keysym)
 	len = strlen(line);
 	getTextSize(line, &w, &h);
 
-	if(  w > CHAT_SIZE_X-40 )
-	{
+	if (w > CHAT_SIZE_X - 40) {
 		return;
 	}
 
-	/* zpracovani backspace */
-	if (keysym.sym == SDLK_BACKSPACE && len > 0){
-		line[len-1]='\0';
+	/* processing of backspace */
+	if (keysym.sym == SDLK_BACKSPACE && len > 0) {
+		line[len - 1] = '\0';
 		return;
 	}
 
-	/* zpracovani tisknutelnych paznaku */
-	if ( (keysym.sym >= SDLK_SPACE && keysym.sym <= SDLK_AT)
-			|| (keysym.sym >= SDLK_LEFTBRACKET && keysym.sym <= SDLK_BACKQUOTE) ){
-		line[len] = keysym.sym;	/*  tady by bylo daleko lepsi dat strcat,
-							predpoklada se, ze line je vyplnen 0 az dokonce */
+	/* processing of printable chars but not letters */
+	if ((keysym.sym >= SDLK_SPACE && keysym.sym <= SDLK_AT)
+		|| (keysym.sym >= SDLK_LEFTBRACKET && keysym.sym <= SDLK_BACKQUOTE)) {
+		/* here would be much better to put 'strcat' as 'line' is expected
+		 * to be full of '0' up to its end
+		 */
+		line[len] = keysym.sym;
 	}
 
-	/* zpracovani pismenek */
-	if ( keysym.sym >= SDLK_a && keysym.sym <= SDLK_z){
+	/* processing of letters */
+	if (keysym.sym >= SDLK_a && keysym.sym <= SDLK_z) {
 		char c = keysym.sym;
-		if (keysym.mod == KMOD_SHIFT)
+		if (keysym.mod == KMOD_SHIFT) {
 			c = toupper(c);
-		line[len] = c;	/*  tady by bylo daleko lepsi dat strcat,
-							predpoklada se, ze line je vyplnen 0 az dokonce */
+		}
+		/* here would be much better to put 'strcat' as 'line' is expected
+		 * to be full of '0' up to its end
+		 */
+		line[len] = c;
 	}
 
 	return;
@@ -145,13 +146,11 @@ static void processMessageKey(SDL_keysym keysym)
 
 static void sendNewMessage()
 {
-	if( getNetTypeGame() == NET_GAME_TYPE_CLIENT )
-	{
+	if (getNetTypeGame() == NET_GAME_TYPE_CLIENT) {
 		proto_send_chat_client(line);
 	}
 
-	if( getNetTypeGame() == NET_GAME_TYPE_SERVER )
-	{
+	if (getNetTypeGame() == NET_GAME_TYPE_SERVER) {
 		char out[STR_PROTO_SIZE];
 
 		snprintf(out, STR_PROTO_SIZE, "chat %s:%s\n",
@@ -175,28 +174,25 @@ static void eventChatDisable()
 
 static void eventChatEnable()
 {
-	/* Mame zobrazene okno chatu. Je potreba zpracovat vsechny klavesy v bufferu
-	 * s tim, ze pri klavese RETURN provedeme odeslani radku chatu
-	 * na server
+	/* The chat window is displayed. It is needed to process all keys in the buffer
+	 * but when ENTER is pressed the chat row is sent to the server
 	 */
 
-	while( isAnyKeyInKeyboardBuffer() == TRUE )
-	{
+	while (isAnyKeyInKeyboardBuffer() == TRUE) {
 		SDL_keysym key;
 		key = popKeyFromKeyboardBuffer();
 
-		if ( key.sym == SDLK_RETURN )
-		{
-			if ( strcmp(line, "") != 0 )
-			{ /* mame napsany radek: je potreba jej odeslat */
+		if (key.sym == SDLK_RETURN) {
+			if (strcmp(line, "") != 0) {
+				/* the chat row is already written - it is needed to send it */
 				sendNewMessage();
 				memset(line, '\0', STR_SIZE);
-				continue;	/* pokracovat s dalsimi klavesami */
+				continue;	/* continue with other keys */
 			}
-			else
-			{ /* radek je prazdny, je potreba vypnout okno chatu */
+			else {
+				/* the chat row is empty - it is needed to turn off the chat window */
 				eventChatDisable();
-				/* vypneme zachytavani klaves do bufferu a vycistime buffer */
+				/* turn off key catching into the buffer and clear the buffer */
 				//disableKeyboardBuffer();
 				//clearKeyboardBuffer();
 			}
@@ -207,12 +203,11 @@ static void eventChatEnable()
 }
 
 /**
- * Zpracovani "udalosti" chatu?
+ * Processing of chat 'events'
  */
 void eventChat()
 {
-	if( isChatActive() )
-	{
+	if (isChatActive()) {
 		eventChatEnable();
 	}
 }
@@ -229,23 +224,22 @@ bool_t isRecivedNewMsg()
 
 void addToChat(char *s)
 {
-	addList(listText, strdup(s) );
+	addList(listText, strdup(s));
 
-	if( listText->count > CHAT_MAX_LINES )
-	{
+	if (listText->count > CHAT_MAX_LINES) {
 		delListItem(listText, 0, free);
 	}
 
-	if( chat_active == FALSE )
-	{
+	if (chat_active == FALSE) {
 		receivedNewMsg = TRUE;
 	}
 }
 
 void quitChat()
 {
-	assert( listText != NULL );
+	assert(listText != NULL);
 
 	unregisterHotKey(SDLK_RETURN);
 	destroyListItem(listText, free);
 }
+
