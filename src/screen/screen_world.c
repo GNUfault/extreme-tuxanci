@@ -154,9 +154,11 @@ void prepareArena()
 
 			if( isSettingAI() )
 			{
-				if( loadModule("libmodAI") == 0 )
+				tux->control = TUX_CONTROL_AI;
+				
+				if( loadModule("libmodAI") != 0 )
 				{
-					tux->control = TUX_CONTROL_AI;
+					tux->control = TUX_CONTROL_KEYBOARD_LEFT;
 				}
 			}
 
