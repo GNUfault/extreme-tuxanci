@@ -40,13 +40,8 @@
 #include "heightScore.h"
 #endif
 
-#ifdef SUPPORT_UDP
-#include "udp_server.h"
-#endif
 
-#ifdef SUPPORT_TCP
-#include "tcp_server.h"
-#endif
+#include "udp_server.h"
 
 static list_t *listClient;
 
@@ -154,27 +149,6 @@ void destroyAnyClient(client_t *p)
 	free(p);
 }
 
-static void destroyUdpOrTcpClient(client_t *client)
-{
-	switch( client->type )
-	{
-#ifdef SUPPORT_UDP
-		case CLIENT_TYPE_UDP :
-			destroyUdpClient(client);
-		break;
-#endif
-
-#ifdef SUPPORT_TCP
-		case CLIENT_TYPE_TCP :
-			destroyTcpClient(client);
-		break;
-#endif
-		default :
-			assert( ! _("Bad client type (TCP/UDP)!"));
-		break;
-	}
-}
-
 static void eventDelClientFromListClient(client_t *client)
 {
 	int offset;
@@ -183,7 +157,7 @@ static void eventDelClientFromListClient(client_t *client)
 
 	assert( offset != -1 );
 
-	delListItem(listClient, offset, destroyUdpOrTcpClient);
+	delListItem(listClient, offset, destroyUdpClient);
 }
 
 static void delZombieCLient(void *p_nothink)
@@ -275,23 +249,12 @@ int initServer(char *ip4, int port4, char *ip6, int port6)
 	setServerMaxClients(SERVER_MAX_CLIENTS);
 	setServerTimer();
 
-#ifdef SUPPORT_UDP
 	ret = initUdpServer(ip4, port4, ip6, port6);
 
 	if( ret == 0 )
 	{
 		return -1;
 	}
-#endif
-
-#ifdef SUPPORT_TCP
-	ret = initTcpServer(ip4, port4, ip6, port6);
-
-	if( ret == 0 )
-	{
-		return -1;
-	}
-#endif
 
 	return ret;
 }
@@ -327,25 +290,8 @@ void sendClient(client_t *p, char *msg)
 		}
 #endif
 
-		switch( p->type )
-		{
-#ifdef SUPPORT_UDP
-			case CLIENT_TYPE_UDP :
-				ret = writeUdpSocket(p->socket_udp, p->socket_udp, msg, strlen(msg));
-			break;
-#endif
+		ret = writeUdpSocket(p->socket_udp, p->socket_udp, msg, strlen(msg));
 
-#ifdef SUPPORT_TCP
-			case CLIENT_TYPE_TCP :
-				ret = addBuffer(p->sendBuffer, msg, strlen(msg));
-			break;
-#endif
-
-			default :
-				assert( ! _("Bad client type (TCP/UDP)!"));
-			break;
-		}
-	
 		if( ret <= 0 )
 		{
 			p->status = NET_STATUS_ZOMBIE;
@@ -401,13 +347,6 @@ static void porcesListClients()
 
 		eventClientWorkRecvList(thisClient);
 		eventMsgInCheckFront(thisClient);
-		
-#ifdef SUPPORT_TCP
-		if( thisClient->type == CLIENT_TYPE_TCP )
-		{
-			sendTcpClientBuffer(thisClient);
-		}
-#endif
 	}
 }
 
@@ -416,16 +355,8 @@ void eventServer()
 #ifndef PUBLIC_SERVER
 	int count;
 
-#ifdef SUPPORT_TCP
-	do{
-		restartSelect();
-		setServerTcpSelect();
-		actionSelect();
-		count = selectServerTcpSocket();
-	}while( count > 0 );
-#endif
 
-#ifdef SUPPORT_UDP
+
 	do{
 		restartSelect();
 		setServerUdpSelect();
@@ -434,32 +365,18 @@ void eventServer()
 	}while( count > 0 );
 #endif
 
-#endif
-
 #ifdef PUBLIC_SERVER
 	int ret;
 
 	restartSelect();
 
-#ifdef SUPPORT_TCP
-	setServerTcpSelect();
-#endif
-
-#ifdef SUPPORT_UDP
 	setServerUdpSelect();
-#endif
 
 	ret = actionSelect();
 
 	if( ret > 0 )
 	{
-#ifdef SUPPORT_TCP
-		selectServerTcpSocket();
-#endif
-
-#ifdef SUPPORT_UDP
 		selectServerUdpSocket();
-#endif
 	}
 #endif
 
@@ -473,15 +390,9 @@ void quitServer()
 
 	assert( listClient != NULL );
 
-	destroyListItem(listClient, destroyUdpOrTcpClient);
+	destroyListItem(listClient, destroyUdpClient);
 
 	destroyTimer(listServerTimer);
 
-#ifdef SUPPORT_UDP
 	quitUdpServer();
-#endif
-
-#ifdef SUPPORT_TCP
-	quitTcpServer();
-#endif
 }

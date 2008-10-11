@@ -274,16 +274,16 @@ static void readArenaFromStatus()
 			closeUdpSocket(sock_server_udp);
 			sock_server_udp = NULL;
 			strncpy(arenaNetName, offset_begin, offset_end-offset_begin);
-/*
+
 			if( getArenaFileFormNetName(arenaNetName) != NULL )
 			{
 				setScreen("world");
 				return;
 			}
-*/
+
 			connectToDownServer();
 
-			//printf("arenaNetName = >>%s<<\n", arenaNetName);
+			printf("arenaNetName = >>%s<<\n", arenaNetName);
 		}
 	}
 }
