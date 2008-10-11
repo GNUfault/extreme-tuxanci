@@ -20,16 +20,9 @@ ENDIF ( Server )
 # Command for finding correct file names in directory, replace DIR with
 # directory name you want eg: base
 # find ./ -maxdepth 1 -type f -name \*.c |grep "$" |sed -e 's/^\.\//\$\{WORKDIR\}\/DIR\//' -e 's/\.c//' |tr '\n' ' '
-	SET ( SRC_base
-		${SRC_base}
-		${WORKDIR}/net/udp ${WORKDIR}/net/tcp
-		${WORKDIR}/base/udp_server )
-#	SET ( SRC_base
-#		${SRC_base}
-#		${WORKDIR}/net/tcp
-#		${WORKDIR}/base/tcp_server )
 SET ( SRC_base
-	${SRC_base}
+	${WORKDIR}/net/udp ${WORKDIR}/net/tcp
+	${WORKDIR}/base/udp_server
 	${WORKDIR}/base/main	${WORKDIR}/base/shot
 	${WORKDIR}/base/space	${WORKDIR}/base/checkFront
 	${WORKDIR}/base/storage	${WORKDIR}/base/myTimer
