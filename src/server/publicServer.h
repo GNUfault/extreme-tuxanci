@@ -1,12 +1,12 @@
 
 #ifndef PUBLIC_SERVER_H
 
-#define PUBLIC_SERVER_H
+#    define PUBLIC_SERVER_H
 
-#include "arena.h"
-#include "arenaFile.h"
+#    include "arena.h"
+#    include "arenaFile.h"
 
-#define WORLD_COUNT_ROUND_UNLIMITED	-1
+#    define WORLD_COUNT_ROUND_UNLIMITED	-1
 
 extern char *getSetting(char *env, char *param, char *default_val);
 extern void countRoundInc();

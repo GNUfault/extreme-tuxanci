@@ -1,15 +1,14 @@
 
 #ifndef INDEX_H
 
-#define INDEX_H
+#    define INDEX_H
 
-#include "main.h"
-#include "list.h"
+#    include "main.h"
+#    include "list.h"
 
-typedef struct index_item_struct
-{
-    int key;
-    void *data;
+typedef struct index_item_struct {
+	int key;
+	void *data;
 } index_item_t;
 
 extern list_t *newIndex();

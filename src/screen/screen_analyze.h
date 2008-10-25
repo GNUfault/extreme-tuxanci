@@ -1,14 +1,13 @@
 
 #ifndef SCREEN_ANALYZE_H
 
-#define SCREEN_ANALYZE_H
+#    define SCREEN_ANALYZE_H
 
-#include "main.h"
+#    include "main.h"
 
-typedef struct analyze_struct
-{
-    char *name;
-    int score;
+typedef struct analyze_struct {
+	char *name;
+	int score;
 } analyze_t;
 
 extern void startScreenAnalyze();

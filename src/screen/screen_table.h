@@ -1,10 +1,10 @@
 
 #ifndef SCREEN_TABLE_H
 
-#define SCREEN_TABLE_H
+#    define SCREEN_TABLE_H
 
-#define SCREEN_TABLE_MAX_PLAYERS	10
-#define SCREEN_TABLE_FILE_HIGHSCORE_NAME	"highscore"
+#    define SCREEN_TABLE_MAX_PLAYERS	10
+#    define SCREEN_TABLE_FILE_HIGHSCORE_NAME	"highscore"
 
 extern void startScreenTable();
 extern void drawScreenTable();

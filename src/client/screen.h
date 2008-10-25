@@ -1,24 +1,23 @@
 
 #ifndef SCREEN_H
 
-#define SCREEN_H
+#    define SCREEN_H
 
-#include "main.h"
+#    include "main.h"
 
-typedef struct screen_struct
-{
-    char *name;
-    void (*fce_start) ();
-    void (*fce_event) ();
-    void (*fce_draw) ();
-    void (*fce_stop) ();
+typedef struct screen_struct {
+	char *name;
+	void (*fce_start) ();
+	void (*fce_event) ();
+	void (*fce_draw) ();
+	void (*fce_stop) ();
 } screen_t;
 
 extern bool_t isScreenInicialized();
 
 extern screen_t *newScreen(char *name,
-                           void (*fce_start) (), void (*fce_event) (),
-                           void (*fce_draw) (), void (*fce_stop) ());
+						   void (*fce_start) (), void (*fce_event) (),
+						   void (*fce_draw) (), void (*fce_stop) ());
 
 extern void destroyScreen(screen_t * p);
 extern void registerScreen(screen_t * p);

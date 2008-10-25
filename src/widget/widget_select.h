@@ -1,18 +1,17 @@
 
 #ifndef WIDGET_SELECT_H
 
-#define WIDGET_SELECT_H
+#    define WIDGET_SELECT_H
 
-#include "main.h"
-#include "list.h"
-#include "widget.h"
+#    include "main.h"
+#    include "list.h"
+#    include "widget.h"
 
-typedef struct widget_select
-{
-    int w, h;
-    list_t *list;
-    int select;
-    void (*fce_event) (void *);
+typedef struct widget_select {
+	int w, h;
+	list_t *list;
+	int select;
+	void (*fce_event) (void *);
 } widget_select_t;
 
 extern widget_t *newWidgetSelect(int x, int y, void (*fce_event) (void *));

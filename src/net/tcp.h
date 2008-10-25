@@ -1,27 +1,26 @@
 
 #ifndef MY_TCP_H
 
-#define MY_TCP_H
-#include "main.h"
+#    define MY_TCP_H
+#    include "main.h"
 
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
+#    include <sys/socket.h>
+#    include <netinet/in.h>
+#    include <netinet/tcp.h>
 
-#define SUPPORT_IPv6
+#    define SUPPORT_IPv6
 
-#define	PROTO_TCPv4	0
-#define	PROTO_TCPv6	1
+#    define	PROTO_TCPv4	0
+#    define	PROTO_TCPv6	1
 
-typedef struct struct_sock_tcp_t
-{
-    int sock;
-    int proto;
+typedef struct struct_sock_tcp_t {
+	int sock;
+	int proto;
 
-    struct sockaddr_in sockAddr;
-#ifdef SUPPORT_IPv6
-    struct sockaddr_in6 sockAddr6;
-#endif
+	struct sockaddr_in sockAddr;
+#    ifdef SUPPORT_IPv6
+	struct sockaddr_in6 sockAddr6;
+#    endif
 } sock_tcp_t;
 
 extern sock_tcp_t *newSockTcp(int proto);

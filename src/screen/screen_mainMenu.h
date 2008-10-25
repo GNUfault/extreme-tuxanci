@@ -1,9 +1,9 @@
 
 #ifndef SCREEN_MIAN_MENU_H
 
-#define SCREEN_MIAN_MENU_H
+#    define SCREEN_MIAN_MENU_H
 
-#include "main.h"
+#    include "main.h"
 
 extern void startScreenMainMenu();
 extern void drawScreenMainMenu();

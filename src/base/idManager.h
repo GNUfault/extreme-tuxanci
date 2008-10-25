@@ -1,12 +1,12 @@
 
 #ifndef ID_MANAGER_H
-#define ID_MANAGER_H
-#define MAX_ID		1000000
-#define ID_UNKNOWN	-1
-#ifdef __WIN32__
-#define random rand
-#endif
-#include "list.h"
+#    define ID_MANAGER_H
+#    define MAX_ID		1000000
+#    define ID_UNKNOWN	-1
+#    ifdef __WIN32__
+#        define random rand
+#    endif
+#    include "list.h"
 
 extern void initListID();
 extern int isRegisterID(int id);

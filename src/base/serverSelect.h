@@ -1,7 +1,7 @@
 
 #ifndef SERVER_SELECT
 
-#define SERVER_SELECT
+#    define SERVER_SELECT
 
 extern void restartSelect();
 extern void addSockToSelectRead(int sock);

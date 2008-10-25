@@ -1,16 +1,16 @@
 
 #ifndef CHECK_FRONT_H
 
-#define CHECK_FRONT_H
-#define CHECK_FRONT_SEND_TIME_INTERVAL	100
-#define CHECK_FRONT_MAX_COUNT_SEND		30
+#    define CHECK_FRONT_H
+#    define CHECK_FRONT_SEND_TIME_INTERVAL	100
+#    define CHECK_FRONT_MAX_COUNT_SEND		30
 
-#define CHECK_FRONT_ID_NONE				-1
-#define CHECK_FRONT_TYPE_SIMPLE			1
-#define CHECK_FRONT_TYPE_CHECK			2
+#    define CHECK_FRONT_ID_NONE				-1
+#    define CHECK_FRONT_TYPE_SIMPLE			1
+#    define CHECK_FRONT_TYPE_CHECK			2
 
-#include "list.h"
-#include "server.h"
+#    include "list.h"
+#    include "server.h"
 
 extern list_t *newCheckFront();
 extern void addMsgInCheckFront(list_t * list, char *msg, int type, int id);

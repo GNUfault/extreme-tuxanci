@@ -1,10 +1,10 @@
 
 #ifndef SERVER_UDP_H
 
-#define SERVER_UDP_H
+#    define SERVER_UDP_H
 
-#include "server.h"
-#include "udp.h"
+#    include "server.h"
+#    include "udp.h"
 
 extern client_t *newUdpClient(sock_udp_t * sock_udp);
 extern void destroyUdpClient(client_t * p);

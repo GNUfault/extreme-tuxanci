@@ -1,17 +1,17 @@
 
 #ifndef SCREEN_WORLD_H
 
-#define SCREEN_WORLD_H
+#    define SCREEN_WORLD_H
 
-#include "main.h"
-#include "myTimer.h"
-#include "tux.h"
-#include "arenaFile.h"
-#include "arena.h"
+#    include "main.h"
+#    include "myTimer.h"
+#    include "tux.h"
+#    include "arenaFile.h"
+#    include "arena.h"
 
-#define TIMER_END_ARENA 5000
-#define WORLD_COUNT_ROUND_UNLIMITED	-1
-#define LAG_SERVER_UNKNOWN		-1
+#    define TIMER_END_ARENA 5000
+#    define WORLD_COUNT_ROUND_UNLIMITED	-1
+#    define LAG_SERVER_UNKNOWN		-1
 
 extern bool_t isScreenWorldInicialized();
 extern void initWorld();

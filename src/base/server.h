@@ -1,51 +1,50 @@
 
 #ifndef MY_SERVER
 
-#define MY_SERVER
+#    define MY_SERVER
 
-#include <time.h>
+#    include <time.h>
 
-#include "list.h"
-#include "tux.h"
-#include "myTimer.h"
-#include "protect.h"
-#include "buffer.h"
+#    include "list.h"
+#    include "tux.h"
+#    include "myTimer.h"
+#    include "protect.h"
+#    include "buffer.h"
 
-#ifndef PUBLIC_SERVER
-#include "interface.h"
-#endif
+#    ifndef PUBLIC_SERVER
+#        include "interface.h"
+#    endif
 
-#include "udp.h"
+#    include "udp.h"
 
-#define SERVER_TIMEOUT		1000
-#define SERVER_TIME_SYNC	1000
-#define SERVER_TIME_PING	1000
-#define SERVER_MAX_CLIENTS	100
+#    define SERVER_TIMEOUT		1000
+#    define SERVER_TIME_SYNC	1000
+#    define SERVER_TIME_PING	1000
+#    define SERVER_MAX_CLIENTS	100
 
-#define SERVER_INDEX_ROOT_TUX	0
+#    define SERVER_INDEX_ROOT_TUX	0
 
-#define CLIENT_TYPE_UDP		1
-#define CLIENT_TYPE_TCP		2
+#    define CLIENT_TYPE_UDP		1
+#    define CLIENT_TYPE_TCP		2
 
-typedef struct client_struct
-{
-    int type;
+typedef struct client_struct {
+	int type;
 
-    sock_udp_t *socket_udp;
+	sock_udp_t *socket_udp;
 
-    buffer_t *recvBuffer;
-    buffer_t *sendBuffer;
+	buffer_t *recvBuffer;
+	buffer_t *sendBuffer;
 
-    int status;
+	int status;
 
-    tux_t *tux;
+	tux_t *tux;
 
-    protect_t *protect;
+	protect_t *protect;
 
-    list_t *listSendMsg;
-    list_t *listRecvMsg;
+	list_t *listSendMsg;
+	list_t *listRecvMsg;
 
-    list_t *listSeesShot;
+	list_t *listSeesShot;
 } client_t;
 
 extern int initServer(char *ip4, int port4, char *ip6, int port6);

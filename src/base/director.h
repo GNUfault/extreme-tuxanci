@@ -1,14 +1,13 @@
 
 #ifndef DIRECTOR_H
-#define DIRECTOR_H
+#    define DIRECTOR_H
 
-#include "main.h"
-#include "list.h"
+#    include "main.h"
+#    include "list.h"
 
-typedef struct director_struct
-{
-    char *path;
-    list_t *list;
+typedef struct director_struct {
+	char *path;
+	list_t *list;
 } director_t;
 
 extern director_t *loadDirector(char *s);

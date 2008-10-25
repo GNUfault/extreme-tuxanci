@@ -1,13 +1,13 @@
 
 #ifndef SCREEN_CHOICE_ARENA
 
-#define SCREEN_CHOICE_ARENA
+#    define SCREEN_CHOICE_ARENA
 
-#include "main.h"
-#include "arenaFile.h"
+#    include "main.h"
+#    include "arenaFile.h"
 
-#define SCREENSHOT_ARENA_WIDTH		160
-#define SCREENSHOT_ARENA_HEIGHT		107
+#    define SCREENSHOT_ARENA_WIDTH		160
+#    define SCREENSHOT_ARENA_HEIGHT		107
 
 extern void drawScreenChoiceArena();
 extern void eventScreenChoiceArena();

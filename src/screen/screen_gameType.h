@@ -1,9 +1,9 @@
 
 #ifndef SCREEN_GAME_TYPE
 
-#define SCREEN_GAME_TYPE
+#    define SCREEN_GAME_TYPE
 
-#include "main.h"
+#    include "main.h"
 
 extern void drawScreenGameType();
 extern void eventScreenGameType();

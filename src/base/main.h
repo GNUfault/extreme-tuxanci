@@ -1,21 +1,21 @@
 
 #ifndef MAIN_H
-#define MAIN_H
-#define WINDOW_SIZE_X 800
-#define WINDOW_SIZE_Y 600
-#ifdef NLS
-#define _(text) gettext(text)
-#else
-#define _(text) (text)
-#endif
+#    define MAIN_H
+#    define WINDOW_SIZE_X 800
+#    define WINDOW_SIZE_Y 600
+#    ifdef NLS
+#        define _(text) gettext(text)
+#    else
+#        define _(text) (text)
+#    endif
 
-#ifdef NLS
-#include <libintl.h>
-#include <locale.h>
-#endif
-#include "bool.h"
-#include "string_length.h"
-#include "path.h"
+#    ifdef NLS
+#        include <libintl.h>
+#        include <locale.h>
+#    endif
+#    include "bool.h"
+#    include "string_length.h"
+#    include "path.h"
 
 extern char *getParam(char *s);
 extern char *getParamElse(char *s1, char *s2);

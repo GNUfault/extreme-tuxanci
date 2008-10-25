@@ -1,15 +1,14 @@
 
 #ifndef BUFFER_H
 
-#define BUFFER_H
+#    define BUFFER_H
 
-#define BUFFER_LIMIT_ALLOC 1024
+#    define BUFFER_LIMIT_ALLOC 1024
 
-typedef struct str_buffer
-{
-    char *data;
-    unsigned int size;
-    unsigned int alloc;
+typedef struct str_buffer {
+	char *data;
+	unsigned int size;
+	unsigned int alloc;
 } buffer_t;
 
 extern buffer_t *newBuffer(int n);

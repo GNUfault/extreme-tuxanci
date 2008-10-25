@@ -1,13 +1,13 @@
 
 #ifndef SCREEN_SETTING
 
-#define SCREEN_SETTING
+#    define SCREEN_SETTING
 
-#include "main.h"
+#    include "main.h"
 
-#define NAME_AI			"TuxBot"
-#define NAME_PLAYER_RIGHT	"Name1"
-#define NAME_PLAYER_LEFT	"Name2"
+#    define NAME_AI			"TuxBot"
+#    define NAME_PLAYER_RIGHT	"Name1"
+#    define NAME_PLAYER_LEFT	"Name2"
 
 extern void initScreenSetting();
 extern void drawScreenSetting();

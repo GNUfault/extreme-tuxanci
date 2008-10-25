@@ -1,28 +1,27 @@
 
 #ifndef MY_LAYER_H
 
-#define MY_LAYER_H
+#    define MY_LAYER_H
 
-#include "main.h"
-#include "image.h"
+#    include "main.h"
+#    include "image.h"
 
-typedef struct layer_str
-{
-    int x;                      //suradnice obrazka na obrazovke
-    int y;
+typedef struct layer_str {
+	int x;						//suradnice obrazka na obrazovke
+	int y;
 
-    int w;                      //rozmery obrazka na obrazovke
-    int h;
+	int w;						//rozmery obrazka na obrazovke
+	int h;
 
-    int px;                     //suradnice casti surfrace
-    int py;
+	int px;						//suradnice casti surfrace
+	int py;
 
-    int pw;                     //rozmeri casti surfrace
-    int ph;
+	int pw;						//rozmeri casti surfrace
+	int ph;
 
-    int layer;
+	int layer;
 
-    image_t *image;             //dane surfrace
+	image_t *image;				//dane surfrace
 } layer_t;
 
 extern bool_t isLayerInicialized();
@@ -40,7 +39,7 @@ extern void initLayer();
  */
 
 extern void addLayer(image_t * img,
-                     int x, int y, int px, int py, int w, int h, int player);
+					 int x, int y, int px, int py, int w, int h, int player);
 
 /*
  * Vykresli zoznam na obrazovku
@@ -48,7 +47,7 @@ extern void addLayer(image_t * img,
 extern void drawLayer();
 extern void drawLayerCenter(int x, int y);
 extern void drawLayerSplit(int local_x, int local_y, int x, int y, int w,
-                           int h);
+						   int h);
 extern void flushLayer();
 extern void quitLayer();
 

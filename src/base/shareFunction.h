@@ -1,6 +1,6 @@
 
 #ifndef SHARE_FUNCTION_H
-#define SHARE_FUNCTION_H
+#    define SHARE_FUNCTION_H
 
 extern void initShareFunction();
 extern void addToShareFce(char *name, void *function);

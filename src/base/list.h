@@ -1,15 +1,14 @@
 
 #ifndef LIST_H
-#define LIST_H
-#define LIST_ALLOC_LIMIT 16
+#    define LIST_H
+#    define LIST_ALLOC_LIMIT 16
 
-#include "main.h"
+#    include "main.h"
 
-typedef struct list_str
-{
-    void **list;
-    int count;
-    int alloc;
+typedef struct list_str {
+	void **list;
+	int count;
+	int alloc;
 } list_t;
 
 extern list_t *newList();
