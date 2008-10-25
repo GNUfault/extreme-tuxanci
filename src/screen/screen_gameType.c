@@ -255,7 +255,7 @@ void initScreenGameType()
 									  WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN,
 									  300, 180);
 
-	textfield_port = newWidgetTextfield(getParamElse("--port", "2200"),
+	textfield_port = newWidgetTextfield(getParamElse("--port", "6800"),
 										WIDGET_TEXTFIELD_FILTER_NUM, 300, 280);
 
 	selectSession = newWidgetSelect(300, 185, eventWidget);

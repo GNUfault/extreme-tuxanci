@@ -48,7 +48,7 @@ sock_tcp_t *bindTcpSocket(char *address, int port, int proto)
 	assert(port > 0 && port < 65535);
 
 	new = newSockTcp(proto);
-	ret = -1;					// no Warnnings
+	ret = -1;					// no Warnings
 
 	assert(new != NULL);
 

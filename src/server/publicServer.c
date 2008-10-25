@@ -161,7 +161,7 @@ static int registerPublicServer()
 	register_head *head = (register_head *) str;
 
 	head->cmd = 'p';
-	head->port = atoi(getSetting("PORT4", "--port4", "2200"));
+	head->port = atoi(getSetting("PORT4", "--port4", "6800"));
 	head->ip = 0;				// TODO
 
 	/* send request for server list */
@@ -212,8 +212,8 @@ static int initPublicServerNetwork()
 		p_ip6 = NULL;
 	}
 
-	port4 = atoi(getSetting("PORT4", "--port4", "2200"));
-	port6 = atoi(getSetting("PORT6", "--port6", "2200"));
+	port4 = atoi(getSetting("PORT4", "--port4", "6800"));
+	port6 = atoi(getSetting("PORT6", "--port6", "6800"));
 
 	//ret = initNetMulitplayerPublicServer(p_ip4, port4, p_ip6, port6);
 
@@ -252,7 +252,7 @@ int initPublicServer()
 		return -1;
 	}
 
-	initHighScore(getSetting("SCORE_FILE", "--score-file", "/tmp/highscore"));
+	initHighScore(getSetting("SCORE_FILE", "--score-file", "/tmp/highscore.txt"));
 
 	loadArena();
 
@@ -269,8 +269,7 @@ int initPublicServer()
 		return -1;
 	}
 
-	setServerMaxClients(atoi
-						(getSetting("MAX_CLIENTS", "--max-clients", "32")));
+	setServerMaxClients(atoi (getSetting("MAX_CLIENTS", "--max-clients", "32")));
 
 	if (registerPublicServer() < 0) {
 		printf(_("Unable to contact MasterServer!)\n"));
