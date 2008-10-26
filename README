@@ -1,12 +1,13 @@
 ABOUT
 =====
-	Tuxanci is first cushion shooter based on well-known Czech game Bulanci.
+	Tuxanci is first tux shooter ere while inspired by well-known Czech
+	game Bulanci. But it goes its own way now and it is much better.
 	
 	Game supports 1 player and multiplayer game on one computer and also
 	supports gameplay over network (LAN/Internet [IPv4 and IPv6]).
 	
 	Goal in this game is to shoot enemy penguin before he does so. Penguin
-	can shoot only in X and Y axes so no diagonal shooting is availible.
+	can shoot only in X and Y axes so no diagonal shooting is availible yet.
 
 	Weapon list
 	-----------
@@ -50,10 +51,11 @@ HOWTO COMPILE
 	This howto is written for linux. For other platforms please think about
 	rather using binary modules.
 	First of all we need some libraries:
-		(g)libc, SDL, SDL_image, SDL_ttf, optionally SDL_mixer, gettext
+		(g)libc, SDL, SDL_image, SDL_ttf, optionally SDL_mixer,
+		gettext, libzzip
 
 	And some applications:
-		cmake version 2.4.6 and above
+		cmake version 2.6.0 and above
 
 	Now we have two options what we can do:
 	(all commands are supposed to be written in tuxanci sources directory)
@@ -64,7 +66,7 @@ HOWTO COMPILE
 		# make install
 	Building Server
 	--------------
-		$ cmake .
+		$ cmake . -DServer=1
 		$ make
 		# make install
 	Removing current install
@@ -87,7 +89,7 @@ HOWTO COMPILE
 		# -DDebug=1			# enable debug
 		# -DCMAKE_C_FLAGS=-Wall		# modification for CFLAGS
 		# -DWin=1			# build windows port
-		# -DNLS=1			# enable Gettext NLS
+		# -DNLS=0			# disable Gettext NLS
 		# -DApple=1			# build apple port
 		# -DCMAKE_INSTALL_PREFIX=/bla/	# install prefix
 		# -DCMAKE_DATA_PATH=/other/bla/	# install path for data
@@ -95,7 +97,7 @@ HOWTO COMPILE
 		# -DLIB_INSTALL_DIR=/other/bla	# install path for libraries
 		# -DCMAKE_DOC_PATH=/other/bla	# install path for doc
 		# -DCMAKE_LOCALE_PATH=/bla	# install path for locale
-		# -DCMAKE_FONT=/bla/font.ttf	# install path for locale
+		# -DCMAKE_FONT=/bla/font.ttf	# install path for fonts
 GAME USAGE
 ==========
 	Starting game is simple tuxanci-VERSION or tuxanci-server-V. based on what we
@@ -109,7 +111,7 @@ GAME USAGE
 	For client we create some configuration files in $HOME. There is created
 	".tuxanci" directory and in there are pretty selfexplaining .conf files.
 
-	For server we create directory /etc/tuxanci/server.conf where you could
+	For server we create directory /etc/tuxanci-server/server.conf where you could
 	do some changes for it (again pretty selfexplaining).
 
 	Controls
@@ -127,8 +129,12 @@ GAME USAGE
 		Common
 		~~~~~~
 			Fullscreen/window mode: F1 (dangerous with multiple monitors)
-			Pause: P # not working yet
+			Save game: F2
+			Change splitting of screen: F3 (just in local
+				multiplayer game in a big arena)
+			Pause: P
 			Quit: Esc
+
 HAVE PROBLEM/FOUND BUG/ETC...
 =============================
 	If you found some bug or have feature request please fill it into: 
@@ -137,20 +143,22 @@ HAVE PROBLEM/FOUND BUG/ETC...
 	You need some help with install/etc... feel free to join us on our irc
 	channel which is #tuxanci on server irc.tuxportal.cz. If you don't like
 	irc you can can contact us on our forum also: http://czf.tuxanci.org.
+
 INFORMATIONS FOR TRANSLATORS
 ============================
 	So you want to help us translating our perfect game :] What should you
 	do is question you are asking i guess. It is pretty simple. We are using
-	gettext so you only have to download our .pot file from svn
-	<http://opensvn.csie.org/tuxanci_ng/po/tuxanci.pot> and translate every
-	line into your desired language. MSGID is orginal message and MSGSTR is
-	translated one. When you are done you rename tuxanci.pot to langcode.po
-	(cs.po). For translating is needed only some text editor (advanced are
-	kbabel, lokalize...) and some skills in your and english language. Final
-	product of your effort mail onto our mail (team<-at->tuxanci.org). Ah and
-	before I forget update some relevant informations into header of your .po
-	file, examples can be found in our svn too
-	<http://opensvn.csie.org/tuxanci_ng/po/>.
+	gettext so you only have to download our .pot file from git
+	<http://repo.or.cz/w/tuxanci.git?a=blob_plain;f=po/tuxanci.pot;hb=HEAD>
+	and translate every line into your desired language. MSGID is orginal
+	message and MSGSTR is translated one. When you are done you rename
+	tuxanci.pot to langcode.po (cs_CZ.po). For translating is needed only
+	some text editor (advanced are kbabel, lokalize...) and some skills
+	in your and english language. Final product of your effort mail onto our
+	mail (team<-at->tuxanci.org). Ah and before I forget update some
+	relevant informations into header of your .po file, examples can be
+	found in our git too <http://repo.or.cz/w/tuxanci.git?a=tree;f=po;hb=HEAD>.
+
 MORE
 ====
 	More informations you can find on our website: http://www.tuxanci.org/

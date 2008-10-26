@@ -8,7 +8,7 @@
 # -DNO_Audio=1 			# disable audio
 # -DDebug=1			# enable debug
 # -DCMAKE_C_FLAGS=-Wall		# modification for CFLAGS
-# -DNLS=1			# enable Gettext NLS
+# -DNLS=0			# disable Gettext NLS
 # -DApple=1			# build apple port
 # -DCMAKE_INSTALL_PREFIX=/bla/	# install prefix
 # -DCMAKE_DATA_PATH=/other/bla/	# install path for data
