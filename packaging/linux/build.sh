@@ -12,7 +12,6 @@ if [[ $1 == "--help" ]]; then
 	echo "usage: $0 -v version -a arch -r revision"
 	echo "-v 0.2.5 \"compile version 0.2.5\""
 	echo "-a i386 \"compile 32b ELF (64b for 64b ELF)\""
-	echo "-r 183 \"create packages from svn revision 183\""
 	echo "!if no version is specified svn version is created!"
 	echo "!if no arch is specified 64b is used!"
 	echo "!if no revision is specified HEAD is used!"
@@ -21,14 +20,13 @@ fi
 ###############################################################################
 # ARGUMENT PASSING
 ###############################################################################
-VERSION="svn"
+VERSION="dev"
 ARCH="amd64"
 SVN_REV=""
-while getopts v:a:r: arg ; do
+while getopts v:a: arg ; do
 	case $arg in
 		v) VERSION=${OPTARG};;
 		a) ARCH=${OPTARG};;
-		r) SVN_REV="-r ${OPTARG}";;
 	esac
 done
 ###############################################################################
@@ -36,9 +34,9 @@ done
 ###############################################################################
 APPNAME="tuxanci"
 GIT="git://repo.or.cz/tuxanci.git"
-BUNDLE_PREFIX="${HOME}"/tuxanci-bundle
+BUNDLE_PREFIX="${HOME}"/tmp/tuxanci-bundle
 LOG="${BUNDLE_PREFIX}"/linux.log
-SOURCE="${BUNDLE_PREFIX}"/"${APPNAME}"_source_"${VERSION}"
+SOURCE="${BUNDLE_PREFIX}"/"${APPNAME}-source-${VERSION}"
 D="${BUNDLE_PREFIX}"/"${APPNAME}"
 OPTIONS="client server"
 ERROR_MESSAGE="Check ${LOG}, cause i was unable to finish my stuff correctly!"
@@ -46,19 +44,20 @@ CMAKE_PARAMS="-DNLS=1 -DTUXANCI_VERSION=${VERSION} -DCMAKE_BUILD_TYPE=Release"
 ###############################################################################
 # PREPARING ENVIROMENT
 ###############################################################################
-mkdir -p "${BUNDLE_PREFIX}" || ( echo "I was unable to create working directory"; exit 1 )
+mkdir -p "${BUNDLE_PREFIX}" || { echo "I was unable to create working directory" && exit 1 ; }
 rm -rf "${BUNDLE_PREFIX}"/*
 cd "${BUNDLE_PREFIX}"
 touch "${LOG}" || ( echo "I was unable to create log file"; exit 1 )
 echo "" > "${LOG}"	# LOG CLEANUP
-echo "<Downloading files from SVN repository>"
+echo "<Downloading files from GIT repository>"
 echo "<******************************>"
-git export ${GIT} ${SVN_REV} ${SOURCE} >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
+git clone ${GIT} ${SOURCE} >> "${LOG}" || { echo "${ERROR_MESSAGE}" && exit 1 ; }
+rm -rf ${SOURCE}/.git
 rm -rf ${SOURCE}/packaging
 ###############################################################################
 # CREATE SOURCE PACKAGE
 ###############################################################################
-tar cjf "${APPNAME}"_source_"${VERSION}".tar.bz2 "${APPNAME}"_source_"${VERSION}"/
+tar cjf "${APPNAME}-source-${VERSION}".tar.bz2 "${APPNAME}-source-${VERSION}"/
 ###############################################################################
 # DEBIAN PACKAGE ENVIROMENT CREATION
 ###############################################################################
@@ -129,8 +128,8 @@ rm CMakeCache.txt || ( echo "I was unable to cleanup CMakeCache.txt"; exit 1; )
 make clean >> "${LOG}"
 cmake . ${CMAKE_PARAMS} >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
 make >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
-make install DESTDIR="${D}_${Y}_${VERSION}-${ARCH}/" >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
-cd "${D}"_"${Y}"_"${VERSION}"-"${ARCH}"/
+make install DESTDIR="${D}-${Y}-${VERSION}-${ARCH}/" >> "${LOG}" || ( echo "${ERROR_MESSAGE}"; exit 1 )
+cd "${D}"-"${Y}"-"${VERSION}"-"${ARCH}"/
 `which strip` --strip-unneeded lib/${APPNAME}-${VERSION}/* bin/* >> "${LOG}"
 done
 ###############################################################################
@@ -144,13 +143,13 @@ rm -rf "${SOURCE}"
 echo "<Creating tar.bz2 archives>"
 echo "<******************************>"
 for Y in ${OPTIONS} ; do
-	tar cjf "${APPNAME}"_"${Y}"_"${VERSION}"-"${ARCH}".tar.bz2 "${APPNAME}"_"${Y}"_${VERSION}-"${ARCH}"/*
+	tar cjf "${APPNAME}"-"${Y}"-"${VERSION}"-"${ARCH}".tar.bz2 "${APPNAME}"-"${Y}"-${VERSION}-"${ARCH}"/*
 done
 ###############################################################################
 # DESTRUCTION OF UNPACKED BINARIES
 ###############################################################################
 for Y in ${OPTIONS} ; do
-	rm -rf "${APPNAME}"_"${Y}"_${VERSION}-"${ARCH}"/
+	rm -rf "${APPNAME}"-"${Y}"-${VERSION}-"${ARCH}"/
 done
 ###############################################################################
 # SHOW WHAT HAVE WE DONE
