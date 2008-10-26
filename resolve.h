@@ -1,5 +1,7 @@
 /*
  *  (C) Copyright 2006 ZeXx86 (zexx86@gmail.com)
+ *  (C) Copyright 2007 ZeXx86 (zexx86@gmail.com)
+ *  (C) Copyright 2008 ZeXx86 (zexx86@gmail.com)
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -46,17 +48,18 @@ typedef struct client_context {
 	unsigned ip;
 } client_t;
 
-typedef struct {
+typedef struct response_header {
 	unsigned port;
 
 	/* for another use */
 	unsigned ip;
 } response_head;
 
-extern bool client_connected (unsigned int client);
-extern bool client_disconnected (client_t *client);
-extern bool init_resolve ();
-extern bool handler (client_t *client, char *buf, int size);
+
+extern unsigned client_connected (unsigned int client);
+extern unsigned client_disconnected (client_t *client);
+extern unsigned init_resolve ();
+extern unsigned handler (client_t *client, char *buf, int size);
 extern int server_resolve (unsigned ip, unsigned int port);
 
 #endif 

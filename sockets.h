@@ -1,5 +1,7 @@
 /*
  *  (C) Copyright 2006 ZeXx86 (zexx86@gmail.com)
+ *  (C) Copyright 2007 ZeXx86 (zexx86@gmail.com)
+ *  (C) Copyright 2008 ZeXx86 (zexx86@gmail.com)
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -26,7 +28,7 @@
 extern int send_to_socket (int id, char *data, unsigned len);
 extern int send_to_server (server_t* server, char *data);
 extern int send_to_server_len (server_t* server, char *data, unsigned len);
-extern bool init_sockets ();
-extern bool loop ();
+extern unsigned init_sockets ();
+extern unsigned loop ();
 
 #endif

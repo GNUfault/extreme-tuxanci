@@ -1,8 +1,8 @@
-CFLAGS= -m32 -O2 -Wall -lpthread
-CPP= g++
+CFLAGS= -O2 -Wall -lpthread
+CPP= gcc
 
-preklad: main.cpp
-	$(CPP) $(CFLAGS) -otuxanci-master main.cpp sockets.cpp resolve.cpp
+all: 
+	$(CPP) $(CFLAGS) -otuxanci-master main.c sockets.c resolve.c
 
 clean:
 	rm -f tuxanci-master
