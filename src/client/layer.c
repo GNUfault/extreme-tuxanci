@@ -72,9 +72,9 @@ addLayer(image_t * img, int x, int y, int px, int py, int w, int h, int player)
 	//here we are sure, that we want to insert it somewhere else than the begining
 	for (i = 0; i < listLayer->count; i ++) {
 		actual = getList(listLayer, i);
-		//if we are at the same layer, we apply insert sort in (y+h/2)
+		//if we are at the same layer, we apply insert sort in (y+h)
 		while ((actual->layer == new->layer)) {
-			if ((new->y + new->h / 2) < (actual->y + actual->h/2)) {
+			if ((new->y + new->h) < (actual->y + actual->h)) {
 				insList(listLayer, i, new);
 				return;
 			};
