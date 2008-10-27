@@ -31,17 +31,19 @@ void initLayer()
 }
 
 /*
- * Prida novu polozku do zoznamu vrstiev
- * *img - obrazok, ktory obsahuje polozka
- * x y w h - suradnca kam sa obrazok vykresli a jeho rozmery
- * px py pw ph - suradnica casti obrazka *img ktora sa ma zobrazit
- * layer - vrstva na ktorej sa zobrazi obrazok
+ * Add image to queue for rendering
+ * *img - image to be rendered
+ * x,y - coordinates where to draw the image
+ * w,h - width and height of rendered part of image
+ * px,py - coordinates of upper left corner of rendered part of image
+ * layer - on which layer to draw
+ *          (0 - under tuxanci | 1 - same as tuxanci | 2 - over tuxancami)
  */
 void
 addLayer(image_t * img, int x, int y, int px, int py, int w, int h, int player)
 {
 	layer_t *new;
-	layer_t *this;
+	layer_t *actual;
 	int i, j;
 
 	assert(img != NULL);
@@ -56,21 +58,44 @@ addLayer(image_t * img, int x, int y, int px, int py, int w, int h, int player)
 	new->layer = player;
 	new->image = img;
 
-	for (i = 0; i < listLayer->count; i++) {
-		this = (layer_t *) listLayer->list[i];
+	//first, we check if we should insert our image at the begining of the queue
+	if (listLayer->count == 0) {
+		addList(listLayer, new);
+		return;
+	};
 
-		if (this->layer == new->layer) {
-			for (j = i; j < listLayer->count; j++) {
-				this = (layer_t *) listLayer->list[j];
+	if (((layer_t *)listLayer->list[0])->layer > new->layer) {
+		insList(listLayer, 0, new);
+		return;
+	};
 
-				if (this->y + this->h > new->y + new->h) {
-					insList(listLayer, j, new);
-					return;
-				}
-			}
-		}
-	}
+	//here we are sure, that we want to insert it somewhere else than the begining
+	for (i = 0; i < listLayer->count; i ++) {
+		actual = getList(listLayer, i);
+		//if we are at the same layer, we apply insert sort in (y+h/2)
+		while ((actual->layer == new->layer)) {
+			if ((new->y + new->h / 2) < (actual->y + actual->h/2)) {
+				insList(listLayer, i, new);
+				return;
+			};
 
+			i ++;
+			if (i >= listLayer->count) break;
+			actual = getList(listLayer, i);
+
+			if (actual->layer > new->layer) {
+				insList(listLayer, i, new);
+				return;
+			};
+		};
+		if (i >= listLayer->count) break;
+
+		//we check if we are on layer, that is not present yet
+		if (actual->layer > new->layer) {
+			insList(listLayer, i, new);
+			return;
+		};
+	};
 	addList(listLayer, new);
 }
 
