@@ -320,7 +320,12 @@ void initArenaFile()
 	listArenaFile = newList();
 
 	p = loadDirector(PATH_ARENA);
-	//p = loadDirector( getHomeDirector() );
+
+	if (p==NULL)
+	{
+		fprintf(stderr, _("Director " PATH_ARENA " not found !\n"));
+		exit(-1);
+	}
 
 	for (i = 0; i < p->list->count; i++) {
 		char *line;
