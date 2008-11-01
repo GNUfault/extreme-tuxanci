@@ -117,7 +117,6 @@ int initSDL()
 
 	srand((unsigned) time(NULL));
 	isInterfaceInit = TRUE;
-	isSlowHack = FALSE;
 
 	return 0;
 }
@@ -194,31 +193,46 @@ static void action_esc()
 }
 */
 
-void activeSlowHack()
-{
-	isSlowHack = TRUE;
-}
-
-static void slowHackRoutine()
+int hack_slow()
 {
 	static time_t lastTime = 0;
+	static bool_t isSlowHack = FALSE;
+	time_t currentTime;
+
+	currentTime = getMyTime();
 
 	if( lastTime == 0 )
 	{
-		lastTime = getMyTime();
-		return;
+		lastTime = currentTime;
+		return 0;
 	}
 
-	if( getMyTime() - lastTime >= 50 )
+	//printf("DEBUG: time interval %d\n", currentTime - lastTime);
+
+	if( isSlowHack == FALSE && currentTime - lastTime >= 100 )
 	{
-		lastTime = 0;
-		isSlowHack = FALSE;
-		return;
+		printf("start slow hack (%d)\n", currentTime - lastTime);
+		isSlowHack = TRUE;
+		lastTime = getMyTime();
+		return 1;
 	}
 
-	//printf("SLOW HACK : %d\n", (getMyTime() - lastTime));
+	if( isSlowHack == TRUE && currentTime - lastTime >= 50 )
+	{
+		printf("stop slow hack (%d)\n", currentTime - lastTime);
+		isSlowHack = FALSE;
+		lastTime = getMyTime();
+		return 0;
+	}
+
+	if( isSlowHack == TRUE )
+	{
+		printf("hack time interval %d\n", currentTime - lastTime);
+	}
 
 	lastTime = getMyTime();
+
+	return isSlowHack;
 }
 
 int eventAction()
@@ -252,12 +266,11 @@ int eventAction()
 		case SDL_USEREVENT:
 			switch (event.user.code) {
 			case USR_EVT_TIMER:
-				if( isSlowHack )
+				if( hack_slow() )
 				{
-					slowHackRoutine();
 					break;
 				}
-	
+
 				drawScreen();
 				eventScreen();
 				eventHotKey();

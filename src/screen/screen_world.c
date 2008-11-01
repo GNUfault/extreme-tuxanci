@@ -497,8 +497,6 @@ void startWorld()
 	setGameType();
 	initChat();
 	prepareArena();
-
-	activeSlowHack(); // !!!
 }
 
 static void action_analyze(space_t * space, tux_t * tux, void *p)
