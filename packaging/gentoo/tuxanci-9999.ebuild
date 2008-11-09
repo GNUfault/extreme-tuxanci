@@ -4,7 +4,7 @@
 
 EAPI="2"
 
-inherit games cmake-utils git
+inherit cmake-utils git games
 
 DESCRIPTION="Tuxanci is first cushion shooter inspired by game Bulanci."
 HOMEPAGE="http://www.tuxanci.org/"
@@ -14,7 +14,7 @@ LICENSE="GPL-2"
 
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="alsa debug dedicated nls"
+IUSE="alsa debug dedicated nls opengl"
 # alsa is used only when building client
 
 RDEPEND="!dedicated? (
@@ -23,6 +23,10 @@ RDEPEND="!dedicated? (
 			>=media-libs/sdl-image-1.2.6-r1[png]
 			alsa? (
 				>=media-libs/sdl-mixer-1.2.7[vorbis]
+			)
+			opengl? (
+				media-libs/libsdl[opengl?]
+				virtual/opengl
 			)
 		)
 	dev-libs/zziplib[sdl]"
@@ -37,11 +41,13 @@ src_configure() {
 	use debug && mycmakeargs="${mycmakeargs} -DDebug=1"
 	use dedicated && mycmakeargs="${mycmakeargs} -DServer=1"
 	use nls && mycmakeargs="${mycmakeargs} -DNLS=1"
+	use opengl || mycmakeargs="${mycmakeargs} -DNO_OPENGL=1"
 	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=${GAMES_PREFIX}
 		-DCMAKE_DATA_PATH=${GAMES_DATADIR}
 		-DCMAKE_LOCALE_PATH=${GAMES_DATADIR_BASE}/locale/
 		-DCMAKE_DOC_PATH=${GAMES_DATADIR_BASE}/doc/${PF}
 		-DCMAKE_ETC_PATH=${GAMES_SYSCONFDIR} -DLIB_INSTALL_DIR=$(games_get_libdir)"
+
 	cmake-utils_src_configure
 }
 
