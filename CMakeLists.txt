@@ -17,6 +17,7 @@
 # -DCMAKE_DOC_PATH=/other/bla/doc/tuxanci-version/	# install path for doc
 # -DCMAKE_LOCALE_PATH=/other/bla	# install path for locale
 # -DCMAKE_FONT=/bla/font.ttf	# install path for locale
+# -DNO_OPENGL=1			# disable opengl
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
@@ -128,10 +129,12 @@ ENDIF ( Apple )
 MESSAGE ( STATUS "<Locating ZZIP library>" )
 MESSAGE ( STATUS "<******************************>" )
 FIND_PACKAGE ( ZZIP REQUIRED )
-MESSAGE ( STATUS "<Locating OpenGL stuff>" )
-MESSAGE ( STATUS "<******************************>" )
-FIND_PACKAGE ( OpenGL REQUIRED )
-FIND_PACKAGE ( GLU REQUIRED )
+IF ( NOT NO_OPENGL )
+	MESSAGE ( STATUS "<Locating OpenGL stuff>" )
+	MESSAGE ( STATUS "<******************************>" )
+	FIND_PACKAGE ( OpenGL REQUIRED )
+	FIND_PACKAGE ( GLU REQUIRED )
+ENDIF ( NOT NO_OPENGL )
 MESSAGE ( STATUS "<Locating SDL stuff>" )
 MESSAGE ( STATUS "<******************************>" )
 

@@ -6,13 +6,15 @@
 IF ( Server )
 	LINK_LIBRARIES (  ${ZZIP_LIBRARY} ${CMAKE_DL_LIBS} )
 ELSE ( Server )
+	IF ( NOT NO_OPENGL )
+		LINK_LIBRARIES ( ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} )
+	ENDIF ( NOT NO_OPENGL )
 	IF  ( NO_Audio )
 		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY}
-		${SDLTTF_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} )
+		${SDLTTF_LIBRARY} )
 	ELSE ( NO_Audio )
 		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY}
-		${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} ${OPENGL_gl_LIBRARY}
-		${OPENGL_glu_LIBRARY} )
+		${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} )
 	ENDIF ( NO_Audio )
 	LINK_LIBRARIES ( SDLmain )
 ENDIF ( Server )
@@ -90,6 +92,14 @@ ELSE ( NO_Audio )
 	INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
 ENDIF ( NO_Audio )
 ###############################################################################
+# OPENGL CHECK
+###############################################################################
+IF ( NOT NO_OPENGL )
+	MESSAGE ( STATUS "<Building with OPENGL as requested>" )
+	MESSAGE ( STATUS "<******************************>" )
+	ADD_DEFINITIONS ( -DSUPPORT_OPENGL )
+ENDIF ( NOT NO_OPENGL )
+###############################################################################
 # MODULES
 ###############################################################################
 ADD_SUBDIRECTORY ( modules )
@@ -101,7 +111,6 @@ IF ( Server )
 	MESSAGE ( STATUS "<******************************>" )
 	SET ( SRC_compile ${SRC_base} ${SRC_server} )
 	ADD_EXECUTABLE ( ${APPNAME} ${SRC_compile} )
-	ADD_SUBDIRECTORY ( downserver )
 ENDIF ( Server )
 ###############################################################################
 # CLIENT COMPILATION
