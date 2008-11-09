@@ -61,10 +61,6 @@ void drawFont(char *string, int x, int y, int r, int g, int b)
 		image = newImage(text);
 		drawImage(image, x, y, 0, 0, image->w, image->h);
 		destroyImage(image);
-
-#ifdef SUPPORT_OPENGL
-		SDL_FreeSurface(text); // we don't need text anymore
-#endif
 	};
 }
 
@@ -107,10 +103,6 @@ void drawFontMaxSize(char *s, int x, int y, int w, int h, int r, int g, int b)
 	//posibly broken
 	drawImage(i, x, y, 0, 0, my_w, my_h);
 	destroyImage(i);
-
-#ifdef SUPPORT_OPENGL
-		SDL_FreeSurface(text); // we don't need text anymore
-#endif
 }
 
 /*

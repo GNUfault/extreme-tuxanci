@@ -147,6 +147,8 @@ image_t* newImage(SDL_Surface *surface)
 
 	new->tex_id = tid;
 
+	SDL_FreeSurface(surface);
+
 	return new;
 }
 #endif
