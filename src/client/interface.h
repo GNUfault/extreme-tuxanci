@@ -12,6 +12,10 @@
 #    include <SDL_thread.h>
 #    include "main.h"
 
+#ifdef SUPPORT_OPENGL
+#include <SDL_opengl.h>
+#endif
+
 /*
 #include <SDL_net.h>
 */

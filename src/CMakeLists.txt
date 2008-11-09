@@ -7,9 +7,12 @@ IF ( Server )
 	LINK_LIBRARIES (  ${ZZIP_LIBRARY} ${CMAKE_DL_LIBS} )
 ELSE ( Server )
 	IF  ( NO_Audio )
-		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} )
+		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY}
+		${SDLTTF_LIBRARY} ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} )
 	ELSE ( NO_Audio )
-		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} )
+		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY}
+		${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} ${OPENGL_gl_LIBRARY}
+		${OPENGL_glu_LIBRARY} )
 	ENDIF ( NO_Audio )
 	LINK_LIBRARIES ( SDLmain )
 ENDIF ( Server )
@@ -98,6 +101,7 @@ IF ( Server )
 	MESSAGE ( STATUS "<******************************>" )
 	SET ( SRC_compile ${SRC_base} ${SRC_server} )
 	ADD_EXECUTABLE ( ${APPNAME} ${SRC_compile} )
+	ADD_SUBDIRECTORY ( downserver )
 ENDIF ( Server )
 ###############################################################################
 # CLIENT COMPILATION

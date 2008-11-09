@@ -17,6 +17,9 @@
 #    include "string_length.h"
 #    include "path.h"
 
+
+//#define SUPPORT_OPENGL
+
 extern char *getParam(char *s);
 extern char *getParamElse(char *s1, char *s2);
 extern bool_t isParamFlag(char *s);

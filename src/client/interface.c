@@ -17,7 +17,13 @@ static SDL_Surface *screen;
 static SDL_TimerID timer;
 
 // window flags
+#ifndef SUPPORT_OPENGL
 static Uint32 g_win_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT;
+#endif
+
+#ifdef SUPPORT_OPENGL
+static Uint32 g_win_flags = SDL_OPENGL;
+#endif
 
 static bool_t isInterfaceInit = FALSE;
 
@@ -76,6 +82,42 @@ void hotkey_screen()
 	}
 }
 
+#ifdef SUPPORT_OPENGL
+/*
+ * Sets video mode and sets up OpenGL for this change
+ */
+SDL_Surface * SetVideoMode(int width, int height, int bpp, Uint32 flags)
+{
+	SDL_Surface *rval = 0;
+
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	rval = SDL_SetVideoMode(width, height, bpp, flags);
+
+	glClearColor(0.0f, 0.0f, 0.0f, 0.5f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glClearDepth(1.0);
+	glDisable(GL_DEPTH_TEST);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glOrtho(0.0f,width, height,0.0f,-1.0f,1.0f);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	glEnable(GL_TEXTURE_2D);
+
+	return rval;
+}
+#endif
+
 int initSDL()
 {
 #ifdef DEBUG
@@ -87,17 +129,14 @@ int initSDL()
 		SDL_Quit();
 		return -1;
 	}
-	// initialization of SDL
-	//screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
-	screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 
-/*
-        my_surface = SDL_CreateRGBSurface(screen->flags, WINDOW_SIZE_X, WINDOW_SIZE_Y,
-		screen->format->BitsPerPixel,
-		screen->format->Rmask,	screen->format->Gmask,
-		screen->format->Bmask,	screen->format->Amask);
-*/
-	//memset(my_surface->pixels, 128, 200);
+#ifndef SUPPORT_OPENGL
+	screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
+#endif
+
+#ifdef SUPPORT_OPENGL
+	screen = SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
+#endif
 
 	if (screen == NULL) {
 		fprintf(stderr, "%s\n", SDL_GetError());
@@ -129,12 +168,13 @@ SDL_Surface *getSDL_Screen()
 
 void interfaceRefresh()
 {
-	//SDL_BlitSurface(my_surface, NULL, screen, NULL);
-	//SDL_UpdateRect(screen, 0, 0, screen->w, screen->h);
-
-	//drawImage(my_surface, 200, 100, 0, 0, 200, 200);
+#ifndef SUPPORT_OPENGL
 	SDL_Flip(screen);
-	//SDL_UpdateRect(screen, 400, 0, 400, 600);
+#endif
+
+#ifdef SUPPORT_OPENGL
+	SDL_GL_SwapBuffers();
+#endif
 }
 
 void getMousePosition(int *x, int *y)
@@ -177,22 +217,6 @@ void printPressAnyKey()
 }
 
 
-/*
-static void action_esc()
-{
-	if( strcmp(getScreen(), "world") == 0 )
-	{
-		setScreen("analyze");
-	}
-
-	if( strcmp(getScreen(), "mainMenu") == 0 )
-	{
-		quit();
-	}
-
-}
-*/
-
 int hack_slow()
 {
 	static time_t lastTime = 0;
@@ -211,7 +235,7 @@ int hack_slow()
 
 	if( isSlowHack == FALSE && currentTime - lastTime >= 100 )
 	{
-		printf("start slow hack (%d)\n", currentTime - lastTime);
+		//printf("start slow hack (%d)\n", currentTime - lastTime);
 		isSlowHack = TRUE;
 		lastTime = getMyTime();
 		return 1;
@@ -219,7 +243,7 @@ int hack_slow()
 
 	if( isSlowHack == TRUE && currentTime - lastTime >= 50 )
 	{
-		printf("stop slow hack (%d)\n", currentTime - lastTime);
+		//printf("stop slow hack (%d)\n", currentTime - lastTime);
 		isSlowHack = FALSE;
 		lastTime = getMyTime();
 		return 0;
@@ -227,7 +251,7 @@ int hack_slow()
 
 	if( isSlowHack == TRUE )
 	{
-		printf("hack time interval %d\n", currentTime - lastTime);
+		//printf("hack time interval %d\n", currentTime - lastTime);
 	}
 
 	lastTime = getMyTime();
@@ -244,17 +268,6 @@ int eventAction()
 		switch (event.type) {
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
-/*
-				case SDLK_ESCAPE:
-					action_esc();
-					return 0;
-				break;
-*/
-/*
-				case SDLK_F1:
-					if(!toggleFullscreen())return 0;
-				break;
-*/
 			default:
 				//neni potreba vyuzivat frontu stale
 				if (keyboardBufferEnabled == TRUE)

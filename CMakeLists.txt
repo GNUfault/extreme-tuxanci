@@ -123,9 +123,17 @@ IF ( Apple )
 	ADD_DEFINITIONS ( -DAPPLE )
 ENDIF ( Apple )
 ###############################################################################
-# SDL SEARCH
+# LIBS SEARCH
 ###############################################################################
+MESSAGE ( STATUS "<Locating ZZIP library>" )
+MESSAGE ( STATUS "<******************************>" )
 FIND_PACKAGE ( ZZIP REQUIRED )
+MESSAGE ( STATUS "<Locating OpenGL stuff>" )
+MESSAGE ( STATUS "<******************************>" )
+FIND_PACKAGE ( OpenGL REQUIRED )
+FIND_PACKAGE ( GLU REQUIRED )
+MESSAGE ( STATUS "<Locating SDL stuff>" )
+MESSAGE ( STATUS "<******************************>" )
 
 IF ( NOT Server )
 	FIND_PACKAGE ( SDL REQUIRED )

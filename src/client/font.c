@@ -1,6 +1,7 @@
 #include "main.h"
 #include "interface.h"
 #include "font.h"
+#include "image.h"
 
 static TTF_Font *g_font;
 static int fontSize;
@@ -41,43 +42,44 @@ void initFont(char *file, int size)
 }
 
 /*
- * Zobrazi text *s na suradnicu x y s farbou RGB
+ * Zobrazi text *string na suradnicu x y s farbou RGB
  */
-void drawFont(char *s, int x, int y, int r, int g, int b)
+void drawFont(char *string, int x, int y, int r, int g, int b)
 {
-	SDL_Rect dst_rect;
 	SDL_Surface *text;
-	SDL_Surface *p;
-	SDL_Color farba_pisma = { r, g, b, 0 };
+	image_t *image;
+	SDL_Color font_color = {r, g, b, SDL_ALPHA_OPAQUE};
 
-	//printf("drawFont %s\n", s);
 
-	assert(s != NULL);
+	assert( string != NULL );
 
-	p = getSDL_Screen();
 
-	text = TTF_RenderUTF8_Blended(g_font, s, farba_pisma);
+	text = TTF_RenderUTF8_Blended(g_font, string, font_color);
 
-	dst_rect.x = x;
-	dst_rect.y = y;
+	// because if string=="" TTF_RenderUTF8_Blended returns NULL
+	if( text != NULL ){
+		image = newImage(text);
+		drawImage(image, x, y, 0, 0, image->w, image->h);
+		destroyImage(image);
 
-	SDL_BlitSurface(text, NULL, p, &dst_rect);
-	SDL_FreeSurface(text);
+#ifdef SUPPORT_OPENGL
+		SDL_FreeSurface(text); // we don't need text anymore
+#endif
+	};
 }
 
 void drawFontMaxSize(char *s, int x, int y, int w, int h, int r, int g, int b)
 {
 	SDL_Rect src_rect, dst_rect;
 	SDL_Surface *text;
-	SDL_Surface *p;
-	SDL_Color farba_pisma = { r, g, b, 0 };
+	image_t *i;
+	SDL_Color font_color = {r, g, b, SDL_ALPHA_OPAQUE};
 	int my_w, my_h;
 
 	assert(s != NULL);
 
-	p = getSDL_Screen();
 
-	text = TTF_RenderUTF8_Blended(g_font, s, farba_pisma);
+	text = TTF_RenderUTF8_Blended(g_font, s, font_color);
 
 
 	my_w = text->w;
@@ -100,8 +102,15 @@ void drawFontMaxSize(char *s, int x, int y, int w, int h, int r, int g, int b)
 	dst_rect.x = x;
 	dst_rect.y = y;
 
-	SDL_BlitSurface(text, &src_rect, p, &dst_rect);
-	SDL_FreeSurface(text);
+	i = newImage(text);
+
+	//posibly broken
+	drawImage(i, x, y, 0, 0, my_w, my_h);
+	destroyImage(i);
+
+#ifdef SUPPORT_OPENGL
+		SDL_FreeSurface(text); // we don't need text anymore
+#endif
 }
 
 /*

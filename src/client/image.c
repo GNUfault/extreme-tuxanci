@@ -65,6 +65,8 @@ static SDL_Surface *loadImage(const char *filename, int alpha)
 	return ret;
 }
 
+
+#ifndef SUPPORT_OPENGL
 image_t *newImage(SDL_Surface * surface)
 {
 	image_t *new;
@@ -78,11 +80,89 @@ image_t *newImage(SDL_Surface * surface)
 
 	return new;
 }
+#endif
 
-static void destroyImage(image_t * p)
+#ifdef SUPPORT_OPENGL
+/*
+ * returns closest bigger power of 2 to i
+ */
+unsigned int closestpoweroftwo(unsigned int i)
+{
+	int p;
+	p=0;
+	while(i){
+		i=i>>1;
+		p++;
+	}
+	return 1<<(p-0);
+}
+
+/* convert from SDL_Surface to image_t
+ * WARNING: newImage is indestructive to surface, caller is responsible for freeing surface
+ * surface is not needed for image_t after execution of newImage
+ */
+
+image_t* newImage(SDL_Surface *surface)
+{
+	image_t *new;
+	Uint32 rmask, gmask, bmask, amask;
+	SDL_Surface *sdl_rgba_surface;
+	unsigned int bpp;
+
+	//it is unoptimal to blit to buffer surface before actual loading to opengl texture but it is safer and simpler to implement
+	//it is unoptimal to always use RGBA texture
+
+	// we set properties of our buffer sdl_rgba_surface
+	rmask = 0x000000ff;
+	gmask = 0x0000ff00;
+	bmask = 0x00ff0000;
+	amask = 0xff000000;
+	bpp = 32; /*bits per pixel*/
+
+	assert(surface != NULL);
+
+	new = malloc(sizeof(image_t));
+	new->w = surface->w;
+	new->h = surface->h;
+
+	//because some older hw is really slow when using textures with width and height which is not a power of two
+	new->tw = closestpoweroftwo(new->w);
+	new->th = closestpoweroftwo(new->h);
+
+	sdl_rgba_surface = SDL_CreateRGBSurface( SDL_SWSURFACE, new->tw, new->th, bpp,  rmask, gmask, bmask, amask);
+
+	SDL_SetAlpha(surface, 0, SDL_ALPHA_OPAQUE); // we unset SDL_SRCALPHA to preserve alpha channel of original image
+	SDL_BlitSurface(surface, 0, sdl_rgba_surface, 0);
+
+	SDL_LockSurface(sdl_rgba_surface); // we ensure that we can read pixels from sdl_rgba_surface
+
+	GLuint tid;
+	glGenTextures(1, &tid); //we ask for free texture id
+	glBindTexture(GL_TEXTURE_2D, tid);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // scale linearly when image bigger than texture
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // scale linearly when image smalled than texture
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, new->tw, new->th, 0, GL_RGBA, GL_UNSIGNED_BYTE, sdl_rgba_surface->pixels);
+	SDL_UnlockSurface(sdl_rgba_surface);
+	SDL_FreeSurface(sdl_rgba_surface);
+
+	new->tex_id = tid;
+
+	return new;
+}
+#endif
+
+void destroyImage(image_t * p)
 {
 	assert(p != NULL);
+
+#ifndef SUPPORT_OPENGL
 	SDL_FreeSurface((SDL_Surface *) p->image);
+#endif
+
+#ifdef SUPPORT_OPENGL
+	glDeleteTextures(1, &p->tex_id);
+#endif
+
 	free(p);
 }
 
@@ -138,6 +218,7 @@ void delAllImageInGroup(char *group)
 	delAllItemFromStorage(listStorage, group, destroyImage);
 }
 
+#ifndef SUPPORT_OPENGL
 void drawImage(image_t * p, int x, int y, int px, int py, int w, int h)
 {
 	static SDL_Surface *screen = NULL;
@@ -157,6 +238,55 @@ void drawImage(image_t * p, int x, int y, int px, int py, int w, int h)
 
 	SDL_BlitSurface(p->image, &src_rect, screen, &dst_rect);
 }
+#endif
+
+#ifdef SUPPORT_OPENGL
+/*
+ * Draws image on screen at [x,y], with width w and height h, top-left corner on image is at [px,py]
+ */
+void drawImage(image_t *image, int x,int y, int px, int py, int w, int h)
+{
+	/* x -coordinate of left border xx- coordinate of right border,
+	 * y -coordinate of top border yy- coordinate of bottom border,
+	 * t_ texture space d_ screen space,
+	 */
+	float t_x, t_y, t_xx, t_yy;
+	float d_x, d_y, d_xx, d_yy;
+
+	// screen space
+	d_x = x;
+	d_y = y;
+	d_xx = x+w;
+	d_yy = y+h;
+
+	// texture space (remember that texture space is from 0.0  to 1.0)
+	t_x = px/(float)image->tw;
+	t_y = py/(float)image->th;
+	t_xx = (px+w)/(float)image->tw;
+	t_yy = (py+h)/(float)image->th;
+
+	glBindTexture(GL_TEXTURE_2D, image->tex_id);
+
+	// 2--4
+	// |\ |
+	// | \|
+	// 1--3
+	glBegin(GL_TRIANGLE_STRIP);
+		//1
+		glTexCoord2f(t_x,t_yy);
+		glVertex2f(d_x, d_yy);
+		//2
+		glTexCoord2f(t_x, t_y);
+		glVertex2f(d_x, d_y);
+		//3
+		glTexCoord2f(t_xx, t_yy);
+		glVertex2f(d_xx, d_yy);
+		//4
+		glTexCoord2f(t_xx,t_y);
+		glVertex2f(d_xx, d_y);
+	glEnd();
+}
+#endif
 
 /*
  * Odstrani zoznam obrazkov z pamate
