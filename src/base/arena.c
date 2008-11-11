@@ -35,7 +35,7 @@ static int isBigArena(arena_t * arena)
 static int isTuxNear(tux_t * tux1, tux_t * tux2)
 {
 	if (abs(tux1->x - tux2->x) < WINDOW_SIZE_X &&
-		abs(tux1->y - tux2->y) < WINDOW_SIZE_Y) {
+	    abs(tux1->y - tux2->y) < WINDOW_SIZE_Y) {
 		return 1;
 	}
 
@@ -112,10 +112,8 @@ arena_t *newArena(int w, int h)
 	}
 
 	new->spaceTux = newSpace(w, h, zone_w, zone_h, getStatusTux, setStatusTux);
-	new->spaceItem =
-		newSpace(w, h, zone_w, zone_h, getStatusItem, setStatusItem);
-	new->spaceShot =
-		newSpace(w, h, zone_w, zone_h, getStatusShot, setStatusShot);
+	new->spaceItem = newSpace(w, h, zone_w, zone_h, getStatusItem, setStatusItem);
+	new->spaceShot = newSpace(w, h, zone_w, zone_h, getStatusShot, setStatusShot);
 
 	new->countRound = 0;
 	new->max_countRound = 0;
@@ -137,10 +135,13 @@ int isFreeSpace(arena_t * arena, int x, int y, int w, int h)
 
 	if (isConflictWithObjectFromSpace(arena->spaceTux, x, y, w, h))
 		return 0;
+
 	if (isConflictWithObjectFromSpace(arena->spaceShot, x, y, w, h))
 		return 0;
+
 	if (isConflictWithObjectFromSpace(arena->spaceItem, x, y, w, h))
 		return 0;
+
 	if (isConflictWithObjectFromSpace(arena->spaceShot, x, y, w, h))
 		return 0;
 
@@ -167,9 +168,7 @@ void findFreeSpace(arena_t * arena, int *x, int *y, int w, int h)
 	*y = z_y;
 }
 
-void
-getCenterScreen(int *screen_x, int *screen_y, int x, int y, int screen_size_x,
-				int screen_size_y)
+void getCenterScreen(int *screen_x, int *screen_y, int x, int y, int screen_size_x, int screen_size_y)
 {
 	arena_t *arena;
 
@@ -204,23 +203,20 @@ static void drawBackground(arena_t * arena, int screen_x, int screen_y)
 		int i, j;
 
 		for (i = screen_y / arena->background->h;
-			 i <=
-			 screen_y / arena->background->h +
-			 WINDOW_SIZE_Y / arena->background->h + 1; i++) {
+		     i <= screen_y / arena->background->h + WINDOW_SIZE_Y / arena->background->h + 1; i++) {
+
 			for (j = screen_x / arena->background->w;
-				 j <=
-				 screen_x / arena->background->w +
-				 WINDOW_SIZE_X / arena->background->w + 1; j++) {
+			     j <= screen_x / arena->background->w + WINDOW_SIZE_X / arena->background->w + 1; j++) {
+
 				addLayer(arena->background, j * arena->background->w,
-						 i * arena->background->h, 0, 0, arena->background->w,
-						 arena->background->h, -100);
+					 i * arena->background->h, 0, 0, arena->background->w,
+					 arena->background->h, -100);
 
 				//count++;
 			}
 		}
 	} else {
-		addLayer(arena->background,
-				 0, 0, 0, 0, arena->background->w, arena->background->h, -100);
+		addLayer(arena->background, 0, 0, 0, 0, arena->background->w, arena->background->h, -100);
 	}
 }
 
@@ -241,57 +237,46 @@ static void action_drawShot(space_t * space, shot_t * shot, void *p)
 
 static void drawObjects(arena_t * arena, int screen_x, int screen_y)
 {
-	actionSpaceFromLocation(arena->spaceTux, action_drawTux, NULL,
-							screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
-
-	actionSpaceFromLocation(arena->spaceItem, action_drawItem, NULL,
-							screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
-
-	actionSpaceFromLocation(arena->spaceShot, action_drawShot, NULL,
-							screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+	actionSpaceFromLocation(arena->spaceTux, action_drawTux, NULL, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+	actionSpaceFromLocation(arena->spaceItem, action_drawItem, NULL, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+	actionSpaceFromLocation(arena->spaceShot, action_drawShot, NULL, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 	drawModule(screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 }
 
-static void
-drawSplitArenaForTux(arena_t * arena, tux_t * tux, int location_x,
-					 int location_y)
+static void drawSplitArenaForTux(arena_t * arena, tux_t * tux, int location_x, int location_y)
 {
 	int screen_x, screen_y;
 
 	switch (splitType) {
-	case SCREEN_SPLIT_HORIZONTAL:
-		getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X,
-						WINDOW_SIZE_Y / 2);
-		break;
-	case SCREEN_SPLIT_VERTICAL:
-		getCenterScreen(&screen_x, &screen_y, tux->x, tux->y,
-						WINDOW_SIZE_X / 2, WINDOW_SIZE_Y);
-		break;
-	default:
-		screen_x = -1;
-		screen_y = -1;
-		assert(!"stupd error ");
-		break;
+		case SCREEN_SPLIT_HORIZONTAL:
+			getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X, WINDOW_SIZE_Y / 2);
+			break;
+		case SCREEN_SPLIT_VERTICAL:
+			getCenterScreen(&screen_x, &screen_y, tux->x, tux->y, WINDOW_SIZE_X / 2, WINDOW_SIZE_Y);
+			break;
+		default:
+			screen_x = -1;
+			screen_y = -1;
+			assert(!"stupd error ");
+			break;
 	}
 
 	drawBackground(arena, screen_x, screen_y);
 	drawObjects(arena, screen_x, screen_y);
 
 	switch (splitType) {
-	case SCREEN_SPLIT_HORIZONTAL:
-		drawLayerSplit(location_x, location_y, screen_x, screen_y,
-					   WINDOW_SIZE_X, WINDOW_SIZE_Y / 2);
-		break;
-	case SCREEN_SPLIT_VERTICAL:
-		drawLayerSplit(location_x, location_y, screen_x, screen_y,
-					   WINDOW_SIZE_X / 2, WINDOW_SIZE_Y);
-		break;
-	default:
-		screen_x = -1;
-		screen_y = -1;
-		assert(!"stupd error ");
-		break;
+		case SCREEN_SPLIT_HORIZONTAL:
+			drawLayerSplit(location_x, location_y, screen_x, screen_y, WINDOW_SIZE_X, WINDOW_SIZE_Y / 2);
+			break;
+		case SCREEN_SPLIT_VERTICAL:
+			drawLayerSplit(location_x, location_y, screen_x, screen_y, WINDOW_SIZE_X / 2, WINDOW_SIZE_Y);
+			break;
+		default:
+			screen_x = -1;
+			screen_y = -1;
+			assert(!"stupd error ");
+			break;
 	}
 }
 
@@ -303,12 +288,12 @@ void drawSplitArena(arena_t * arena)
 
 	if (tux != NULL) {
 		switch (splitType) {
-		case SCREEN_SPLIT_HORIZONTAL:
-			drawSplitArenaForTux(arena, tux, 0, WINDOW_SIZE_Y / 2);
-			break;
-		case SCREEN_SPLIT_VERTICAL:
-			drawSplitArenaForTux(arena, tux, WINDOW_SIZE_X / 2, 0);
-			break;
+			case SCREEN_SPLIT_HORIZONTAL:
+				drawSplitArenaForTux(arena, tux, 0, WINDOW_SIZE_Y / 2);
+				break;
+			case SCREEN_SPLIT_VERTICAL:
+				drawSplitArenaForTux(arena, tux, WINDOW_SIZE_X / 2, 0);
+				break;
 		}
 	}
 
@@ -351,7 +336,7 @@ void drawSimpleArena(arena_t * arena)
 void drawArena(arena_t * arena)
 {
 	if (isBigArena(arena) &&
-		getNetTypeGame() == NET_GAME_TYPE_NONE && !isSettingAI()) {
+	    getNetTypeGame() == NET_GAME_TYPE_NONE && !isSettingAI()) {
 		tux_t *tux1;
 		tux_t *tux2;
 
@@ -359,8 +344,7 @@ void drawArena(arena_t * arena)
 		tux2 = getControlTux(TUX_CONTROL_KEYBOARD_LEFT);
 
 		if (isTuxNear(tux1, tux2)) {
-			drawCenterArena(arena, (tux1->x + tux2->x) / 2,
-							(tux1->y + tux2->y) / 2);
+			drawCenterArena(arena, (tux1->x + tux2->x) / 2, (tux1->y + tux2->y) / 2);
 		} else {
 			drawSplitArena(arena);
 		}

@@ -84,8 +84,10 @@ char *getString(int n)
 int *newInt(int x)
 {
 	int *new;
+
 	new = malloc(sizeof(int));
 	*new = x;
+
 	return new;
 }
 
@@ -110,9 +112,9 @@ int isFillPath(const char *path)
 	assert(path != NULL);
 
 #ifndef __WIN32__
-	if (path[0] == '/')			// for Unix-like systems ;)
+	if (path[0] == '/')	// for Unix-like systems ;)
 #else
-	if (path[1] == ':')			// for Windows-like systems ;)
+	if (path[1] == ':')	// for Windows-like systems ;)
 #endif
 	{
 		return 1;

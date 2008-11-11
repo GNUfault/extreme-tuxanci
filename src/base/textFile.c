@@ -13,6 +13,7 @@ textFile_t *newTextFile(char *s)
 {
 	textFile_t *new;
 	char path[STR_PATH_SIZE];
+
 	assert(s != NULL);
 
 	if (isFillPath(s)) {
@@ -45,6 +46,7 @@ static void createLine(list_t * list, char *p, int len)
 
 	do {
 		end_line = memchr(begin_line, '\n', len);
+
 		if (end_line == NULL)
 			break;
 
@@ -126,9 +128,11 @@ void saveTextFile(textFile_t * p)
 {
 	int i;
 	FILE *file;
+
 	assert(p != NULL);
 
 	file = fopen(p->file, "wb");
+
 	for (i = 0; i < p->text->count; i++) {
 		fprintf(file, "%s\n", (char *) p->text->list[i]);
 	}

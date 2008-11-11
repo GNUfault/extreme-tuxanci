@@ -71,10 +71,13 @@ static void addMsgAllClientSeesTux(char *msg, tux_t * tux, int type, int id)
 
 	if (x < 0)
 		x = 0;
+
 	if (y < 0)
 		y = 0;
+
 	if (w + x >= arena->w)
 		w = arena->w - (x + 1);
+
 	if (h + y >= arena->h)
 		h = arena->h - (y + 1);
 
@@ -108,34 +111,32 @@ void protoSendClient(int type, client_t * client, char *msg, int type2, int id)
 	assert(msg != NULL);
 
 	switch (type) {
-	case PROTO_SEND_ONE:
-		assert(client != NULL);
-		addMsgClient(client, msg, type2, id);
-		break;
-	case PROTO_SEND_ALL:
-		assert(client == NULL);
-		addMsgAllClient(msg, type2, id);
-		break;
-	case PROTO_SEND_BUT:
-		assert(client != NULL);
-		addMsgAllClientBut(msg, client, type2, id);
-		break;
-	case PROTO_SEND_ALL_SEES_TUX:
-#ifndef PUBLIC_SERVER
-		if (client != NULL) {
+		case PROTO_SEND_ONE:
+			assert(client != NULL);
+			addMsgClient(client, msg, type2, id);
+			break;
+		case PROTO_SEND_ALL:
+			assert(client == NULL);
+			addMsgAllClient(msg, type2, id);
+			break;
+		case PROTO_SEND_BUT:
+			assert(client != NULL);
+			addMsgAllClientBut(msg, client, type2, id);
+			break;
+		case PROTO_SEND_ALL_SEES_TUX:
+	#ifndef PUBLIC_SERVER
+			if (client != NULL) {
+				addMsgAllClientSeesTux(msg, client->tux, type2, id);
+			} else {
+				addMsgAllClientSeesTux(msg, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT), type2, id);
+			}
+	#endif
+	#ifdef PUBLIC_SERVER
 			addMsgAllClientSeesTux(msg, client->tux, type2, id);
-		} else {
-			addMsgAllClientSeesTux(msg,
-								   getControlTux(TUX_CONTROL_KEYBOARD_RIGHT),
-								   type2, id);
-		}
-#endif
-#ifdef PUBLIC_SERVER
-		addMsgAllClientSeesTux(msg, client->tux, type2, id);
-#endif
-		break;
-	default:
-		assert(!_("Type variable has a really wierd value!"));
-		break;
+	#endif
+			break;
+		default:
+			assert(!_("Type variable has a really wierd value!"));
+			break;
 	}
 }

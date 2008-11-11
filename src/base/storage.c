@@ -29,6 +29,7 @@ static storage_item_t *newStorageItem(char *group, char *name, void *data)
 	new->name = strdup(name);
 	new->group = strdup(group);
 	new->data = data;
+
 	return new;
 }
 
@@ -38,6 +39,7 @@ static void destroyStorageItem(storage_item_t * p, void *f)
 
 	assert(p != NULL);
 	assert(f != NULL);
+
 	fce = f;
 	fce(p->data);
 	free(p->name);
@@ -50,6 +52,7 @@ void addItemToStorage(list_t * list, char *group, char *name, void *data)
 	assert(list != NULL);
 	assert(group != NULL);
 	assert(name != NULL);
+
 	addList(list, newStorageItem(group, name, data));
 }
 
@@ -61,11 +64,14 @@ void *getItemFromStorage(list_t * list, char *group, char *name)
 	assert(list != NULL);
 	assert(group != NULL);
 	assert(name != NULL);
+
 	for (i = 0; i < list->count; i++) {
 		this = (storage_item_t *) list->list[i];
+
 		if (strcmp(group, this->group) == 0 && strcmp(name, this->name) == 0)
 			return this->data;
 	}
+
 #ifdef DEBUG
 	printf(_("%s %s was not found in storage!\n"), group, name);
 #endif
@@ -80,14 +86,17 @@ void delItemFromStorage(list_t * list, char *group, char *name, void *f)
 	assert(list != NULL);
 	assert(group != NULL);
 	assert(name != NULL);
+
 	for (i = 0; i < list->count; i++) {
 		this = (storage_item_t *) list->list[i];
+
 		if (strcmp(group, this->group) == 0 && strcmp(name, this->name) == 0) {
 			destroyStorageItem(this, f);
 			delList(list, i);
 			return;
 		}
 	}
+
 	return;
 }
 
@@ -101,6 +110,7 @@ void delAllItemFromStorage(list_t * list, char *group, void *f)
 
 	for (i = 0; i < list->count; i++) {
 		this = (storage_item_t *) list->list[i];
+
 		if (strcmp(group, this->group) == 0) {
 			destroyStorageItem(this, f);
 			delList(list, i);
@@ -116,9 +126,12 @@ void destroyStorage(list_t * p, void *f)
 
 	assert(p != NULL);
 	assert(f != NULL);
+
 	for (i = 0; i < p->count; i++) {
 		this = (storage_item_t *) p->list[i];
+
 		destroyStorageItem(this, f);
 	}
+
 	destroyList(p);
 }

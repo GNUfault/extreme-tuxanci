@@ -13,6 +13,7 @@ list_t *newList()
 
 	new = malloc(sizeof(list_t));
 	memset(new, 0, sizeof(list_t));
+
 	return new;
 }
 
@@ -23,6 +24,7 @@ list_t *cloneList(list_t * p)
 	assert(p != NULL);
 	new = malloc(sizeof(list_t));
 	memcpy(new, p, sizeof(list_t));
+
 	if (p->list != NULL) {
 		new->list = malloc(p->alloc * sizeof(void *));
 		memcpy(new->list, p->list, p->alloc * sizeof(void *));
@@ -40,8 +42,10 @@ list_t *cloneListItem(list_t * p, void *f)
 	assert(f != NULL);
 	new = cloneList(p);
 	fce = f;
+
 	for (i = 0; i < p->count; i++)
 		new->list[i] = fce(p->list[i]);
+
 	return new;
 }
 
@@ -85,8 +89,7 @@ void insList(list_t * p, int n, void *item)
 	assert(p != NULL);
 	addList(p, NULL);			// :)
 	assert(n >= 0 || n < p->count);
-	memmove(p->list + n + 1, p->list + n,
-			((p->count - 1) - n) * sizeof(void *));
+	memmove(p->list + n + 1, p->list + n, ((p->count - 1) - n) * sizeof(void *));
 	p->list[n] = item;
 }
 
@@ -102,9 +105,11 @@ int searchListItem(list_t * p, void *n)
 	int i;
 
 	assert(p != NULL);
+
 	for (i = 0; i < p->count; i++)
 		if (p->list[i] == n)
 			return i;
+
 	return -1;
 }
 
@@ -112,9 +117,10 @@ void delList(list_t * p, int n)
 {
 	assert(p != NULL);
 	assert(n >= 0 || n < p->count);
-	memmove(p->list + n, p->list + n + 1,
-			((p->count - 1) - n) * sizeof(void *));
+
+	memmove(p->list + n, p->list + n + 1, ((p->count - 1) - n) * sizeof(void *));
 	p->count--;
+
 	if (p->count + LIST_ALLOC_LIMIT < p->alloc) {
 		void **new;
 
@@ -137,8 +143,10 @@ void delListItem(list_t * p, int n, void *f)
 	assert(p != NULL);
 	assert(n >= 0 || n < p->count);
 	fce = f;
+
 	if (fce != NULL)
 		fce(p->list[n]);
+
 	delList(p, n);
 }
 
@@ -153,6 +161,7 @@ void destroyList(list_t * p)
 
 	if (p->list != NULL)
 		free(p->list);
+
 	free(p);
 }
 
@@ -163,8 +172,11 @@ void destroyListItem(list_t * p, void *f)
 
 	assert(p != NULL);
 	assert(f != NULL);
+
 	fce = f;
+
 	for (i = 0; i < p->count; i++)
 		fce(p->list[i]);
+
 	destroyList(p);
 }

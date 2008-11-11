@@ -52,6 +52,7 @@ void *getShareFce(char *name)
 		share_fce_item_t *this;
 
 		this = (share_fce_item_t *) listShareFce->list[i];
+
 		if (strcmp(this->name, name) == 0)
 			return this->function;
 	}

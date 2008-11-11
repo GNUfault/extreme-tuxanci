@@ -86,8 +86,7 @@ static proto_cmd_server_t *findCmdProto(client_t * client, char *msg)
 
 		thisCmd = &proto_cmd_list[i];
 
-		if (len >= thisCmd->len
-			&& strncmp(msg, thisCmd->name, thisCmd->len) == 0) {
+		if (len >= thisCmd->len && strncmp(msg, thisCmd->name, thisCmd->len) == 0) {
 			if (thisCmd->tux && client->tux == NULL) {
 				return NULL;
 			}
@@ -140,8 +139,7 @@ void destroyAnyClient(client_t * p)
 #ifdef PUBLIC_SERVER
 		addPlayerInHighScore(p->tux->name, p->tux->score);
 #endif
-		delObjectFromSpaceWithObject(getCurrentArena()->spaceTux, p->tux,
-									 destroyTux);
+		delObjectFromSpaceWithObject(getCurrentArena()->spaceTux, p->tux, destroyTux);
 	}
 
 	free(p);
@@ -177,8 +175,7 @@ static void delZombieCLient(void *p_nothink)
 
 		if (thisClient->status == NET_STATUS_ZOMBIE) {
 			if (thisClient->tux != NULL) {
-				proto_send_del_server(PROTO_SEND_ALL, NULL,
-									  thisClient->tux->id);
+				proto_send_del_server(PROTO_SEND_ALL, NULL, thisClient->tux->id);
 			}
 
 			eventDelClientFromListClient(thisClient);
@@ -194,8 +191,7 @@ static void eventPeriodicSyncClient(void *p_nothink)
 	int i;
 
 #ifndef PUBLIC_SERVER
-	proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, NULL,
-							 getControlTux(TUX_CONTROL_KEYBOARD_RIGHT));
+	proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, NULL, getControlTux(TUX_CONTROL_KEYBOARD_RIGHT));
 #endif
 
 	for (i = 0; i < listClient->count; i++) {
@@ -205,6 +201,7 @@ static void eventPeriodicSyncClient(void *p_nothink)
 		if (thisTux == NULL) {
 			continue;
 		}
+
 		//proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, thisClientSend, thisTux);
 		proto_send_newtux_server(PROTO_SEND_BUT, thisClientSend, thisTux);
 	}
@@ -224,12 +221,9 @@ void setServerTimer()
 	restartTimer();
 	listServerTimer = newTimer();
 
-	addTaskToTimer(listServerTimer, TIMER_PERIODIC, delZombieCLient, NULL,
-				   SERVER_TIMEOUT);
-	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventPeriodicSyncClient,
-				   NULL, SERVER_TIME_SYNC);
-	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventSendPingClients,
-				   NULL, SERVER_TIME_PING);
+	addTaskToTimer(listServerTimer, TIMER_PERIODIC, delZombieCLient, NULL, SERVER_TIMEOUT);
+	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventPeriodicSyncClient, NULL, SERVER_TIME_SYNC);
+	addTaskToTimer(listServerTimer, TIMER_PERIODIC, eventSendPingClients, NULL, SERVER_TIME_PING);
 }
 
 int initServer(char *ip4, int port4, char *ip6, int port6)
@@ -276,14 +270,13 @@ void sendClient(client_t * p, char *msg)
 	assert(msg != NULL);
 
 	if (p->status != NET_STATUS_ZOMBIE) {
-		int ret = -1;			// no Warnnings
+		int ret = -1; // no Warnnings
 
 #ifndef PUBLIC_SERVER
 		if (isParamFlag("--send")) {
 			printf(_("Sending: \"%s\""), msg);
 		}
 #endif
-
 		ret = writeUdpSocket(p->socket_udp, p->socket_udp, msg, strlen(msg));
 
 		if (ret <= 0) {
@@ -316,8 +309,7 @@ static void eventClientWorkRecvList(client_t * client)
 			protoCmd->fce_proto(client, line);
 			rereshLastPing(client->protect);
 		} else {
-			proto_send_error_server(PROTO_SEND_ONE, client,
-									PROTO_ERROR_CODE_BAD_COMMAND);
+			proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_COMMAND);
 		}
 	}
 

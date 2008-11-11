@@ -132,5 +132,6 @@ void destroyBuffer(buffer_t * p)
 
 	if (p->data != NULL)
 		free(p->data);
+
 	free(p);
 }

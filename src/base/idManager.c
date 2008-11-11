@@ -108,7 +108,7 @@ void incID(int id)
 
 	if (index == -1) {
 		assert(!_("This kind of ID was never registered!"));
-		return;					// ha ha ha
+		return;	// ha ha ha
 	}
 
 	this = listID->list[index];
@@ -130,7 +130,7 @@ void delID(int id)
 
 	if (index == -1) {
 		assert(!_("This kind of ID was never registered!"));
-		return;					// ha ha ha
+		return;	// ha ha ha
 	}
 
 	this = listID->list[index];

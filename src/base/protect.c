@@ -11,12 +11,14 @@
 protect_t *newProtect()
 {
 	protect_t *new;
+
 	new = malloc(sizeof(protect_t));
 	new->lastMove = getMyTime();
 	new->lastPing = getMyTime();
 	new->avarage = 0;
 	new->count = 0;
 	new->isDown = FALSE;
+
 	return new;
 }
 
@@ -27,9 +29,11 @@ void refreshLastMove(protect_t * p)
 
 	currentTime = getMyTime();
 	interval = currentTime - p->lastMove;
+
 	p->lastMove = getMyTime();
 	p->avarage += interval;
 	p->count++;
+
 	if (p->count == PROTECT_SPEED_AVARAGE) {
 		int index;
 
@@ -62,8 +66,10 @@ bool_t isDown(protect_t * p)
 
 	currentTime = getMyTime();
 	interval = currentTime - p->lastPing;
+
 	if (interval > PROTECT_PING_INTERVAL_TIMEOUT)
 		p->isDown = TRUE;
+
 	return p->isDown;
 }
 

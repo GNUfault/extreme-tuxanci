@@ -60,16 +60,11 @@ void initTux()
 
 #ifndef PUBLIC_SERVER
 	g_tux_up = addImageData("tux8.png", IMAGE_ALPHA, "tux8", IMAGE_GROUP_BASE);
-	g_tux_right =
-		addImageData("tux6.png", IMAGE_ALPHA, "tux6", IMAGE_GROUP_BASE);
-	g_tux_left =
-		addImageData("tux4.png", IMAGE_ALPHA, "tux4", IMAGE_GROUP_BASE);
-	g_tux_down =
-		addImageData("tux2.png", IMAGE_ALPHA, "tux2", IMAGE_GROUP_BASE);
-	g_cross =
-		addImageData("cross.png", IMAGE_ALPHA, "cross", IMAGE_GROUP_BASE);
+	g_tux_right = addImageData("tux6.png", IMAGE_ALPHA, "tux6", IMAGE_GROUP_BASE);
+	g_tux_left = addImageData("tux4.png", IMAGE_ALPHA, "tux4", IMAGE_GROUP_BASE);
+	g_tux_down = addImageData("tux2.png", IMAGE_ALPHA, "tux2", IMAGE_GROUP_BASE);
+	g_cross = addImageData("cross.png", IMAGE_ALPHA, "cross", IMAGE_GROUP_BASE);
 #endif
-
 	isTuxInit = TRUE;
 }
 
@@ -134,29 +129,29 @@ void getCourse(int n, int *x, int *y)
 	assert(y != NULL);
 
 	switch (n) {
-	case TUX_UP:
-		*x = 0;
-		*y = -1;
-		break;
-
-	case TUX_LEFT:
-		*x = -1;
-		*y = 0;
-		break;
-
-	case TUX_RIGHT:
-		*x = +1;
-		*y = 0;
-		break;
-
-	case TUX_DOWN:
-		*x = 0;
-		*y = +1;
-		break;
-
-	default:
-		assert(!_("Type variable has a really wierd value!"));
-		break;
+		case TUX_UP:
+			*x = 0;
+			*y = -1;
+			break;
+	
+		case TUX_LEFT:
+			*x = -1;
+			*y = 0;
+			break;
+	
+		case TUX_RIGHT:
+			*x = +1;
+			*y = 0;
+			break;
+	
+		case TUX_DOWN:
+			*x = 0;
+			*y = +1;
+			break;
+	
+		default:
+			assert(!_("Type variable has a really wierd value!"));
+			break;
 	}
 }
 
@@ -169,38 +164,37 @@ void drawTux(tux_t * tux)
 	assert(tux != NULL);
 
 	if (tux->bonus == BONUS_HIDDEN &&
-		getNetTypeGame() != NET_GAME_TYPE_NONE &&
-		tux->control == TUX_CONTROL_NET) {
+	    getNetTypeGame() != NET_GAME_TYPE_NONE &&
+	    tux->control == TUX_CONTROL_NET) {
 		return;
 	}
 
 	switch (tux->position) {
-	case TUX_UP:
-		g_image = g_tux_up;
-		break;
-
-	case TUX_LEFT:
-		g_image = g_tux_left;
-		break;
-
-	case TUX_RIGHT:
-		g_image = g_tux_right;
-		break;
-
-	case TUX_DOWN:
-		g_image = g_tux_down;
-		break;
-
-	default:
-		assert(!_("p->control has a really wierd value!"));
-		break;
+		case TUX_UP:
+			g_image = g_tux_up;
+			break;
+	
+		case TUX_LEFT:
+			g_image = g_tux_left;
+			break;
+	
+		case TUX_RIGHT:
+			g_image = g_tux_right;
+			break;
+	
+		case TUX_DOWN:
+			g_image = g_tux_down;
+			break;
+	
+		default:
+			assert(!_("p->control has a really wierd value!"));
+			break;
 	}
 
 	if (tux->status == TUX_STATUS_DEAD) {
 		g_image = g_cross;
 
-		addLayer(g_cross,
-				 tux->x - g_cross->w / 2,
+		addLayer(g_cross, tux->x - g_cross->w / 2,
 				 (tux->y + g_cross->h / 2) - g_cross->h,
 				 0, 0, g_cross->w, g_cross->h, TUX_LAYER);
 
@@ -216,8 +210,7 @@ void drawTux(tux_t * tux)
 			tux->g_name->w, tux->g_name->h, TUX_LAYER);
 	}
 */
-	addLayer(g_image,
-			 tux->x - TUX_IMG_WIDTH / 2,
+	addLayer(g_image, tux->x - TUX_IMG_WIDTH / 2,
 			 (tux->y + TUX_HEIGHT / 2) - TUX_IMG_HEIGHT,
 			 (tux->frame / TUX_KEY) * TUX_IMG_WIDTH, 0,
 			 TUX_IMG_WIDTH, TUX_IMG_HEIGHT, TUX_LAYER);
@@ -312,6 +305,7 @@ void eventTuxIsDead(tux_t * tux)
 	if (tux->status == TUX_STATUS_DEAD) {
 		return;
 	}
+
 #ifndef NO_SOUND
 	playSound("dead", SOUND_GROUP_BASE);
 #endif
@@ -330,7 +324,7 @@ void eventTuxIsDead(tux_t * tux)
 
 	if (getNetTypeGame() != NET_GAME_TYPE_CLIENT) {
 		addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE,
-					   timer_spawnTux, newInt(tux->id), TUX_TIME_SPAWN);
+			       timer_spawnTux, newInt(tux->id), TUX_TIME_SPAWN);
 	}
 
 	if (getNetTypeGame() == NET_GAME_TYPE_SERVER) {
@@ -351,9 +345,7 @@ static void eventTuxIsDeadWIthShot(tux_t * tux, shot_t * shot)
 	if (shot->author_id != tux->id) {
 		tux_t *author;
 
-		author =
-			getObjectFromSpaceWithID(getCurrentArena()->spaceTux,
-									 shot->author_id);
+		author = getObjectFromSpaceWithID(getCurrentArena()->spaceTux, shot->author_id);
 
 		if (author != NULL) {
 			author->score++;
@@ -405,8 +397,7 @@ static void bombBallExplosion(shot_t * shot)
 		proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
 	}
 
-	delObjectFromSpaceWithObject(getCurrentArena()->spaceShot, shot,
-								 destroyShot);
+	delObjectFromSpaceWithObject(getCurrentArena()->spaceShot, shot, destroyShot);
 }
 
 static void action_tux(space_t * space, tux_t * tux, shot_t * shot)
@@ -443,8 +434,7 @@ static void action_tux(space_t * space, tux_t * tux, shot_t * shot)
 
 static void action_shot(space_t * space, shot_t * shot, space_t * spaceTux)
 {
-	actionSpaceFromLocation(spaceTux, action_tux, shot, shot->x, shot->y,
-							shot->w, shot->h);
+	actionSpaceFromLocation(spaceTux, action_tux, shot, shot->x, shot->y, shot->w, shot->h);
 }
 
 void eventConflictTuxWithShot(arena_t * arena)
@@ -454,7 +444,7 @@ void eventConflictTuxWithShot(arena_t * arena)
 
 void moveTux(tux_t * tux, int n)
 {
-	int px = 0, py = 0;			// no warninng
+	int px = 0, py = 0; // no warninng
 	int zal_x, zal_y;
 	int new_x, new_y;
 	int w, h;
@@ -471,9 +461,9 @@ void moveTux(tux_t * tux, int n)
 	}
 
 	if ((n == TUX_LEFT && tux->x - TUX_STEP <= 0) ||
-		(n == TUX_RIGHT && tux->x + TUX_STEP >= arena->w) ||
-		(n == TUX_UP && tux->y - TUX_STEP <= 0) ||
-		(n == TUX_DOWN && tux->y + TUX_STEP >= arena->h)) {
+	    (n == TUX_RIGHT && tux->x + TUX_STEP >= arena->w) ||
+	    (n == TUX_UP && tux->y - TUX_STEP <= 0) ||
+	    (n == TUX_DOWN && tux->y + TUX_STEP >= arena->h)) {
 		return;
 	}
 
@@ -492,11 +482,9 @@ void moveTux(tux_t * tux, int n)
 		new_y += py * TUX_STEP;
 	}
 
-	if (tux->bonus != BONUS_GHOST
-		&&
-		(isConflictWithObjectFromSpaceBut
-		 (arena->spaceTux, new_x, new_y, w, h, tux)
-		 || isConflictModule(new_x, new_y, w, h))) {
+	if (tux->bonus != BONUS_GHOST &&
+	   ( isConflictWithObjectFromSpaceBut(arena->spaceTux, new_x, new_y, w, h, tux) ||
+	     isConflictModule(new_x, new_y, w, h))) {
 		setTuxProportion(tux, zal_x, zal_y);
 		return;
 	}
@@ -505,6 +493,7 @@ void moveTux(tux_t * tux, int n)
 	moveObjectInSpace(arena->spaceTux, tux, new_x, new_y);
 	eventGiveTuxListItem(tux, getCurrentArena()->spaceItem);
 	tux->frame++;
+
 	if (tux->frame == TUX_KEY * TUX_MAX_ANIMATION_FRAME)
 		tux->frame = 0;
 }
@@ -522,8 +511,8 @@ void switchTuxGun(tux_t * tux)
 			tux->gun = i;
 			tux->isCanSwitchGun = FALSE;
 			addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE,
-						   timer_tuxCanSwitchGun, newInt(tux->id),
-						   TUX_TIME_CAN_SWITCH_GUN);
+					timer_tuxCanSwitchGun, newInt(tux->id),
+					TUX_TIME_CAN_SWITCH_GUN);
 #ifndef NO_SOUND
 			playSound("switch_gun", SOUND_GROUP_BASE);
 #endif
@@ -535,14 +524,14 @@ void switchTuxGun(tux_t * tux)
 		if (tux->shot[i] > 0) {
 			tux->gun = i;
 			tux->isCanSwitchGun = FALSE;
+
 			addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE,
-						   timer_tuxCanSwitchGun, newInt(tux->id),
-						   TUX_TIME_CAN_SWITCH_GUN);
+				       timer_tuxCanSwitchGun, newInt(tux->id),
+				       TUX_TIME_CAN_SWITCH_GUN);
 
 #ifndef NO_SOUND
 			playSound("switch_gun", SOUND_GROUP_BASE);
 #endif
-
 			return;
 		}
 	}
@@ -555,6 +544,7 @@ void shotTux(tux_t * tux)
 	if (tux->isCanShot == FALSE || tux->shot[tux->gun] == 0) {
 		return;
 	}
+
 #ifndef NO_SOUND
 	playSound("switch_gun", SOUND_GROUP_BASE);
 #endif
@@ -564,7 +554,7 @@ void shotTux(tux_t * tux)
 	tux->isCanShot = FALSE;
 
 	addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE, timer_tuxCanShot,
-				   newInt(tux->id), TUX_TIME_CAN_SHOT);
+		       newInt(tux->id), TUX_TIME_CAN_SHOT);
 
 	if (tux->shot[tux->gun] == 0) {
 		switchTuxGun(tux);
@@ -578,20 +568,20 @@ void actionTux(tux_t * tux, int action)
 	}
 
 	switch (action) {
-	case TUX_UP:
-	case TUX_LEFT:
-	case TUX_RIGHT:
-	case TUX_DOWN:
-		moveTux(tux, action);
-		break;
-
-	case TUX_SHOT:
-		shotTux(tux);
-		break;
-
-	case TUX_SWITCH_GUN:
-		switchTuxGun(tux);
-		break;
+		case TUX_UP:
+		case TUX_LEFT:
+		case TUX_RIGHT:
+		case TUX_DOWN:
+			moveTux(tux, action);
+			break;
+	
+		case TUX_SHOT:
+			shotTux(tux);
+			break;
+	
+		case TUX_SWITCH_GUN:
+			switchTuxGun(tux);
+			break;
 	}
 }
 
@@ -604,8 +594,7 @@ static void pickUpGun(tux_t * tux)
 			tux->pickup_time++;
 		}
 
-		if (tux->pickup_time == TUX_MAX_PICKUP
-			&& getNetTypeGame() != NET_GAME_TYPE_CLIENT) {
+		if (tux->pickup_time == TUX_MAX_PICKUP && getNetTypeGame() != NET_GAME_TYPE_CLIENT) {
 #ifndef NO_SOUND
 			playSound("switch_gun", SOUND_GROUP_BASE);
 #endif
@@ -635,8 +624,8 @@ static void eventBonus(tux_t * tux)
 
 				tux->bonus = BONUS_NONE;
 
-				if (			/*isConflictTuxWithListTux(tux, getCurrentArena()->listTux) || */
-					   isConflictModule(x, y, w, h)) {
+				if ( /*isConflictTuxWithListTux(tux, getCurrentArena()->listTux) || */
+				     isConflictModule(x, y, w, h)) {
 					tux->bonus = BONUS_GHOST;
 					return;
 				}
@@ -687,10 +676,13 @@ void getTuxProportion(tux_t * tux, int *x, int *y, int *w, int *h)
 
 	if (x != NULL)
 		*x = tux->x - TUX_WIDTH / 2;
+
 	if (y != NULL)
 		*y = tux->y - TUX_HEIGHT / 2;
+
 	if (w != NULL)
 		*w = TUX_WIDTH;
+
 	if (h != NULL)
 		*h = TUX_HEIGHT;
 }

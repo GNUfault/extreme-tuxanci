@@ -27,18 +27,15 @@ void destroyZone(zone_t * p)
 	free(p);
 }
 
-static int
-my_conflictSpace(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
+static int my_conflictSpace(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
 				 int h2)
 {
 	return (x1 < x2 + w2 && x2 < x1 + w1 && y1 < y2 + h2 && y2 < y1 + h1);
 }
 
 space_t *newSpace(int w, int h, int segW, int segH,
-				  void (*getStatus) (void *p, int *id, int *x, int *y, int *w,
-									 int *h), void (*setStatus) (void *p,
-																 int x, int y,
-																 int w, int h))
+		   void (*getStatus) (void *p, int *id, int *x, int *y, int *w, int *h),
+		   void (*setStatus) (void *p, int x, int y, int w, int h))
 {
 	space_t *new;
 	int i, j;
@@ -69,9 +66,8 @@ space_t *newSpace(int w, int h, int segW, int segH,
 	return new;
 }
 
-static void
-getSegment(space_t * p, int x, int y, int w, int h,
-		   int *segX, int *segY, int *segW, int *segH)
+static void getSegment(space_t * p, int x, int y, int w, int h,
+		                    int *segX, int *segY, int *segW, int *segH)
 {
 	*segX = x / p->segW;
 	*segY = y / p->segH;
@@ -134,9 +130,8 @@ void getObjectFromSpace(space_t * p, int x, int y, int w, int h, list_t * list)
 				this = p->zone[j][i]->list->list[k];
 				p->getStatus(this, &id, &this_x, &this_y, &this_w, &this_h);
 
-				if (my_conflictSpace
-					(x, y, w, h, this_x, this_y, this_w, this_h)
-					&& searchListItem(list, this) == -1) {
+				if (my_conflictSpace(x, y, w, h, this_x, this_y, this_w, this_h) &&
+				    searchListItem(list, this) == -1) {
 					addList(list, this);
 				}
 			}
@@ -169,8 +164,7 @@ int isConflictWithObjectFromSpace(space_t * p, int x, int y, int w, int h)
 				this = p->zone[j][i]->list->list[k];
 				p->getStatus(this, &id, &this_x, &this_y, &this_w, &this_h);
 
-				if (my_conflictSpace
-					(x, y, w, h, this_x, this_y, this_w, this_h)) {
+				if (my_conflictSpace(x, y, w, h, this_x, this_y, this_w, this_h)) {
 					return 1;
 				}
 			}
@@ -180,9 +174,7 @@ int isConflictWithObjectFromSpace(space_t * p, int x, int y, int w, int h)
 	return 0;
 }
 
-int
-isConflictWithObjectFromSpaceBut(space_t * p, int x, int y, int w, int h,
-								 void *but)
+int isConflictWithObjectFromSpaceBut(space_t * p, int x, int y, int w, int h, void *but)
 {
 	int segX, segY, segW, segH;
 	int id, this_x, this_y, this_w, this_h;
@@ -207,8 +199,7 @@ isConflictWithObjectFromSpaceBut(space_t * p, int x, int y, int w, int h,
 
 				p->getStatus(this, &id, &this_x, &this_y, &this_w, &this_h);
 
-				if (my_conflictSpace
-					(x, y, w, h, this_x, this_y, this_w, this_h)) {
+				if (my_conflictSpace(x, y, w, h, this_x, this_y, this_w, this_h)) {
 					return 1;
 				}
 			}
@@ -261,15 +252,14 @@ void moveObjectInSpace(space_t * p, void *item, int move_x, int move_y)
 
 	p->getStatus(item, &id, &x, &y, &w, &h);
 	getSegment(p, x, y, w, h, &old_segX, &old_segY, &old_segW, &old_segH);
-	getSegment(p, move_x, move_y, w, h, &new_segX, &new_segY, &new_segW,
-			   &new_segH);
+	getSegment(p, move_x, move_y, w, h, &new_segX, &new_segY, &new_segW, &new_segH);
 /*
 	printf("%d %d %d %d  -> %d %d %d %d \n",
 		old_segX, old_segY, old_segW, old_segH,
 		new_segX, new_segY, new_segW, new_segH);
 */
 	if (old_segX != new_segX || old_segY != new_segY ||
-		old_segW != new_segW || old_segH != new_segH) {
+	    old_segW != new_segW || old_segH != new_segH) {
 		delObjectFromSpace(p, item);
 		p->setStatus(item, move_x, move_y, w, h);
 		addObjectToSpace(p, item);
@@ -313,9 +303,7 @@ void actionSpace(space_t * space, void *f, void *p)
 	}
 }
 
-void
-actionSpaceFromLocation(space_t * space, void *f, void *p, int x, int y,
-						int w, int h)
+void actionSpaceFromLocation(space_t * space, void *f, void *p, int x, int y, int w, int h)
 {
 	void (*fce) (space_t * space, void *f, void *p);
 	list_t *list;
