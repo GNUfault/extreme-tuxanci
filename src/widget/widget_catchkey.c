@@ -18,8 +18,7 @@ widget_t *newWidgetCatchkey(int key, int x, int y, void *event)
 	new->fce_event = event;
 	new->active = FALSE;
 
-	return newWidget(WIDGET_TYPE_CATCHKEY, x, y, WIDGET_CATCHKEY_WIDTH,
-					 WIDGET_CATCHKEY_HEIGHT, new);
+	return newWidget(WIDGET_TYPE_CATCHKEY, x, y, WIDGET_CATCHKEY_WIDTH, WIDGET_CATCHKEY_HEIGHT, new);
 }
 
 int getWidgetCatchKey(widget_t * widget)
@@ -81,7 +80,8 @@ static int getPessAnyKey()
 
 	for (i = SDLK_FIRST; i <= SDLK_COMPOSE; i++) {
 		if (i == SDLK_NUMLOCK ||	// black key
-			i == SDLK_CAPSLOCK || i == SDLK_SCROLLOCK) {
+		    i == SDLK_CAPSLOCK ||
+		    i == SDLK_SCROLLOCK) {
 			continue;
 		}
 
@@ -107,7 +107,7 @@ void eventWidgetCatchkey(widget_t * widget)
 
 	if (isMouseClicked()) {
 		if (x >= widget->x && x <= widget->x + WIDGET_CATCHKEY_WIDTH &&
-			y >= widget->y && y <= widget->y + WIDGET_CATCHKEY_HEIGHT) {
+		    y >= widget->y && y <= widget->y + WIDGET_CATCHKEY_HEIGHT) {
 			p->active = TRUE;
 		} else {
 			p->active = FALSE;

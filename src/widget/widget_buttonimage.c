@@ -10,8 +10,7 @@
 #include "widget.h"
 #include "widget_buttonimage.h"
 
-widget_t *newWidgetButtonimage(image_t * image, int x, int y,
-							   void (*fce_event) (void *))
+widget_t *newWidgetButtonimage(image_t * image, int x, int y, void (*fce_event) (void *))
 {
 	widget_buttonimage_t *new;
 
@@ -57,6 +56,7 @@ void eventWidgetButtonimage(widget_t * widget)
 	assert(widget->type == WIDGET_TYPE_BUTTONIMAGE);
 
 	p = (widget_buttonimage_t *) widget->private_data;
+
 	if (time > 0) {
 		time--;
 		return;
@@ -65,7 +65,7 @@ void eventWidgetButtonimage(widget_t * widget)
 	getMousePosition(&x, &y);
 
 	if (x >= widget->x && x <= widget->x + p->w &&
-		y >= widget->y && y <= widget->y + p->h && isMouseClicked()) {
+	    y >= widget->y && y <= widget->y + p->h && isMouseClicked()) {
 		time = WIDGET_BUTTONIMAGE_TIME;
 		p->active = 1;
 		p->fce_event(widget);

@@ -24,9 +24,8 @@ bool_t isScreenInicialized()
 	return isScreenInit;
 }
 
-screen_t *newScreen(char *name,
-					void (*fce_start) (), void (*fce_event) (),
-					void (*fce_draw) (), void (*fce_stop) ())
+screen_t *newScreen(char *name, void (*fce_start) (), void (*fce_event) (),
+				void (*fce_draw) (), void (*fce_stop) ())
 {
 	screen_t *new;
 

@@ -31,8 +31,7 @@ static void hotkey_pauze()
 
 void initPauza()
 {
-	g_pauza =
-		addImageData("pauza.png", IMAGE_ALPHA, "pauza", IMAGE_GROUP_USER);
+	g_pauza = addImageData("pauza.png", IMAGE_ALPHA, "pauza", IMAGE_GROUP_USER);
 	activePauza = FALSE;
 
 	registerHotKey(SDLK_p, hotkey_pauze);
@@ -42,9 +41,9 @@ void drawPauza()
 {
 	if (activePauza) {
 		drawImage(g_pauza,
-				  WINDOW_SIZE_X / 2 - g_pauza->w / 2,
-				  WINDOW_SIZE_Y / 2 - g_pauza->h / 2,
-				  0, 0, g_pauza->w, g_pauza->h);
+			WINDOW_SIZE_X / 2 - g_pauza->w / 2,
+			WINDOW_SIZE_Y / 2 - g_pauza->h / 2,
+			0, 0, g_pauza->w, g_pauza->h);
 	}
 }
 

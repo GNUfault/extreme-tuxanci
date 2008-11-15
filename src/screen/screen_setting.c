@@ -151,6 +151,7 @@ void eventScreenSetting()
 	if (getWidgetCheckStatus(check_ai) == FALSE) {
 		eventWidgetTextfield(textfield_name_player2);
 	}
+
 #ifndef NO_SOUND
 	eventWidgetCheck(check_music);
 	eventWidgetCheck(check_sound);
@@ -185,9 +186,11 @@ static void eventWidget(void *p)
 	if (button == button_back) {
 		setScreen("mainMenu");
 	}
+
 	if (button == button_keys) {
 		setScreen("settingKeys");
 	}
+
 #ifndef NO_SOUND
 	if (check == check_music) {
 		setMusicActive(getWidgetCheckStatus(check_music));
@@ -279,64 +282,35 @@ static void initSettingFile()
 static void saveAndDestroyConfigFile()
 {
 	if (configFile == NULL) {
-		fprintf(stderr,
-				_
-				("I am unable to save configure file, because config file was not initialised!\n"));
-
+		fprintf(stderr, _("I am unable to save configure file, because config file was not initialised!\n"));
 		return;
 	}
 
-	setValueInConfigFile(configFile, "COUNT_ROUND",
-						 getTextFromWidgetTextfield(textfield_count_cound));
-	setValueInConfigFile(configFile, "NAME_PLAYER_RIGHT",
-						 getTextFromWidgetTextfield(textfield_name_player1));
-	setValueInConfigFile(configFile, "NAME_PLAYER_LEFT",
-						 getTextFromWidgetTextfield(textfield_name_player2));
-
-	setValueInConfigFile(configFile, "GUN_DUAL_SIMPLE",
-						 getYesOrNo(getWidgetCheckStatus
-									(check[GUN_DUAL_SIMPLE])));
-	setValueInConfigFile(configFile, "GUN_SCATTER",
-						 getYesOrNo(getWidgetCheckStatus(check[GUN_SCATTER])));
-	setValueInConfigFile(configFile, "GUN_TOMMY",
-						 getYesOrNo(getWidgetCheckStatus(check[GUN_TOMMY])));
-	setValueInConfigFile(configFile, "GUN_LASSER",
-						 getYesOrNo(getWidgetCheckStatus(check[GUN_LASSER])));
-	setValueInConfigFile(configFile, "GUN_MINE",
-						 getYesOrNo(getWidgetCheckStatus(check[GUN_MINE])));
-	setValueInConfigFile(configFile, "GUN_BOMBBALL",
-						 getYesOrNo(getWidgetCheckStatus
-									(check[GUN_BOMBBALL])));
-
-	setValueInConfigFile(configFile, "BONUS_SPEED",
-						 getYesOrNo(getWidgetCheckStatus(check[BONUS_SPEED])));
-	setValueInConfigFile(configFile, "BONUS_SHOT",
-						 getYesOrNo(getWidgetCheckStatus(check[BONUS_SHOT])));
-	setValueInConfigFile(configFile, "BONUS_TELEPORT",
-						 getYesOrNo(getWidgetCheckStatus
-									(check[BONUS_TELEPORT])));
-	setValueInConfigFile(configFile, "BONUS_GHOST",
-						 getYesOrNo(getWidgetCheckStatus(check[BONUS_GHOST])));
-	setValueInConfigFile(configFile, "BONUS_4X",
-						 getYesOrNo(getWidgetCheckStatus(check[BONUS_4X])));
-	setValueInConfigFile(configFile, "BONUS_HIDDEN",
-						 getYesOrNo(getWidgetCheckStatus
-									(check[BONUS_HIDDEN])));
-
-	setValueInConfigFile(configFile, "AI",
-						 getYesOrNo(getWidgetCheckStatus(check_ai)));
+	setValueInConfigFile(configFile, "COUNT_ROUND",  getTextFromWidgetTextfield(textfield_count_cound));
+	setValueInConfigFile(configFile, "NAME_PLAYER_RIGHT", getTextFromWidgetTextfield(textfield_name_player1));
+	setValueInConfigFile(configFile, "NAME_PLAYER_LEFT", getTextFromWidgetTextfield(textfield_name_player2));
+	setValueInConfigFile(configFile, "GUN_DUAL_SIMPLE", getYesOrNo(getWidgetCheckStatus(check[GUN_DUAL_SIMPLE])));
+	setValueInConfigFile(configFile, "GUN_SCATTER", getYesOrNo(getWidgetCheckStatus(check[GUN_SCATTER])));
+	setValueInConfigFile(configFile, "GUN_TOMMY", getYesOrNo(getWidgetCheckStatus(check[GUN_TOMMY])));
+	setValueInConfigFile(configFile, "GUN_LASSER", getYesOrNo(getWidgetCheckStatus(check[GUN_LASSER])));
+	setValueInConfigFile(configFile, "GUN_MINE", getYesOrNo(getWidgetCheckStatus(check[GUN_MINE])));
+	setValueInConfigFile(configFile, "GUN_BOMBBALL", getYesOrNo(getWidgetCheckStatus(check[GUN_BOMBBALL])));
+	setValueInConfigFile(configFile, "BONUS_SPEED", getYesOrNo(getWidgetCheckStatus(check[BONUS_SPEED])));
+	setValueInConfigFile(configFile, "BONUS_SHOT", getYesOrNo(getWidgetCheckStatus(check[BONUS_SHOT])));
+	setValueInConfigFile(configFile, "BONUS_TELEPORT", getYesOrNo(getWidgetCheckStatus (check[BONUS_TELEPORT])));
+	setValueInConfigFile(configFile, "BONUS_GHOST", getYesOrNo(getWidgetCheckStatus(check[BONUS_GHOST])));
+	setValueInConfigFile(configFile, "BONUS_4X", getYesOrNo(getWidgetCheckStatus(check[BONUS_4X])));
+	setValueInConfigFile(configFile, "BONUS_HIDDEN", getYesOrNo(getWidgetCheckStatus(check[BONUS_HIDDEN])));
+	setValueInConfigFile(configFile, "AI", getYesOrNo(getWidgetCheckStatus(check_ai)));
 
 #ifndef NO_SOUND
-	setValueInConfigFile(configFile, "MUSIC",
-						 getYesOrNo(getWidgetCheckStatus(check_music)));
-	setValueInConfigFile(configFile, "SOUND",
-						 getYesOrNo(getWidgetCheckStatus(check_sound)));
+	setValueInConfigFile(configFile, "MUSIC", getYesOrNo(getWidgetCheckStatus(check_music)));
+	setValueInConfigFile(configFile, "SOUND", getYesOrNo(getWidgetCheckStatus(check_sound)));
 #endif
 
 	if( getChoiceArena() != NULL )
 	{
-		setValueInConfigFile(configFile, "ARENA",
-							getArenaNetName(getChoiceArena()));
+		setValueInConfigFile(configFile, "ARENA", getArenaNetName(getChoiceArena()));
 	}
 	//TODO
 
@@ -352,63 +326,46 @@ void initScreenSetting()
 	image = getImage(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
-	button_back =
-		newWidgetButton(_("back"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100,
-						eventWidget);
-	button_keys =
-		newWidgetButton(_("controls"), WINDOW_SIZE_X - 200,
-						button_back->y - WIDGET_BUTTON_HEIGHT - 10,
-						eventWidget);
+	button_back = newWidgetButton(_("back"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
+
+	button_keys = newWidgetButton(_("controls"), WINDOW_SIZE_X - 200,
+				      button_back->y - WIDGET_BUTTON_HEIGHT - 10, eventWidget);
 
 #ifndef NO_SOUND
-	label_music =
-		newWidgetLabel(_("Music:"), 100, WINDOW_SIZE_Y - 85,
-					   WIDGET_LABEL_LEFT);
-	check_music =
-		newWidgetCheck(label_music->x + label_music->w + 10,
-					   WINDOW_SIZE_Y - 80, isMusicActive(), eventWidget);
-	label_sound =
-		newWidgetLabel(_("Sound:"), check_music->x + WIDGET_CHECK_WIDTH + 10,
-					   WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
-	check_sound =
-		newWidgetCheck(label_sound->x + label_sound->w + 10,
-					   WINDOW_SIZE_Y - 80, isSoundActive(), eventWidget);
-	label_ai =
-		newWidgetLabel(_("AI:"), check_sound->x + WIDGET_CHECK_WIDTH + 10,
-					   WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
+	label_music = newWidgetLabel(_("Music:"), 100, WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
+
+	check_music = newWidgetCheck(label_music->x + label_music->w + 10,
+				     WINDOW_SIZE_Y - 80, isMusicActive(), eventWidget);
+	label_sound = newWidgetLabel(_("Sound:"), check_music->x + WIDGET_CHECK_WIDTH + 10,
+				     WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
+
+	check_sound = newWidgetCheck(label_sound->x + label_sound->w + 10,
+				     WINDOW_SIZE_Y - 80, isSoundActive(), eventWidget);
+
+	label_ai = newWidgetLabel(_("AI:"), check_sound->x + WIDGET_CHECK_WIDTH + 10,
+			 	  WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
 #else
-	label_ai =
-		newWidgetLabel(_("AI:"), 100, WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
+	label_ai = newWidgetLabel(_("AI:"), 100, WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
 #endif
 
-	check_ai =
-		newWidgetCheck(label_ai->x + label_ai->w + 10, WINDOW_SIZE_Y - 80,
-					   FALSE, eventWidget);
+	check_ai = newWidgetCheck(label_ai->x + label_ai->w + 10, WINDOW_SIZE_Y - 80, FALSE, eventWidget);
 
-	label_count_round =
-		newWidgetLabel(_("No. of rounds:"), 100, WINDOW_SIZE_Y - 200,
-					   WIDGET_LABEL_LEFT);
-	label_name_player1 =
-		newWidgetLabel(_("Player 1:"), 100, WINDOW_SIZE_Y - 160,
-					   WIDGET_LABEL_LEFT);
-	label_name_player2 =
-		newWidgetLabel(_("Player 2:"), 100, WINDOW_SIZE_Y - 120,
-					   WIDGET_LABEL_LEFT);
+	label_count_round = newWidgetLabel(_("No. of rounds:"), 100, WINDOW_SIZE_Y - 200, WIDGET_LABEL_LEFT);
+	label_name_player1 = newWidgetLabel(_("Player 1:"), 100, WINDOW_SIZE_Y - 160, WIDGET_LABEL_LEFT);
+	label_name_player2 = newWidgetLabel(_("Player 2:"), 100, WINDOW_SIZE_Y - 120, WIDGET_LABEL_LEFT);
 
 	textfield_count_cound = newWidgetTextfield(getParamElse("--count", "15"),
-											   WIDGET_TEXTFIELD_FILTER_NUM,
-											   110 + label_count_round->w,
-											   WINDOW_SIZE_Y - 200);
+				WIDGET_TEXTFIELD_FILTER_NUM,
+				110 + label_count_round->w,
+				 WINDOW_SIZE_Y - 200);
 
-	textfield_name_player1 =
-		newWidgetTextfield(getParamElse("--name1", NAME_PLAYER_RIGHT),
-						   WIDGET_TEXTFIELD_FILTER_ALPHANUM,
-						   110 + label_count_round->w, WINDOW_SIZE_Y - 160);
+	textfield_name_player1 = newWidgetTextfield(getParamElse("--name1", NAME_PLAYER_RIGHT),
+				WIDGET_TEXTFIELD_FILTER_ALPHANUM,
+				110 + label_count_round->w, WINDOW_SIZE_Y - 160);
 
-	textfield_name_player2 =
-		newWidgetTextfield(getParamElse("--name2", NAME_PLAYER_LEFT),
-						   WIDGET_TEXTFIELD_FILTER_ALPHANUM,
-						   110 + label_count_round->w, WINDOW_SIZE_Y - 120);
+	textfield_name_player2 = newWidgetTextfield(getParamElse("--name2", NAME_PLAYER_LEFT),
+				WIDGET_TEXTFIELD_FILTER_ALPHANUM,
+				110 + label_count_round->w, WINDOW_SIZE_Y - 120);
 
 	for (i = GUN_DUAL_SIMPLE; i <= GUN_BOMBBALL; i++) {
 		int x = 0;
@@ -444,47 +401,21 @@ void initScreenSetting()
 		check[i] = newWidgetCheck(x, y, TRUE, NULL);
 	}
 
-	image_gun_dual_revolver =
-		newWidgetImage(110 + WIDGET_CHECK_WIDTH, 200,
-					   getImage(IMAGE_GROUP_BASE, "panel_dual"));
-	image_gun_scatter =
-		newWidgetImage(110 + WIDGET_CHECK_WIDTH, 250,
-					   getImage(IMAGE_GROUP_BASE, "panel_scatter"));
-	image_gun_tommy =
-		newWidgetImage(110 + WIDGET_CHECK_WIDTH, 300,
-					   getImage(IMAGE_GROUP_BASE, "panel_tommy"));
-	image_gun_lasser =
-		newWidgetImage(260 + WIDGET_CHECK_WIDTH, 200,
-					   getImage(IMAGE_GROUP_BASE, "panel_lasser"));
-	image_gun_mine =
-		newWidgetImage(260 + WIDGET_CHECK_WIDTH, 250,
-					   getImage(IMAGE_GROUP_BASE, "panel_mine"));
-	image_gun_bombball =
-		newWidgetImage(260 + WIDGET_CHECK_WIDTH, 300,
-					   getImage(IMAGE_GROUP_BASE, "panel_bombball"));
+	image_gun_dual_revolver = newWidgetImage(110 + WIDGET_CHECK_WIDTH, 200, getImage(IMAGE_GROUP_BASE, "panel_dual"));
+	image_gun_scatter = newWidgetImage(110 + WIDGET_CHECK_WIDTH, 250, getImage(IMAGE_GROUP_BASE, "panel_scatter"));
+	image_gun_tommy = newWidgetImage(110 + WIDGET_CHECK_WIDTH, 300, getImage(IMAGE_GROUP_BASE, "panel_tommy"));
+	image_gun_lasser = newWidgetImage(260 + WIDGET_CHECK_WIDTH, 200,getImage(IMAGE_GROUP_BASE, "panel_lasser"));
+	image_gun_mine = newWidgetImage(260 + WIDGET_CHECK_WIDTH, 250, getImage(IMAGE_GROUP_BASE, "panel_mine"));
+	image_gun_bombball = newWidgetImage(260 + WIDGET_CHECK_WIDTH, 300, getImage(IMAGE_GROUP_BASE, "panel_bombball"));
+	image_bonus_speed = newWidgetImage(430 + WIDGET_CHECK_WIDTH, 200, getImage(IMAGE_GROUP_BASE, "panel_speed"));;
+	image_bonus_shot = newWidgetImage(430 + WIDGET_CHECK_WIDTH, 250, getImage(IMAGE_GROUP_BASE, "panel_shot"));;
+	image_bonus_teleport = newWidgetImage(430 + WIDGET_CHECK_WIDTH, 300, getImage(IMAGE_GROUP_BASE, "panel_teleport"));;
+	image_bonus_ghost = newWidgetImage(580 + WIDGET_CHECK_WIDTH, 200, getImage(IMAGE_GROUP_BASE, "panel_ghost"));;
+	image_bonus_4x = newWidgetImage(580 + WIDGET_CHECK_WIDTH, 250, getImage(IMAGE_GROUP_BASE, "panel_4x"));;
+	image_bonus_hidden = newWidgetImage(580 + WIDGET_CHECK_WIDTH, 300, getImage(IMAGE_GROUP_BASE, "panel_hidden"));;
 
-	image_bonus_speed =
-		newWidgetImage(430 + WIDGET_CHECK_WIDTH, 200,
-					   getImage(IMAGE_GROUP_BASE, "panel_speed"));;
-	image_bonus_shot =
-		newWidgetImage(430 + WIDGET_CHECK_WIDTH, 250,
-					   getImage(IMAGE_GROUP_BASE, "panel_shot"));;
-	image_bonus_teleport =
-		newWidgetImage(430 + WIDGET_CHECK_WIDTH, 300,
-					   getImage(IMAGE_GROUP_BASE, "panel_teleport"));;
-	image_bonus_ghost =
-		newWidgetImage(580 + WIDGET_CHECK_WIDTH, 200,
-					   getImage(IMAGE_GROUP_BASE, "panel_ghost"));;
-	image_bonus_4x =
-		newWidgetImage(580 + WIDGET_CHECK_WIDTH, 250,
-					   getImage(IMAGE_GROUP_BASE, "panel_4x"));;
-	image_bonus_hidden =
-		newWidgetImage(580 + WIDGET_CHECK_WIDTH, 300,
-					   getImage(IMAGE_GROUP_BASE, "panel_hidden"));;
-
-	registerScreen(newScreen
-				   ("setting", startScreenSetting, eventScreenSetting,
-					drawScreenSetting, stopScreenSetting));
+	registerScreen( newScreen("setting", startScreenSetting, eventScreenSetting,
+			drawScreenSetting, stopScreenSetting));
 
 	initSettingFile();
 

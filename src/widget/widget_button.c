@@ -20,8 +20,8 @@ widget_t *newWidgetButton(char *text, int x, int y, void (*fce_event) (void *))
 	new->fce_event = fce_event;
 	getTextSize(text, &(new->w), &(new->h));
 
-	return newWidget(WIDGET_TYPE_BUTTON, x, y, WIDGET_BUTTON_WIDTH,
-					 WIDGET_BUTTON_HEIGHT, new);
+	return newWidget(WIDGET_TYPE_BUTTON, x, y,
+			WIDGET_BUTTON_WIDTH, WIDGET_BUTTON_HEIGHT, new);
 }
 
 void drawWidgetButton(widget_t * widget)
@@ -38,30 +38,24 @@ void drawWidgetButton(widget_t * widget)
 	getMousePosition(&x, &y);
 
 	if (g_button0 == NULL) {
-		g_button0 =
-			addImageData("button0.png", IMAGE_ALPHA, "button0",
-						 IMAGE_GROUP_BASE);
+		g_button0 = addImageData("button0.png", IMAGE_ALPHA, "button0", IMAGE_GROUP_BASE);
 	}
 
 	if (g_button1 == NULL) {
 		g_button1 =
-			addImageData("button1.png", IMAGE_ALPHA, "button1",
-						 IMAGE_GROUP_BASE);
+			addImageData("button1.png", IMAGE_ALPHA, "button1", IMAGE_GROUP_BASE);
 	}
 
 	if (x >= widget->x && x <= widget->x + WIDGET_BUTTON_WIDTH &&
-		y >= widget->y && y <= widget->y + WIDGET_BUTTON_HEIGHT) {
-		drawImage(g_button1, widget->x, widget->y, 0, 0, g_button0->w,
-				  g_button0->h);
+	    y >= widget->y && y <= widget->y + WIDGET_BUTTON_HEIGHT) {
+		drawImage(g_button1, widget->x, widget->y, 0, 0, g_button0->w, g_button0->h);
 	} else {
-		drawImage(g_button0, widget->x, widget->y, 0, 0, g_button0->w,
-				  g_button0->h);
+		drawImage(g_button0, widget->x, widget->y, 0, 0, g_button0->w, g_button0->h);
 	}
 
 	//drawFont(p->text, p->x+WIDGET_BUTTON_WIDTH/2-p->w/2, p->y+p->h/2, COLOR_WHITE);
-	drawFont(p->text,
-			 widget->x + WIDGET_BUTTON_WIDTH / 2 - p->w / 2,
-			 widget->y + WIDGET_BUTTON_HEIGHT / 2 - p->h / 2, COLOR_WHITE);
+	drawFont(p->text, widget->x + WIDGET_BUTTON_WIDTH / 2 - p->w / 2,
+			  widget->y + WIDGET_BUTTON_HEIGHT / 2 - p->h / 2, COLOR_WHITE);
 }
 
 void eventWidgetButton(widget_t * widget)
@@ -83,8 +77,8 @@ void eventWidgetButton(widget_t * widget)
 	getMousePosition(&x, &y);
 
 	if (x >= widget->x && x <= widget->x + WIDGET_BUTTON_WIDTH &&
-		y >= widget->y && y <= widget->y + WIDGET_BUTTON_HEIGHT &&
-		isMouseClicked()) {
+	    y >= widget->y && y <= widget->y + WIDGET_BUTTON_HEIGHT &&
+	    isMouseClicked()) {
 		time = WIDGET_BUTTON_TIME;
 
 		DEBUG_MSG(_("Event caught\n"));

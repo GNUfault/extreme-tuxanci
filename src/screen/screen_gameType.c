@@ -114,8 +114,7 @@ void drawScreenGameType()
 	drawWidgetLabel(label_client);
 	drawWidgetLabel(label_load_session);
 
-	if (getWidgetChoiceStatus(check_server) == TRUE
-		|| getWidgetChoiceStatus(check_client) == TRUE) {
+	if (getWidgetChoiceStatus(check_server) == TRUE || getWidgetChoiceStatus(check_client) == TRUE) {
 		drawWidgetLabel(label_port);
 		drawWidgetTextfield(textfield_port);
 		drawWidgetLabel(label_ip);
@@ -152,8 +151,7 @@ void eventScreenGameType()
 		eventWidgetChoicegroup(this);
 	}
 
-	if (getWidgetChoiceStatus(check_server) == TRUE
-		|| getWidgetChoiceStatus(check_client) == TRUE) {
+	if (getWidgetChoiceStatus(check_server) == TRUE || getWidgetChoiceStatus(check_client) == TRUE) {
 		eventWidgetTextfield(textfield_ip);
 		eventWidgetTextfield(textfield_port);
 	}
@@ -213,22 +211,15 @@ void initScreenGameType()
 	image = getImage(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
-	button_back =
-		newWidgetButton(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
-	button_play =
-		newWidgetButton(_("play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100,
-						eventWidget);
+	button_back = newWidgetButton(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
+	button_play = newWidgetButton(_("play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
 	button_browser = newWidgetButton(_("browser"), 300, 345, eventWidget);
 
 	listChoiceGroup = newList();
-	check_none =
-		newWidgetChoicegroup(100, 150, FALSE, listChoiceGroup, eventWidget);
-	check_server =
-		newWidgetChoicegroup(100, 200, FALSE, listChoiceGroup, eventWidget);
-	check_client =
-		newWidgetChoicegroup(100, 250, FALSE, listChoiceGroup, eventWidget);
-	check_load_session =
-		newWidgetChoicegroup(100, 300, FALSE, listChoiceGroup, eventWidget);
+	check_none = newWidgetChoicegroup(100, 150, FALSE, listChoiceGroup, eventWidget);
+	check_server = newWidgetChoicegroup(100, 200, FALSE, listChoiceGroup, eventWidget);
+	check_client = newWidgetChoicegroup(100, 250, FALSE, listChoiceGroup, eventWidget);
+	check_load_session = newWidgetChoicegroup(100, 300, FALSE, listChoiceGroup, eventWidget);
 
 	if (isParamFlag("--server")) {
 		setWidgetChoiceStatus(check_server, TRUE);
@@ -239,30 +230,25 @@ void initScreenGameType()
 	}
 
 	label_none = newWidgetLabel(_("Local game"), 130, 145, WIDGET_LABEL_LEFT);
-	label_server =
-		newWidgetLabel(_("Set up a server"), 130, 195, WIDGET_LABEL_LEFT);
-	label_client =
-		newWidgetLabel(_("Network game"), 130, 245, WIDGET_LABEL_LEFT);
-	label_load_session =
-		newWidgetLabel("load session", 130, 295, WIDGET_LABEL_LEFT);
+	label_server = newWidgetLabel(_("Set up a server"), 130, 195, WIDGET_LABEL_LEFT);
+	label_client = newWidgetLabel(_("Network game"), 130, 245, WIDGET_LABEL_LEFT);
+	label_load_session = newWidgetLabel("load session", 130, 295, WIDGET_LABEL_LEFT);
 
 	label_ip = newWidgetLabel(_("IP"), 300, 145, WIDGET_LABEL_LEFT);
 	label_port = newWidgetLabel(_("port"), 300, 245, WIDGET_LABEL_LEFT);
-	label_session =
-		newWidgetLabel("load session :", 300, 145, WIDGET_LABEL_LEFT);
+	label_session = newWidgetLabel("load session :", 300, 145, WIDGET_LABEL_LEFT);
 
 	textfield_ip = newWidgetTextfield(getParamElse("--ip", "127.0.0.1"),
-									  WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN,
-									  300, 180);
+					  WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN,
+					  300, 180);
 
 	textfield_port = newWidgetTextfield(getParamElse("--port", "6800"),
-										WIDGET_TEXTFIELD_FILTER_NUM, 300, 280);
+					    WIDGET_TEXTFIELD_FILTER_NUM, 300, 280);
 
 	selectSession = newWidgetSelect(300, 185, eventWidget);
 
-	registerScreen(newScreen
-				   ("gameType", startScreenGameType, eventScreenGameType,
-					drawScreenGameType, stopScreenGameType));
+	registerScreen( newScreen("gameType", startScreenGameType, eventScreenGameType,
+			drawScreenGameType, stopScreenGameType));
 }
 
 int setSettingGameType(int status)
@@ -287,8 +273,7 @@ int setSettingGameType(int status)
 
 int getSettingGameType()
 {
-	if (getWidgetChoiceStatus(check_none) == TRUE ||
-		getWidgetChoiceStatus(check_load_session) == TRUE) {
+	if (getWidgetChoiceStatus(check_none) == TRUE || getWidgetChoiceStatus(check_load_session) == TRUE) {
 		return NET_GAME_TYPE_NONE;
 	}
 

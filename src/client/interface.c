@@ -70,9 +70,7 @@ void hotkey_screen()
 		fprintf(stderr, _("Unable to switch to FULLSCREEN mode!\n"));
 
 		SDL_FreeSurface(screen);
-		screen =
-			SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, WIN_BPP,
-							 g_win_flags);
+		screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, WIN_BPP, g_win_flags);
 
 		if (screen == NULL) {
 			fprintf(stderr, _("Unable to switch to WINDOW mode! Error: %s\n"),
@@ -215,7 +213,6 @@ void printPressAnyKey()
 		}
 
 }
-
 
 int hack_slow()
 {

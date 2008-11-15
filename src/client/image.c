@@ -53,9 +53,7 @@ static SDL_Surface *loadImage(const char *filename, int alpha)
 		return NULL;
 	}
 
-	if ((ret =
-		 (alpha) ? SDL_DisplayFormatAlpha(tmp) : SDL_DisplayFormat(tmp)) ==
-		NULL) {
+	if ((ret = (alpha) ? SDL_DisplayFormatAlpha(tmp) : SDL_DisplayFormat(tmp)) == NULL) {
 		fprintf(stderr, "%s\n", SDL_GetError());
 		SDL_FreeSurface(tmp);
 		return NULL;

@@ -32,6 +32,7 @@ void widgetGetLocation(widget_t * p, int *x, int *y)
 {
 	if (x != NULL)
 		*x = p->x;
+
 	if (y != NULL)
 		*y = p->y;
 }
@@ -46,6 +47,7 @@ void widgetGetSize(widget_t * p, int *w, int *h)
 {
 	if (w != NULL)
 		*w = p->w;
+
 	if (h != NULL)
 		*h = p->h;
 }

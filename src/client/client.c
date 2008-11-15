@@ -157,8 +157,7 @@ void sendServer(char *msg)
 #endif
 
 	if (sock_server_udp != NULL) {
-		ret =
-			writeUdpSocket(sock_server_udp, sock_server_udp, msg, strlen(msg));
+		ret = writeUdpSocket(sock_server_udp, sock_server_udp, msg, strlen(msg));
 	}
 
 	if (ret < 0) {
@@ -176,15 +175,14 @@ static int eventServerSelect()
 	ret = -1;
 
 	if (sock_server_udp != NULL) {
-		ret =
-			readUdpSocket(sock_server_udp, sock_server_udp, buffer,
-						  STR_PROTO_SIZE - 1);
+		ret = readUdpSocket(sock_server_udp, sock_server_udp, buffer, STR_PROTO_SIZE - 1);
 	}
 
 	if (ret < 0) {
 		errorWithServer();
 		return ret;
 	}
+
 #ifdef SUPPORT_TRAFFIC
 	traffic_down += ret;
 #endif

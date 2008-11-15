@@ -9,8 +9,7 @@
 #include "widget.h"
 #include "widget_choicegroup.h"
 
-widget_t *newWidgetChoicegroup(int x, int y, bool_t status, list_t * list,
-							   void (*fce_event) (void *))
+widget_t *newWidgetChoicegroup(int x, int y, bool_t status, list_t * list, void (*fce_event) (void *))
 {
 	widget_choicegroup_t *new;
 	widget_t *widget;
@@ -21,9 +20,8 @@ widget_t *newWidgetChoicegroup(int x, int y, bool_t status, list_t * list,
 	new->fce_event = fce_event;
 	new->list = list;
 
-	widget =
-		newWidget(WIDGET_TYPE_CHOICE, x, y, WIDGET_CHOICEGROUP_WIDTH,
-				  WIDGET_CHOICEGROUP_HEIGHT, new);
+	widget = newWidget(WIDGET_TYPE_CHOICE, x, y, WIDGET_CHOICEGROUP_WIDTH, WIDGET_CHOICEGROUP_HEIGHT, new);
+
 	addList(new->list, widget);
 
 	return widget;
@@ -44,9 +42,7 @@ void drawWidgetChoicegroup(widget_t * widget)
 	getMousePosition(&x, &y);
 
 	if (g_choicegroup == NULL) {
-		g_choicegroup =
-			addImageData("choice.png", IMAGE_ALPHA, "choicegroup",
-						 IMAGE_GROUP_BASE);
+		g_choicegroup = addImageData("choice.png", IMAGE_ALPHA, "choicegroup", IMAGE_GROUP_BASE);
 	}
 
 	if (p->status == TRUE) {
@@ -56,7 +52,7 @@ void drawWidgetChoicegroup(widget_t * widget)
 	}
 
 	drawImage(g_choicegroup, widget->x, widget->y, offset, 0,
-			  WIDGET_CHOICEGROUP_WIDTH, WIDGET_CHOICEGROUP_HEIGHT);
+		  WIDGET_CHOICEGROUP_WIDTH, WIDGET_CHOICEGROUP_HEIGHT);
 }
 
 void setWidgetChoiceActive(widget_t * widget)
@@ -127,7 +123,7 @@ void eventWidgetChoicegroup(widget_t * widget)
 	getMousePosition(&x, &y);
 
 	if (x >= widget->x && x <= widget->x + WIDGET_CHOICEGROUP_WIDTH &&
-		y >= widget->y && y <= widget->y + WIDGET_CHOICEGROUP_HEIGHT &&
+	    y >= widget->y && y <= widget->y + WIDGET_CHOICEGROUP_HEIGHT &&
 		isMouseClicked()) {
 		setWidgetChoiceActive(widget);
 	}

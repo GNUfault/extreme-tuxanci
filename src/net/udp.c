@@ -57,6 +57,7 @@ sock_udp_t *bindUdpSocket(char *address, int port, int proto)
 	if (new->proto == PROTO_UDPv4) {
 		new->sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	}
+
 #ifdef SUPPORT_IPv6
 	if (new->proto == PROTO_UDPv6) {
 		new->sock = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
@@ -79,9 +80,7 @@ sock_udp_t *bindUdpSocket(char *address, int port, int proto)
 		new->sockAddr.sin_port = htons(port);
 		new->sockAddr.sin_addr.s_addr = inet_addr(address);
 
-		res =
-			bind(new->sock, (struct sockaddr *) &(new->sockAddr),
-				 sizeof(new->sockAddr));
+		res = bind(new->sock, (struct sockaddr *) &(new->sockAddr), sizeof(new->sockAddr));
 	}
 #ifdef SUPPORT_IPv6
 	if (new->proto == PROTO_UDPv6) {
@@ -89,9 +88,7 @@ sock_udp_t *bindUdpSocket(char *address, int port, int proto)
 		new->sockAddr6.sin6_port = htons(port);
 		inet_pton(AF_INET6, address, &(new->sockAddr6.sin6_addr));
 
-		res =
-			bind(new->sock, (struct sockaddr *) &(new->sockAddr6),
-				 sizeof(new->sockAddr6));
+		res = bind(new->sock, (struct sockaddr *) &(new->sockAddr6), sizeof(new->sockAddr6));
 	}
 #endif
 
@@ -121,6 +118,7 @@ sock_udp_t *connectUdpSocket(char *address, int port, int proto)
 	if (new->proto == PROTO_UDPv4) {
 		new->sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	}
+
 #ifdef SUPPORT_IPv6
 	if (new->proto == PROTO_UDPv6) {
 		new->sock = socket(AF_INET6, SOCK_DGRAM, IPPROTO_UDP);
@@ -188,23 +186,23 @@ int readUdpSocket(sock_udp_t * src, sock_udp_t * dst, void *address, int len)
 		addrlen = sizeof(src->sockAddr);
 
 #ifndef __WIN32
-		size =
-			recvfrom(src->sock, address, len, 0,
-					 (struct sockaddr *) &dst->sockAddr,
-					 (socklen_t *) & addrlen);
+		size = recvfrom(src->sock, address, len, 0,
+				(struct sockaddr *) &dst->sockAddr,
+				(socklen_t *) & addrlen);
 #else
 		size =
 			recvfrom(src->sock, address, len, 0,
-					 (struct sockaddr *) &dst->sockAddr, (int *) &addrlen);
+				(struct sockaddr *) &dst->sockAddr, (int *) &addrlen);
 #endif
 	}
+
 #ifdef SUPPORT_IPv6
 	if (dst->proto == PROTO_UDPv6) {
 		addrlen = sizeof(src->sockAddr6);
 
 		size = recvfrom(src->sock, address, len, 0,
-						(struct sockaddr *) &dst->sockAddr6,
-						(socklen_t *) & addrlen);
+				(struct sockaddr *) &dst->sockAddr6,
+				(socklen_t *) & addrlen);
 	}
 #endif
 
@@ -238,17 +236,15 @@ int writeUdpSocket(sock_udp_t * src, sock_udp_t * dst, void *address, int len)
 	if (dst->proto == PROTO_UDPv4) {
 		addrlen = sizeof(src->sockAddr);
 
-		size =
-			sendto(src->sock, address, len, 0,
-				   (struct sockaddr *) &dst->sockAddr, addrlen);
+		size = sendto(src->sock, address, len, 0,
+		       (struct sockaddr *) &dst->sockAddr, addrlen);
 	}
 #ifdef SUPPORT_IPv6
 	if (dst->proto == PROTO_UDPv6) {
 		addrlen = sizeof(src->sockAddr6);
 
-		size =
-			sendto(src->sock, address, len, 0,
-				   (struct sockaddr *) &dst->sockAddr6, addrlen);
+		size = sendto(src->sock, address, len, 0,
+		       (struct sockaddr *) &dst->sockAddr6, addrlen);
 	}
 #endif
 

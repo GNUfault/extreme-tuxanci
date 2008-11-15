@@ -29,55 +29,22 @@ void initPanel()
 	assert(isImageInicialized() == TRUE);
 	assert(isInterfaceInicialized() == TRUE);
 
-	g_panel =
-		addImageData("panel.png", IMAGE_ALPHA, "panel", IMAGE_GROUP_BASE);
-	g_shot =
-		addImageData("panel_shot.png", IMAGE_ALPHA, "panel_image_shot",
-					 IMAGE_GROUP_BASE);
-	g_bonus =
-		addImageData("graf.bonus.png", IMAGE_ALPHA, "panel_graf_bonus",
-					 IMAGE_GROUP_BASE);
-
-	g_icon[GUN_SIMPLE] =
-		addImageData("icon.gun.simple.png", IMAGE_ALPHA, "panel_gun",
-					 IMAGE_GROUP_BASE);
-	g_icon[GUN_DUAL_SIMPLE] =
-		addImageData("icon.gun.dual.simple.png", IMAGE_ALPHA, "panel_dual",
-					 IMAGE_GROUP_BASE);
-	g_icon[GUN_TOMMY] =
-		addImageData("icon.gun.tommy.png", IMAGE_ALPHA, "panel_tommy",
-					 IMAGE_GROUP_BASE);
-	g_icon[GUN_SCATTER] =
-		addImageData("icon.gun.scatter.png", IMAGE_ALPHA, "panel_scatter",
-					 IMAGE_GROUP_BASE);
-	g_icon[GUN_LASSER] =
-		addImageData("icon.gun.lasser.png", IMAGE_ALPHA, "panel_lasser",
-					 IMAGE_GROUP_BASE);
-	g_icon[GUN_MINE] =
-		addImageData("icon.gun.mine.png", IMAGE_ALPHA, "panel_mine",
-					 IMAGE_GROUP_BASE);
-	g_icon[GUN_BOMBBALL] =
-		addImageData("icon.gun.bombball.png", IMAGE_ALPHA, "panel_bombball",
-					 IMAGE_GROUP_BASE);
-
-	g_icon[BONUS_SPEED] =
-		addImageData("icon.bonus.speed.png", IMAGE_ALPHA, "panel_speed",
-					 IMAGE_GROUP_BASE);
-	g_icon[BONUS_SHOT] =
-		addImageData("icon.bonus.shot.png", IMAGE_ALPHA, "panel_shot",
-					 IMAGE_GROUP_BASE);
-	g_icon[BONUS_TELEPORT] =
-		addImageData("icon.bonus.teleport.png", IMAGE_ALPHA, "panel_teleport",
-					 IMAGE_GROUP_BASE);
-	g_icon[BONUS_GHOST] =
-		addImageData("icon.bonus.ghost.png", IMAGE_ALPHA, "panel_ghost",
-					 IMAGE_GROUP_BASE);
-	g_icon[BONUS_4X] =
-		addImageData("icon.bonus.4x.png", IMAGE_ALPHA, "panel_4x",
-					 IMAGE_GROUP_BASE);
-	g_icon[BONUS_HIDDEN] =
-		addImageData("icon.bonus.hidden.png", IMAGE_ALPHA, "panel_hidden",
-					 IMAGE_GROUP_BASE);
+	g_panel = addImageData("panel.png", IMAGE_ALPHA, "panel", IMAGE_GROUP_BASE);
+	g_shot = addImageData("panel_shot.png", IMAGE_ALPHA, "panel_image_shot",IMAGE_GROUP_BASE);
+	g_bonus = addImageData("graf.bonus.png", IMAGE_ALPHA, "panel_graf_bonus", IMAGE_GROUP_BASE);
+	g_icon[GUN_SIMPLE] = addImageData("icon.gun.simple.png", IMAGE_ALPHA, "panel_gun", IMAGE_GROUP_BASE);
+	g_icon[GUN_DUAL_SIMPLE] = addImageData("icon.gun.dual.simple.png", IMAGE_ALPHA, "panel_dual", IMAGE_GROUP_BASE);
+	g_icon[GUN_TOMMY] = addImageData("icon.gun.tommy.png", IMAGE_ALPHA, "panel_tommy", IMAGE_GROUP_BASE);
+	g_icon[GUN_SCATTER] = addImageData("icon.gun.scatter.png", IMAGE_ALPHA, "panel_scatter", IMAGE_GROUP_BASE);
+	g_icon[GUN_LASSER] = addImageData("icon.gun.lasser.png", IMAGE_ALPHA, "panel_lasser", IMAGE_GROUP_BASE);
+	g_icon[GUN_MINE] = addImageData("icon.gun.mine.png", IMAGE_ALPHA, "panel_mine", IMAGE_GROUP_BASE);
+	g_icon[GUN_BOMBBALL] = addImageData("icon.gun.bombball.png", IMAGE_ALPHA, "panel_bombball", IMAGE_GROUP_BASE);
+	g_icon[BONUS_SPEED] = addImageData("icon.bonus.speed.png", IMAGE_ALPHA, "panel_speed", IMAGE_GROUP_BASE);
+	g_icon[BONUS_SHOT] = addImageData("icon.bonus.shot.png", IMAGE_ALPHA, "panel_shot", IMAGE_GROUP_BASE);
+	g_icon[BONUS_TELEPORT] = addImageData("icon.bonus.teleport.png", IMAGE_ALPHA, "panel_teleport", IMAGE_GROUP_BASE);
+	g_icon[BONUS_GHOST] = addImageData("icon.bonus.ghost.png", IMAGE_ALPHA, "panel_ghost", IMAGE_GROUP_BASE);
+	g_icon[BONUS_4X] = addImageData("icon.bonus.4x.png", IMAGE_ALPHA, "panel_4x", IMAGE_GROUP_BASE);
+	g_icon[BONUS_HIDDEN] = addImageData("icon.bonus.hidden.png", IMAGE_ALPHA, "panel_hidden", IMAGE_GROUP_BASE);
 
 	isPanelInit = TRUE;
 }
@@ -96,14 +63,12 @@ static void drawScore(tux_t * tux_right, tux_t * tux_left)
 	}
 
 	getTextSize(strScoreLine, &w, &h);
-	drawFont(strScoreLine, PANEL_SCORE_LOCATION_X, PANEL_SCORE_LOCATION_Y,
-			 COLOR_WHITE);
+	drawFont(strScoreLine, PANEL_SCORE_LOCATION_X, PANEL_SCORE_LOCATION_Y, COLOR_WHITE);
 }
 
 static void drawShot(int n, int x, int y)
 {
-	drawImage(g_shot, x, y, n * PANEL_SHOT_WIDTH, 0, PANEL_SHOT_WIDTH,
-			  PANEL_SHOT_HEIGHT);
+	drawImage(g_shot, x, y, n * PANEL_SHOT_WIDTH, 0, PANEL_SHOT_WIDTH, PANEL_SHOT_HEIGHT);
 }
 
 static void drawShotInfo(tux_t * tux, int x, int y)
@@ -129,14 +94,12 @@ static void drawShotInfo(tux_t * tux, int x, int y)
 
 static void drawGunInfo(tux_t * tux, int x, int y)
 {
-	drawImage(g_icon[tux->gun], x, y, 0, 0,
-			  g_icon[tux->gun]->w, g_icon[tux->gun]->h);
+	drawImage(g_icon[tux->gun], x, y, 0, 0, g_icon[tux->gun]->w, g_icon[tux->gun]->h);
 }
 
 static void drawBonusInfo(tux_t * tux, int x, int y)
 {
-	drawImage(g_icon[tux->bonus], x, y, 0, 0, g_icon[tux->bonus]->w,
-			  g_icon[tux->bonus]->h);
+	drawImage(g_icon[tux->bonus], x, y, 0, 0, g_icon[tux->bonus]->w, g_icon[tux->bonus]->h);
 }
 
 static void drawGrafBonus(tux_t * tux, int x, int y)
@@ -180,13 +143,11 @@ static void drawTuxLeft(tux_t * tux)
 
 void drawPanel(tux_t * tux_right, tux_t * tux_left)
 {
-	drawImage(g_panel, PANEL_LOCATION_X, PANEL_LOCATION_Y, 0, 0, g_panel->w,
-			  g_panel->h);
+	drawImage(g_panel, PANEL_LOCATION_X, PANEL_LOCATION_Y, 0, 0, g_panel->w, g_panel->h);
 	drawScore(tux_right, tux_left);
 
 	if (isRecivedNewMsg()) {
-		drawFont("recived new msg", PANEL_LOCATION_X, PANEL_LOCATION_Y,
-				 COLOR_WHITE);
+		drawFont("recived new msg", PANEL_LOCATION_X, PANEL_LOCATION_Y, COLOR_WHITE);
 	}
 
 	drawTuxRight(tux_right);

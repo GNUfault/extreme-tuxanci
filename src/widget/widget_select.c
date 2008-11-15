@@ -94,8 +94,8 @@ void drawWidgetSelect(widget_t * widget)
 
 		getTextSize(line, &w, &h);
 
-		if (x > widget->x && y > widget->y + i * 20 && x < widget->x + w
-			&& y < widget->y + i * 20 + h) {
+		if (x > widget->x && y > widget->y + i * 20 &&
+		    x < widget->x + w && y < widget->y + i * 20 + h) {
 			drawFont(line, widget->x, widget->y + i * 20, COLOR_YELLOW);
 		} else {
 			if (p->select == i) {
@@ -127,8 +127,8 @@ void eventWidgetSelect(widget_t * widget)
 		getTextSize(line, &w, &h);
 
 		if (x > widget->x && y > widget->y + i * 20 &&
-			x < widget->x + w && y < widget->y + i * 20 + h &&
-			isMouseClicked()) {
+		    x < widget->x + w && y < widget->y + i * 20 + h &&
+		    isMouseClicked()) {
 			p->select = i;
 			p->fce_event(p);
 		}

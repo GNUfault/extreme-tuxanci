@@ -55,6 +55,7 @@ sock_tcp_t *bindTcpSocket(char *address, int port, int proto)
 	if (new->proto == PROTO_TCPv4) {
 		new->sock = socket(AF_INET, SOCK_STREAM, 0);
 	}
+
 #ifdef SUPPORT_IPv6
 	if (new->proto == PROTO_TCPv6) {
 		new->sock = socket(AF_INET6, SOCK_STREAM, 0);
@@ -114,15 +115,13 @@ sock_tcp_t *getTcpNewClient(sock_tcp_t * p)
 	if (new->proto == PROTO_TCPv4) {
 		client_len = sizeof(new->sockAddr);
 
-		new->sock = accept(p->sock, (struct sockaddr *) &new->sockAddr,
-						   (socklen_t *) & client_len);
+		new->sock = accept(p->sock, (struct sockaddr *) &new->sockAddr, (socklen_t *) & client_len);
 	}
 #ifdef SUPPORT_IPv6
 	if (new->proto == PROTO_TCPv6) {
 		client_len = sizeof(new->sockAddr6);
 
-		new->sock = accept(p->sock, (struct sockaddr *) &new->sockAddr6,
-						   (socklen_t *) & client_len);
+		new->sock = accept(p->sock, (struct sockaddr *) &new->sockAddr6, (socklen_t *) & client_len);
 	}
 #endif
 
@@ -186,6 +185,7 @@ sock_tcp_t *connectTcpSocket(char *ip, int port, int proto)
 	if (new->proto == PROTO_TCPv4) {
 		new->sock = socket(AF_INET, SOCK_STREAM, 0);
 	}
+
 #ifdef SUPPORT_IPv6
 	if (new->proto == PROTO_TCPv6) {
 		new->sock = socket(AF_INET6, SOCK_STREAM, 0);
@@ -206,6 +206,7 @@ sock_tcp_t *connectTcpSocket(char *ip, int port, int proto)
 		len = sizeof(new->sockAddr);
 		ret = connect(new->sock, (struct sockaddr *) &new->sockAddr, len);
 	}
+
 #ifdef SUPPORT_IPv6
 	if (new->proto == PROTO_TCPv6) {
 		new->sockAddr6.sin6_family = AF_INET6;
@@ -235,10 +236,10 @@ int disableNagle(sock_tcp_t * p)
 	int result;
 
 	result = setsockopt(p->sock,	/* socket affected */
-						IPPROTO_TCP,	/* set option at TCP level */
-						TCP_NODELAY,	/* name of option */
-						(char *) &flag,	/* the cast is historical cruft */
-						sizeof(int));	/* length of option value */
+			   IPPROTO_TCP,	/* set option at TCP level */
+			   TCP_NODELAY,	/* name of option */
+			   (char *) &flag,	/* the cast is historical cruft */
+			   sizeof(int));	/* length of option value */
 
 #if 0
 	if (result < 0) {

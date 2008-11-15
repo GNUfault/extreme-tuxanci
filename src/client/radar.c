@@ -81,8 +81,7 @@ void initRadar()
 	assert(isImageInicialized() == TRUE);
 	assert(isInterfaceInicialized() == TRUE);
 
-	g_radar =
-		addImageData("radar.png", IMAGE_NO_ALPHA, "radar", IMAGE_GROUP_USER);
+	g_radar = addImageData("radar.png", IMAGE_NO_ALPHA, "radar", IMAGE_GROUP_USER);
 	listRadar = newList();
 }
 
@@ -90,8 +89,7 @@ void drawRadar(arena_t * arena)
 {
 	int i;
 
-	drawImage(g_radar, RADAR_LOCATION_X, RADAR_LOCATION_Y, 0, 0,
-			  RADAR_SIZE_X + 2, RADAR_SIZE_Y + 2);
+	drawImage(g_radar, RADAR_LOCATION_X, RADAR_LOCATION_Y, 0, 0, RADAR_SIZE_X + 2, RADAR_SIZE_Y + 2);
 
 	for (i = 0; i < listRadar->count; i++) {
 		radar_item_t *thisRadarItem;
@@ -99,15 +97,13 @@ void drawRadar(arena_t * arena)
 
 		thisRadarItem = (radar_item_t *) listRadar->list[i];
 
-		x = (((float) RADAR_SIZE_X) / ((float) arena->w)) *
-			((float) thisRadarItem->x);
-		y = (((float) RADAR_SIZE_Y) / ((float) arena->h)) *
-			((float) thisRadarItem->y);
+		x = (((float) RADAR_SIZE_X) / ((float) arena->w)) * ((float) thisRadarItem->x);
+
+		y = (((float) RADAR_SIZE_Y) / ((float) arena->h)) * ((float) thisRadarItem->y);
 
 		if (x >= 0 && x <= RADAR_SIZE_X && y >= 0 && y <= RADAR_SIZE_Y) {
-			drawImage(g_radar,
-					  RADAR_LOCATION_X + 1 + x, RADAR_LOCATION_Y + 1 + y,
-					  2 * thisRadarItem->type, RADAR_SIZE_Y + 2, 2, 2);
+			drawImage(g_radar, RADAR_LOCATION_X + 1 + x, RADAR_LOCATION_Y + 1 + y,
+				  2 * thisRadarItem->type, RADAR_SIZE_Y + 2, 2, 2);
 		}
 	}
 }

@@ -9,8 +9,7 @@
 #include "widget.h"
 #include "widget_check.h"
 
-widget_t *newWidgetCheck(int x, int y, bool_t status,
-						 void (*fce_event) (void *))
+widget_t *newWidgetCheck(int x, int y, bool_t status,  void (*fce_event) (void *))
 {
 	widget_check_t *new;
 
@@ -19,8 +18,7 @@ widget_t *newWidgetCheck(int x, int y, bool_t status,
 	new->status = status;
 	new->fce_event = fce_event;
 
-	return newWidget(WIDGET_TYPE_CHECK, x, y, WIDGET_CHECK_WIDTH,
-					 WIDGET_CHECK_HEIGHT, new);
+	return newWidget(WIDGET_TYPE_CHECK, x, y, WIDGET_CHECK_WIDTH, WIDGET_CHECK_HEIGHT, new);
 }
 
 void drawWidgetCheck(widget_t * widget)
@@ -38,8 +36,7 @@ void drawWidgetCheck(widget_t * widget)
 	getMousePosition(&x, &y);
 
 	if (g_check == NULL) {
-		g_check =
-			addImageData("check.png", IMAGE_ALPHA, "check", IMAGE_GROUP_BASE);
+		g_check = addImageData("check.png", IMAGE_ALPHA, "check", IMAGE_GROUP_BASE);
 	}
 
 	if (p->status == TRUE) {
@@ -48,8 +45,7 @@ void drawWidgetCheck(widget_t * widget)
 		offset = WIDGET_CHECK_WIDTH;
 	}
 
-	drawImage(g_check, widget->x, widget->y, offset, 0, WIDGET_CHECK_WIDTH,
-			  WIDGET_CHECK_HEIGHT);
+	drawImage(g_check, widget->x, widget->y, offset, 0, WIDGET_CHECK_WIDTH, WIDGET_CHECK_HEIGHT);
 }
 
 void eventWidgetCheck(widget_t * widget)
@@ -70,8 +66,8 @@ void eventWidgetCheck(widget_t * widget)
 	getMousePosition(&x, &y);
 
 	if (x >= widget->x && x <= widget->x + WIDGET_CHECK_WIDTH &&
-		y >= widget->y && y <= widget->y + WIDGET_CHECK_HEIGHT &&
-		isMouseClicked()) {
+	    y >= widget->y && y <= widget->y + WIDGET_CHECK_HEIGHT &&
+	    isMouseClicked()) {
 		if (p->status == TRUE) {
 			p->status = FALSE;
 			p->time = WIDGET_CHECK_TIME_SWITCH_STATUS;

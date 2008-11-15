@@ -30,22 +30,22 @@ void initTerm()
 static char *getStrGun(int gun)
 {
 	switch (gun) {
-	case GUN_SIMPLE:
-		return "revolver";
-	case GUN_DUAL_SIMPLE:
-		return "dual revolver";
-	case GUN_SCATTER:
-		return "scatter";
-	case GUN_TOMMY:
-		return "tommy";
-	case GUN_LASSER:
-		return "lasser";
-	case GUN_MINE:
-		return "mine";
-	case GUN_BOMBBALL:
-		return "bombball";
-	default:
-		return "none";
+		case GUN_SIMPLE:
+			return "revolver";
+		case GUN_DUAL_SIMPLE:
+			return "dual revolver";
+		case GUN_SCATTER:
+			return "scatter";
+		case GUN_TOMMY:
+			return "tommy";
+		case GUN_LASSER:
+			return "lasser";
+		case GUN_MINE:
+			return "mine";
+		case GUN_BOMBBALL:
+			return "bombball";
+		default:
+			return "none";
 	}
 
 	return "gun_unknow";
@@ -54,20 +54,20 @@ static char *getStrGun(int gun)
 static char *getStrBonus(int bonus)
 {
 	switch (bonus) {
-	case BONUS_SPEED:
-		return "speed";
-	case BONUS_SHOT:
-		return "shot";
-	case BONUS_TELEPORT:
-		return "teleport";
-	case BONUS_GHOST:
-		return "ghost";
-	case BONUS_4X:
-		return "4X";
-	case BONUS_HIDDEN:
-		return "hidden";
-	default:
-		return "none";
+		case BONUS_SPEED:
+			return "speed";
+		case BONUS_SHOT:
+			return "shot";
+		case BONUS_TELEPORT:
+			return "teleport";
+		case BONUS_GHOST:
+			return "ghost";
+		case BONUS_4X:
+			return "4X";
+		case BONUS_HIDDEN:
+			return "hidden";
+		default:
+			return "none";
 	}
 
 	return "bonus_unknow";

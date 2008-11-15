@@ -98,34 +98,18 @@ void initScreenMainMenu()
 					 IMAGE_GROUP_BASE);
 	image_backgorund = newWidgetImage(0, 0, image);
 
-	button_play =
-		newWidgetButton(_("Start game"),
-						WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 200,
-						eventWidget);
-	button_setting =
-		newWidgetButton(_("Settings"),
-						WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 250,
-						eventWidget);
-	button_table =
-		newWidgetButton(_("Highscore"),
-						WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 300,
-						eventWidget);
-	button_credits =
-		newWidgetButton(_("Credits"),
-						WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 350,
-						eventWidget);
-	button_end =
-		newWidgetButton(_("Quit game"),
-						WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 400,
-						eventWidget);
+	button_play = newWidgetButton(_("Start game"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 200, eventWidget);
+	button_setting = newWidgetButton(_("Settings"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 250, eventWidget);
+	button_table = newWidgetButton(_("Highscore"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 300, eventWidget);
+	button_credits = newWidgetButton(_("Credits"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 350, eventWidget);
+	button_end = newWidgetButton(_("Quit game"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 400, eventWidget);
 
 #ifndef NO_SOUND
 	addMusic("menu.ogg", "menu", MUSIC_GROUP_BASE);
 #endif
 
-	registerScreen(newScreen
-				   ("mainMenu", startScreenMainMenu, eventScreenMainMenu,
-					drawScreenMainMenu, stopScreenMainMenu));
+	registerScreen( newScreen("mainMenu", startScreenMainMenu, eventScreenMainMenu,
+			drawScreenMainMenu, stopScreenMainMenu));
 }
 
 void quitScreenMainMenu()

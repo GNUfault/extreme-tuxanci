@@ -84,8 +84,7 @@ void eventScreenAnalyze()
 void stopScreenAnalyze()
 {
 	destroyWidgetLabel(widgetLabelMsg);
-	widgetLabelMsg =
-		newWidgetLabel("", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
+	widgetLabelMsg = newWidgetLabel("", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
 }
 
 static void eventWidget(void *p)
@@ -118,8 +117,7 @@ void addAnalyze(char *name, int score)
 void setMsgToAnalyze(char *msg)
 {
 	destroyWidgetLabel(widgetLabelMsg);
-	widgetLabelMsg =
-		newWidgetLabel(msg, WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
+	widgetLabelMsg = newWidgetLabel(msg, WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
 }
 
 void endAnalyze()
@@ -132,16 +130,13 @@ void endAnalyze()
 
 		this = (analyze_t *) (listAnalyze->list[i]);
 
-		addList(listWidgetLabelName, newWidgetLabel(this->name,
-													100, 200 + 20 * i,
-													WIDGET_LABEL_LEFT));
+		addList(listWidgetLabelName, newWidgetLabel(this->name, 100,
+							    200 + 20 * i, WIDGET_LABEL_LEFT));
 
 		str = getString(this->score);
 
-		addList(listWidgetLabelScore, newWidgetLabel(str,
-													 WINDOW_SIZE_X - 100,
-													 200 + 20 * i,
-													 WIDGET_LABEL_RIGHT));
+		addList(listWidgetLabelScore, newWidgetLabel(str, WINDOW_SIZE_X - 100,
+							     200 + 20 * i, WIDGET_LABEL_RIGHT));
 
 		free(str);
 	}
@@ -158,16 +153,13 @@ void initScreenAnalyze()
 	listWidgetLabelScore = newList();
 	listAnalyze = newList();
 
-	button_ok =
-		newWidgetButton("OK", WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
-						WINDOW_SIZE_Y - 100, eventWidget);
+	button_ok = newWidgetButton("OK", WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
+				    WINDOW_SIZE_Y - 100, eventWidget);
 
-	registerScreen(newScreen
-				   ("analyze", startScreenAnalyze, eventScreenAnalyze,
-					drawScreenAnalyze, stopScreenAnalyze));
+	registerScreen( newScreen("analyze", startScreenAnalyze, eventScreenAnalyze,
+			drawScreenAnalyze, stopScreenAnalyze));
 
-	widgetLabelMsg =
-		newWidgetLabel("", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
+	widgetLabelMsg = newWidgetLabel("", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
 }
 
 void quitScreenAnalyze()

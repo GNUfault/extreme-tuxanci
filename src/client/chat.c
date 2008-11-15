@@ -47,8 +47,7 @@ static void hotkey_chat()
 
 void initChat()
 {
-	g_chat =
-		addImageData("chat.png", IMAGE_NO_ALPHA, "chat", IMAGE_GROUP_USER);
+	g_chat = addImageData("chat.png", IMAGE_NO_ALPHA, "chat", IMAGE_GROUP_USER);
 
 	listText = newList();
 	strcpy(line, "");
@@ -70,8 +69,7 @@ void drawChat()
 		return;
 	}
 
-	drawImage(g_chat,
-			  CHAT_LOCATION_X, CHAT_LOCATION_Y,
+	drawImage(g_chat, CHAT_LOCATION_X, CHAT_LOCATION_Y,
 			  0, 0, CHAT_SIZE_X, CHAT_SIZE_Y);
 
 	for (i = 0; i < listText->count; i++) {
@@ -79,9 +77,8 @@ void drawChat()
 
 		s = (char *) listText->list[i];
 
-		drawFontMaxSize(s,
-						CHAT_LOCATION_X + 5, CHAT_LOCATION_Y + 5 + i * 20,
-						CHAT_SIZE_X - 10, 20, COLOR_WHITE);
+		drawFontMaxSize(s, CHAT_LOCATION_X + 5, CHAT_LOCATION_Y + 5 + i * 20,
+				   CHAT_SIZE_X - 10, 20, COLOR_WHITE);
 	}
 
 	strcpy(str, line);
@@ -96,8 +93,7 @@ void drawChat()
 		timeBlick = 0;
 	}
 
-	drawFont(str, CHAT_LOCATION_X + 5,
-			 (CHAT_LOCATION_Y + 5) + (CHAT_MAX_LINES * 20), COLOR_WHITE);
+	drawFont(str, CHAT_LOCATION_X + 5, (CHAT_LOCATION_Y + 5) + (CHAT_MAX_LINES * 20), COLOR_WHITE);
 }
 
 static void processMessageKey(SDL_keysym keysym)

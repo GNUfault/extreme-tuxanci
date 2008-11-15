@@ -30,18 +30,22 @@ int getValue(char *line, char *env, char *val, int len)
 	strcpy(clone_env, env);
 
 	offset_env = strstr(line, clone_env);
+
 	if (offset_env == NULL)
 		return -1;
 
 	offset_val_begin = strchr(offset_env, '"');
+
 	if (offset_val_begin == NULL)
 		return -1;
 
 	offset_val_end = strchr(offset_val_begin + 1, '"');
+
 	if (offset_val_end == NULL)
 		return -1;
 
 	val_len = (int) (offset_val_end - (offset_val_begin + 1));
+
 	if (val_len > len - 1)
 		val_len = len - 1;
 
@@ -63,14 +67,17 @@ char *setValue(char *line, char *env, char *val)
 	strcpy(clone_env, env);
 
 	offset_env = strstr(line, clone_env);
+
 	if (offset_env == NULL)
 		return NULL;
 
 	offset_val_begin = strchr(offset_env, '"');
+
 	if (offset_val_begin == NULL)
 		return NULL;
 
 	offset_val_end = strchr(offset_val_begin + 1, '"');
+
 	if (offset_val_end == NULL)
 		return NULL;
 
@@ -124,9 +131,7 @@ int setValueInConfigFile(textFile_t * textFile, char *env, char *val)
 	return -1;
 }
 
-void
-loadValueFromConfigFile(textFile_t * textFile, char *env, char *val, int len,
-						char *butVal)
+void loadValueFromConfigFile(textFile_t * textFile, char *env, char *val, int len, char *butVal)
 {
 	strcpy(val, butVal);
 

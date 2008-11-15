@@ -90,14 +90,14 @@ static void setWidgetLabel()
 	int i;
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("Highscore file: \"%s\" was not loaded!"),
-				SCREEN_TABLE_FILE_HIGHSCORE_NAME);
+		fprintf(stderr, _("Highscore file: \"%s\" was not loaded!"), SCREEN_TABLE_FILE_HIGHSCORE_NAME);
 
 		return;
 	}
 
 	if (listWidgetLabelNumer != NULL ||
-		listWidgetLabelName != NULL || listWidgetLabelScore != NULL) {
+	    listWidgetLabelName != NULL ||
+	    listWidgetLabelScore != NULL) {
 		destroyListItem(listWidgetLabelNumer, destroyWidgetLabel);
 		destroyListItem(listWidgetLabelName, destroyWidgetLabel);
 		destroyListItem(listWidgetLabelScore, destroyWidgetLabel);
@@ -119,19 +119,13 @@ static void setWidgetLabel()
 		sscanf(line, "%s %s", name, score);
 		sprintf(num, "%2d)", i + 1);
 
-		label =
-			newWidgetLabel(num, WINDOW_SIZE_X / 2 - 100, 200 + i * 20,
-						   WIDGET_LABEL_LEFT);
+		label = newWidgetLabel(num, WINDOW_SIZE_X / 2 - 100, 200 + i * 20, WIDGET_LABEL_LEFT);
 		addList(listWidgetLabelNumer, label);
 
-		label =
-			newWidgetLabel(name, WINDOW_SIZE_X / 2, 200 + i * 20,
-						   WIDGET_LABEL_CENTER);
+		label = newWidgetLabel(name, WINDOW_SIZE_X / 2, 200 + i * 20, WIDGET_LABEL_CENTER);
 		addList(listWidgetLabelName, label);
 
-		label =
-			newWidgetLabel(score, WINDOW_SIZE_X / 2 + 80, 200 + i * 20,
-						   WIDGET_LABEL_LEFT);
+		label = newWidgetLabel(score, WINDOW_SIZE_X / 2 + 80, 200 + i * 20, WIDGET_LABEL_LEFT);
 		addList(listWidgetLabelScore, label);
 	}
 }
@@ -195,15 +189,11 @@ void initScreenTable()
 {
 	image_t *image;
 
-	image =
-		addImageData("screen_table.png", IMAGE_NO_ALPHA, "screen_table",
-					 IMAGE_GROUP_BASE);
+	image = addImageData("screen_table.png", IMAGE_NO_ALPHA, "screen_table", IMAGE_GROUP_BASE);
 	image_backgorund = newWidgetImage(0, 0, image);
 
-	button_back =
-		newWidgetButton(_("back"),
-						WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
-						WINDOW_SIZE_Y - 100, eventWidget);
+	button_back = newWidgetButton(_("back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
+						 WINDOW_SIZE_Y - 100, eventWidget);
 
 	loadHighscoreFile();
 	listWidgetLabelNumer = NULL;
@@ -211,8 +201,7 @@ void initScreenTable()
 	listWidgetLabelScore = NULL;
 	setWidgetLabel();
 
-	registerScreen(newScreen("table", startScreenTable, eventScreenTable,
-							 drawScreenTable, stopScreenTable));
+	registerScreen(newScreen("table", startScreenTable, eventScreenTable, drawScreenTable, stopScreenTable));
 }
 
 void quitScreenTable()

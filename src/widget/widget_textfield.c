@@ -27,8 +27,8 @@ widget_t *newWidgetTextfield(char *text, int filter, int x, int y)
 	new->filter = filter;
 	getTextSize(text, &new->w, &new->h);
 
-	return newWidget(WIDGET_TYPE_TEXTFILED, x, y, WIDGET_TEXTFIELD_WIDTH,
-					 WIDGET_TEXTFIELD_HEIGHT, new);
+	return newWidget(WIDGET_TYPE_TEXTFILED, x, y,
+			 WIDGET_TEXTFIELD_WIDTH, WIDGET_TEXTFIELD_HEIGHT, new);
 }
 
 static void drawBackground(widget_t * widget)
@@ -43,23 +43,17 @@ static void drawBackground(widget_t * widget)
 	p = (widget_textfield_t *) widget->private_data;
 
 	if (g_textfield0 == NULL) {
-		g_textfield0 =
-			addImageData("textfield0.png", IMAGE_ALPHA, "textfiled0",
-						 IMAGE_GROUP_BASE);
+		g_textfield0 = addImageData("textfield0.png", IMAGE_ALPHA, "textfiled0", IMAGE_GROUP_BASE);
 	}
 
 	if (g_textfield1 == NULL) {
-		g_textfield1 =
-			addImageData("textfield1.png", IMAGE_ALPHA, "textfiled1",
-						 IMAGE_GROUP_BASE);
+		g_textfield1 = addImageData("textfield1.png", IMAGE_ALPHA, "textfiled1", IMAGE_GROUP_BASE);
 	}
 
 	if (p->active) {
-		drawImage(g_textfield1, widget->x, widget->y, 0, 0, g_textfield1->w,
-				  g_textfield1->h);
+		drawImage(g_textfield1, widget->x, widget->y, 0, 0, g_textfield1->w, g_textfield1->h);
 	} else {
-		drawImage(g_textfield0, widget->x, widget->y, 0, 0, g_textfield0->w,
-				  g_textfield0->h);
+		drawImage(g_textfield0, widget->x, widget->y, 0, 0, g_textfield0->w, g_textfield0->h);
 	}
 }
 
@@ -75,8 +69,8 @@ static void drawText(widget_t * widget)
 
 	strcpy(str, p->text);
 
-	if (p->timeBlick > WIDGET_TEXTFIELD_TIME_BLICK_CURSOR / 2 &&
-		p->active == TRUE) {
+	if (p->timeBlick > WIDGET_TEXTFIELD_TIME_BLICK_CURSOR / 2 && p->active == TRUE)
+	{
 		//strcat(str, ">");
 		strcat(str, "\f");
 	}
@@ -86,12 +80,12 @@ static void drawText(widget_t * widget)
 	if (p->timeBlick == WIDGET_TEXTFIELD_TIME_BLICK_CURSOR) {
 		p->timeBlick = 0;
 	}
+
 	//drawFont(str, p->x+WIDGET_TEXTFIELD_TEXT_OFFSET_X, p->y+p->h/2, COLOR_WHITE);
 	//printf("p->y: %d\nheight: %d\n p->h: %d\n", p->y, WIDGET_TEXTFIELD_HEIGHT, p->h);
 
-	drawFont(str,
-			 widget->x + WIDGET_TEXTFIELD_TEXT_OFFSET_X,
-			 widget->y + WIDGET_TEXTFIELD_HEIGHT / 2 - p->h / 2, COLOR_WHITE);
+	drawFont(str, widget->x + WIDGET_TEXTFIELD_TEXT_OFFSET_X,
+		      widget->y + WIDGET_TEXTFIELD_HEIGHT / 2 - p->h / 2, COLOR_WHITE);
 }
 
 void drawWidgetTextfield(widget_t * widget)
@@ -145,33 +139,35 @@ static void checkText(widget_textfield_t * p)
 		isDel = TRUE;
 
 		switch (p->filter) {
-		case WIDGET_TEXTFIELD_FILTER_ALL:
-			isDel = FALSE;
-			break;
-
-		case WIDGET_TEXTFIELD_FILTER_NUM:
-			if (c >= '0' && c <= '9') {
+			case WIDGET_TEXTFIELD_FILTER_ALL:
 				isDel = FALSE;
-			}
-			break;
-
-		case WIDGET_TEXTFIELD_FILTER_ALPHANUM:
-			if ((c >= '0' && c <= '9') ||
-				(c >= 'a' && c <= 'z') ||
-				(c >= 'A' && c <= 'Z') || (c == '_' || c == '-')) {
-				isDel = FALSE;
-			}
-			break;
-
-		case WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN:
-			if ((c >= '0' && c <= '9') || (c == '.' || c == ':' || c == '-')) {
-				isDel = FALSE;
-			}
-			break;
-
-		default:
-			assert(!_("Bad filter!"));
-			break;
+				break;
+	
+			case WIDGET_TEXTFIELD_FILTER_NUM:
+				if (c >= '0' && c <= '9') {
+					isDel = FALSE;
+				}
+				break;
+	
+			case WIDGET_TEXTFIELD_FILTER_ALPHANUM:
+				if ((c >= '0' && c <= '9') ||
+				    (c >= 'a' && c <= 'z') ||
+				    (c >= 'A' && c <= 'Z') ||
+				    (c == '_' || c == '-')) {
+					isDel = FALSE;
+				}
+				break;
+	
+			case WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN:
+				if ((c >= '0' && c <= '9') ||
+				    (c == '.' || c == ':' || c == '-')) {
+					isDel = FALSE;
+				}
+				break;
+	
+			default:
+				assert(!_("Bad filter!"));
+				break;
 		}
 
 		if (isDel) {
@@ -182,7 +178,6 @@ static void checkText(widget_textfield_t * p)
 	}
 
 	getTextSize(p->text, &p->w, &p->h);
-
 }
 
 #ifdef ZZEEXX86_READKEY
@@ -351,8 +346,10 @@ static void readKey(widget_textfield_t * p)
 
 			if (strlen(name) == 1)
 				c = name[0];
+
 			if (strlen(name) == 3)
 				c = name[1];
+
 			if (strcmp(name, "space") == 0)
 				c = ' ';
 
@@ -385,8 +382,7 @@ static void readKey(widget_textfield_t * p)
 
 			p->text[len] = c;
 
-			if (mapa[SDLK_LSHIFT] == SDL_PRESSED ||
-				mapa[SDLK_RSHIFT] == SDL_PRESSED) {
+			if (mapa[SDLK_LSHIFT] == SDL_PRESSED || mapa[SDLK_RSHIFT] == SDL_PRESSED) {
 				int i;
 
 				for (i = 0; i < len_shift_map; i += 2) {
@@ -399,8 +395,7 @@ static void readKey(widget_textfield_t * p)
 				return;
 			}
 
-			if (mapa[SDLK_LSHIFT] == SDL_PRESSED ||
-				mapa[SDLK_RSHIFT] == SDL_PRESSED) {
+			if (mapa[SDLK_LSHIFT] == SDL_PRESSED || mapa[SDLK_RSHIFT] == SDL_PRESSED) {
 				p->text[len] -= 32;
 			}
 
@@ -425,7 +420,7 @@ void eventWidgetTextfield(widget_t * widget)
 
 	if (isMouseClicked()) {
 		if (x >= widget->x && x <= widget->x + WIDGET_TEXTFIELD_WIDTH &&
-			y >= widget->y && y <= widget->y + WIDGET_TEXTFIELD_HEIGHT) {
+		    y >= widget->y && y <= widget->y + WIDGET_TEXTFIELD_HEIGHT) {
 			p->active = TRUE;
 		} else {
 			p->active = FALSE;

@@ -62,9 +62,8 @@ void setGameType()
 {
 	int ret = 0;
 
-	ret =
-		initNetMuliplayer(getSettingGameType(), getSettingIP(),
-						  getSettingPort(), getSettingProto());
+	ret = initNetMuliplayer(getSettingGameType(), getSettingIP(),
+				getSettingPort(), getSettingProto());
 
 	if (ret != 0) {
 		fprintf(stderr, _("Network initialization error!\n"));
@@ -109,8 +108,7 @@ void countRoundInc()
 #ifndef NO_SOUND
 		playSound("end", SOUND_GROUP_BASE);
 #endif
-		addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE,
-					   timer_endArena, NULL, TIMER_END_ARENA);
+		addTaskToTimer(getCurrentArena()->listTimer, TIMER_ONE, timer_endArena, NULL, TIMER_END_ARENA);
 	}
 }
 
@@ -220,10 +218,13 @@ static void control_keyboard_right(tux_t * tux)
 
 	if (mapa[(SDLKey) getKey(KEY_TUX_RIGHT_MOVE_UP)] == SDL_PRESSED)
 		countKey++;
+
 	if (mapa[(SDLKey) getKey(KEY_TUX_RIGHT_MOVE_RIGHT)] == SDL_PRESSED)
 		countKey++;
+
 	if (mapa[(SDLKey) getKey(KEY_TUX_RIGHT_MOVE_LEFT)] == SDL_PRESSED)
 		countKey++;
+
 	if (mapa[(SDLKey) getKey(KEY_TUX_RIGHT_MOVE_DOWN)] == SDL_PRESSED)
 		countKey++;
 
@@ -309,10 +310,13 @@ static void control_keyboard_left(tux_t * tux)
 
 	if (mapa[(SDLKey) getKey(KEY_TUX_LEFT_MOVE_UP)] == SDL_PRESSED)
 		countKey++;
+
 	if (mapa[(SDLKey) getKey(KEY_TUX_LEFT_MOVE_RIGHT)] == SDL_PRESSED)
 		countKey++;
+
 	if (mapa[(SDLKey) getKey(KEY_TUX_LEFT_MOVE_LEFT)] == SDL_PRESSED)
 		countKey++;
+
 	if (mapa[(SDLKey) getKey(KEY_TUX_LEFT_MOVE_DOWN)] == SDL_PRESSED)
 		countKey++;
 
@@ -390,12 +394,12 @@ static void eventEnd()
 tux_t *getControlTux(int control_type)
 {
 	switch (control_type) {
-	case TUX_CONTROL_KEYBOARD_RIGHT:
-		return tuxWithControlRightKeyboard;
-		break;
-	case TUX_CONTROL_KEYBOARD_LEFT:
-		return tuxWithControlLeftKeyboard;
-		break;
+		case TUX_CONTROL_KEYBOARD_RIGHT:
+			return tuxWithControlRightKeyboard;
+			break;
+		case TUX_CONTROL_KEYBOARD_LEFT:
+			return tuxWithControlLeftKeyboard;
+			break;
 	}
 
 	return NULL;
@@ -404,12 +408,12 @@ tux_t *getControlTux(int control_type)
 void setControlTux(tux_t * tux, int control_type)
 {
 	switch (control_type) {
-	case TUX_CONTROL_KEYBOARD_RIGHT:
-		tuxWithControlRightKeyboard = tux;
-		break;
-	case TUX_CONTROL_KEYBOARD_LEFT:
-		tuxWithControlLeftKeyboard = tux;
-		break;
+		case TUX_CONTROL_KEYBOARD_RIGHT:
+			tuxWithControlRightKeyboard = tux;
+			break;
+		case TUX_CONTROL_KEYBOARD_LEFT:
+			tuxWithControlLeftKeyboard = tux;
+			break;
 	}
 }
 
@@ -422,21 +426,21 @@ void tuxControl(tux_t * p)
 	}
 
 	switch (p->control) {
-	case TUX_CONTROL_NONE:
-		assert(!_("Tux has not defined controls!"));
-		break;
-
-	case TUX_CONTROL_KEYBOARD_LEFT:
-		if (isChatActive() == FALSE) {
-			control_keyboard_left(p);
-		}
-		break;
-
-	case TUX_CONTROL_KEYBOARD_RIGHT:
-		if (isChatActive() == FALSE) {
-			control_keyboard_right(p);
-		}
-		break;
+		case TUX_CONTROL_NONE:
+			assert(!_("Tux has not defined controls!"));
+			break;
+	
+		case TUX_CONTROL_KEYBOARD_LEFT:
+			if (isChatActive() == FALSE) {
+				control_keyboard_left(p);
+			}
+			break;
+	
+		case TUX_CONTROL_KEYBOARD_RIGHT:
+			if (isChatActive() == FALSE) {
+				control_keyboard_right(p);
+			}
+			break;
 	}
 }
 

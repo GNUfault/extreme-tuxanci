@@ -49,6 +49,7 @@ void drawScreenChoiceArena()
 
 	for (i = 0; i < listWidgetButtonimage->count; i++) {
 		widget_t *this;
+
 		this = (widget_t *) listWidgetButtonimage->list[i];
 		drawWidgetButtonimage(this);
 	}
@@ -63,6 +64,7 @@ void eventScreenChoiceArena()
 
 	for (i = 0; i < listWidgetButtonimage->count; i++) {
 		widget_t *this;
+
 		this = (widget_t *) listWidgetButtonimage->list[i];
 		eventWidgetButtonimage(this);
 	}
@@ -135,11 +137,8 @@ void initScreenChoiceArena()
 	image = getImage(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
-	button_back =
-		newWidgetButton(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
-	button_play =
-		newWidgetButton(_("play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100,
-						eventWidget);
+	button_back = newWidgetButton(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
+	button_play = newWidgetButton(_("play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
 
 	listWidgetButtonimage = newList();
 	currentArena = NULL;
@@ -151,16 +150,13 @@ void initScreenChoiceArena()
 
 		arenaFile = getArenaFile(i);
 		//image = addImageData(getArenaImage(i), IMAGE_NO_ALPHA, "none", IMAGE_GROUP_BASE);
-		image = loadImageFromArena(arenaFile,
-								   getArenaImage(arenaFile),
-								   IMAGE_GROUP_BASE, "none", IMAGE_NO_ALPHA);
+		image = loadImageFromArena(arenaFile,  getArenaImage(arenaFile),
+					   IMAGE_GROUP_BASE, "none", IMAGE_NO_ALPHA);
 
 		x = 100 + 200 * (i - 3 * (i / 3));
 		y = 150 + 200 * (i / 3);
 
-		widget_buttonimage = newWidgetButtonimage(image,
-												  x, y,
-												  eventWidgetButtonImage);
+		widget_buttonimage = newWidgetButtonimage(image, x, y, eventWidgetButtonImage);
 /*
 		if( i == choiceArenaId )
 		{
@@ -170,10 +166,9 @@ void initScreenChoiceArena()
 		addList(listWidgetButtonimage, widget_buttonimage);
 	}
 
-	registerScreen(newScreen
-				   ("chiceArena", startScreenChoiceArena,
-					eventScreenChoiceArena, drawScreenChoiceArena,
-					stopScreenChoiceArena));
+	registerScreen( newScreen("chiceArena", startScreenChoiceArena,
+			eventScreenChoiceArena, drawScreenChoiceArena,
+			stopScreenChoiceArena));
 }
 
 void quitScreenChoiceArena()

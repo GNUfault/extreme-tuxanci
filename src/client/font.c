@@ -74,9 +74,7 @@ void drawFontMaxSize(char *s, int x, int y, int w, int h, int r, int g, int b)
 
 	assert(s != NULL);
 
-
 	text = TTF_RenderUTF8_Blended(g_font, s, font_color);
-
 
 	my_w = text->w;
 

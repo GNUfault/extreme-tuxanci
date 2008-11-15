@@ -46,8 +46,7 @@ static void eventWidget(void *p)
 	button = (widget_t *) p;
 
 	if (button == widgetButtonSave) {
-		saveArena(getTextFromWidgetTextfield(widgetTextFieldName),
-				  getCurrentArena());
+		saveArena(getTextFromWidgetTextfield(widgetTextFieldName), getCurrentArena());
 		switchTerm();
 	}
 
@@ -67,27 +66,23 @@ void initSaveDialog()
 
 	g_background = getImage(IMAGE_GROUP_BASE, "screen_main");
 
-	widgetLabelMsg = newWidgetLabel("name",
-									SAVE_DIALOG_LOCATIN_X + 20,
-									SAVE_DIALOG_LOCATIN_Y + 20,
-									WIDGET_LABEL_LEFT);
+	widgetLabelMsg = newWidgetLabel("name", SAVE_DIALOG_LOCATIN_X + 20,
+						SAVE_DIALOG_LOCATIN_Y + 20,
+						WIDGET_LABEL_LEFT);
 
-	widgetTextFieldName = newWidgetTextfield("noname",
-											 WIDGET_TEXTFIELD_FILTER_ALPHANUM,
-											 widgetLabelMsg->x +
-											 widgetLabelMsg->w + 10,
-											 widgetLabelMsg->y);
+	widgetTextFieldName = newWidgetTextfield("noname", WIDGET_TEXTFIELD_FILTER_ALPHANUM,
+							widgetLabelMsg->x +
+							widgetLabelMsg->w + 10,
+							 widgetLabelMsg->y);
 
-	widgetButtonSave = newWidgetButton("Save",
-									   SAVE_DIALOG_LOCATIN_X + 20,
-									   SAVE_DIALOG_LOCATIN_Y + 60,
-									   eventWidget);
+	widgetButtonSave = newWidgetButton("Save", SAVE_DIALOG_LOCATIN_X + 20,
+						SAVE_DIALOG_LOCATIN_Y + 60,
+						eventWidget);
 
-	widgetButtonBack = newWidgetButton("Back",
-									   SAVE_DIALOG_LOCATIN_X + 20 +
-									   WIDGET_BUTTON_WIDTH + 20,
-									   SAVE_DIALOG_LOCATIN_Y + 60,
-									   eventWidget);
+	widgetButtonBack = newWidgetButton("Back", SAVE_DIALOG_LOCATIN_X + 20 +
+						WIDGET_BUTTON_WIDTH + 20,
+						SAVE_DIALOG_LOCATIN_Y + 60,
+						eventWidget);
 
 	registerHotKey(SDLK_F2, hotkey_saveDialog);
 }
@@ -104,10 +99,12 @@ void drawSaveDialog()
 	}
 
 	drawImage(g_background,
-			  SAVE_DIALOG_LOCATIN_X,
-			  SAVE_DIALOG_LOCATIN_Y,
-			  SAVE_DIALOG_LOCATIN_X,
-			  SAVE_DIALOG_LOCATIN_Y, SAVE_DIALOG_SIZE_X, SAVE_DIALOG_SIZE_Y);
+		SAVE_DIALOG_LOCATIN_X,
+		SAVE_DIALOG_LOCATIN_Y,
+		SAVE_DIALOG_LOCATIN_X,
+		SAVE_DIALOG_LOCATIN_Y,
+		SAVE_DIALOG_SIZE_X,
+		SAVE_DIALOG_SIZE_Y);
 
 	drawWidgetLabel(widgetLabelMsg);
 	drawWidgetTextfield(widgetTextFieldName);

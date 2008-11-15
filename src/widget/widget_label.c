@@ -30,16 +30,15 @@ void drawWidgetLabel(widget_t * widget)
 	p = (widget_label_t *) widget->private_data;
 
 	switch (p->bind) {
-	case WIDGET_LABEL_RIGHT:
-		drawFont(p->text, widget->x + p->w, widget->y + p->h / 2, COLOR_WHITE);
-		break;
-	case WIDGET_LABEL_LEFT:
-		drawFont(p->text, widget->x, widget->y + widget->h / 2, COLOR_WHITE);
-		break;
-	case WIDGET_LABEL_CENTER:
-		drawFont(p->text, widget->x - p->w / 2, widget->y + p->h / 2,
-				 COLOR_WHITE);
-		break;
+		case WIDGET_LABEL_RIGHT:
+			drawFont(p->text, widget->x + p->w, widget->y + p->h / 2, COLOR_WHITE);
+			break;
+		case WIDGET_LABEL_LEFT:
+			drawFont(p->text, widget->x, widget->y + widget->h / 2, COLOR_WHITE);
+			break;
+		case WIDGET_LABEL_CENTER:
+			drawFont(p->text, widget->x - p->w / 2, widget->y + p->h / 2, COLOR_WHITE);
+			break;
 	}
 }
 

@@ -39,8 +39,7 @@ void initLayer()
  * layer - on which layer to draw
  *          (0 - under tuxanci | 1 - same as tuxanci | 2 - over tuxancami)
  */
-void
-addLayer(image_t * img, int x, int y, int px, int py, int w, int h, int player)
+void addLayer(image_t * img, int x, int y, int px, int py, int w, int h, int player)
 {
 	layer_t *new;
 	layer_t *actual;
@@ -89,6 +88,7 @@ addLayer(image_t * img, int x, int y, int px, int py, int w, int h, int player)
 				return;
 			};
 		};
+
 		if (i >= listLayer->count)
 			break;
 
@@ -134,15 +134,15 @@ void drawLayerCenter(int x, int y)
 	for (i = 0; i < listLayer->count; i++) {
 		this = (layer_t *) listLayer->list[i];
 
-		if (this->x + this->w < screen_x || this->x > screen_x + WINDOW_SIZE_X
-			|| this->y + this->h < screen_y
-			|| this->y > screen_y + WINDOW_SIZE_Y) {
+		if (this->x + this->w < screen_x ||
+		    this->x > screen_x + WINDOW_SIZE_X ||
+		    this->y + this->h < screen_y ||
+		    this->y > screen_y + WINDOW_SIZE_Y) {
 			continue;
 		}
 		//count++;
 
-		drawImage(this->image,
-				  this->x - screen_x, this->y - screen_y,
+		drawImage(this->image, this->x - screen_x, this->y - screen_y,
 				  this->px, this->py, this->w, this->h);
 
 		//printf("%d %d\n", this->x - screen_x, this->y - screen_y);
@@ -164,9 +164,10 @@ void drawLayerSplit(int local_x, int local_y, int x, int y, int w, int h)
 		this = (layer_t *) listLayer->list[i];
 
 		if (this->x + this->w < x || this->x > x + w ||
-			this->y + this->h < y || this->y > y + h) {
+		    this->y + this->h < y || this->y > y + h) {
 			continue;
 		}
+
 		//count++;
 
 		if (local_x + (this->x - x) < local_x) {
@@ -197,9 +198,8 @@ void drawLayerSplit(int local_x, int local_y, int x, int y, int w, int h)
 			this->h -= (local_y + (this->y - y) + this->h) - (local_y + h);
 		}
 
-		drawImage(this->image,
-				  local_x + (this->x - x), local_y + (this->y - y),
-				  this->px, this->py, this->w, this->h);
+		drawImage(this->image, local_x + (this->x - x), local_y + (this->y - y),
+				       this->px, this->py, this->w, this->h);
 
 		//printf("%d %d\n", this->x - screen_x, this->y - screen_y);
 	}

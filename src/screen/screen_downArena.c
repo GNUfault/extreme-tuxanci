@@ -373,16 +373,14 @@ void initScreenDownArena()
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	button_back =
-		newWidgetButton(_("back"),
-						WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
-						WINDOW_SIZE_Y - 80, eventWidget);
+		newWidgetButton(_("back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
+				WINDOW_SIZE_Y - 80, eventWidget);
 
 	label_status =
 		newWidgetLabel("none", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
 
-	registerScreen(newScreen
-				   ("downArena", startScreenDownArena, eventScreenDownArena,
-					drawScreenDownArena, stopScreenDownArena));
+	registerScreen( newScreen("downArena", startScreenDownArena, eventScreenDownArena,
+			drawScreenDownArena, stopScreenDownArena));
 }
 
 void quitScreenDownArena()
