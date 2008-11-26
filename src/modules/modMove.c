@@ -109,8 +109,10 @@ static void transformShot(shot_t * shot, int position)
 		shot->py = +speed;
 		break;
 	}
+
 	shot->position = position;
 	shot->isCanKillAuthor = TRUE;
+
 	if (shot->gun == GUN_LASSER)
 		export_fce->fce_transformOnlyLasser(shot);
 }
@@ -133,7 +135,9 @@ move_shot(shot_t * shot, int position, int src_x, int src_y,
 		offset = shot->y - src_y;
 		break;
 	}
+
 	transformShot(shot, position);
+
 	switch (shot->position) {
 	case TUX_UP:
 		new_x = dist_x + offset;
@@ -152,6 +156,7 @@ move_shot(shot_t * shot, int position, int src_x, int src_y,
 		new_y = dist_y + dist_h + 5;
 		break;
 	}
+
 	moveObjectInSpace(export_fce->fce_getCurrentArena()->spaceShot, shot,
 					  new_x, new_y);
 	if (export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_SERVER) {
@@ -169,6 +174,7 @@ int init(export_fce_t * p)
 	export_fce = p;
 	export_fce->fce_addToShareFce("move_tux", (void *) move_tux);
 	export_fce->fce_addToShareFce("move_shot", (void *) move_shot);
+
 	return 0;
 }
 
@@ -180,9 +186,11 @@ static void proto_movetux(char *msg)
 	tux_t *tux;
 
 	assert(msg != NULL);
+
 	sscanf(msg, "%s %d %d %d", cmd, &id, &x, &y);
 	space = export_fce->fce_getCurrentArena()->spaceTux;
 	tux = getObjectFromSpaceWithID(space, id);
+
 	if (tux != NULL)
 		moveObjectInSpace(space, tux, x, y);
 }
@@ -195,16 +203,21 @@ static void proto_moveshot(char *msg)
 	shot_t *shot;
 
 	assert(msg != NULL);
+
 	sscanf(msg, "%s %d %d %d %d %d %d",
 		   cmd, &shot_id, &x, &y, &px, &py, &position);
+
 	space = export_fce->fce_getCurrentArena()->spaceShot;
+
 	if ((shot = getObjectFromSpaceWithID(space, shot_id)) == NULL)
 		return;
+
 	moveObjectInSpace(space, shot, x, y);
 	shot->isCanKillAuthor = 1;
 	shot->position = position;
 	shot->px = px;
 	shot->py = py;
+
 	if (shot->gun == GUN_LASSER)
 		export_fce->fce_transformOnlyLasser(shot);
 }
@@ -236,6 +249,7 @@ void recvMsg(char *msg)
 {
 	if (export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_SERVER)
 		return;
+
 	if (strncmp(msg, "movetux", 7) == 0)
 		proto_movetux(msg);
 	if (strncmp(msg, "moveshot", 8) == 0)

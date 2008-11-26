@@ -11,6 +11,8 @@
 #include "list.h"
 #include "gun.h"
 #include "space.h"
+#include "proto.h"
+#include "serverSendMsg.h"
 
 #ifndef PUBLIC_SERVER
 #    include "interface.h"
@@ -258,6 +260,8 @@ static int negPosition(int n)
 	return -1;					// no warnning
 }
 
+
+#if 0 //zaloha
 static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
 {
 	arena_t *arena;
@@ -285,6 +289,32 @@ static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
 		}
 	}
 }
+#endif
+
+static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
+{
+	arena_t *arena;
+	tux_t *author;
+
+	arena = export_fce->fce_getCurrentArena();
+
+	author = getObjectFromSpaceWithID(arena->spaceTux, shot->author_id);
+
+	if (author != NULL &&
+		author->bonus == BONUS_GHOST && author->bonus_time > 0) {
+		return;
+	}
+
+	if (negPosition(shot->position) == pipe->position ) {
+		moveShotFromPipe(shot, pipe);
+	} else {
+		if (shot->gun == GUN_BOMBBALL) {
+			export_fce->fce_boundBombBall(shot);
+		} else {
+			shot->del = TRUE;
+		}
+	}
+}
 
 static void
 action_eventshot(space_t * space, shot_t * shot, space_t * spacePipe)
@@ -293,6 +323,10 @@ action_eventshot(space_t * space, shot_t * shot, space_t * spacePipe)
 							shot->y, shot->w, shot->h);
 
 	if (shot->del == TRUE) {
+		if (getNetTypeGame() == NET_GAME_TYPE_SERVER) {
+			proto_send_del_server(PROTO_SEND_ALL, NULL, shot->id);
+		}
+
 		delObjectFromSpaceWithObject(space, shot, export_fce->fce_destroyShot);
 	}
 }
@@ -300,6 +334,11 @@ action_eventshot(space_t * space, shot_t * shot, space_t * spacePipe)
 int event()
 {
 	if (spacePipe == NULL) {
+		return 0;
+	}
+
+	// na skusku
+	if (export_fce->fce_getNetTypeGame() == NET_GAME_TYPE_CLIENT) {
 		return 0;
 	}
 

@@ -429,6 +429,10 @@ static void action_tux(space_t * space, tux_t * tux, shot_t * shot)
 		}
 	}
 
+	if (getNetTypeGame() == NET_GAME_TYPE_SERVER) {
+		proto_send_del_server(PROTO_SEND_ALL, NULL, shot->id);
+	}
+
 	delObjectFromSpaceWithObject(arena->spaceShot, shot, destroyShot);
 }
 
@@ -439,6 +443,10 @@ static void action_shot(space_t * space, shot_t * shot, space_t * spaceTux)
 
 void eventConflictTuxWithShot(arena_t * arena)
 {
+	if (getNetTypeGame() == NET_GAME_TYPE_CLIENT) { // na skusku
+		return;
+	}
+
 	actionSpace(arena->spaceShot, action_shot, arena->spaceTux);
 }
 
