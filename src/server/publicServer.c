@@ -224,9 +224,16 @@ static int initPublicServerNetwork()
 
 static void loadArena()
 {
-	choice_arenaFile =
-		getArenaFileFormNetName(getSetting("ARENA", "--arena", "FAGN"));
+	choice_arenaFile = getArenaFileFormNetName(getSetting("ARENA", "--arena", "FAGN"));
+
+	if( choice_arenaFile == NULL )
+	{
+		fprintf(stderr, _("I dont load arena %s!\n"), getSetting("ARENA", "--arena", "FAGN"));
+		exit(-1);
+	}
+
 	arena = getArena(choice_arenaFile);
+
 	setCurrentArena(arena);
 }
 
@@ -243,9 +250,7 @@ int initPublicServer()
 	initShot();
 	initServerConfigFile();
 
-	ret =
-		initLog(getSetting
-				("LOG_FILE", "--log-file", "/tmp/tuxanci-server.log"));
+	ret = initLog(getSetting("LOG_FILE", "--log-file", "/tmp/tuxanci-server.log"));
 
 	if (ret < 0) {
 		fprintf(stderr, _("I was unable to open config file!\n"));

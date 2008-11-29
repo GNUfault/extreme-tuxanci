@@ -378,8 +378,10 @@ void initArenaFile()
 	listArenaFile = newList();
 
 	loadArenaFromDirector(PATH_ARENA);
-	loadArenaFromDirector(getHomeDirector());
 
+#ifndef PUBLIC_SERVER
+	loadArenaFromDirector(getHomeDirector());
+#endif
 }
 
 void quitArenaFile()
