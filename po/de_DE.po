@@ -325,11 +325,11 @@ msgstr "Variable netGameType hat einen sehr seltsamen Wert!"
 
 #: src/base/downServer.c:72
 msgid "ERR Arena not found !\n"
-msgstr ""
+msgstr "FEHLER Arena nicht gefunden!\n"
 
 #: src/base/downServer.c:81
 msgid "ERR Server has a problem !\n"
-msgstr ""
+msgstr "FEHLER Server hatte ein Problem!\n"
 
 #: src/base/downServer.c:134
 #, fuzzy, c-format
@@ -799,40 +799,3 @@ msgstr "Sehr schlechter Log-Wert!"
 #, c-format
 msgid "Scorefile: \"%s\"\n"
 msgstr "Scorefile: \"%s\"\n"
-
-#~ msgid ""
-#~ "I've done this once, dont want to mess memory with module %s again!\n"
-#~ msgstr ""
-#~ "Das hab ich schon getan. Ich will den Speicher nicht nochmal mit dem "
-#~ "Modul %s vollmüllen!\n"
-
-#~ msgid "Connected to: %s on port: %d via TCP\n"
-#~ msgstr "Verbunden mit: %s auf Port: %d via TCP\n"
-
-#~ msgid "Closing TCP connection.\n"
-#~ msgstr "Trenne TCP Verbindung.\n"
-
-#~ msgid "Bad client type (TCP/UDP)!"
-#~ msgstr "Schlechter Client Typ (TCP/UDP)!"
-
-#~ msgid "Loading map file: %s\n"
-#~ msgstr "Lade Karten-Datei: %s\n"
-
-#~ msgid ""
-#~ "I was unable to initialize old nls system (if you see this something "
-#~ "wierd is happening)!\n"
-#~ msgstr ""
-#~ "Konnte altes nls System nicht initialisieren ( wenn Du dies siehts "
-#~ "passiert etwas sehr Seltsames)!\n"
-
-#~ msgid ""
-#~ "When generating random value in range 0 to 3 i got some other value?!"
-#~ msgstr ""
-#~ "Beim Generieren einer Zufallszahl von 0 bis 3 habe ich einen anderen Wert "
-#~ "erhalten?!"
-
-#~ msgid "Tux is moving in another dimension maybe!"
-#~ msgstr "Tux verschwindet evtl in einer anderen Dimension!"
-
-#~ msgid "Variable p->control has a really wierd value!"
-#~ msgstr "Variable p->control hat einen sehr seltsamen Wert!"
