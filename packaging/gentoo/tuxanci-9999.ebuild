@@ -18,11 +18,11 @@ IUSE="alsa debug dedicated nls opengl"
 # alsa is used only when building client
 
 RDEPEND="!dedicated? (
-			>=media-libs/libsdl-1.2.10[X]
-			>=media-libs/sdl-ttf-2.0.7[X]
-			>=media-libs/sdl-image-1.2.6-r1[png]
+			media-libs/libsdl[X]
+			media-libs/sdl-ttf[X]
+			media-libs/sdl-image[png]
 			alsa? (
-				>=media-libs/sdl-mixer-1.2.7[vorbis]
+				media-libs/sdl-mixer[vorbis]
 			)
 			opengl? (
 				media-libs/libsdl[opengl?]
