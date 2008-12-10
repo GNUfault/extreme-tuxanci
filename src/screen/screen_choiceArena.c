@@ -9,6 +9,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
+#include "hotKey.h"
 
 #ifndef NO_SOUND
 #    include "music.h"
@@ -31,11 +32,18 @@ static widget_t *button_back;
 static list_t *listWidgetButtonimage;
 static arenaFile_t *currentArena;
 
+static void hotkey_escape()
+{
+	setScreen("gameType");
+}
+
 void startScreenChoiceArena()
 {
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 }
 
 void drawScreenChoiceArena()
@@ -72,6 +80,7 @@ void eventScreenChoiceArena()
 
 void stopScreenChoiceArena()
 {
+	unregisterHotKey(SDLK_ESCAPE);
 }
 
 static void eventWidgetButtonImage(void *p)

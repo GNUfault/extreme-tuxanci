@@ -11,6 +11,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
+#include "hotKey.h"
 
 #ifndef NO_SOUND
 #    include "music.h"
@@ -31,11 +32,18 @@ static list_t *listWidgetLabelScore;
 
 static textFile_t *textFile;
 
+static void hotkey_escape()
+{
+	setScreen("mainMenu");
+}
+
 void startScreenTable()
 {
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 }
 
 void drawScreenTable()
@@ -72,6 +80,7 @@ void eventScreenTable()
 
 void stopScreenTable()
 {
+	unregisterHotKey(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)

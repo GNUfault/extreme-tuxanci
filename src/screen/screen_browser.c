@@ -12,7 +12,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
-
+#include "hotKey.h"
 
 #ifndef __WIN32__
 #    include <sys/socket.h>
@@ -72,12 +72,18 @@ static int LoadServers();
 static int RefreshServers();
 static server_t *server_getcurr();
 
+static void hotkey_escape()
+{
+	setScreen("gameType");
+}
 
 void startScreenBrowser()
 {
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 
 	LoadServers();
 }
@@ -117,6 +123,8 @@ void stopScreenBrowser()
 	//destroyListItem(select_server->list, free);
 	//select_server->list = newList();
 	removeAllFromWidgetSelect(select_server);
+
+	unregisterHotKey(SDLK_ESCAPE);
 
 	while (1) {
 		i = 0;

@@ -9,10 +9,13 @@
 #include "textFile.h"
 #include "director.h"
 #include "homeDirector.h"
+
 #include "configFile.h"
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
+#include "hotKey.h"
+
 #ifndef NO_SOUND
 #    include "music.h"
 #    include "sound.h"
@@ -72,13 +75,19 @@ static widget_t *tux_left_keyfire_val;
 // possible variant will be reusing widget_image for current widget_label so there wont 
 // be key names but only images
 
+static void hotkey_escape()
+{
+	setScreen("setting");
+}
+
 void startScreenSettingKeys() 
 {
 	
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
-	
-#endif	
+#endif
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 }
 static void setKeytableFromConfigFile(textFile_t * configFile) 
 {
@@ -362,7 +371,7 @@ void
 
  stopScreenSettingKeys() 
 {
-
+	unregisterHotKey(SDLK_ESCAPE);
 } 
 void
 

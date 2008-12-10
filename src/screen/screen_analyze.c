@@ -9,6 +9,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
+#include "hotKey.h"
 
 #ifndef NO_SOUND
 #    include "music.h"
@@ -48,11 +49,18 @@ static void destroyAnalyze(analyze_t * p)
 	free(p);
 }
 
+static void hotkey_escape()
+{
+	setScreen("mainMenu");
+}
+
 void startScreenAnalyze()
 {
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 }
 
 void drawScreenAnalyze()
@@ -85,6 +93,8 @@ void stopScreenAnalyze()
 {
 	destroyWidgetLabel(widgetLabelMsg);
 	widgetLabelMsg = newWidgetLabel("", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
+
+	unregisterHotKey(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)

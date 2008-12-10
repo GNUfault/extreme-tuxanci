@@ -15,6 +15,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
+#include "hotKey.h"
 
 #ifndef NO_SOUND
 #    include "music.h"
@@ -78,11 +79,18 @@ static widget_t *check_ai;
 
 static textFile_t *configFile;
 
+static void hotkey_escape()
+{
+	setScreen("mainMenu");
+}
+
 void startScreenSetting()
 {
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 }
 
 void drawScreenSetting()
@@ -173,6 +181,7 @@ void eventScreenSetting()
 
 void stopScreenSetting()
 {
+	unregisterHotKey(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)

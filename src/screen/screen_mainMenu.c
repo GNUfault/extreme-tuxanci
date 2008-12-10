@@ -8,6 +8,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
+#include "hotKey.h"
 
 #ifndef NO_SOUND
 #    include "music.h"
@@ -31,11 +32,18 @@ static widget_t *button_table;
 static widget_t *button_credits;
 static widget_t *button_end;
 
+static void hotkey_escape()
+{
+	quitGame();
+}
+
 void startScreenMainMenu()
 {
 #ifndef NO_SOUND
 	playMusic("menu", MUSIC_GROUP_BASE);
 #endif
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 }
 
 void drawScreenMainMenu()
@@ -60,6 +68,7 @@ void eventScreenMainMenu()
 
 void stopScreenMainMenu()
 {
+	unregisterHotKey(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)

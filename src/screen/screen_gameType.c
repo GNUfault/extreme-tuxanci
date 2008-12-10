@@ -13,6 +13,7 @@
 #include "interface.h"
 #include "screen.h"
 #include "image.h"
+#include "hotKey.h"
 
 #ifndef NO_SOUND
 #    include "music.h"
@@ -82,6 +83,11 @@ static void loadSession(widget_t * p)
 	destroyDirector(director);
 }
 
+static void hotkey_escape()
+{
+	setScreen("mainMenu");
+}
+
 void startScreenGameType()
 {
 #ifndef NO_SOUND
@@ -94,6 +100,8 @@ void startScreenGameType()
 	setWidgetChoiceStatus(check_load_session, FALSE);
 
 	loadSession(selectSession);
+
+	registerHotKey(SDLK_ESCAPE, hotkey_escape);
 }
 
 void drawScreenGameType()
@@ -169,6 +177,7 @@ void eventScreenGameType()
 
 void stopScreenGameType()
 {
+	unregisterHotKey(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)
