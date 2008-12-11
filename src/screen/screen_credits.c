@@ -15,7 +15,7 @@
 #    include "music.h"
 #endif
 
-#include "credits.h"
+#include "screen_credits.h"
 
 #include "widget.h"
 #include "widget_image.h"
@@ -105,7 +105,7 @@ void initScreenCredits()
 	image_t *image;
 	int i;
 
-	image = getImage(IMAGE_GROUP_BASE, "main");
+	image = getImage(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	button_back = newWidgetButton(_("back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,

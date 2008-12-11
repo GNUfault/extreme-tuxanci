@@ -5,22 +5,22 @@
 
 #    include "main.h"
 
-typedef struct struct {
+typedef struct screen_struct {
 	char *name;
 	void (*fce_start) ();
 	void (*fce_event) ();
 	void (*fce_draw) ();
 	void (*fce_stop) ();
-} t;
+} screen_t;
 
 extern bool_t isScreenInicialized();
 
-extern t *newScreen(char *name,
+extern screen_t *newScreen(char *name,
 						   void (*fce_start) (), void (*fce_event) (),
 						   void (*fce_draw) (), void (*fce_stop) ());
 
-extern void destroyScreen(t * p);
-extern void registerScreen(t * p);
+extern void destroyScreen(screen_t * p);
+extern void registerScreen(screen_t * p);
 extern void initScreen();
 extern void setScreen(char *name);
 extern void switchScreen();

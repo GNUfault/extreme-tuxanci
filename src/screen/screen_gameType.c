@@ -19,8 +19,8 @@
 #    include "music.h"
 #endif
 
-#include "gameType.h"
-#include "setting.h"
+#include "screen_gameType.h"
+#include "screen_setting.h"
 
 #include "widget.h"
 #include "widget_label.h"
@@ -217,7 +217,7 @@ void initScreenGameType()
 {
 	image_t *image;
 
-	image = getImage(IMAGE_GROUP_BASE, "main");
+	image = getImage(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	button_back = newWidgetButton(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);

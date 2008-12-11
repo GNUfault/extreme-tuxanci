@@ -64,7 +64,7 @@ void initSaveDialog()
 {
 	activeSaveDialog = FALSE;
 
-	g_background = getImage(IMAGE_GROUP_BASE, "main");
+	g_background = getImage(IMAGE_GROUP_BASE, "screen_main");
 
 	widgetLabelMsg = newWidgetLabel("name", SAVE_DIALOG_LOCATIN_X + 20,
 						SAVE_DIALOG_LOCATIN_Y + 20,
