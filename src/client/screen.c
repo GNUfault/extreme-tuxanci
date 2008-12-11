@@ -12,8 +12,8 @@
 
 //#define DEBUG_TIME_DRAW
 
-static screen_t *currentScreen;
-static screen_t *futureScreen;
+static t *currentScreen;
+static t *futureScreen;
 
 static list_t *listScreen;
 
@@ -24,10 +24,10 @@ bool_t isScreenInicialized()
 	return isScreenInit;
 }
 
-screen_t *newScreen(char *name, void (*fce_start) (), void (*fce_event) (),
+t *newScreen(char *name, void (*fce_start) (), void (*fce_event) (),
 				void (*fce_draw) (), void (*fce_stop) ())
 {
-	screen_t *new;
+	t *new;
 
 	assert(name != NULL);
 	assert(fce_start != NULL);
@@ -35,7 +35,7 @@ screen_t *newScreen(char *name, void (*fce_start) (), void (*fce_event) (),
 	assert(fce_draw != NULL);
 	assert(fce_stop != NULL);
 
-	new = malloc(sizeof(screen_t));
+	new = malloc(sizeof(t));
 	new->name = strdup(name);
 	new->fce_start = fce_start;
 	new->fce_event = fce_event;
@@ -45,7 +45,7 @@ screen_t *newScreen(char *name, void (*fce_start) (), void (*fce_event) (),
 	return new;
 }
 
-void destroyScreen(screen_t * p)
+void destroyScreen(t * p)
 {
 	assert(p != NULL);
 
@@ -53,7 +53,7 @@ void destroyScreen(screen_t * p)
 	free(p);
 }
 
-void registerScreen(screen_t * p)
+void registerScreen(t * p)
 {
 	assert(p != NULL);
 
@@ -72,13 +72,13 @@ void initScreen()
 	isScreenInit = TRUE;
 }
 
-static screen_t *findScreen(char *name)
+static t *findScreen(char *name)
 {
-	screen_t *this;
+	t *this;
 	int i;
 
 	for (i = 0; i < listScreen->count; i++) {
-		this = (screen_t *) (listScreen->list[i]);
+		this = (t *) (listScreen->list[i]);
 		assert(this != NULL);
 
 		if (strcmp(name, this->name) == 0) {

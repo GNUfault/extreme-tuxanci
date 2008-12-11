@@ -17,7 +17,7 @@
 #    include "music.h"
 #endif
 
-#include "screen_table.h"
+#include "table.h"
 
 #include "widget_image.h"
 #include "widget_label.h"
@@ -198,7 +198,7 @@ void initScreenTable()
 {
 	image_t *image;
 
-	image = addImageData("screen_table.png", IMAGE_NO_ALPHA, "screen_table", IMAGE_GROUP_BASE);
+	image = addImageData("table.png", IMAGE_NO_ALPHA, "table", IMAGE_GROUP_BASE);
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	button_back = newWidgetButton(_("back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,

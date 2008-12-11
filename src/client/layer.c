@@ -10,7 +10,7 @@
 #include "layer.h"
 #include "image.h"
 
-#include "screen_world.h"
+#include "world.h"
 
 static list_t *listLayer;
 
@@ -125,27 +125,27 @@ void drawLayer()
 void drawLayerCenter(int x, int y)
 {
 	layer_t *this;
-	int screen_x, screen_y;
+	int x, y;
 	int i;
 	//int count = 0;
 
-	getCenterScreen(&screen_x, &screen_y, x, y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
+	getCenterScreen(&x, &y, x, y, WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 	for (i = 0; i < listLayer->count; i++) {
 		this = (layer_t *) listLayer->list[i];
 
-		if (this->x + this->w < screen_x ||
-		    this->x > screen_x + WINDOW_SIZE_X ||
-		    this->y + this->h < screen_y ||
-		    this->y > screen_y + WINDOW_SIZE_Y) {
+		if (this->x + this->w < x ||
+		    this->x > x + WINDOW_SIZE_X ||
+		    this->y + this->h < y ||
+		    this->y > y + WINDOW_SIZE_Y) {
 			continue;
 		}
 		//count++;
 
-		drawImage(this->image, this->x - screen_x, this->y - screen_y,
+		drawImage(this->image, this->x - x, this->y - y,
 				  this->px, this->py, this->w, this->h);
 
-		//printf("%d %d\n", this->x - screen_x, this->y - screen_y);
+		//printf("%d %d\n", this->x - x, this->y - y);
 	}
 
 	//printf("count = %d\n", count);
@@ -201,7 +201,7 @@ void drawLayerSplit(int local_x, int local_y, int x, int y, int w, int h)
 		drawImage(this->image, local_x + (this->x - x), local_y + (this->y - y),
 				       this->px, this->py, this->w, this->h);
 
-		//printf("%d %d\n", this->x - screen_x, this->y - screen_y);
+		//printf("%d %d\n", this->x - x, this->y - y);
 	}
 
 	//printf("count = %d\n", count);

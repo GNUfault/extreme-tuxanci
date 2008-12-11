@@ -14,8 +14,8 @@
 #    include "music.h"
 #endif
 
-#include "screen_mainMenu.h"
-#include "screen_setting.h"
+#include "mainMenu.h"
+#include "setting.h"
 
 #include "widget.h"
 #include "widget_label.h"
@@ -103,7 +103,7 @@ void initScreenMainMenu()
 	image_t *image;
 
 	image =
-		addImageData("screen_main.png", IMAGE_NO_ALPHA, "screen_main",
+		addImageData("main.png", IMAGE_NO_ALPHA, "main",
 					 IMAGE_GROUP_BASE);
 	image_backgorund = newWidgetImage(0, 0, image);
 

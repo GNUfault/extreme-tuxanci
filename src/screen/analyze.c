@@ -15,8 +15,8 @@
 #    include "music.h"
 #endif
 
-#include "screen_mainMenu.h"
-#include "screen_analyze.h"
+#include "mainMenu.h"
+#include "analyze.h"
 
 #include "widget.h"
 #include "widget_label.h"
@@ -156,7 +156,7 @@ void initScreenAnalyze()
 {
 	image_t *image;
 
-	image = getImage(IMAGE_GROUP_BASE, "screen_main");
+	image = getImage(IMAGE_GROUP_BASE, "main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	listWidgetLabelName = newList();

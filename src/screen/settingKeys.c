@@ -21,9 +21,9 @@
 #    include "sound.h"
 #endif							/* 
  */
-#include "screen_mainMenu.h"
-#include "screen_setting.h"
-#include "screen_settingKeys.h"
+#include "mainMenu.h"
+#include "setting.h"
+#include "settingKeys.h"
 	
 #include "widget.h"
 #include "widget_button.h"
@@ -383,7 +383,7 @@ image_t * image;
 
 initKeyTable();
 	
-image = getImage(IMAGE_GROUP_BASE, "screen_main");
+image = getImage(IMAGE_GROUP_BASE, "main");
 	
 image_backgorund = newWidgetImage(0, 0, image);
 	

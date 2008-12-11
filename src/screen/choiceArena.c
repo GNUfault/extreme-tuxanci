@@ -15,8 +15,8 @@
 #    include "music.h"
 #endif
 
-#include "screen_mainMenu.h"
-#include "screen_choiceArena.h"
+#include "mainMenu.h"
+#include "choiceArena.h"
 
 #include "widget.h"
 #include "widget_label.h"
@@ -143,7 +143,7 @@ void initScreenChoiceArena()
 	image_t *image;
 	int i;
 
-	image = getImage(IMAGE_GROUP_BASE, "screen_main");
+	image = getImage(IMAGE_GROUP_BASE, "main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	button_back = newWidgetButton(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);

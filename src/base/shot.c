@@ -14,7 +14,7 @@
 #ifndef PUBLIC_SERVER
 #    include "image.h"
 #    include "layer.h"
-#    include "screen_world.h"
+#    include "world.h"
 #endif
 
 #ifdef PUBLIC_SERVER
@@ -303,7 +303,7 @@ static void action_check(space_t * space, shot_t * shot, client_t * client)
 
 void checkShotIsInTuxScreen(arena_t * arena)
 {
-	int screen_x, screen_y;
+	int x, y;
 	tux_t *thisTux;
 	client_t *thisClient;
 	list_t *listClient;
@@ -324,11 +324,11 @@ void checkShotIsInTuxScreen(arena_t * arena)
 			continue;
 		}
 
-		getCenterScreen(&screen_x, &screen_y, thisTux->x, thisTux->y,
+		getCenterScreen(&x, &y, thisTux->x, thisTux->y,
 				WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 		actionSpaceFromLocation(arena->spaceShot, action_check,
-					thisClient, screen_x, screen_y,
+					thisClient, x, y,
 					WINDOW_SIZE_X, WINDOW_SIZE_Y);
 
 		while (thisClient->listSeesShot->count > 100) {
