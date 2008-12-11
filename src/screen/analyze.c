@@ -15,13 +15,13 @@
 #    include "music.h"
 #endif
 
-#include "screen_mainMenu.h"
-#include "screen_analyze.h"
+#include "mainMenu.h"
+#include "analyze.h"
 
 #include "widget.h"
-#include "widget_label.h"
-#include "widget_button.h"
-#include "widget_image.h"
+#include "label.h"
+#include "button.h"
+#include "image.h"
 
 static widget_t *image_backgorund;
 
@@ -156,7 +156,7 @@ void initScreenAnalyze()
 {
 	image_t *image;
 
-	image = getImage(IMAGE_GROUP_BASE, "screen_main");
+	image = getImage(IMAGE_GROUP_BASE, "main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	listWidgetLabelName = newList();

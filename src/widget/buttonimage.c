@@ -8,7 +8,7 @@
 #include "image.h"
 
 #include "widget.h"
-#include "widget_buttonimage.h"
+#include "buttonimage.h"
 
 widget_t *newWidgetButtonimage(image_t * image, int x, int y, void (*fce_event) (void *))
 {
