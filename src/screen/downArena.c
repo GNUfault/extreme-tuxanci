@@ -20,13 +20,13 @@
 #include "tcp.h"
 
 #include "widget.h"
-#include "widget_image.h"
-#include "widget_label.h"
-#include "widget_button.h"
+#include "image.h"
+#include "label.h"
+#include "button.h"
 
-#include "screen_setting.h"
-#include "screen_downArena.h"
-#include "screen_gameType.h"
+#include "setting.h"
+#include "downArena.h"
+#include "gameType.h"
 
 static sock_udp_t *sock_server_udp;
 static sock_tcp_t *sock_server_tcp;
@@ -369,7 +369,7 @@ void initScreenDownArena()
 {
 	image_t *image;
 
-	image = getImage(IMAGE_GROUP_BASE, "screen_main");
+	image = getImage(IMAGE_GROUP_BASE, "main");
 	image_backgorund = newWidgetImage(0, 0, image);
 
 	button_back =

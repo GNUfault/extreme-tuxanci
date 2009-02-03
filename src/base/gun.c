@@ -19,7 +19,7 @@
 #endif
 #ifndef PUBLIC_SERVER
 #    include "interface.h"
-#    include "screen_world.h"
+#    include "world.h"
 #endif
 #ifdef PUBLIC_SERVER
 #    include "publicServer.h"
