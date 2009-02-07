@@ -4,11 +4,11 @@
 
 EAPI="2"
 
-inherit cmake-utils git games
+EGIT_REPO_URI="git://repo.or.cz/tuxanci.git"
+inherit cmake-utils games git
 
 DESCRIPTION="Tuxanci is first tux shooter inspired by game Bulanci."
 HOMEPAGE="http://www.tuxanci.org/"
-EGIT_REPO_URI="git://repo.or.cz/tuxanci.git"
 #SRC_URI="http://download.${PN}.org/${P}.tar.bz2"
 LICENSE="GPL-2"
 
@@ -18,19 +18,16 @@ IUSE="alsa debug dedicated nls opengl"
 # alsa is used only when building client
 
 RDEPEND="!dedicated? (
-			media-libs/libsdl[X]
+			media-libs/libsdl[X,opengl?]
 			media-libs/sdl-ttf[X]
 			media-libs/sdl-image[png]
 			alsa? (
 				media-libs/sdl-mixer[vorbis]
 			)
-			opengl? (
-				media-libs/libsdl[opengl?]
-				virtual/opengl
-			)
 		)
 	dev-libs/zziplib[sdl]"
-DEPEND=">=dev-util/cmake-2.6.0
+DEPEND="${RDEPEND}
+	>=dev-util/cmake-2.6.0
 	nls? ( sys-devel/gettext )"
 
 S="${WORKDIR}"/"${PN}"
@@ -46,7 +43,7 @@ src_configure() {
 		-DCMAKE_DATA_PATH=${GAMES_DATADIR}
 		-DCMAKE_LOCALE_PATH=${GAMES_DATADIR_BASE}/locale/
 		-DCMAKE_DOC_PATH=${GAMES_DATADIR_BASE}/doc/${PF}
-		-DCMAKE_ETC_PATH=${GAMES_SYSCONFDIR} -DLIB_INSTALL_DIR=$(games_get_libdir)"
+		-DCMAKE_CONF_PATH=${GAMES_SYSCONFDIR} -DLIB_INSTALL_DIR=$(games_get_libdir)"
 
 	cmake-utils_src_configure
 }
@@ -57,7 +54,7 @@ src_install() {
 
 	cmake-utils_src_install
 	#dosym ${GAMES_BINDIR}/${P} ${GAMES_BINDIR}/${PN}
-	dosym ${GAMES_BINDIR}/${MY_PN}-dev ${GAMES_BINDIR}/${MY_PN}
+	#dosym ${GAMES_BINDIR}/${MY_PN}-dev ${GAMES_BINDIR}/${MY_PN}
 	doicon data/${PN}.svg
 	# we compile our desktop file
 	cd "${WORKDIR}"/tuxanci_build
