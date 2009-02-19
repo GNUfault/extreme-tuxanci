@@ -21,7 +21,7 @@
 ###############################################################################
 # DEFAULT OPTIONS
 ###############################################################################
-option(WITH_SERVER		"Build the server instead of client"		ON)
+option(WITH_SERVER		"Build the server instead of client"		OFF)
 option(WITH_AUDIO		"Build with audio enabled"					ON)
 option(ENABLE_DEBUG		"Build debug features"						OFF)
 option(WITH_NLS			"Build the translations"					ON)
