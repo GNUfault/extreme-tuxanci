@@ -33,17 +33,18 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}"/"${PN}"
 
 src_configure() {
-	local mycmakeargs
-	use alsa || mycmakeargs="${mycmakeargs} -DNO_Audio=1"
-	use debug && mycmakeargs="${mycmakeargs} -DDebug=1"
-	use dedicated && mycmakeargs="${mycmakeargs} -DServer=1"
-	use nls || mycmakeargs="${mycmakeargs} -DNO_NLS=1"
-	use opengl || mycmakeargs="${mycmakeargs} -DNO_OPENGL=1"
-	mycmakeargs="${mycmakeargs} -DCMAKE_INSTALL_PREFIX=${GAMES_PREFIX}
+	local mycmakeargs="$(cmake-utils_use_with alsa AUDIO)
+		$(cmake-utils_use_enable debug DEBUG)
+		$(cmake-utils_use_with dedicated SERVER)
+		$(cmake-utils_use_with nls NLS)
+		$(cmake-utils_use_with opengl OPENGL)"
+	mycmakeargs="${mycmakeargs}
+		-DCMAKE_INSTALL_PREFIX=${GAMES_PREFIX}
 		-DCMAKE_DATA_PATH=${GAMES_DATADIR}
 		-DCMAKE_LOCALE_PATH=${GAMES_DATADIR_BASE}/locale/
 		-DCMAKE_DOC_PATH=${GAMES_DATADIR_BASE}/doc/${PF}
-		-DCMAKE_CONF_PATH=${GAMES_SYSCONFDIR} -DLIB_INSTALL_DIR=$(games_get_libdir)"
+		-DCMAKE_CONF_PATH=${GAMES_SYSCONFDIR}
+		-DLIB_INSTALL_DIR=$(games_get_libdir)"
 
 	cmake-utils_src_configure
 }
