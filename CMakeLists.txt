@@ -31,7 +31,7 @@ option(BUNDLE			"Use for generating binary. DEV ONLY"		OFF)
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
-SET ( TUXANCI_VERSION "dev" CACHE STRING "Version" )
+SET ( TUXANCI_VERSION "0.21.99" CACHE STRING "Version" ) # update with releases
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
 SET ( CMAKE_CONF_PATH "/etc" CACHE PATH "Config path prefix" )
