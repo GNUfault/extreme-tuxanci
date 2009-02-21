@@ -141,11 +141,13 @@ int initSDL()
 		SDL_Quit();
 		return -1;
 	}
-	// enable unicode by default for keyboard support
+	// Enable unicode by default for keyboard support.
+	// It is bit more consuming than the nonsdl but can draw more characters.
 	SDL_EnableUNICODE(1);
 	SDL_WM_SetCaption(WINDOW_TITLE, NULL);
-	//SDL_ShowCursor(0);
-	SDL_EnableKeyRepeat(0, 1);
+
+	// Keyboard repeating
+	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 	timer = SDL_AddTimer(INTERVAL, TimerCallback, NULL);
 
 	initKeyboardBuffer(KEYBOARD_BUFFER_SIZE);
