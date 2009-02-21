@@ -181,7 +181,7 @@ IF ( BUNDLE )
 	SET ( CMAKE_INSTALL_LOCALEDIR share/locale/ )
 	SET ( CMAKE_INSTALL_ETCDIR etc )
 	SET ( CMAKE_INSTALL_DOCDIR doc )
-	CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${WORKDIR}/base/path.h )
+	CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${CMAKE_BINARY_DIR}/src/base/path.h )
 ENDIF ( BUNDLE )
 ###############################################################################
 # GETTEXT SUPPORT
@@ -200,7 +200,7 @@ MESSAGE ( "CXXflags:${CMAKE_CXX_FLAGS}" )
 MESSAGE ( STATUS "<Compiling SRC>" )
 MESSAGE ( STATUS "<******************************>" )
 IF ( NOT BUNDLE )
-	CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${WORKDIR}/base/path.h )
+	CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${CMAKE_BINARY_DIR}/src/base/path.h )
 ENDIF ( NOT BUNDLE )
 ADD_SUBDIRECTORY ( src )
 ###############################################################################
