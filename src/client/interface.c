@@ -98,7 +98,9 @@ SDL_Surface * SetVideoMode(int width, int height, int bpp, Uint32 flags)
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+#ifdef SDL_GL_SWAP_CONTROL
 	SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
+#endif
 
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
