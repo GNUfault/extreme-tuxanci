@@ -18,13 +18,13 @@ IUSE="alsa debug dedicated nls opengl"
 # alsa is used only when building client
 
 RDEPEND="!dedicated? (
-			media-libs/libsdl[X,opengl?]
-			media-libs/sdl-ttf[X]
-			media-libs/sdl-image[png]
-			alsa? (
-				media-libs/sdl-mixer[vorbis]
-			)
+		media-libs/libsdl[X,opengl?]
+		media-libs/sdl-ttf[X]
+		media-libs/sdl-image[png]
+		alsa? (
+			media-libs/sdl-mixer[vorbis]
 		)
+	)
 	dev-libs/zziplib[sdl]"
 DEPEND="${RDEPEND}
 	>=dev-util/cmake-2.6.0
