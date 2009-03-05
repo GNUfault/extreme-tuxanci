@@ -131,9 +131,9 @@ ENDIF ( Apple )
 ###############################################################################
 # LIBS SEARCH
 ###############################################################################
-MESSAGE ( STATUS "<Locating ZZIP library>" )
+MESSAGE ( STATUS "<Locating ZIP library>" )
 MESSAGE ( STATUS "<******************************>" )
-FIND_PACKAGE ( ZZIP REQUIRED )
+FIND_PACKAGE ( ZIP REQUIRED )
 IF ( WITH_OPENGL )
 	MESSAGE ( STATUS "<Locating OpenGL stuff>" )
 	MESSAGE ( STATUS "<******************************>" )
