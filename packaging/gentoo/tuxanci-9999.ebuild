@@ -25,7 +25,7 @@ RDEPEND="!dedicated? (
 			media-libs/sdl-mixer[vorbis]
 		)
 	)
-	dev-libs/zziplib[sdl]"
+	>=dev-libs/libzip-0.9"
 DEPEND="${RDEPEND}
 	>=dev-util/cmake-2.6.0
 	nls? ( sys-devel/gettext )"
