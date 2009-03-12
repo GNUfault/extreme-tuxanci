@@ -22,7 +22,6 @@ option(ENABLE_DEBUG		"Build debug features"						OFF)
 option(WITH_NLS			"Build the translations"					ON)
 option(Apple			"Build some apple quirks. USE ONLY ON MAC!"	OFF)
 option(WITH_OPENGL		"Use opengl as renderer instead of SW"		ON)
-option(BUNDLE			"Use for generating binary. DEV ONLY"		OFF)
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
@@ -157,25 +156,6 @@ IF ( NOT WITH_SERVER )
 	)
 ENDIF ( NOT WITH_SERVER )
 ###############################################################################
-# BUNDLING (INTERNAL STUFF USERS/PACKAGERS SHOULD NEVER USE)
-###############################################################################
-IF ( BUNDLE )
-	SET ( CMAKE_CONF_PATH "../etc")
-	SET ( CMAKE_DATA_PATH "../share")
-	SET ( CMAKE_LOCALE_PATH "../share/locale/")
-	SET ( CMAKE_FONT "../share/font/DejaVuSans.ttf" )
-	SET ( CMAKE_DOC_PATH "../doc")
-	SET ( LIB_INSTALL_DIR "../lib")
-	SET ( CMAKE_INSTALL_PREFIX "/")
-	SET ( CMAKE_INSTALL_BINDIR bin )
-	SET ( CMAKE_INSTALL_LIBDIR lib )
-	SET ( CMAKE_INSTALL_DATADIR share )
-	SET ( CMAKE_INSTALL_LOCALEDIR share/locale/ )
-	SET ( CMAKE_INSTALL_ETCDIR etc )
-	SET ( CMAKE_INSTALL_DOCDIR doc )
-	CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${CMAKE_BINARY_DIR}/src/base/path.h )
-ENDIF ( BUNDLE )
-###############################################################################
 # GETTEXT SUPPORT
 ###############################################################################
 IF ( WITH_NLS )
@@ -191,9 +171,7 @@ MESSAGE ( "Cflags:${CMAKE_C_FLAGS}" )
 MESSAGE ( "CXXflags:${CMAKE_CXX_FLAGS}" )
 MESSAGE ( STATUS "<Compiling SRC>" )
 MESSAGE ( STATUS "<******************************>" )
-IF ( NOT BUNDLE )
-	CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${CMAKE_BINARY_DIR}/src/base/path.h )
-ENDIF ( NOT BUNDLE )
+CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${CMAKE_BINARY_DIR}/src/base/path.h )
 ADD_SUBDIRECTORY ( src )
 ###############################################################################
 # DATA INSTALLATION
