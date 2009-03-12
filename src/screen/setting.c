@@ -22,11 +22,11 @@
 #    include "sound.h"
 #endif
 
-#include "screen_mainMenu.h"
-#include "screen_setting.h"
-#include "screen_settingKeys.h"
-#include "screen_settingKeys.h"
-#include "screen_choiceArena.h"
+#include "mainMenu.h"
+#include "setting.h"
+#include "settingKeys.h"
+#include "settingKeys.h"
+#include "choiceArena.h"
 
 #include "widget.h"
 #include "widget_label.h"

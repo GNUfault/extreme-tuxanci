@@ -39,8 +39,8 @@ extern int errno;
 #    include "music.h"
 #endif
 
-#include "screen_gameType.h"
-#include "screen_browser.h"
+#include "gameType.h"
+#include "browser.h"
 
 #include "widget.h"
 #include "widget_image.h"

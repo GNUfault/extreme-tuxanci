@@ -14,7 +14,7 @@
 #ifndef PUBLIC_SERVER
 #    include "image.h"
 #    include "layer.h"
-#    include "screen_world.h"
+#    include "world.h"
 #endif
 
 #ifdef PUBLIC_SERVER

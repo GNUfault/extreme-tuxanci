@@ -15,7 +15,7 @@
 #    include "music.h"
 #endif
 
-#include "screen_credits.h"
+#include "credits.h"
 
 #include "widget.h"
 #include "widget_image.h"

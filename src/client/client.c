@@ -23,8 +23,8 @@
 
 #include "client.h"
 
-#include "screen_analyze.h"
-#include "screen_world.h"
+#include "analyze.h"
+#include "world.h"
 #include "buffer.h"
 
 #include "udp.h"

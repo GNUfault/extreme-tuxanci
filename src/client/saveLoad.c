@@ -16,8 +16,8 @@
 
 #include "saveLoad.h"
 
-#include "screen_choiceArena.h"
-#include "screen_world.h"
+#include "choiceArena.h"
+#include "world.h"
 
 static void action_saveTux(space_t * space, tux_t * tux, textFile_t * textFile)
 {

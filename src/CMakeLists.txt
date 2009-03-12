@@ -56,12 +56,12 @@ SET ( SRC_client
 	${WORKDIR}/client/pauza	${WORKDIR}/client/saveDialog
 	${WORKDIR}/client/hotKey
 
-	${WORKDIR}/screen/screen_choiceArena
-	${WORKDIR}/screen/screen_settingKeys	${WORKDIR}/screen/screen_table
-	${WORKDIR}/screen/screen_setting	${WORKDIR}/screen/screen_credits
-	${WORKDIR}/screen/screen_world	${WORKDIR}/screen/screen_analyze
-	${WORKDIR}/screen/screen_mainMenu	${WORKDIR}/screen/screen_browser
-	${WORKDIR}/screen/screen_gameType	${WORKDIR}/screen/screen_downArena
+	${WORKDIR}/screen/choiceArena
+	${WORKDIR}/screen/settingKeys	${WORKDIR}/screen/table
+	${WORKDIR}/screen/setting	${WORKDIR}/screen/credits
+	${WORKDIR}/screen/world	${WORKDIR}/screen/analyze
+	${WORKDIR}/screen/mainMenu	${WORKDIR}/screen/browser
+	${WORKDIR}/screen/gameType	${WORKDIR}/screen/downArena
 
 	${WORKDIR}/widget/widget_check	${WORKDIR}/widget/widget_button
 	${WORKDIR}/widget/widget_textfield	${WORKDIR}/widget/widget_label

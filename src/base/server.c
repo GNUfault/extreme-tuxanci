@@ -33,7 +33,7 @@
 #include "downServer.h"
 
 #ifndef PUBLIC_SERVER
-#    include "screen_world.h"
+#    include "world.h"
 #endif
 
 #ifdef PUBLIC_SERVER

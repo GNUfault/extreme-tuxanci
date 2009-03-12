@@ -19,8 +19,8 @@
 #    include "music.h"
 #endif
 
-#include "screen_gameType.h"
-#include "screen_setting.h"
+#include "gameType.h"
+#include "setting.h"
 
 #include "widget.h"
 #include "widget_label.h"

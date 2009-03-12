@@ -17,7 +17,7 @@
 #    include "music.h"
 #endif
 
-#include "screen_table.h"
+#include "table.h"
 
 #include "widget_image.h"
 #include "widget_label.h"

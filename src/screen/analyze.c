@@ -15,8 +15,8 @@
 #    include "music.h"
 #endif
 
-#include "screen_mainMenu.h"
-#include "screen_analyze.h"
+#include "mainMenu.h"
+#include "analyze.h"
 
 #include "widget.h"
 #include "widget_label.h"

@@ -15,8 +15,8 @@
 #    include "music.h"
 #endif
 
-#include "screen_mainMenu.h"
-#include "screen_choiceArena.h"
+#include "mainMenu.h"
+#include "choiceArena.h"
 
 #include "widget.h"
 #include "widget_label.h"
