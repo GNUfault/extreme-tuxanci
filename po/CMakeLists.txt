@@ -1,6 +1,8 @@
 ###############################################################################
 # WE NEED GETTEXT
 ##############################################################################
+MESSAGE ( STATUS "<Locating Gettext>" )
+MESSAGE ( STATUS "<******************************>" )
 FIND_PACKAGE ( Gettext REQUIRED )
 IF ( NOT GETTEXT_MSGFMT_EXECUTABLE )
 	MESSAGE ( FATAL_ERROR "Please install the msgfmt binary" )

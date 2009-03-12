@@ -1,34 +1,34 @@
-# - Find zzip
-# Find the native ZZIP includes and library
+# - Find zip
+# Find the native ZIP includes and library
 #
-#  ZZIP_INCLUDE_DIR - where to find zzip.h, etc.
-#  ZZIP_LIBRARIES   - List of libraries when using zzip.
-#  ZZIP_FOUND       - True if zzip found.
+#  ZIP_INCLUDE_DIR - where to find zzip.h, etc.
+#  ZIP_LIBRARIES   - List of libraries when using zzip.
+#  ZIP_FOUND       - True if zzip found.
 
 
-IF (ZZIP_INCLUDE_DIR)
+IF (ZIP_INCLUDE_DIR)
   # Already in cache, be silent
-  SET(ZZIP_FIND_QUIETLY TRUE)
-ENDIF (ZZIP_INCLUDE_DIR)
+  SET(ZIP_FIND_QUIETLY TRUE)
+ENDIF (ZIP_INCLUDE_DIR)
 
-FIND_PATH(ZZIP_INCLUDE_DIR zip.h)
+FIND_PATH(ZIP_INCLUDE_DIR zip.h)
 
-SET(ZZIP_NAMES zip)
-FIND_LIBRARY(ZZIP_LIBRARY NAMES ${ZZIP_NAMES} )
+SET(ZIP_NAMES zip)
+FIND_LIBRARY(ZIP_LIBRARY NAMES ${ZZIP_NAMES} )
 
-# handle the QUIETLY and REQUIRED arguments and set ZZIP_FOUND to TRUE if 
+# handle the QUIETLY and REQUIRED arguments and set ZIP_FOUND to TRUE if 
 # all listed variables are TRUE
 INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(ZZIP DEFAULT_MSG ZZIP_LIBRARY ZZIP_INCLUDE_DIR)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(ZIP DEFAULT_MSG ZIP_LIBRARY ZIP_INCLUDE_DIR)
 
-IF(ZZIP_FOUND)
-  SET( ZZIP_LIBRARIES ${ZZIP_LIBRARY} )
-ELSE(ZZIP_FOUND)
-   SET(ZZIP_FOUND FALSE)
-      IF (ZZIP_REQUIRED)
-			        MESSAGE(FATAL_ERROR "zziplib not found")
-	  ENDIF (ZZIP_REQUIRED)
-  SET( ZZIP_LIBRARIES )
-ENDIF(ZZIP_FOUND)
+IF(ZIP_FOUND)
+  SET( ZIP_LIBRARIES ${ZZIP_LIBRARY} )
+ELSE(ZIP_FOUND)
+   SET(ZIP_FOUND FALSE)
+      IF (ZIP_REQUIRED)
+			        MESSAGE(FATAL_ERROR "libzip not found")
+	  ENDIF (ZIP_REQUIRED)
+  SET( ZIP_LIBRARIES )
+ENDIF(ZIP_FOUND)
 
-MARK_AS_ADVANCED( ZZIP_LIBRARY ZZIP_INCLUDE_DIR )
+MARK_AS_ADVANCED( ZIP_LIBRARY ZIP_INCLUDE_DIR )

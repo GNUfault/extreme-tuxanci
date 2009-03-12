@@ -117,7 +117,6 @@ ENDIF ( NOT WITH_SERVER )
 IF ( WITH_SERVER )
 	ADD_DEFINITIONS ( -DPUBLIC_SERVER )
 	ADD_DEFINITIONS ( -DNO_SOUND )
-	SET ( NO_Audio "ON" )
 	INCLUDE_DIRECTORIES ( ${WORKDIR}/server )
 ENDIF ( WITH_SERVER )
 ###############################################################################
@@ -134,31 +133,29 @@ ENDIF ( Apple )
 MESSAGE ( STATUS "<Locating ZIP library>" )
 MESSAGE ( STATUS "<******************************>" )
 FIND_PACKAGE ( ZIP REQUIRED )
-IF ( WITH_OPENGL )
-	MESSAGE ( STATUS "<Locating OpenGL stuff>" )
-	MESSAGE ( STATUS "<******************************>" )
-	FIND_PACKAGE ( OpenGL REQUIRED )
-	FIND_PACKAGE ( GLU REQUIRED )
-ENDIF ( WITH_OPENGL )
-MESSAGE ( STATUS "<Locating SDL stuff>" )
-MESSAGE ( STATUS "<******************************>" )
 
 IF ( NOT WITH_SERVER )
+	IF ( WITH_OPENGL )
+		MESSAGE ( STATUS "<Locating OpenGL>" )
+		MESSAGE ( STATUS "<******************************>" )
+		FIND_PACKAGE ( OpenGL REQUIRED )
+		INCLUDE_DIRECTORIES ( ${OPENGL_INCLUDE_DIR} )
+	ENDIF ( WITH_OPENGL )
+	MESSAGE ( STATUS "<Locating SDL>" )
+	MESSAGE ( STATUS "<******************************>" )
 	FIND_PACKAGE ( SDL REQUIRED )
 	FIND_PACKAGE ( SDL_image REQUIRED )
 	FIND_PACKAGE ( SDL_ttf REQUIRED )
 	IF ( WITH_AUDIO )
 		FIND_PACKAGE ( SDL_mixer REQUIRED )
+		INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
 	ENDIF ( WITH_AUDIO )
+	INCLUDE_DIRECTORIES (
+		${SDL_INCLUDE_DIR}
+		${SDLTTF_INCLUDE_DIR}
+		${SDLIMAGE_INCLUDE_DIR}
+	)
 ENDIF ( NOT WITH_SERVER )
-INCLUDE_DIRECTORIES (
-	${SDL_INCLUDE_DIR}
-	${SDLTTF_INCLUDE_DIR}
-	${SDLIMAGE_INCLUDE_DIR}
-)
-IF ( WITH_AUDIO )
-	INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
-ENDIF ( WITH_AUDIO )
 ###############################################################################
 # BUNDLING (INTERNAL STUFF USERS/PACKAGERS SHOULD NEVER USE)
 ###############################################################################

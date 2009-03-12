@@ -4,16 +4,16 @@
 # LINKING ( for binary )
 ###############################################################################
 IF ( WITH_SERVER )
-	LINK_LIBRARIES (  ${ZZIP_LIBRARY} ${CMAKE_DL_LIBS} )
+	LINK_LIBRARIES (  ${ZIP_LIBRARY} ${CMAKE_DL_LIBS} )
 ELSE ( WITH_SERVER )
 	IF ( WITH_OPENGL )
-		LINK_LIBRARIES ( ${OPENGL_gl_LIBRARY} ${OPENGL_glu_LIBRARY} )
+		LINK_LIBRARIES ( ${OPENGL_LIBRARIES} )
 	ENDIF ( WITH_OPENGL )
 	IF  ( WITH_AUDIO )
-		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY}
+		LINK_LIBRARIES ( ${ZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY}
 		${SDLTTF_LIBRARY} ${SDLMIXER_LIBRARY} )
 	ELSE ( WITH_AUDIO )
-		LINK_LIBRARIES ( ${ZZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY}
+		LINK_LIBRARIES ( ${ZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY}
 		${SDLTTF_LIBRARY} )
 	ENDIF ( WITH_AUDIO )
 	LINK_LIBRARIES ( SDLmain )
@@ -89,19 +89,19 @@ INCLUDE_DIRECTORIES ( ${CMAKE_BINARY_DIR}/src/base/ )
 IF ( ENABLE_IPV6 )
 	ADD_DEFINITIONS ( -DSUPPORT_IPv6 )
 ENDIF ( ENABLE_IPV6 )
-
 ###############################################################################
 # AUDIO CHECK
 ###############################################################################
-IF ( WITH_AUDIO )
-	MESSAGE ( STATUS "<Building with audio as requested>" )
-	MESSAGE ( STATUS "<******************************>" )
-	SET ( SRC_compile ${SRC_base} ${SRC_client} ${SRC_audio} )
-	INCLUDE_DIRECTORIES ( ${WORKDIR}/audio )
-	INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
-ELSE ( WITH_AUDIO )
-	ADD_DEFINITIONS ( -DNO_SOUND )
-ENDIF ( WITH_AUDIO )
+IF ( NOT WITH_SERVER )
+	IF ( WITH_AUDIO )
+		MESSAGE ( STATUS "<Building with audio as requested>" )
+		MESSAGE ( STATUS "<******************************>" )
+		SET ( SRC_compile ${SRC_base} ${SRC_client} ${SRC_audio} )
+		INCLUDE_DIRECTORIES ( ${WORKDIR}/audio )
+	ELSE ( WITH_AUDIO )
+		ADD_DEFINITIONS ( -DNO_SOUND )
+	ENDIF ( WITH_AUDIO )
+ENDIF ( NOT WITH_SERVER )
 ###############################################################################
 # OPENGL CHECK
 ###############################################################################
