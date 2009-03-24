@@ -19,6 +19,7 @@ option(WITH_SERVER		"Build the server instead of client"		OFF)
 option(ENABLE_IPV6      "Build with the ipv6 support"		        OFF)
 option(WITH_AUDIO		"Build with audio enabled"					ON)
 option(ENABLE_DEBUG		"Build debug features"						OFF)
+option(DEVELOPER		"Modify stuff to please tuxanci devs"		OFF)
 option(WITH_NLS			"Build the translations"					ON)
 option(Apple			"Build some apple quirks. USE ONLY ON MAC!"	OFF)
 option(WITH_OPENGL		"Use opengl as renderer instead of SW"		ON)
@@ -89,14 +90,17 @@ ADD_CUSTOM_TARGET ( uninstall "${CMAKE_COMMAND}"
 #SET ( CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${TUXANCI_VERSION_FULL}" )
 #INCLUDE ( CPack )
 ###############################################################################
-# DEBUG STUFF
+# DEBUG/DEVELOPER STUFF
 ###############################################################################
 IF ( ENABLE_DEBUG )
-	SET( CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
-	SET( CMAKE_CXX_FLAGS "-g -O0 -Wall -pipe")
+	SET ( CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
 	ADD_DEFINITIONS ( -DDEBUG )
 	# SET ( CMAKE_VERBOSE_MAKEFILE on )
 ENDIF ( ENABLE_DEBUG )
+IF ( DEVELOPER )
+	ADD_DEFINITIONS ( -DDEBUG )
+	SET ( CMAKE_C_FLAGS "-g -O0 -pipe -Wall -Wextra -Wshadow -pedantic" )
+ENDIF ( DEVELOPER )
 ###############################################################################
 # BASIC DIRECTORIES FOR INCLUSION
 ###############################################################################
@@ -167,8 +171,6 @@ ENDIF ( WITH_NLS )
 ###############################################################################
 # COMPILATION ITSELF
 ###############################################################################
-MESSAGE ( "Cflags:${CMAKE_C_FLAGS}" )
-MESSAGE ( "CXXflags:${CMAKE_CXX_FLAGS}" )
 MESSAGE ( STATUS "<Compiling SRC>" )
 MESSAGE ( STATUS "<******************************>" )
 CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${CMAKE_BINARY_DIR}/src/base/path.h )
@@ -176,7 +178,6 @@ ADD_SUBDIRECTORY ( src )
 ###############################################################################
 # DATA INSTALLATION
 ###############################################################################
-# path which user send us
 ADD_SUBDIRECTORY ( data )
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/LICENCE
 	DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
@@ -185,3 +186,16 @@ INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS
 INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README
 	DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
 ###############################################################################
+# GOODBYE INFORMATIONS (VARIABLES SETTINGS)
+###############################################################################
+MESSAGE ( STATUS "<Printing out environment settings>" )
+MESSAGE ( STATUS "<******************************>" )
+MESSAGE ( STATUS "CFlags: ${CMAKE_C_FLAGS}" )
+MESSAGE ( STATUS "Font: ${CMAKE_FONT}" )
+MESSAGE ( STATUS "PREFIX: ${CMAKE_INSTALL_PREFIX}" )
+MESSAGE ( STATUS "ETC directory: ${CMAKE_CONF_PATH}" )
+MESSAGE ( STATUS "DOC directory: ${CMAKE_DOC_PATH}" )
+MESSAGE ( STATUS "LOCALE directory: ${CMAKE_INSTALL_LOCALEDIR}" )
+MESSAGE ( STATUS "DATA directory: ${CMAKE_INSTALL_DATADIR}" )
+###############################################################################
+
