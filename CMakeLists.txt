@@ -77,18 +77,24 @@ CONFIGURE_FILE (
 ADD_CUSTOM_TARGET ( uninstall "${CMAKE_COMMAND}" 
   -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" )
 ###############################################################################
-# CPACK (Not used for now)
+# CPACK
 ###############################################################################
-#SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README" )
-#SET ( CPACK_GENERATOR "TBZ2" )
-#SET ( CPACK_SOURCE_GENERATOR "TBZ2" )
-#SET ( CPACK_PACKAGE_VERSION_MAJOR "0" )
-#SET ( CPACK_PACKAGE_VERSION_MINOR "2" )
-#SET ( CPACK_PACKAGE_VERSION_PATCH "0" )
-#SET ( TUXANCI_VERSION "${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}" )
-#SET ( TUXANCI_VERSION_FULL "${TUXANCI_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}" )
-#SET ( CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${TUXANCI_VERSION_FULL}" )
-#INCLUDE ( CPack )
+INCLUDE ( InstallRequiredSystemLibraries )
+SET ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Tuxanci is first tux shooter inspired by game Bulanci." )
+SET ( CPACK_PACKAGE_VENDOR "Tomas Chvatal <scarabeus@gentoo.org>" )
+SET ( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENCE" )
+SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README" )
+SET ( CPACK_GENERATOR "TBZ2;TGZ" )
+SET ( CPACK_SOURCE_GENERATOR "TBZ2;TGZ" )
+SET ( CPACK_PACKAGE_VERSION_MAJOR "0" )
+SET ( CPACK_PACKAGE_VERSION_MINOR "22" )
+SET ( CPACK_PACKAGE_VERSION_PATCH "0" )
+SET ( CPACK_PACKAGE_INSTALL_DIRECTORY "tuxanci-${TUXANCI_VERSION}" )
+SET ( CPACK_STRIP_FILES "src/tuxanci" )
+SET ( CPACK_SOURCE_STRIP_FILES "" )
+SET ( CPACK_PACKAGE_EXECUTABLES "src/tuxanci" "Tuxanci" )
+SET ( CPACK_SET_DESTDIR "ON" )
+INCLUDE ( CPack )
 ###############################################################################
 # DEBUG/DEVELOPER STUFF
 ###############################################################################
