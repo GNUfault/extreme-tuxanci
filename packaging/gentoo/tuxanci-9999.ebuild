@@ -56,8 +56,10 @@ src_configure() {
 src_install() {
 	cmake-utils_src_install
 
-	doicon data/${PN}.svg
-	domenu data/${PN}.desktop
+	if ! use dedicated; then
+		doicon data/${PN}.svg
+		domenu data/${PN}.desktop
+	fi
 
 	prepgamesdirs
 }
