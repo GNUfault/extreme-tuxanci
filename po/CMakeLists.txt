@@ -4,6 +4,7 @@
 MESSAGE ( STATUS "<Locating Gettext>" )
 MESSAGE ( STATUS "<******************************>" )
 FIND_PACKAGE ( Gettext REQUIRED )
+INCLUDE_DIRECTORIES ( ${GETTEXT_INCLUDE_DIR} )
 FILE ( GLOB _po_files *.po )
 SET ( _gmoFiles )
 ###############################################################################

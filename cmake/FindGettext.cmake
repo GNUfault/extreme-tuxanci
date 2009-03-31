@@ -3,6 +3,7 @@
 # following values:
 #  GETTEXT_MSGMERGE_EXECUTABLE: the full path to the msgmerge tool.
 #  GETTEXT_MSGFMT_EXECUTABLE: the full path to the msgfmt tool.
+#  GETTEXT_INCLUDES: just for including on windows, on POSIX it works just fine.
 #  GETTEXT_FOUND: True if gettext has been found.
 #
 # Additionally it provides the following macros:
@@ -13,10 +14,23 @@
 #    building the default target.
 
 
+FIND_PATH(GETTEXT_INCLUDE_DIR libintl.h
+		PATHS
+		${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/include
+		NO_DEFAULT_PATH
+)
 
-FIND_PROGRAM(GETTEXT_MSGMERGE_EXECUTABLE msgmerge)
+FIND_PROGRAM(GETTEXT_MSGMERGE_EXECUTABLE msgmerge
+		PATHS
+		${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/exe/
+		NO_DEFAULT_PATH
+)
 
-FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
+FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt
+		PATHS
+		${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/exe/
+		NO_DEFAULT_PATH
+)
 
 MACRO(GETTEXT_CREATE_TRANSLATIONS _potFile _firstPoFile)
 
