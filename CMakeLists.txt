@@ -140,18 +140,17 @@ ENDIF ( Apple )
 # LIBS SEARCH
 ###############################################################################
 MESSAGE ( STATUS "<Locating ZIP library>" )
-MESSAGE ( STATUS "<******************************>" )
 FIND_PACKAGE ( ZIP REQUIRED )
 
 IF ( NOT WITH_SERVER )
+	MESSAGE ( STATUS "<Locating Fontconfig" )
+	FIND_PACKAGE ( Fontconfig REQUIRED )
 	IF ( WITH_OPENGL )
 		MESSAGE ( STATUS "<Locating OpenGL>" )
-		MESSAGE ( STATUS "<******************************>" )
 		FIND_PACKAGE ( OpenGL REQUIRED )
 		INCLUDE_DIRECTORIES ( ${OPENGL_INCLUDE_DIR} )
 	ENDIF ( WITH_OPENGL )
 	MESSAGE ( STATUS "<Locating SDL>" )
-	MESSAGE ( STATUS "<******************************>" )
 	FIND_PACKAGE ( SDL REQUIRED )
 	FIND_PACKAGE ( SDL_image REQUIRED )
 	FIND_PACKAGE ( SDL_ttf REQUIRED )
@@ -160,6 +159,7 @@ IF ( NOT WITH_SERVER )
 		INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
 	ENDIF ( WITH_AUDIO )
 	INCLUDE_DIRECTORIES (
+		${FONTCONFIG_INCLUDE_DIR}
 		${SDL_INCLUDE_DIR}
 		${SDLTTF_INCLUDE_DIR}
 		${SDLIMAGE_INCLUDE_DIR}
@@ -170,15 +170,12 @@ ENDIF ( NOT WITH_SERVER )
 ###############################################################################
 IF ( WITH_NLS )
 	MESSAGE ( STATUS "<Building with NLS as requested>" )
-	MESSAGE ( STATUS "<******************************>" )
 	ADD_DEFINITIONS ( -DNLS )
 	ADD_SUBDIRECTORY ( po )
 ENDIF ( WITH_NLS )
 ###############################################################################
 # COMPILATION ITSELF
 ###############################################################################
-MESSAGE ( STATUS "<Compiling SRC>" )
-MESSAGE ( STATUS "<******************************>" )
 CONFIGURE_FILE ( ${WORKDIR}/base/path.h.in ${CMAKE_BINARY_DIR}/src/base/path.h )
 ADD_SUBDIRECTORY ( src )
 ###############################################################################

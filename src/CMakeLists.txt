@@ -16,7 +16,7 @@ ELSE ( WITH_SERVER )
 		LINK_LIBRARIES ( ${ZIP_LIBRARY} ${SDL_LIBRARY} ${SDLIMAGE_LIBRARY}
 		${SDLTTF_LIBRARY} )
 	ENDIF ( WITH_AUDIO )
-	LINK_LIBRARIES ( SDLmain )
+	LINK_LIBRARIES ( ${FONTCONFIG_LIBRARIES} SDLmain )
 ENDIF ( WITH_SERVER )
 
 ###############################################################################
@@ -95,7 +95,6 @@ ENDIF ( ENABLE_IPV6 )
 IF ( NOT WITH_SERVER )
 	IF ( WITH_AUDIO )
 		MESSAGE ( STATUS "<Building with audio as requested>" )
-		MESSAGE ( STATUS "<******************************>" )
 		SET ( SRC_compile ${SRC_base} ${SRC_client} ${SRC_audio} )
 		INCLUDE_DIRECTORIES ( ${WORKDIR}/audio )
 	ELSE ( WITH_AUDIO )
@@ -106,8 +105,6 @@ ENDIF ( NOT WITH_SERVER )
 # OPENGL CHECK
 ###############################################################################
 IF ( WITH_OPENGL )
-	MESSAGE ( STATUS "<Building with OPENGL as requested>" )
-	MESSAGE ( STATUS "<******************************>" )
 	ADD_DEFINITIONS ( -DSUPPORT_OPENGL )
 ENDIF ( WITH_OPENGL )
 ###############################################################################
@@ -119,7 +116,6 @@ ADD_SUBDIRECTORY ( modules )
 ###############################################################################
 IF ( WITH_SERVER )
 	MESSAGE ( STATUS "<Building server as requested>" )
-	MESSAGE ( STATUS "<******************************>" )
 	SET ( SRC_compile ${SRC_base} ${SRC_server} )
 	ADD_EXECUTABLE ( ${APPNAME} ${SRC_compile} )
 ELSE ( WITH_SERVER )
@@ -127,7 +123,6 @@ ELSE ( WITH_SERVER )
 # CLIENT COMPILATION
 ###############################################################################
 	MESSAGE ( STATUS "<Building client as requested>" )
-	MESSAGE ( STATUS "<******************************>" )
 	ADD_EXECUTABLE ( ${APPNAME} ${SRC_compile} )
 ENDIF ( WITH_SERVER )
 ################################################################################
