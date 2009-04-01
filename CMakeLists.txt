@@ -143,7 +143,7 @@ MESSAGE ( STATUS "<Locating ZIP library>" )
 FIND_PACKAGE ( ZIP REQUIRED )
 
 IF ( NOT WITH_SERVER )
-	MESSAGE ( STATUS "<Locating Fontconfig" )
+	MESSAGE ( STATUS "<Locating Fontconfig>" )
 	FIND_PACKAGE ( Fontconfig REQUIRED )
 	IF ( WITH_OPENGL )
 		MESSAGE ( STATUS "<Locating OpenGL>" )
