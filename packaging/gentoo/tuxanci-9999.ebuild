@@ -23,7 +23,9 @@ KEYWORDS="~amd64 ~x86"
 IUSE="alsa debug dedicated ipv6 nls opengl"
 # alsa is used only when building client
 
-RDEPEND="!dedicated? (
+RDEPEND="
+	!dedicated? (
+		media-libs/fontconfig
 		media-libs/libsdl[X,opengl?]
 		media-libs/sdl-ttf[X]
 		media-libs/sdl-image[png]
