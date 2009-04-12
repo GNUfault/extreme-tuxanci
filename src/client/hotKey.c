@@ -53,13 +53,13 @@ static hotKey_t *findHotkey(SDLKey key)
 	return NULL;
 }
 
-void hotKey_init()
+void hot_key_init()
 {
 	listHotKey = list_new();
 	lastActive = timer_get_current_time();
 }
 
-void hotKey_register(SDLKey key, void (*handler) ())
+void hot_key_register(SDLKey key, void (*handler) ())
 {
 	hotKey_t *hotkey;
 /*
@@ -71,7 +71,7 @@ void hotKey_register(SDLKey key, void (*handler) ())
 	list_ins(listHotKey, 0, hotkey);
 }
 
-void unhotKey_register(SDLKey key)
+void unhot_key_register(SDLKey key)
 {
 	hotKey_t *hotkey;
 	int my_index;
@@ -87,7 +87,7 @@ void unhotKey_register(SDLKey key)
 	list_del_item(listHotKey, my_index, destroyHotKey);
 }
 
-void hotKey_enable(SDLKey key)
+void hot_key_enable(SDLKey key)
 {
 	hotKey_t *hotkey;
 
@@ -101,7 +101,7 @@ void hotKey_enable(SDLKey key)
 	hotkey->active = TRUE;
 }
 
-void hotKey_disable(SDLKey key)
+void hot_key_disable(SDLKey key)
 {
 	hotKey_t *hotkey;
 
@@ -115,7 +115,7 @@ void hotKey_disable(SDLKey key)
 	hotkey->active = FALSE;
 }
 
-void hotKey_event()
+void hot_key_event()
 {
 	my_time_t currentTime;
 	Uint8 *mapa;
@@ -144,7 +144,7 @@ void hotKey_event()
 	}
 }
 
-void hotKey_quit()
+void hot_key_quit()
 {
 	list_destroy_item(listHotKey, destroyHotKey);
 }

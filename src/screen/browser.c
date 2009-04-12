@@ -83,7 +83,7 @@ void browser_start()
 	music_play("menu", MUSIC_GROUP_BASE);
 #endif
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 
 	LoadServers();
 }
@@ -124,7 +124,7 @@ void browser_stop()
 	//select_server->list = list_new();
 	select_remove_all(select_server);
 
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 
 	while (1) {
 		i = 0;
@@ -175,8 +175,8 @@ static void eventWidget(void *p)
 		char *address = (char *) inet_ntoa(srv);
 
 		setSettingGameType(NET_GAME_TYPE_CLIENT);
-		gameType_set_ip(address);
-		gameType_set_port(server->port);
+		game_type_set_ip(address);
+		game_type_set_port(server->port);
 
 		screen_set("world");
 	}

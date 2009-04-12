@@ -263,7 +263,7 @@ static void tux_eventAI(tux_t * tux)
 
 		moveAlternative(this, w * 2);
 
-		if (export_fce->fce_arena__is_free_space(arena, this->x, this->y, w, h) == 1) {
+		if (export_fce->fce_arena_is_free_space(arena, this->x, this->y, w, h) == 1) {
 			forkAlternative(listFork, this, 2 * w, 2 * h);
 			countFork++;
 			continue;
@@ -281,7 +281,7 @@ static void tux_eventAI(tux_t * tux)
 			break;
 		}
 
-		if (export_fce->fce_arena__is_free_space(arena, this->x, this->y, w, h) == 0) {
+		if (export_fce->fce_arena_is_free_space(arena, this->x, this->y, w, h) == 0) {
 			//forkAlternative(listFork, this, w*2, h*2);
 			list_del_item(listAlternative, my_index, destroyAlternative);
 			my_index--;

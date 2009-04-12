@@ -13,23 +13,23 @@ typedef struct {
 	textFile_t *map;
 } arenaFile_t;
 
-extern bool_t arenaFile_is_inicialized();
-extern int arenaFile_get_value(char *line, char *env, char *val, int len);
-extern int arenaFile_get_count();
-extern char *arenaFile_get_name(arenaFile_t * arenaFile);
-extern char *arenaFile_get_net_name(arenaFile_t * arenaFile);
-extern arenaFile_t *arenaFile_get_file_format_net_name(char *s);
-extern char *arenaFile_get_image(arenaFile_t * arenaFile);
+extern bool_t arena_file_is_inicialized();
+extern int arena_file_get_value(char *line, char *env, char *val, int len);
+extern int arena_file_get_count();
+extern char *arena_file_get_name(arenaFile_t * arenaFile);
+extern char *arena_file_get_net_name(arenaFile_t * arenaFile);
+extern arenaFile_t *arena_file_get_file_format_net_name(char *s);
+extern char *arena_file_get_image(arenaFile_t * arenaFile);
 #    ifndef PUBLIC_SERVER
-extern image_t *arenaFile_load_image(arenaFile_t * arenaFile, char *filename,
+extern image_t *arena_file_load_image(arenaFile_t * arenaFile, char *filename,
 								   char *group, char *name, int alpha);
 #    endif
-extern arenaFile_t *arenaFile_get(int n);
-extern int arenaFile_get_id(arenaFile_t * arenaFile);
-extern arena_t *arenaFile_get_arena(arenaFile_t * arenaFile);
-extern arenaFile_t *arenaFile_new(char *path);
-extern void arenaFile_load(char *path);
-extern void arenaFile_init();
-extern void arenaFile_quit();
+extern arenaFile_t *arena_file_get(int n);
+extern int arena_file_get_id(arenaFile_t * arenaFile);
+extern arena_t *arena_file_get_arena(arenaFile_t * arenaFile);
+extern arenaFile_t *arena_file_new(char *path);
+extern void arena_file_load(char *path);
+extern void arena_file_init();
+extern void arena_file_quit();
 
 #endif

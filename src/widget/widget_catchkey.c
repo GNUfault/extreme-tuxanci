@@ -9,7 +9,7 @@
 #include "widget.h"
 #include "widget_catchkey.h"
 
-widget_t *catchKey_new(int key, int x, int y, void *event)
+widget_t *catch_key_new(int key, int x, int y, void *event)
 {
 	widget_catchkey_t *new;
 
@@ -21,7 +21,7 @@ widget_t *catchKey_new(int key, int x, int y, void *event)
 	return widget_new(WIDGET_TYPE_CATCHKEY, x, y, WIDGET_CATCHKEY_WIDTH, WIDGET_CATCHKEY_HEIGHT, new);
 }
 
-int catchKey_get(widget_t * widget)
+int catch_key_get(widget_t * widget)
 {
 	widget_catchkey_t *p;
 
@@ -33,7 +33,7 @@ int catchKey_get(widget_t * widget)
 	return p->key;
 }
 
-void catchKey_set(widget_t * widget, int key)
+void catch_key_set(widget_t * widget, int key)
 {
 	widget_catchkey_t *p;
 
@@ -45,7 +45,7 @@ void catchKey_set(widget_t * widget, int key)
 	p->key = key;
 }
 
-void catchKey_draw(widget_t * widget)
+void catch_key_draw(widget_t * widget)
 {
 	widget_catchkey_t *p;
 	char *name;
@@ -93,7 +93,7 @@ static int getPessAnyKey()
 	return WIDGET_CATCHKEY_NOKEY;
 }
 
-void catchKey_event(widget_t * widget)
+void catch_key_event(widget_t * widget)
 {
 	widget_catchkey_t *p;
 	int x, y;
@@ -126,7 +126,7 @@ void catchKey_event(widget_t * widget)
 	}
 }
 
-void catchKey_destroy(widget_t * widget)
+void catch_key_destroy(widget_t * widget)
 {
 	widget_catchkey_t *p;
 

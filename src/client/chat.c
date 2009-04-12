@@ -38,7 +38,7 @@ static void chat_eventDisable();
 static void hotkey_chat_esc()
 {
 	//printf("*** hotkey_chat_esc\n");
-	//unhotKey_register(SDLK_ESCAPE);
+	//unhot_key_register(SDLK_ESCAPE);
 	chat_eventDisable();
 }
 
@@ -52,12 +52,12 @@ static void hotkey_chat_enter()
 	chat_active = TRUE;
 	receivedNewMsg = FALSE;
 
-	hotKey_disable(SDLK_RETURN);
-	hotKey_disable(SDLK_p);
-	hotKey_register(SDLK_ESCAPE, hotkey_chat_esc);
+	hot_key_disable(SDLK_RETURN);
+	hot_key_disable(SDLK_p);
+	hot_key_register(SDLK_ESCAPE, hotkey_chat_esc);
 
 	interface_enable_keyboard_buffer();
-	keyboardBuffer_clear();
+	keyboard_buffer_clear();
 }
 
 void chat_init()
@@ -68,7 +68,7 @@ void chat_init()
 	strcpy(line, "");
 	chat_active = FALSE;
 
-	hotKey_register(SDLK_RETURN, hotkey_chat_enter);
+	hot_key_register(SDLK_RETURN, hotkey_chat_enter);
 
 	receivedNewMsg = FALSE;
 	line_time = 0;
@@ -160,11 +160,11 @@ static void processMessageKey(SDL_keysym keysym)
 
 static void sendNewMessage()
 {
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		proto_send_chat_client(line);
 	}
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		char out[STR_PROTO_SIZE];
 
 		snprintf(out, STR_PROTO_SIZE, "chat %s:%s\n",
@@ -179,12 +179,12 @@ static void chat_eventDisable()
 	chat_active = FALSE;
 	memset(line, '\0', STR_SIZE);
 
-	hotKey_enable(SDLK_RETURN);
-	hotKey_enable(SDLK_p);
-	unhotKey_register(SDLK_ESCAPE);
+	hot_key_enable(SDLK_RETURN);
+	hot_key_enable(SDLK_p);
+	unhot_key_register(SDLK_ESCAPE);
 
 	interface_disable_keyboard_buffer();
-	keyboardBuffer_clear();
+	keyboard_buffer_clear();
 }
 
 static void chat_eventEnable()
@@ -193,9 +193,9 @@ static void chat_eventEnable()
 	 * but when ENTER is pressed the chat row is sent to the server
 	 */
 
-	while (keyboardBuffer_is_any_key() == TRUE) {
+	while (keyboard_buffer_is_any_key() == TRUE) {
 		SDL_keysym key;
-		key = keyboardBuffer_pop();
+		key = keyboard_buffer_pop();
 
 		if (key.sym == SDLK_RETURN) {
 			if (strcmp(line, "") != 0) {
@@ -208,7 +208,7 @@ static void chat_eventEnable()
 				//chat_eventDisable();
 				/* turn off key catching into the buffer and clear the buffer */
 				//interface_disable_keyboard_buffer();
-				//keyboardBuffer_clear();
+				//keyboard_buffer_clear();
 			}
 		}
 
@@ -253,6 +253,6 @@ void chat_quit()
 {
 	assert(listText != NULL);
 
-	//unhotKey_register(SDLK_RETURN);
+	//unhot_key_register(SDLK_RETURN);
 	list_destroy_item(listText, free);
 }

@@ -19,15 +19,15 @@ typedef struct widget_choicegroup {
 	list_t *list;
 } widget_choicegroup_t;
 
-extern widget_t *choiceGroup_new(int x, int y, bool_t status,
+extern widget_t *choice_group_new(int x, int y, bool_t status,
 									  list_t * list,
 									  void (*fce_event) (void *));
 
-extern void choiceGroup_draw(widget_t * p);
-extern void choiceGroup_set_active(widget_t * widget);
-extern bool_t choiceGroup_get_status(widget_t * widget);
+extern void choice_group_draw(widget_t * p);
+extern void choice_group_set_active(widget_t * widget);
+extern bool_t choice_group_get_status(widget_t * widget);
 extern void choiceGroup_set_status(widget_t * widget, bool_t status);
-extern void choiceGroup_event(widget_t * p);
-extern void choiceGroup_destroy(widget_t * p);
+extern void choice_group_event(widget_t * p);
+extern void choice_group_destroy(widget_t * p);
 
 #endif

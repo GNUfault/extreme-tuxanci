@@ -12,10 +12,10 @@
 #    include "list.h"
 #    include "server.h"
 
-extern list_t *checkFront_new();
-extern void checkFront_add_msg(list_t * list, char *msg, int type, int id);
-extern void checkFront_event(client_t * client);
-extern void checkFront_del_msg(list_t * listCheckFront, int id);
-extern void checkFront_destroy(list_t * p);
+extern list_t *check_front_new();
+extern void check_front_add_msg(list_t * list, char *msg, int type, int id);
+extern void check_front_event(client_t * client);
+extern void check_front_del_msg(list_t * listCheckFront, int id);
+extern void check_front_destroy(list_t * p);
 
 #endif

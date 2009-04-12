@@ -170,7 +170,7 @@ int main(int argc, char *argv[])
 #endif
 
 #ifdef PUBLIC_SERVER
-	publicServer_start();
+	public_server_start();
 #endif
 
 	return 0;

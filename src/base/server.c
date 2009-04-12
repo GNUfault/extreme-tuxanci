@@ -117,7 +117,7 @@ client_t *server_new_any_client()
 
 	new->status = NET_STATUS_OK;
 	new->listRecvMsg = list_new();
-	new->listSendMsg = checkFront_new();
+	new->listSendMsg = check_front_new();
 	new->listSeesShot = list_new();
 	new->protect = newProtect();
 
@@ -128,10 +128,10 @@ void server_destroy_any_client(client_t * p)
 {
 	assert(p != NULL);
 
-	//checkFront_event(p);
+	//check_front_event(p);
 	list_destroy_item(p->listRecvMsg, free);
 	list_destroy_item(p->listSeesShot, free);
-	checkFront_destroy(p->listSendMsg);
+	check_front_destroy(p->listSendMsg);
 
 	destroyProtect(p->protect);
 
@@ -153,7 +153,7 @@ static void eventDelClientFromListClient(client_t * client)
 
 	assert(offset != -1);
 
-	list_del_item(listClient, offset, serverUdp_destroy_client);
+	list_del_item(listClient, offset, server_udp_destroy_client);
 }
 
 static void delZombieCLient(void *p_nothink)
@@ -169,7 +169,7 @@ static void delZombieCLient(void *p_nothink)
 
 		if (isDown(thisClient->protect) == TRUE) {
 			proto_send_end_server(PROTO_SEND_ONE, thisClient);
-			checkFront_event(thisClient);
+			check_front_event(thisClient);
 			thisClient->status = NET_STATUS_ZOMBIE;
 		}
 
@@ -239,7 +239,7 @@ int server_init(char *ip4, int port4, char *ip6, int port6)
 	server_set_time();
 
 	//printf("%s %d %s %d\n", ip4, port4, ip6, port6);
-	ret = serverUdp_init(ip4, port4, ip6, port6);
+	ret = server_udp_init(ip4, port4, ip6, port6);
 
 	if (ret == 0) {
 		return -1;
@@ -247,11 +247,11 @@ int server_init(char *ip4, int port4, char *ip6, int port6)
 
 	if( ip4 != NULL )
 	{
-		downServer_init(ip4, port4);
+		down_server_init(ip4, port4);
 	}
 	else if( ip6 != NULL )
 	{
-		downServer_init(ip6, port6);
+		down_server_init(ip6, port6);
 	}
 
 	return ret;
@@ -334,7 +334,7 @@ static void porcesListClients()
 		thisClient = (client_t *) listClient->list[i];
 
 		client_eventWorkRecvList(thisClient);
-		checkFront_event(thisClient);
+		check_front_event(thisClient);
 	}
 }
 
@@ -346,13 +346,13 @@ void server_event()
 	do {
 		select_restart();
 
-		serverUdp_set_select();
-		downServer_set_select();
+		server_udp_set_select();
+		down_server_set_select();
 
 		select_action();
 
-		count = serverUdp_select_sock();
-		downServer_select_socket();
+		count = server_udp_select_sock();
+		down_server_select_socket();
 	} while (count > 0);
 #endif
 
@@ -361,14 +361,14 @@ void server_event()
 
 	select_restart();
 
-	serverUdp_set_select();
-	downServer_set_select();
+	server_udp_set_select();
+	down_server_set_select();
 
 	ret = select_action();
 
 	if (ret > 0) {
-		serverUdp_select_sock();
-		downServer_select_socket();
+		server_udp_select_sock();
+		down_server_select_socket();
 	}
 #endif
 
@@ -382,11 +382,11 @@ void server_quit()
 
 	assert(listClient != NULL);
 
-	list_destroy_item(listClient, serverUdp_destroy_client);
+	list_destroy_item(listClient, server_udp_destroy_client);
 
 	timer_destroy(listServerTimer);
 
-	serverUdp_quit();
+	server_udp_quit();
 
-	downServer_quit();
+	down_server_quit();
 }

@@ -204,7 +204,7 @@ static void teleportTux(tux_t * tux, teleport_t * teleport)
 	teleport_t *distTeleport;
 
 	if (tux->bonus == BONUS_GHOST ||
-		export_fce->fce_netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
+		export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return;
 	}
 
@@ -236,11 +236,11 @@ int init(export_fce_t * p)
 		return -1;
 	}
 
-	if ((fce_move_tux = export_fce->fce_shareFunction_get("move_tux")) == NULL) {
+	if ((fce_move_tux = export_fce->fce_share_function_get("move_tux")) == NULL) {
 		return -1;
 	}
 
-	if ((fce_move_shot = export_fce->fce_shareFunction_get("move_shot")) == NULL) {
+	if ((fce_move_shot = export_fce->fce_share_function_get("move_shot")) == NULL) {
 		return -1;
 	}
 
@@ -316,7 +316,7 @@ int event()
 		return 0;
 	}
 
-	if (export_fce->fce_netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
+	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return 0;
 	}
 

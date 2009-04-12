@@ -51,7 +51,7 @@ void word_inc_round()
 {
 }
 
-char *publicServer_get_setting(char *env, char *param, char *default_val)
+char *public_server_get_setting(char *env, char *param, char *default_val)
 {
 	return getParamElse(param, server_configFile_get_value(env, default_val));
 }
@@ -161,7 +161,7 @@ static int registerPublicServer()
 	register_head *head = (register_head *) str;
 
 	head->cmd = 'p';
-	head->port = atoi(publicServer_get_setting("PORT4", "--port4", "6800"));
+	head->port = atoi(public_server_get_setting("PORT4", "--port4", "6800"));
 	head->ip = 0;				// TODO
 
 	/* send request for server list */
@@ -186,7 +186,7 @@ static int registerPublicServer()
 	return 0;
 }
 
-static int publicServer_initNetwork()
+static int public_server_initNetwork()
 {
 	char ip4[STR_IP_SIZE];
 	char ip6[STR_IP_SIZE];
@@ -197,8 +197,8 @@ static int publicServer_initNetwork()
 
 	ret = -1;
 
-	strcpy(ip4, publicServer_get_setting("IP4", "--ip4", "none"));
-	strcpy(ip6, publicServer_get_setting("IP6", "--ip6", "none"));
+	strcpy(ip4, public_server_get_setting("IP4", "--ip4", "none"));
+	strcpy(ip6, public_server_get_setting("IP6", "--ip6", "none"));
 
 	p_ip4 = ip4;
 
@@ -212,68 +212,68 @@ static int publicServer_initNetwork()
 		p_ip6 = NULL;
 	}
 
-	port4 = atoi(publicServer_get_setting("PORT4", "--port4", "6800"));
-	port6 = atoi(publicServer_get_setting("PORT6", "--port6", "6800"));
+	port4 = atoi(public_server_get_setting("PORT4", "--port4", "6800"));
+	port6 = atoi(public_server_get_setting("PORT6", "--port6", "6800"));
 
 	//ret = initNetMulitplayerPublicServer(p_ip4, port4, p_ip6, port6);
 
-	ret = netMultiplayer_init_for_game_server(p_ip4, port4, p_ip6, port6);
+	ret = net_multiplayer_init_for_game_server(p_ip4, port4, p_ip6, port6);
 
 	return ret;
 }
 
 static void load_arena()
 {
-	choice_arenaFile = arenaFile_get_file_format_net_name(publicServer_get_setting("ARENA", "--arena", "FAGN"));
+	choice_arenaFile = arena_file_get_file_format_net_name(public_server_get_setting("ARENA", "--arena", "FAGN"));
 
 	if (choice_arenaFile == NULL) {
-		fprintf(stderr, _("I dont load arena %s!\n"), publicServer_get_setting("ARENA", "--arena", "FAGN"));
+		fprintf(stderr, _("I dont load arena %s!\n"), public_server_get_setting("ARENA", "--arena", "FAGN"));
 		exit(-1);
 	}
 
-	arena = arenaFile_get_arena(choice_arenaFile);
+	arena = arena_file_get_arena(choice_arenaFile);
 
 	arena_set_current(arena);
 }
 
-int publicServer_init()
+int public_server_init()
 {
 	int ret;
 	int i;
 
 	id_init_list();
 	module_init();
-	arenaFile_init();
+	arena_file_init();
 	tux_init();
 	item_init();
 	shot_init();
 	server_configFile_init();
 
-	ret = log_init(publicServer_get_setting("LOG_FILE", "--log-file", "/tmp/tuxanci-server.log"));
+	ret = log_init(public_server_get_setting("LOG_FILE", "--log-file", "/tmp/tuxanci-server.log"));
 
 	if (ret < 0) {
 		fprintf(stderr, _("I was unable to open config file!\n"));
 		return -1;
 	}
 
-	highScore_init(publicServer_get_setting("SCORE_FILE", "--score-file", "/tmp/highscore.txt"));
+	high_score_init(public_server_get_setting("SCORE_FILE", "--score-file", "/tmp/highscore.txt"));
 
 	load_arena();
 
-	for (i = 0; i < atoi(publicServer_get_setting("ITEM", "--item", "10")); i++) {
+	for (i = 0; i < atoi(public_server_get_setting("ITEM", "--item", "10")); i++) {
 		item_add_new_item(arena->spaceItem, ID_UNKNOWN);
 	}
 
 	isSignalEnd = FALSE;
 
-	ret = publicServer_initNetwork();
+	ret = public_server_initNetwork();
 
 	if (ret < 0) {
 		printf(_("Unable to initialize network socket!\n"));
 		return -1;
 	}
 
-	server_set_max_clients(atoi (publicServer_get_setting("MAX_CLIENTS", "--max-clients", "32")));
+	server_set_max_clients(atoi (public_server_get_setting("MAX_CLIENTS", "--max-clients", "32")));
 
 	if (registerPublicServer() < 0) {
 		printf(_("Unable to contact MasterServer!)\n"));
@@ -282,7 +282,7 @@ int publicServer_init()
 	return 0;
 }
 
-arenaFile_t *choiceArena_get()
+arenaFile_t *choice_arena_get()
 {
 	return choice_arenaFile;
 }
@@ -292,10 +292,10 @@ void eventPublicServer()
 	static my_time_t lastActive = 0;
 	my_time_t interval;
 
-	netMultiplayer_event();
+	net_multiplayer_event();
 
 	if (isSignalEnd == TRUE) {
-		publicServer_quit();
+		public_server_quit();
 	}
 
 	if (lastActive == 0) {
@@ -321,36 +321,36 @@ void my_handler_quit(int n)
 	isSignalEnd = TRUE;
 }
 
-void publicServer_quit()
+void public_server_quit()
 {
 	DEBUG_MSG(_("Quitting public server\n"));
 
-	netMultiplayer_quit();
+	net_multiplayer_quit();
 	arena_destroy(arena);
 
 	tux_quit();
 	item_quiy();
 	shot_quit();
 
-	arenaFile_quit();
+	arena_file_quit();
 	server_configFile_quit();
 	module_quit();
 	id_quit_list();
-	highScore_quit();
+	high_score_quit();
 	log_quit();
 
 	exit(0);
 }
 
-int publicServer_start()
+int public_server_start()
 {
 #ifndef __WIN32__
 	signal(SIGINT, my_handler_quit);
 	signal(SIGTERM, my_handler_quit);
 	signal(SIGQUIT, my_handler_quit);
 #endif
-	if (publicServer_init() < 0) {
-		publicServer_quit();
+	if (public_server_init() < 0) {
+		public_server_quit();
 		return -1;
 	}
 

@@ -285,7 +285,7 @@ static void action_eventwall(space_t * space, wall_t * wall, shot_t * shot)
 	}
 
 	if (shot->gun == GUN_BOMBBALL) {
-		if (export_fce->fce_netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+		if (export_fce->fce_net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 			export_fce->fce_shot_bound_bombBall(shot);
 		}
 

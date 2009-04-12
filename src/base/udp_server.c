@@ -46,7 +46,7 @@
 static sock_udp_t *sock_server_udp;
 static sock_udp_t *sock_server_udp_second;
 
-client_t *serverUdp_new_client(sock_udp_t * sock_udp)
+client_t *server_udp_new_client(sock_udp_t * sock_udp)
 {
 	client_t *new;
 
@@ -68,9 +68,9 @@ client_t *serverUdp_new_client(sock_udp_t * sock_udp)
 	return new;
 }
 
-void serverUdp_destroy_client(client_t * p)
+void server_udp_destroy_client(client_t * p)
 {
-	checkFront_event(p);
+	check_front_event(p);
 
 #ifdef PUBLIC_SERVER
 	char str_log[STR_LOG_SIZE];
@@ -86,7 +86,7 @@ void serverUdp_destroy_client(client_t * p)
 	server_destroy_any_client(p);
 }
 
-int serverUdp_init(char *ip4, int port4, char *ip6, int port6)
+int server_udp_init(char *ip4, int port4, char *ip6, int port6)
 {
 	int ret;
 
@@ -126,7 +126,7 @@ static void eventCreateNewUdpClient(sock_udp_t * socket_udp)
 
 	listClient = server_get_list_clients();
 
-	client = serverUdp_new_client(socket_udp);
+	client = server_udp_new_client(socket_udp);
 	list_add(listClient, client);
 }
 
@@ -196,7 +196,7 @@ static void client_eventUdpSelect(sock_udp_t * sock_server)
 	list_add(client->listRecvMsg, strdup(listRecvMsg));
 }
 
-void serverUdp_set_select()
+void server_udp_set_select()
 {
 	if (sock_server_udp != NULL) {
 		select_add_sock_for_read(sock_server_udp->sock);
@@ -207,7 +207,7 @@ void serverUdp_set_select()
 	}
 }
 
-int serverUdp_select_sock()
+int server_udp_select_sock()
 {
 	int count;
 
@@ -230,7 +230,7 @@ int serverUdp_select_sock()
 	return count;
 }
 
-void serverUdp_quit()
+void server_udp_quit()
 {
 	if (sock_server_udp != NULL) {
 		DEBUG_MSG(_("Closing port: \"%d\"\n"), sock_udp_get_port(sock_server_udp));

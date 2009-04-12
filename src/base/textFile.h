@@ -14,11 +14,11 @@ typedef struct str_textFile_t {
 	list_t *text;
 } textFile_t;
 
-extern textFile_t *textFile_new(char *s);
-extern textFile_t *textFile_load(char *s);
-extern void textFile_print(textFile_t * p);
-extern void textFile_save(textFile_t * p);
-extern void textFile_destroy(textFile_t * p);
+extern textFile_t *text_file_new(char *s);
+extern textFile_t *text_file_load(char *s);
+extern void text_file_print(textFile_t * p);
+extern void text_file_save(textFile_t * p);
+extern void text_file_destroy(textFile_t * p);
 
 
 #endif

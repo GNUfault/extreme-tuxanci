@@ -9,7 +9,7 @@
 #include "main.h"
 #include "textFile.h"
 
-textFile_t *textFile_new(char *s)
+textFile_t *text_file_new(char *s)
 {
 	textFile_t *new;
 	char path[STR_PATH_SIZE];
@@ -68,7 +68,7 @@ static void createLine(list_t * list, char *p, int len)
  * Nacita subor *s a vrati ho f
  * formatovany v type textFile_t*
  */
-textFile_t *textFile_load(char *s)
+textFile_t *text_file_load(char *s)
 {
 	FILE *file;
 	textFile_t *ret;
@@ -99,7 +99,7 @@ textFile_t *textFile_load(char *s)
 
 	fclose(file);
 
-	ret = textFile_new(s);
+	ret = text_file_new(s);
 	createLine(ret->text, p, file_length);
 
 	free(p);
@@ -111,7 +111,7 @@ textFile_t *textFile_load(char *s)
  * Zobrazi text ulozeny v *p
  * do stdout
  */
-void textFile_print(textFile_t * p)
+void text_file_print(textFile_t * p)
 {
 	int i;
 
@@ -124,7 +124,7 @@ void textFile_print(textFile_t * p)
 	}
 }
 
-void textFile_save(textFile_t * p)
+void text_file_save(textFile_t * p)
 {
 	int i;
 	FILE *file;
@@ -144,7 +144,7 @@ void textFile_save(textFile_t * p)
  * Uvolni text ulozeny v type textFile_t*
  * z pamate.
  */
-void textFile_destroy(textFile_t * p)
+void text_file_destroy(textFile_t * p)
 {
 	assert(p != NULL);
 

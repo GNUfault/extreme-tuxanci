@@ -213,7 +213,7 @@ void shot_bound_bombBall(shot_t * shot)
 	shot->py = getRandomCourse(shot->py, +10);
 	shot->isCanKillAuthor = 1;
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		proto_send_shot_server(PROTO_SEND_ALL, NULL, shot);
 	}
 }
@@ -309,7 +309,7 @@ void shot_check_is_tux_screen(arena_t * arena)
 	list_t *listClient;
 	int i;
 
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_SERVER) {
 		return;
 	}
 

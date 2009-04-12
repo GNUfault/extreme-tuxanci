@@ -84,7 +84,7 @@ static void addShot(tux_t * tux, int x, int y, int px, int py)
 {
 	int gun;
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
 		return;
 
 	if (tux->gun == GUN_BOMBBALL)
@@ -236,17 +236,17 @@ static void putInGunMine(tux_t * tux)
 
 	arena = arena_get_current();
 
-	if (arena__is_free_space(arena_get_current(), x, y, ITEM_MINE_WIDTH, ITEM_MINE_HEIGHT)) {
+	if (arena_is_free_space(arena_get_current(), x, y, ITEM_MINE_WIDTH, ITEM_MINE_HEIGHT)) {
 		item_t *item;
 #ifndef NO_SOUND
 		sound_play("put_mine", SOUND_GROUP_BASE);
 #endif
 		tux->shot[tux->gun]--;
 
-		if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+		if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 			item = item_new(x, y, ITEM_MINE, tux->id);
 
-			if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+			if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 				proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
 
 			space_add(arena->spaceItem, item);

@@ -151,10 +151,10 @@ int interface_init()
 	SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 	timer = SDL_AddTimer(INTERVAL, TimerCallback, NULL);
 
-	keyboardBuffer_init(KEYBOARD_BUFFER_SIZE);
+	keyboard_buffer_init(KEYBOARD_BUFFER_SIZE);
 
-	hotKey_init();
-	hotKey_register(SDLK_F1, hotkey_screen);
+	hot_key_init();
+	hot_key_register(SDLK_F1, hotkey_screen);
 
 	srand((unsigned) time(NULL));
 	isInterfaceInit = TRUE;
@@ -272,7 +272,7 @@ int eventAction()
 			default:
 				//neni potreba vyuzivat frontu stale
 				if (keyboardBufferEnabled == TRUE)
-					keyboardBuffer_push(event.key.keysym);
+					keyboard_buffer_push(event.key.keysym);
 				break;
 			}
 			break;
@@ -287,7 +287,7 @@ int eventAction()
 
 				screen_draw();
 				screen_event();
-				hotKey_event();
+				hot_key_event();
 				screen_switch();
 				break;
 
@@ -335,8 +335,8 @@ void interface_quit()
 {
 	DEBUG_MSG(_("Quitting SDL\n"));
 
-	hotKey_quit();
-	keyboardBuffer_quit();
+	hot_key_quit();
+	keyboard_buffer_quit();
 
 	SDL_Quit();
 

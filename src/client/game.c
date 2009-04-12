@@ -44,7 +44,7 @@
 
 static void initGame()
 {
-	homeDirector_create();
+	home_director_create();
 
 	interface_init();
 	font_init();
@@ -56,20 +56,20 @@ static void initGame()
 	music_init();
 #endif
 	screen_init();
-	arenaFile_init();
+	arena_file_init();
 	tux_init();
 	item_init();
 	shot_init();
 	panel_init();
 	word_init();
 
-	mainMenu_init();
+	main_menu_init();
 	analyze_init();
-	choiceArena_init();
+	choice_arena_init();
 	setting_init();
-	settingKey_int();
-	gameType_init();
-	downArena_init();
+	setting_key_int();
+	game_type_init();
+	down_arena_init();
 	scredits_init();
 	table_init();
 	browser_init();
@@ -79,13 +79,13 @@ void game_quit()
 {
 	interface_quit();
 
-	mainMenu_quit();
+	main_menu_quit();
 	analyze_quit();
 	setting_quit();
-	settingKey_quit();
-	gameType_quit();
-	downArena_quit();
-	choiceArena_quit();
+	setting_key_quit();
+	game_type_quit();
+	down_arena_quit();
+	choice_arena_quit();
 	scredits_quit();
 	table_quit();
 	browser_quit();
@@ -93,7 +93,7 @@ void game_quit()
 	layer_quit();
 	font_quit();
 	screen_quit();
-	arenaFile_quit();
+	arena_file_quit();
 	item_quiy();
 	tux_quit();
 	shot_quit();

@@ -24,12 +24,12 @@
 
 static int netGameType;
 
-int netMultiplayer_get_game_type()
+int net_multiplayer_get_game_type()
 {
 	return netGameType;
 }
 
-int netMultiplayer_init_for_game_server(char *ip4, int port4, char *ip6, int port6)
+int net_multiplayer_init_for_game_server(char *ip4, int port4, char *ip6, int port6)
 {
 	int ret;
 
@@ -42,7 +42,7 @@ int netMultiplayer_init_for_game_server(char *ip4, int port4, char *ip6, int por
 	return ret;
 }
 
-int netMultiplayer_init(int type, char *ip, int port, int proto)
+int net_multiplayer_init(int type, char *ip, int port, int proto)
 {
 	netGameType = type;
 
@@ -86,7 +86,7 @@ int netMultiplayer_init(int type, char *ip, int port, int proto)
 	return 0;
 }
 
-void netMultiplayer_event()
+void net_multiplayer_event()
 {
 	switch (netGameType) {
 	case NET_GAME_TYPE_NONE:
@@ -107,7 +107,7 @@ void netMultiplayer_event()
 	}
 }
 
-void netMultiplayer_quit()
+void net_multiplayer_quit()
 {
 	switch (netGameType) {
 	case NET_GAME_TYPE_NONE:

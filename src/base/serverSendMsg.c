@@ -20,7 +20,7 @@ static void addMsgClient(client_t * p, char *msg, int type, int id)
 	assert(msg != NULL);
 
 	if (p->status != NET_STATUS_ZOMBIE) {
-		checkFront_add_msg(p->listSendMsg, msg, type, id);
+		check_front_add_msg(p->listSendMsg, msg, type, id);
 	}
 }
 
@@ -106,7 +106,7 @@ static void addMsgAllClientSeesTux(char *msg, tux_t * tux, int type, int id)
 	list_destroy(listHelp);
 }
 
-void sendMsg_to_client(int type, client_t * client, char *msg, int type2, int id)
+void send_msg_to_client(int type, client_t * client, char *msg, int type2, int id)
 {
 	assert(msg != NULL);
 

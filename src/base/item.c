@@ -180,13 +180,13 @@ void item_add_new_item(space_t * spaceItem, int author_id)
 	int type;
 
 #ifdef PUBLIC_SERVER
-	if (getCountWeaponOrBonusItem(spaceItem) >= atoi(publicServer_get_setting("MAX_ITEM", "--max-item", "100"))) {
+	if (getCountWeaponOrBonusItem(spaceItem) >= atoi(public_server_get_setting("MAX_ITEM", "--max-item", "100"))) {
 		return;
 	}
 #endif
 
 #ifndef PUBLIC_SERVER
-	if (setting_is_any_item() == FALSE || netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
+	if (setting_is_any_item() == FALSE || net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return;
 	}
 #endif
@@ -239,16 +239,16 @@ void item_add_new_item(space_t * spaceItem, int author_id)
 		}
 #ifndef PUBLIC_SERVER
 	} while (setting_is_item(type) == FALSE ||
-		(netMultiplayer_get_game_type() == NET_GAME_TYPE_NONE && type == BONUS_HIDDEN));
+		(net_multiplayer_get_game_type() == NET_GAME_TYPE_NONE && type == BONUS_HIDDEN));
 #endif
 	item = item_new(new_x, new_y, type, author_id);
 	space_add(spaceItem, item);
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 		proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
 
 #ifndef PUBLIC_SERVER
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
 		radar_add(item->id, new_x, new_y, RADAR_TYPE_ITEM);
 #endif
 }
@@ -326,7 +326,7 @@ void item_event(space_t * spaceItem)
 
 static void mineExplosion(space_t * spaceItem, item_t * item)
 {
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 		int x, y;
 		item_t *item_explosion;
 
@@ -334,16 +334,16 @@ static void mineExplosion(space_t * spaceItem, item_t * item)
 		y = (item->y + item->h / 2) - ITEM_BIG_EXPLOSION_HEIGHT / 2;
 		item_explosion = item_new(x, y, ITEM_BIG_EXPLOSION, item->author_id);
 
-		if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+		if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 			proto_send_additem_server(PROTO_SEND_ALL, NULL, item_explosion);
 
 		space_add(spaceItem, item_explosion);
 	}
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 		proto_send_del_server(PROTO_SEND_ALL, NULL, item->id);
 
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
 		space_del_with_item(spaceItem, item, item_destroy);
 }
 
@@ -355,7 +355,7 @@ static void action_item(space_t * space, item_t * item, int *isDel)
 
 	switch (item->type) {
 		case ITEM_MINE:
-			if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
+			if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
 				mineExplosion(space, item);
 			break;
 		case ITEM_EXPLOSION:
@@ -373,7 +373,7 @@ static void action_shot(space_t * space, shot_t * shot, space_t * spaceItem)
 				shot->x, shot->y, shot->w, shot->h);
 
 	if (isDel) {
-		if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+		if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 			proto_send_del_server(PROTO_SEND_ALL, NULL, shot->id);
 
 		space_del_with_item(space, shot, shot_destroy);
@@ -382,7 +382,7 @@ static void action_shot(space_t * space, shot_t * shot, space_t * spaceItem)
 
 void item_event_conglicts_shot_with_item(arena_t * arena)
 {
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
 		return;
 
 	space_action(arena->spaceShot, action_shot, arena->spaceItem);
@@ -401,7 +401,7 @@ static void tux_event_tux_is_deadWithItem(tux_t * tux, item_t * item)
 	if (item->author_id == tux->id) {
 		tux->score--;
 
-		if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+		if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 			proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 	}
 
@@ -413,7 +413,7 @@ static void tux_event_tux_is_deadWithItem(tux_t * tux, item_t * item)
 		if (author != NULL) {
 			author->score++;
 
-			if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+			if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 				proto_send_newtux_server(PROTO_SEND_ALL, NULL, author);
 		}
 	}
@@ -430,11 +430,11 @@ static void tuxGiveBonus(tux_t * tux, item_t * item)
 	tux->bonus = item->type;
 	tux->bonus_time = TUX_MAX_BONUS;
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 		proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 
 #ifndef PUBLIC_SERVER
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
 		radar_del(item->id);
 #endif
 }
@@ -448,11 +448,11 @@ static void tuxGiveGun(tux_t * tux, item_t * item)
 	tux->shot[item->type] += GUN_MAX_SHOT;
 	tux->gun = item->type;
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 		proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 
 #ifndef PUBLIC_SERVER
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT)
 		radar_del(item->id);
 #endif
 }
@@ -468,7 +468,7 @@ static void action_giveitem(space_t * space, item_t * item, tux_t * tux)
 		case GUN_BOMBBALL:
 			tuxGiveGun(tux, item);
 	
-			if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+			if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 				proto_send_del_server(PROTO_SEND_ALL, NULL, item->id);
 	
 			space_del_with_item(space, item, item_destroy);
@@ -494,7 +494,7 @@ static void action_giveitem(space_t * space, item_t * item, tux_t * tux)
 		case BONUS_HIDDEN:
 			tuxGiveBonus(tux, item);
 	
-			if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+			if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 				proto_send_del_server(PROTO_SEND_ALL, NULL, item->id);
 	
 			space_del_with_item(space, item, item_destroy);
@@ -512,7 +512,7 @@ void item_tux_give_list_item(tux_t * tux, space_t * spaceItem)
 	assert(spaceItem != NULL);
 	assert(tux != NULL);
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
 		return;
 
 	if (tux->status == TUX_STATUS_DEAD)

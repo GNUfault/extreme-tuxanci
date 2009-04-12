@@ -12,10 +12,10 @@
 #    define SAVE_DIALOG_LOCATIN_Y	(WINDOW_SIZE_Y/2 - SAVE_DIALOG_SIZE_Y/2)
 
 
-extern void saveDialog_init();
-extern bool_t saveDialog_is_active();
-extern void saveDialog_draw();
-extern void saveDialog_event();
-extern void saveDialog_quit();
+extern void save_dialog_init();
+extern bool_t save_dialog_is_active();
+extern void save_dialog_draw();
+extern void save_dialog_event();
+extern void save_dialog_quit();
 
 #endif

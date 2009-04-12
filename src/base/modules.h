@@ -28,10 +28,10 @@ typedef struct export_fce_s {
 						  int w, int h, int player);
 #    endif
 
-	int (*fce_netMultiplayer_get_game_type) ();
+	int (*fce_net_multiplayer_get_game_type) ();
 	int (*fce_module_load_dep) (char *name);
-	void (*fce_shareFunction_add) (char *name, void *function);
-	void *(*fce_shareFunction_get) (char *name);
+	void (*fce_share_function_add) (char *name, void *function);
+	void *(*fce_share_function_get) (char *name);
 
 	void (*fce_tux_get_proportion) (tux_t * tux, int *x, int *y, int *w, int *h);
 	void (*fce_tux_set_proportion) (tux_t * tux, int x, int y);
@@ -41,7 +41,7 @@ typedef struct export_fce_s {
 	arena_t *(*fce_arena_get_current) ();
 	int (*fce_arena_conflict_space) (int x1, int y1, int w1, int h1, int x2, int y2,
 							  int w2, int h2);
-	int (*fce_arena__is_free_space) (arena_t * arena, int x, int y, int w, int h);
+	int (*fce_arena_is_free_space) (arena_t * arena, int x, int y, int w, int h);
 	void (*fce_arena_find_free_space) (arena_t * arena, int *x, int *y, int w, int h);
 	void (*fce_proto_send_module_server) (int type, client_t * client,
 										  char *msg);

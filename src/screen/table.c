@@ -43,7 +43,7 @@ void table_start()
 	music_play("menu", MUSIC_GROUP_BASE);
 #endif
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 
 void table_draw()
@@ -80,7 +80,7 @@ void table_event()
 
 void table_stop()
 {
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)
@@ -144,13 +144,13 @@ static void loadHighscoreFile()
 	char path[STR_PATH_SIZE];
 	int i;
 
-	sprintf(path, "%s/" SCREEN_TABLE_FILE_HIGHSCORE_NAME, homeDirector_get());
-	textFile = textFile_load(path);
+	sprintf(path, "%s/" SCREEN_TABLE_FILE_HIGHSCORE_NAME, home_director_get());
+	textFile = text_file_load(path);
 
 	if (textFile == NULL) {
 		fprintf(stderr, _("I am unable to load: \"%s\"!\n"), path);
 		fprintf(stderr, _("Creating: \"%s\"\n"), path);
-		textFile = textFile_new(path);
+		textFile = text_file_new(path);
 	} else {
 		return;
 	}
@@ -164,7 +164,7 @@ static void loadHighscoreFile()
 		list_add(textFile->text, strdup("no_name 0"));
 	}
 
-	textFile_save(textFile);
+	text_file_save(textFile);
 }
 
 int table_add(char *name, int score)
@@ -223,7 +223,7 @@ void table_quit()
 	list_destroy_item(listWidgetLabelScore, label_destroy);
 
 	if (textFile != NULL) {
-		textFile_save(textFile);
-		textFile_destroy(textFile);
+		text_file_save(textFile);
+		text_file_destroy(textFile);
 	}
 }

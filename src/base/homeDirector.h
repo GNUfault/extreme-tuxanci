@@ -5,6 +5,6 @@
 
 #    include "main.h"
 
-extern void homeDirector_create();
-extern char *homeDirector_get();
+extern void home_director_create();
+extern char *home_director_get();
 #endif

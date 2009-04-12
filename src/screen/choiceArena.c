@@ -56,10 +56,10 @@ void screen_startChoiceArena()
 	music_play("menu", MUSIC_GROUP_BASE);
 #endif
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 
-void choiceArena_draw()
+void choice_arena_draw()
 {
 	int i;
 
@@ -71,11 +71,11 @@ void choiceArena_draw()
 	if (show_map_buttons.prev) { button_draw(button_prev); }
 
 	for (i = show_map_buttons.min ; i < show_map_buttons.max; i++) {
-		buttonImage_draw((widget_t*)listAllWidgetButtonimage->list[i]);
+		button_image_draw((widget_t*)listAllWidgetButtonimage->list[i]);
 	}
 }
 
-void choiceArena_event()
+void choice_arena_event()
 {
 	int i;
 
@@ -85,13 +85,13 @@ void choiceArena_event()
 	if (show_map_buttons.prev) { button_event(button_prev); }
 
 	for (i = show_map_buttons.min ; i < show_map_buttons.max; i++) {
-		buttonImage_event((widget_t*)listAllWidgetButtonimage->list[i]);
+		button_image_event((widget_t*)listAllWidgetButtonimage->list[i]);
 	}
 }
 
 void stopScreenChoiceArena()
 {
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 }
 
 static void button_eventImage(void *p)
@@ -107,30 +107,30 @@ static void button_eventImage(void *p)
 		this = (widget_t *) (listAllWidgetButtonimage->list[i]);
 
 		if (buttonimage == this) {
-			buttonImage_set_active(this, TRUE);
-			currentArena = arenaFile_get(i);
+			button_image_set_active(this, TRUE);
+			currentArena = arena_file_get(i);
 		} else {
-			buttonImage_set_active(this, FALSE);
+			button_image_set_active(this, FALSE);
 		}
 	}
 }
 
-arenaFile_t *choiceArena_get()
+arenaFile_t *choice_arena_get()
 {
 	return currentArena;
 }
 
-void choiceArena_set(arenaFile_t * arenaFile)
+void choice_arena_set(arenaFile_t * arenaFile)
 {
 	widget_t *widget_buttonimage;
 	int id;
 
-	id = arenaFile_get_id(arenaFile);
+	id = arena_file_get_id(arenaFile);
 	currentArena = arenaFile;
 
 	if (id >= 0) {
 		widget_buttonimage = (widget_t *) listAllWidgetButtonimage->list[id];
-		buttonImage_set_active(widget_buttonimage, TRUE);
+		button_image_set_active(widget_buttonimage, TRUE);
 	}
 }
 
@@ -168,18 +168,18 @@ static void eventWidget(void *p)
 static void activateHandledMapButtonGroup(void) {
 	int min = handled_map_button_group * 6;
 	min = min < 0 ? 0 : min;
-	min = min <= arenaFile_get_count() ? min : arenaFile_get_count();
-	int max = min+6 <= arenaFile_get_count() ? min+6 : arenaFile_get_count();
+	min = min <= arena_file_get_count() ? min : arena_file_get_count();
+	int max = min+6 <= arena_file_get_count() ? min+6 : arena_file_get_count();
 
 	if (min) { show_map_buttons.prev = 1; }
 	else { show_map_buttons.prev = 0; }
-	if (max < arenaFile_get_count()) { show_map_buttons.next = 1; }
+	if (max < arena_file_get_count()) { show_map_buttons.next = 1; }
 	else { show_map_buttons.next = 0; }
 	show_map_buttons.min = min;
 	show_map_buttons.max = max;
 }
 
-void choiceArena_init()
+void choice_arena_init()
 {
 	image_t *image;
 	int i;
@@ -196,14 +196,14 @@ void choiceArena_init()
 	listAllWidgetButtonimage = list_new();
 	currentArena = NULL;
 
-	for (i = 0; i < arenaFile_get_count(); i++) {
+	for (i = 0; i < arena_file_get_count(); i++) {
 		widget_t *widget_buttonimage;
 		arenaFile_t *arenaFile;
 		int x, y;
 
-		arenaFile = arenaFile_get(i);
-		//image = image_add(arenaFile_get_image(i), IMAGE_NO_ALPHA, "none", IMAGE_GROUP_BASE);
-		image = arenaFile_load_image(arenaFile,  arenaFile_get_image(arenaFile),
+		arenaFile = arena_file_get(i);
+		//image = image_add(arena_file_get_image(i), IMAGE_NO_ALPHA, "none", IMAGE_GROUP_BASE);
+		image = arena_file_load_image(arenaFile,  arena_file_get_image(arenaFile),
 					   IMAGE_GROUP_BASE, "none", IMAGE_NO_ALPHA);
 
 		// only 6 map buttons can be shown at once;
@@ -214,7 +214,7 @@ void choiceArena_init()
 		x = 100 + 200 * (pos - 3 * (pos / 3));
 		y = 150 + 200 * (pos / 3);
 
-		widget_buttonimage = buttonImage_new(image, x, y, button_eventImage);
+		widget_buttonimage = button_image_new(image, x, y, button_eventImage);
 /*
 		if( i == choiceArenaId )
 		{
@@ -227,11 +227,11 @@ void choiceArena_init()
 	}
 
 	screen_register( screen_new("chiceArena", screen_startChoiceArena,
-			choiceArena_event, choiceArena_draw,
+			choice_arena_event, choice_arena_draw,
 			stopScreenChoiceArena));
 }
 
-void choiceArena_quit()
+void choice_arena_quit()
 {
 	wid_image_destroy(image_backgorund);
 
@@ -241,5 +241,5 @@ void choiceArena_quit()
 	button_destroy(button_next);
 	button_destroy(button_prev);
 
-	list_destroy_item(listAllWidgetButtonimage, buttonImage_destroy);
+	list_destroy_item(listAllWidgetButtonimage, button_image_destroy);
 }

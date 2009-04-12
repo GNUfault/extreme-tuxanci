@@ -34,7 +34,7 @@ void pauza_init()
 	g_pauza = image_add("pauza.png", IMAGE_ALPHA, "pauza", IMAGE_GROUP_USER);
 	activePauza = FALSE;
 
-	hotKey_register(SDLK_p, hotkey_pauze);
+	hot_key_register(SDLK_p, hotkey_pauze);
 }
 
 void pauza_draw()
@@ -58,5 +58,5 @@ bool_t pauza_is_active()
 
 void pauza_quit()
 {
-	unhotKey_register(SDLK_p);
+	unhot_key_register(SDLK_p);
 }

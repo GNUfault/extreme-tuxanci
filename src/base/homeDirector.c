@@ -10,7 +10,7 @@
 
 static char homeDirector[STR_PATH_SIZE];
 
-void homeDirector_create()
+void home_director_create()
 {
 	char *envHome;
 #ifndef __WIN32__
@@ -40,7 +40,7 @@ void homeDirector_create()
 	}
 }
 
-char *homeDirector_get()
+char *home_director_get()
 {
 	return homeDirector;
 }

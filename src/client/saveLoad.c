@@ -65,7 +65,7 @@ static void saveContextArenaToTextFile(textFile_t * textFile, arena_t * arena)
 	char str[STR_PROTO_SIZE];
 
 	sprintf(str, "ARENA %s %d %d",
-			arenaFile_get_net_name(choiceArena_get()),
+			arena_file_get_net_name(choice_arena_get()),
 			arena->countRound, arena->max_countRound);
 
 	list_add(textFile->text, strdup(str));
@@ -80,16 +80,16 @@ void save_arena(char *filename, arena_t * arena)
 	textFile_t *textFile;
 	char path[STR_PATH_SIZE];
 
-	sprintf(path, "%s/%s.sav", homeDirector_get(), filename);
+	sprintf(path, "%s/%s.sav", home_director_get(), filename);
 
 	DEBUG_MSG(_("Saving game to: \"%s\"\n"), path);
 
-	textFile = textFile_new(path);
+	textFile = text_file_new(path);
 
 	if (textFile != NULL) {
 		saveContextArenaToTextFile(textFile, arena);
-		textFile_save(textFile);
-		textFile_destroy(textFile);
+		text_file_save(textFile);
+		text_file_destroy(textFile);
 	} else {
 		fprintf(stderr, _("I was unable to save: \"%s\"\n"), path);
 	}
@@ -105,7 +105,7 @@ static arena_t *load_arenaFromLine(char *line)
 
 	sscanf(line, "%s %s %d %d", cmd, name, &countRound, &max_countRound);
 
-	word_set_arena(arenaFile_get_file_format_net_name(name));
+	word_set_arena(arena_file_get_file_format_net_name(name));
 
 	arena = arena_get_current();
 	arena->max_countRound = max_countRound;
@@ -246,15 +246,15 @@ void load_arena(char *filename)
 	textFile_t *textFile;
 	char path[STR_PATH_SIZE];
 
-	sprintf(path, "%s/%s", homeDirector_get(), filename);
+	sprintf(path, "%s/%s", home_director_get(), filename);
 
 	DEBUG_MSG(_("Loadig game from file: \"%s\"\n"), path);
 
-	textFile = textFile_load(path);
+	textFile = text_file_load(path);
 
 	if (textFile != NULL) {
 		loadContextArenaFromTextFile(textFile);
-		textFile_destroy(textFile);
+		text_file_destroy(textFile);
 	} else {
 		fprintf(stderr, _("Unable to load save: \"%s\"\n"), path);
 	}

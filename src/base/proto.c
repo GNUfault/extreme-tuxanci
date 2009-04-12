@@ -44,7 +44,7 @@ void proto_send_error_server(int type, client_t * client, int errorcode)
 
 	snprintf(msg, STR_PROTO_SIZE, "error %d\n", errorcode);
 
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -157,7 +157,7 @@ void proto_recv_hello_server(client_t * client, char *msg)
 
 	if (space_get_count(arena_get_current()->spaceTux) + 1 > server_get_max_clients()) {
 		proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_LIMIT_MAX_CLIENT);
-		checkFront_event(client);
+		check_front_event(client);
 		client->status = NET_STATUS_ZOMBIE;
 		return;
 	}
@@ -167,7 +167,7 @@ void proto_recv_hello_server(client_t * client, char *msg)
 
 #ifdef PUBLIC_SERVER
 	if (supportVersion == NULL) {
-		supportVersion = publicServer_get_setting("SUPPORT_CLIENTS", "--support-clients", TUXANCI_VERSION);
+		supportVersion = public_server_get_setting("SUPPORT_CLIENTS", "--support-clients", TUXANCI_VERSION);
 	}
 #endif
 
@@ -185,7 +185,7 @@ void proto_recv_hello_server(client_t * client, char *msg)
 
 	if (strstr(supportVersion, version) == NULL) {
 		proto_send_error_server(PROTO_SEND_ONE, client, PROTO_ERROR_CODE_BAD_VERSION);
-		checkFront_event(client);
+		check_front_event(client);
 		client->status = NET_STATUS_ZOMBIE;
 		return;
 	}
@@ -219,14 +219,14 @@ void proto_send_status_server(int type, client_t * client)
 #endif
 
 #ifdef PUBLIC_SERVER
-	name = publicServer_get_setting("NAME", "--name", "noname");
+	name = public_server_get_setting("NAME", "--name", "noname");
 #endif
 
 	version = TUXANCI_VERSION;
 	clients = arena_get_current()->spaceTux->listIndex->count;
 	maxclients = server_get_max_clients();
 	uptime = (unsigned int) server_get_update();
-	arena = arenaFile_get_net_name(choiceArena_get());
+	arena = arena_file_get_net_name(choice_arena_get());
 
 	snprintf(msg, STR_PROTO_SIZE,
 		"name: %s\n"
@@ -236,7 +236,7 @@ void proto_send_status_server(int type, client_t * client)
 		"uptime: %d\n"
 		"arena: %s\n", name, version, clients, maxclients, uptime, arena);
 
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 	//proto_send(type, client, msg);
 }
 
@@ -257,7 +257,7 @@ void proto_send_listscore_server(int type, client_t * client, int max)
 	strcpy(msg, "");
 
 	for (i = 0; i < max; i++) {
-		str = highScore_get_table(i);
+		str = high_score_get_table(i);
 
 		if (str == NULL) {
 			break;
@@ -268,7 +268,7 @@ void proto_send_listscore_server(int type, client_t * client, int max)
 	}
 
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 	free(msg);
 }
 
@@ -317,7 +317,7 @@ void proto_recv_check_server(client_t * client, char *msg)
 		return;
 	}
 
-	checkFront_del_msg(client->listSendMsg, id);
+	check_front_del_msg(client->listSendMsg, id);
 }
 
 void proto_send_init_server(int type, client_t * client, client_t * client2)
@@ -331,17 +331,17 @@ void proto_send_init_server(int type, client_t * client, client_t * client2)
 	count = WORLD_COUNT_ROUND_UNLIMITED;
 
 #ifndef PUBLIC_SERVER
-	publicServer_get_settingCountRound(&count);
+	public_server_get_settingCountRound(&count);
 #endif
 
 	check_id = id_get_newcount(0);
 
 	snprintf(msg, STR_PROTO_SIZE, "init %d %d %d %d %s %d\n",
 		 client2->tux->id, client2->tux->x, client2->tux->y,
-		 count, arenaFile_get_net_name(choiceArena_get()), check_id);
+		 count, arena_file_get_net_name(choice_arena_get()), check_id);
 
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
 }
 
 #ifndef PUBLIC_SERVER
@@ -372,7 +372,7 @@ void proto_recv_init_client(char *msg)
 		return;
 	}
 
-	word_set_arena(arenaFile_get_file_format_net_name(arena_name));
+	word_set_arena(arena_file_get_file_format_net_name(arena_name));
 
 	arena = arena_get_current();
 	arena->max_countRound = n;
@@ -384,7 +384,7 @@ void proto_recv_init_client(char *msg)
 	tux->control = TUX_CONTROL_KEYBOARD_RIGHT;
 	word_set_control_tux(tux, TUX_CONTROL_KEYBOARD_RIGHT);
 
-	publicServer_get_settingNameRight(tux->name);
+	public_server_get_settingNameRight(tux->name);
 
 	space_add(arena->spaceTux, tux);
 }
@@ -399,7 +399,7 @@ proto_send_event_server(int type, client_t * client, tux_t * tux, int action)
 	snprintf(msg, STR_PROTO_SIZE, "event %d %d\n", tux->id, action);
 
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -491,7 +491,7 @@ void proto_send_newtux_server(int type, client_t * client, tux_t * tux)
 			 tux->shot[GUN_BOMBBALL], tux->bonus_time, tux->pickup_time);
 
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE,
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE,
 					CHECK_FRONT_ID_NONE);
 }
 
@@ -578,7 +578,7 @@ void proto_send_kill_server(int type, client_t * client, tux_t * tux)
 	snprintf(msg, STR_PROTO_SIZE, "kill %d\n", tux->id);
 
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -616,7 +616,7 @@ void proto_send_del_server(int type, client_t * client, int id)
 
 	snprintf(msg, STR_PROTO_SIZE, "del %d %d\n", id, check_id);
 
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
 	//proto_check(type, client, msg, check_id);
 }
 
@@ -704,7 +704,7 @@ void proto_send_additem_server(int type, client_t * client, item_t * p)
 
 	//proto_send(type, client, msg);
 	//proto_check(type, client, msg, check_id);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_CHECK, check_id);
 }
 
 #ifndef PUBLIC_SERVER
@@ -764,7 +764,7 @@ void proto_send_shot_server(int type, client_t * client, shot_t * p)
 
 	//proto_send(type, client, msg);
 	//proto_check(type, client, msg, check_id);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -836,7 +836,7 @@ void proto_recv_chat_server(client_t * client, char *msg)
 
 void proto_send_chat_server(int type, client_t * client, char *msg)
 {
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 
 #ifndef PUBLIC_SERVER
 	proto_recv_chat_client(msg);
@@ -892,7 +892,7 @@ void proto_send_module_server(int type, client_t * client, char *msg)
 	strcat(out, "\n");
 */
 
-	sendMsg_to_client(type, client, out, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, out, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -924,7 +924,7 @@ void proto_send_ping_server(int type, client_t * client)
 	char msg[STR_PROTO_SIZE];
 	snprintf(msg, STR_PROTO_SIZE, "ping\n");
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER
@@ -946,7 +946,7 @@ void proto_send_echo_server(int type, client_t * client, char *s)
 
 	snprintf(msg, STR_PROTO_SIZE, "echo%s", s);
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 void proto_send_end_server(int type, client_t * client)
@@ -955,7 +955,7 @@ void proto_send_end_server(int type, client_t * client)
 
 	snprintf(msg, STR_PROTO_SIZE, "end\n");
 	//proto_send(type, client, msg);
-	sendMsg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
+	send_msg_to_client(type, client, msg, CHECK_FRONT_TYPE_SIMPLE, CHECK_FRONT_ID_NONE);
 }
 
 #ifndef PUBLIC_SERVER

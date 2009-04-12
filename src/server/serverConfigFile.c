@@ -40,7 +40,7 @@ void server_configFile_init()
 	printf(_("Loading configuration from: \"%s\"\n"),
 		   getParamElse("--config-file", SERVER_CONFIG));
 
-	serverTextFile = textFile_load(configFile);
+	serverTextFile = text_file_load(configFile);
 
 	if (serverTextFile == NULL) {
 		fprintf(stderr,
@@ -95,6 +95,6 @@ char *server_configFile_get_value(char *env, char *s)
 void server_configFile_quit()
 {
 	if (serverTextFile != NULL) {
-		textFile_destroy(serverTextFile);
+		text_file_destroy(serverTextFile);
 	}
 }

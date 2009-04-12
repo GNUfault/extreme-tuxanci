@@ -11,16 +11,16 @@
 
 static textFile_t *textFile;
 
-void highScore_init(char *file)
+void high_score_init(char *file)
 {
 	int i;
 
-	textFile = textFile_load(file);
+	textFile = text_file_load(file);
 
 	if (textFile == NULL) {
 		fprintf(stderr, _("I am unable to load: \"%s\"!\n"), file);
 		fprintf(stderr, _("Creating: \"%s\"\n"), file);
-		textFile = textFile_new(file);
+		textFile = text_file_new(file);
 	} else {
 
 		DEBUG_MSG(_("Scorefile: \"%s\"\n"), file);
@@ -36,7 +36,7 @@ void highScore_init(char *file)
 		list_add(textFile->text, strdup("no_name 0"));
 	}
 
-	textFile_save(textFile);
+	text_file_save(textFile);
 }
 
 int table_add(char *name, int score)
@@ -61,8 +61,8 @@ int table_add(char *name, int score)
 			sprintf(new, "%s %d", name, score);
 			list_ins(textFile->text, i, strdup(new));
 			list_del_item(textFile->text, HIGHSCORE_MAX_PLAYERS, free);
-			//textFile_print(textFile);
-			textFile_save(textFile);
+			//text_file_print(textFile);
+			text_file_save(textFile);
 
 			return 0;
 		}
@@ -71,7 +71,7 @@ int table_add(char *name, int score)
 	return -1;
 }
 
-char *highScore_get_table(int index)
+char *high_score_get_table(int index)
 {
 	if (textFile != NULL && index >= 0 && index < textFile->text->count) {
 		return (char *) textFile->text->list[index];
@@ -80,10 +80,10 @@ char *highScore_get_table(int index)
 	return NULL;
 }
 
-void highScore_quit()
+void high_score_quit()
 {
 	if (textFile != NULL) {
-		textFile_save(textFile);
-		textFile_destroy(textFile);
+		text_file_save(textFile);
+		text_file_destroy(textFile);
 	}
 }

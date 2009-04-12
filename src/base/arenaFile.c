@@ -29,12 +29,12 @@
 static list_t *listArenaFile;
 static bool_t isArenaFileInit = FALSE;
 
-bool_t arenaFile_is_inicialized()
+bool_t arena_file_is_inicialized()
 {
 	return isArenaFileInit;
 }
 
-int arenaFile_get_value(char *line, char *env, char *val, int len)
+int arena_file_get_value(char *line, char *env, char *val, int len)
 {
 	char *offset_env;
 	char *offset_val_begin;
@@ -73,7 +73,7 @@ int arenaFile_get_value(char *line, char *env, char *val, int len)
 
 
 #ifndef PUBLIC_SERVER
-image_t *arenaFile_load_image(arenaFile_t * arenaFile, char *filename, char *group, char *name, int alpha)
+image_t *arena_file_load_image(arenaFile_t * arenaFile, char *filename, char *group, char *name, int alpha)
 {
 	char *extractFile;
 	image_t *image;
@@ -103,13 +103,13 @@ static void cmd_arena(arena_t ** arena, char *line)
 	char str_w[STR_SIZE];
 	char str_h[STR_SIZE];
 
-	if (arenaFile_get_value(line, "background", str_image, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "background", str_image, STR_SIZE) != 0)
 		return;
 
-	if (arenaFile_get_value(line, "w", str_w, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "w", str_w, STR_SIZE) != 0)
 		return;
 
-	if (arenaFile_get_value(line, "h", str_h, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "h", str_h, STR_SIZE) != 0)
 		return;
 
 	(*arena) = arena_new(atoi(str_w), atoi(str_h));
@@ -127,7 +127,7 @@ static void cmd_module_load(char *line)
 {
 	char str_file[STR_SIZE];
 
-	if (arenaFile_get_value(line, "file", str_file, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "file", str_file, STR_SIZE) != 0)
 		return;
 
 	module_load(str_file);
@@ -141,17 +141,17 @@ static void cmd_loadImage(arenaFile_t * arenaFile, char *line)
 	char str_name[STR_SIZE];
 	char str_alpha[STR_SIZE];
 
-	if (arenaFile_get_value(line, "file", str_file, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "file", str_file, STR_SIZE) != 0)
 		return;
 
-	if (arenaFile_get_value(line, "name", str_name, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "name", str_name, STR_SIZE) != 0)
 		return;
 
-	if (arenaFile_get_value(line, "alpha", str_alpha, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "alpha", str_alpha, STR_SIZE) != 0)
 		return;
 
 	//printf("str_file=%s str_name=%s str_alpha=%s\n", str_file, str_name, str_alpha);
-	arenaFile_load_image(arenaFile, str_file, IMAGE_GROUP_USER, str_name, isYesOrNO(str_alpha));
+	arena_file_load_image(arenaFile, str_file, IMAGE_GROUP_USER, str_name, isYesOrNO(str_alpha));
 
 	//image_add(str_file, isYesOrNO(str_alpha), str_name, IMAGE_GROUP_USER);
 }
@@ -161,10 +161,10 @@ static void cmd_loadMusic(arenaFile_t * arenaFile, char *line)
 	char str_file[STR_SIZE];
 	char str_name[STR_SIZE];
 
-	if (arenaFile_get_value(line, "file", str_file, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "file", str_file, STR_SIZE) != 0)
 		return;
 
-	if (arenaFile_get_value(line, "name", str_name, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "name", str_name, STR_SIZE) != 0)
 		return;
 
 #ifndef NO_SOUND
@@ -177,19 +177,19 @@ static void cmd_music_play(arena_t * arena, char *line)
 {
 	char str_music[STR_SIZE];
 
-	if (arenaFile_get_value(line, "music", str_music, STR_SIZE) != 0)
+	if (arena_file_get_value(line, "music", str_music, STR_SIZE) != 0)
 		return;
 
 	strcpy(arena->music, str_music);
 }
 #endif
 
-int arenaFile_get_count()
+int arena_file_get_count()
 {
 	return listArenaFile->count;
 }
 
-static char *arenaFile_get_arenaStatus(textFile_t * ts, char *s)
+static char *arena_file_get_arenaStatus(textFile_t * ts, char *s)
 {
 	int len;
 	int i;
@@ -208,23 +208,23 @@ static char *arenaFile_get_arenaStatus(textFile_t * ts, char *s)
 	return NULL;
 }
 
-char *arenaFile_get_name(arenaFile_t * arenaFile)
+char *arena_file_get_name(arenaFile_t * arenaFile)
 {
 	char *ret;
 
-	ret = arenaFile_get_arenaStatus(arenaFile->map, "name");
+	ret = arena_file_get_arenaStatus(arenaFile->map, "name");
 	return (ret != NULL ? ret : "arena_no_name");
 }
 
-char *arenaFile_get_net_name(arenaFile_t * arenaFile)
+char *arena_file_get_net_name(arenaFile_t * arenaFile)
 {
 	char *ret;
 
-	ret = arenaFile_get_arenaStatus(arenaFile->map, "netName");
+	ret = arena_file_get_arenaStatus(arenaFile->map, "netName");
 	return (ret != NULL ? ret : "arena_no_net_name");
 }
 
-arenaFile_t *arenaFile_get_file_format_net_name(char *s)
+arenaFile_t *arena_file_get_file_format_net_name(char *s)
 {
 	int i;
 
@@ -233,24 +233,24 @@ arenaFile_t *arenaFile_get_file_format_net_name(char *s)
 
 		arenaFile = (arenaFile_t *) listArenaFile->list[i];
 
-		if (strcmp(arenaFile_get_net_name(arenaFile), s) == 0)
+		if (strcmp(arena_file_get_net_name(arenaFile), s) == 0)
 			return arenaFile;
 	}
 
 	return NULL;
 }
 
-char *arenaFile_get_image(arenaFile_t * arenaFile)
+char *arena_file_get_image(arenaFile_t * arenaFile)
 {
-	return arenaFile_get_arenaStatus(arenaFile->map, "screen");
+	return arena_file_get_arenaStatus(arenaFile->map, "screen");
 }
 
-arenaFile_t *arenaFile_get(int n)
+arenaFile_t *arena_file_get(int n)
 {
 	return (arenaFile_t *) listArenaFile->list[n];
 }
 
-int arenaFile_get_id(arenaFile_t * arenaFile)
+int arena_file_get_id(arenaFile_t * arenaFile)
 {
 	int i;
 
@@ -267,7 +267,7 @@ int arenaFile_get_id(arenaFile_t * arenaFile)
 	return -1;
 }
 
-arena_t *arenaFile_get_arena(arenaFile_t * arenaFile)
+arena_t *arena_file_get_arena(arenaFile_t * arenaFile)
 {
 	textFile_t *ts;
 	arena_t *arena = NULL;		// no warninng
@@ -301,7 +301,7 @@ arena_t *arenaFile_get_arena(arenaFile_t * arenaFile)
 	return arena;
 }
 
-arenaFile_t *arenaFile_new(char *path)
+arenaFile_t *arena_file_new(char *path)
 {
 	arenaFile_t *new;
 	char *extractFile;
@@ -310,7 +310,7 @@ arenaFile_t *arenaFile_new(char *path)
 	new->path = strdup(path);
 
 	extractFile = archive_extract_file(path, "arena.map");
-	new->map = textFile_load(extractFile);
+	new->map = text_file_load(extractFile);
 	archive_delete_file(extractFile);
 
 	return new;
@@ -318,14 +318,14 @@ arenaFile_t *arenaFile_new(char *path)
 
 void arena_destroyFile(arenaFile_t * p)
 {
-	textFile_destroy(p->map);
+	text_file_destroy(p->map);
 	free(p->path);
 	free(p);
 }
 
-void arenaFile_load(char *path)
+void arena_file_load(char *path)
 {
-	list_add(listArenaFile, arenaFile_new(path));
+	list_add(listArenaFile, arena_file_new(path));
 }
 
 static void load_arenaFromDirector(char *director)
@@ -360,7 +360,7 @@ static void load_arenaFromDirector(char *director)
 			DEBUG_MSG(_("Loading arena: %s\n"), line);
 
 			accessExistFile(path);
-			arenaFile_load(path);
+			arena_file_load(path);
 		}
 	}
 
@@ -369,7 +369,7 @@ static void load_arenaFromDirector(char *director)
 
 }
 
-void arenaFile_init()
+void arena_file_init()
 {
 #ifndef PUBLIC_SERVER
 	assert(image_is_inicialized() == TRUE);
@@ -380,11 +380,11 @@ void arenaFile_init()
 	load_arenaFromDirector(PATH_ARENA);
 
 #ifndef PUBLIC_SERVER
-	load_arenaFromDirector(homeDirector_get());
+	load_arenaFromDirector(home_director_get());
 #endif
 }
 
-void arenaFile_quit()
+void arena_file_quit()
 {
 	isArenaFileInit = FALSE;
 	list_destroy_item(listArenaFile, arena_destroyFile);

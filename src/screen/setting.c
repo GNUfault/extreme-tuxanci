@@ -90,7 +90,7 @@ void screen_startSetting()
 	music_play("menu", MUSIC_GROUP_BASE);
 #endif
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 
 void setting_draw()
@@ -108,12 +108,12 @@ void setting_draw()
 	label_draw(label_sound);
 #endif
 
-	textField_draw(textfield_count_cound);
-	textField_draw(textfield_name_player1);
+	text_field_draw(textfield_count_cound);
+	text_field_draw(textfield_name_player1);
 
 	if (check_get_status(check_ai) == FALSE) {
 		label_draw(label_name_player2);
-		textField_draw(textfield_name_player2);
+		text_field_draw(textfield_name_player2);
 	}
 
 	wid_image_draw(image_gun_dual_revolver);
@@ -153,11 +153,11 @@ void setting_event()
 {
 	int i;
 
-	textField_event(textfield_count_cound);
-	textField_event(textfield_name_player1);
+	text_field_event(textfield_count_cound);
+	text_field_event(textfield_name_player1);
 
 	if (check_get_status(check_ai) == FALSE) {
-		textField_event(textfield_name_player2);
+		text_field_event(textfield_name_player2);
 	}
 
 #ifndef NO_SOUND
@@ -181,7 +181,7 @@ void setting_event()
 
 void stopScreenSetting()
 {
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)
@@ -216,15 +216,15 @@ static void initSettingFile()
 	char path[STR_PATH_SIZE];
 	char val[STR_SIZE];
 
-	sprintf(path, "%s/tuxanci.conf", homeDirector_get());
+	sprintf(path, "%s/tuxanci.conf", home_director_get());
 
-	configFile = textFile_load(path);
+	configFile = text_file_load(path);
 
 	if (configFile == NULL) {
 		fprintf(stderr, _("I am unable to load: \"%s\"!\n"), path);
 		fprintf(stderr, _("Creating: \"%s\"\n"), path);
 
-		configFile = textFile_new(path);
+		configFile = text_file_new(path);
 	}
 
 	if (configFile == NULL) {
@@ -233,15 +233,15 @@ static void initSettingFile()
 	}
 
 	loadValueFromConfigFile(configFile, "COUNT_ROUND", val, STR_SIZE, "15");
-	textField_set_text(textfield_count_cound, val);
+	text_field_set_text(textfield_count_cound, val);
 
 	loadValueFromConfigFile(configFile, "NAME_PLAYER_RIGHT", val, STR_SIZE,
 							NAME_PLAYER_RIGHT);
-	textField_set_text(textfield_name_player1, val);
+	text_field_set_text(textfield_name_player1, val);
 
 	loadValueFromConfigFile(configFile, "NAME_PLAYER_LEFT", val, STR_SIZE,
 							NAME_PLAYER_LEFT);
-	textField_set_text(textfield_name_player2, val);
+	text_field_set_text(textfield_name_player2, val);
 
 	loadValueFromConfigFile(configFile, "GUN_DUAL_SIMPLE", val, STR_SIZE,
 							"YES");
@@ -283,9 +283,9 @@ static void initSettingFile()
 #endif
 
 	loadValueFromConfigFile(configFile, "ARENA", val, STR_SIZE, "FAGN");
-	choiceArena_set(arenaFile_get_file_format_net_name(val));
+	choice_arena_set(arena_file_get_file_format_net_name(val));
 
-	textFile_save(configFile);
+	text_file_save(configFile);
 }
 
 static void saveAndDestroyConfigFile()
@@ -295,9 +295,9 @@ static void saveAndDestroyConfigFile()
 		return;
 	}
 
-	setValueInConfigFile(configFile, "COUNT_ROUND",  textField_get_text(textfield_count_cound));
-	setValueInConfigFile(configFile, "NAME_PLAYER_RIGHT", textField_get_text(textfield_name_player1));
-	setValueInConfigFile(configFile, "NAME_PLAYER_LEFT", textField_get_text(textfield_name_player2));
+	setValueInConfigFile(configFile, "COUNT_ROUND",  text_field_get_text(textfield_count_cound));
+	setValueInConfigFile(configFile, "NAME_PLAYER_RIGHT", text_field_get_text(textfield_name_player1));
+	setValueInConfigFile(configFile, "NAME_PLAYER_LEFT", text_field_get_text(textfield_name_player2));
 	setValueInConfigFile(configFile, "GUN_DUAL_SIMPLE", getYesOrNo(check_get_status(check[GUN_DUAL_SIMPLE])));
 	setValueInConfigFile(configFile, "GUN_SCATTER", getYesOrNo(check_get_status(check[GUN_SCATTER])));
 	setValueInConfigFile(configFile, "GUN_TOMMY", getYesOrNo(check_get_status(check[GUN_TOMMY])));
@@ -317,14 +317,14 @@ static void saveAndDestroyConfigFile()
 	setValueInConfigFile(configFile, "SOUND", getYesOrNo(check_get_status(check_sound)));
 #endif
 
-	if( choiceArena_get() != NULL )
+	if( choice_arena_get() != NULL )
 	{
-		setValueInConfigFile(configFile, "ARENA", arenaFile_get_net_name(choiceArena_get()));
+		setValueInConfigFile(configFile, "ARENA", arena_file_get_net_name(choice_arena_get()));
 	}
 	//TODO
 
-	textFile_save(configFile);
-	textFile_destroy(configFile);
+	text_file_save(configFile);
+	text_file_destroy(configFile);
 }
 
 void setting_init()
@@ -363,16 +363,16 @@ void setting_init()
 	label_name_player1 = label_new(_("Player 1:"), 100, WINDOW_SIZE_Y - 160, WIDGET_LABEL_LEFT);
 	label_name_player2 = label_new(_("Player 2:"), 100, WINDOW_SIZE_Y - 120, WIDGET_LABEL_LEFT);
 
-	textfield_count_cound = textField_new(getParamElse("--count", "15"),
+	textfield_count_cound = text_field_new(getParamElse("--count", "15"),
 				WIDGET_TEXTFIELD_FILTER_NUM,
 				110 + label_count_round->w,
 				 WINDOW_SIZE_Y - 200);
 
-	textfield_name_player1 = textField_new(getParamElse("--name1", NAME_PLAYER_RIGHT),
+	textfield_name_player1 = text_field_new(getParamElse("--name1", NAME_PLAYER_RIGHT),
 				WIDGET_TEXTFIELD_FILTER_ALPHANUM,
 				110 + label_count_round->w, WINDOW_SIZE_Y - 160);
 
-	textfield_name_player2 = textField_new(getParamElse("--name2", NAME_PLAYER_LEFT),
+	textfield_name_player2 = text_field_new(getParamElse("--name2", NAME_PLAYER_LEFT),
 				WIDGET_TEXTFIELD_FILTER_ALPHANUM,
 				110 + label_count_round->w, WINDOW_SIZE_Y - 120);
 
@@ -434,23 +434,23 @@ void setting_init()
 #endif
 }
 
-void publicServer_get_settingNameRight(char *s)
+void public_server_get_settingNameRight(char *s)
 {
-	strcpy(s, textField_get_text(textfield_name_player1));
+	strcpy(s, text_field_get_text(textfield_name_player1));
 }
 
-void publicServer_get_settingNameLeft(char *s)
+void public_server_get_settingNameLeft(char *s)
 {
 	if (check_get_status(check_ai)) {
 		strcpy(s, NAME_AI);
 	} else {
-		strcpy(s, textField_get_text(textfield_name_player2));
+		strcpy(s, text_field_get_text(textfield_name_player2));
 	}
 }
 
-void publicServer_get_settingCountRound(int *n)
+void public_server_get_settingCountRound(int *n)
 {
-	*n = atoi(textField_get_text(textfield_count_cound));
+	*n = atoi(text_field_get_text(textfield_count_cound));
 }
 
 bool_t setting_is_ai()
@@ -499,10 +499,10 @@ void setting_quit()
 	label_destroy(label_sound);
 #endif
 	label_destroy(label_name_player2);
-	textField_destroy(textfield_name_player2);
+	text_field_destroy(textfield_name_player2);
 
-	textField_destroy(textfield_name_player1);
-	textField_destroy(textfield_count_cound);
+	text_field_destroy(textfield_name_player1);
+	text_field_destroy(textfield_count_cound);
 
 	wid_image_destroy(image_gun_dual_revolver);
 	wid_image_destroy(image_gun_scatter);

@@ -46,7 +46,7 @@ static void eventWidget(void *p)
 	button = (widget_t *) p;
 
 	if (button == widgetButtonSave) {
-		save_arena(textField_get_text(widgetTextFieldName), arena_get_current());
+		save_arena(text_field_get_text(widgetTextFieldName), arena_get_current());
 		switchTerm();
 	}
 
@@ -60,7 +60,7 @@ static void hotkey_saveDialog()
 	switchTerm();
 }
 
-void saveDialog_init()
+void save_dialog_init()
 {
 	activeSaveDialog = FALSE;
 
@@ -70,7 +70,7 @@ void saveDialog_init()
 						SAVE_DIALOG_LOCATIN_Y + 20,
 						WIDGET_LABEL_LEFT);
 
-	widgetTextFieldName = textField_new("noname", WIDGET_TEXTFIELD_FILTER_ALPHANUM,
+	widgetTextFieldName = text_field_new("noname", WIDGET_TEXTFIELD_FILTER_ALPHANUM,
 							widgetLabelMsg->x +
 							widgetLabelMsg->w + 10,
 							 widgetLabelMsg->y);
@@ -84,15 +84,15 @@ void saveDialog_init()
 						SAVE_DIALOG_LOCATIN_Y + 60,
 						eventWidget);
 
-	hotKey_register(SDLK_F2, hotkey_saveDialog);
+	hot_key_register(SDLK_F2, hotkey_saveDialog);
 }
 
-bool_t saveDialog_is_active()
+bool_t save_dialog_is_active()
 {
 	return activeSaveDialog;
 }
 
-void saveDialog_draw()
+void save_dialog_draw()
 {
 	if (activeSaveDialog == FALSE) {
 		return;
@@ -107,29 +107,29 @@ void saveDialog_draw()
 		SAVE_DIALOG_SIZE_Y);
 
 	label_draw(widgetLabelMsg);
-	textField_draw(widgetTextFieldName);
+	text_field_draw(widgetTextFieldName);
 	button_draw(widgetButtonSave);
 	button_draw(widgetButtonBack);
 }
 
-void saveDialog_event()
+void save_dialog_event()
 {
 	if (activeSaveDialog == FALSE) {
 		return;
 	}
 
-	textField_event(widgetTextFieldName);
+	text_field_event(widgetTextFieldName);
 	button_event(widgetButtonSave);
 	button_event(widgetButtonBack);
 
 }
 
-void saveDialog_quit()
+void save_dialog_quit()
 {
-	unhotKey_register(SDLK_F2);
+	unhot_key_register(SDLK_F2);
 
 	label_destroy(widgetLabelMsg);
-	textField_destroy(widgetTextFieldName);
+	text_field_destroy(widgetTextFieldName);
 	button_destroy(widgetButtonSave);
 	button_destroy(widgetButtonBack);
 }

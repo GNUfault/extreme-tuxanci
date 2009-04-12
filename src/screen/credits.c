@@ -41,7 +41,7 @@ void scredits_start()
 #endif
 	offset = 0;
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 
 void scredits_draw()
@@ -86,7 +86,7 @@ void scredits_event()
 
 void scredits_stop()
 {
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)
@@ -115,7 +115,7 @@ void scredits_init()
 
 	if (tryExistFile(PATH_DOC SCREEN_CREDITS_FILE) == 0) {
 		creditExists = 1;
-		textFile = textFile_load(PATH_DOC SCREEN_CREDITS_FILE);
+		textFile = text_file_load(PATH_DOC SCREEN_CREDITS_FILE);
 
 		for (i = 0; i < textFile->text->count; i++) {
 			widget_t *label;
@@ -158,6 +158,6 @@ void scredits_quit()
 	list_destroy_item(listWidgetLabel, label_destroy);
 
 	if (creditExists) {
-		textFile_destroy(textFile);
+		text_file_destroy(textFile);
 	}
 }

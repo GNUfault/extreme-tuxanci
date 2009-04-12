@@ -62,11 +62,11 @@ static void connectToDownServer()
 	char status[STR_SIZE];
 	char msg[STR_PROTO_SIZE];
 
-	sock_server_tcp = sock_tcp_connect(publicServer_get_settingIP(), publicServer_get_settingPort());
+	sock_server_tcp = sock_tcp_connect(public_server_get_settingIP(), public_server_get_settingPort());
 
 	if( sock_server_tcp == NULL )
 	{
-		sprintf(status, "I do not connect to %s %d TCP down server", publicServer_get_settingIP(), publicServer_get_settingPort());
+		sprintf(status, "I do not connect to %s %d TCP down server", public_server_get_settingIP(), public_server_get_settingPort());
 		setStatusString(status);
 		return;
 	}
@@ -85,7 +85,7 @@ static void connectToDownServer()
 
 	buffer_append(sendBuffer, msg, strlen(msg));
 
-	sprintf(status, "Connect to %s %d TCP down server", publicServer_get_settingIP(), publicServer_get_settingPort());
+	sprintf(status, "Connect to %s %d TCP down server", public_server_get_settingIP(), public_server_get_settingPort());
 	setStatusString(status);
 }
 
@@ -106,7 +106,7 @@ static void sendStatusToGameServer()
 	if( countSendMsg > DOWN_ARENA_MAX_SEND_MSG_STATUS )
 	{
 		char status[STR_SIZE];
-		sprintf(status, "Game server %s %d is down", publicServer_get_settingIP(), publicServer_get_settingPort());
+		sprintf(status, "Game server %s %d is down", public_server_get_settingIP(), public_server_get_settingPort());
 		setStatusString(status);
 		return;
 	}
@@ -118,36 +118,36 @@ static void sendStatusToGameServer()
 	if( sock_udp_write(sock_server_udp, sock_server_udp, msg, strlen(msg)) < 0 )
 	{
 		char status[STR_SIZE];
-		sprintf(status, "I do not send message to %s %d UDP game server", publicServer_get_settingIP(), publicServer_get_settingPort());
+		sprintf(status, "I do not send message to %s %d UDP game server", public_server_get_settingIP(), public_server_get_settingPort());
 		setStatusString(status);
 	}
 }
 
-void downArena_start()
+void down_arena_start()
 {
 	char status[STR_SIZE];
 
 	strcpy(str_status, "none");
 	memset(arenaNetName, 0, STR_SIZE);
 
-	sock_server_udp = sock_udp_connect(publicServer_get_settingIP(), publicServer_get_settingPort());
+	sock_server_udp = sock_udp_connect(public_server_get_settingIP(), public_server_get_settingPort());
 
 	if (sock_server_udp == NULL)
 	{
-		sprintf(status, "I do not connect to %s %d UDP game server", publicServer_get_settingIP(), publicServer_get_settingPort());
+		sprintf(status, "I do not connect to %s %d UDP game server", public_server_get_settingIP(), public_server_get_settingPort());
 		setStatusString(status);
 		return;
 	}
 
 	sock_udp_set_non_block(sock_server_udp);
 
-	sprintf(status, "Connect to %s %d UDP game server", publicServer_get_settingIP(), publicServer_get_settingPort());
+	sprintf(status, "Connect to %s %d UDP game server", public_server_get_settingIP(), public_server_get_settingPort());
 	setStatusString(status);
 
 	sendStatusToGameServer();
 }
 
-void downArena_draw()
+void down_arena_draw()
 {
 	wid_image_draw(image_backgorund);
 	label_draw(label_status);
@@ -160,7 +160,7 @@ static void proto_ok(char *line)
 	fileSize = atoi(line + 3);
 	fileOffset = 0;
 
-	sprintf(path, "%s/%s.zip", homeDirector_get(), arenaNetName);
+	sprintf(path, "%s/%s.zip", home_director_get(), arenaNetName);
 	//printf("path = %s\n", path);
 	file = fopen(path, "wb");
 }
@@ -281,7 +281,7 @@ static void readArenaFromStatus()
 			sock_server_udp = NULL;
 			strncpy(arenaNetName, offset_begin, offset_end - offset_begin);
 
-			if (arenaFile_get_file_format_net_name(arenaNetName) != NULL) {
+			if (arena_file_get_file_format_net_name(arenaNetName) != NULL) {
 				screen_set("world");
 				return;
 			}
@@ -307,7 +307,7 @@ static void eventStatus()
 	}
 }
 
-void downArena_event()
+void down_arena_event()
 {
 	int i;
 
@@ -331,14 +331,14 @@ void downArena_event()
 		fclose(file);
 		file = NULL;
 		closeConnectFromDownServer();
-		arenaFile_load(path);
+		arena_file_load(path);
 		screen_set("world");
 	}
 
 	button_event(button_back);
 }
 
-void downArena_stop()
+void down_arena_stop()
 {
 	if (file != NULL) {
 		unlink(path);
@@ -365,7 +365,7 @@ static void eventWidget(void *p)
 	}
 }
 
-void downArena_init()
+void down_arena_init()
 {
 	image_t *image;
 
@@ -379,11 +379,11 @@ void downArena_init()
 	label_status =
 		label_new("none", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
 
-	screen_register( screen_new("downArena", downArena_start, downArena_event,
-			downArena_draw, downArena_stop));
+	screen_register( screen_new("downArena", down_arena_start, down_arena_event,
+			down_arena_draw, down_arena_stop));
 }
 
-void downArena_quit()
+void down_arena_quit()
 {
 	wid_image_destroy(image_backgorund);
 	button_destroy(button_back);

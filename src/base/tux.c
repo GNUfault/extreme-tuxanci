@@ -169,7 +169,7 @@ void tux_draw(tux_t * tux)
 	assert(tux != NULL);
 
 	if (tux->bonus == BONUS_HIDDEN &&
-	    netMultiplayer_get_game_type() != NET_GAME_TYPE_NONE &&
+	    net_multiplayer_get_game_type() != NET_GAME_TYPE_NONE &&
 	    tux->control == TUX_CONTROL_NET) {
 		return;
 	}
@@ -268,7 +268,7 @@ static void timer_spawnTux(void *p)
 
 	item_add_new_item(arena->spaceItem, ID_UNKNOWN);
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 	}
 }
@@ -327,12 +327,12 @@ void tux_event_tux_is_dead(tux_t * tux)
 	tux->isCanShot = TRUE;
 	tux->isCanSwitchGun = TRUE;
 
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 		timer_add_task(arena_get_current()->listTimer, TIMER_ONE,
 			       timer_spawnTux, newInt(tux->id), TUX_TIME_SPAWN);
 	}
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		proto_send_kill_server(PROTO_SEND_ALL, NULL, tux);
 	}
 }
@@ -342,7 +342,7 @@ static void tux_event_tux_is_deadWIthShot(tux_t * tux, shot_t * shot)
 	if (shot->author_id == tux->id) {
 		tux->score--;
 
-		if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+		if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 			proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 		}
 	}
@@ -355,7 +355,7 @@ static void tux_event_tux_is_deadWIthShot(tux_t * tux, shot_t * shot)
 		if (author != NULL) {
 			author->score++;
 
-			if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+			if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 				proto_send_newtux_server(PROTO_SEND_ALL, NULL, author);
 			}
 		}
@@ -374,13 +374,13 @@ void tux_teleport(tux_t * tux)
 	sound_play("teleport", SOUND_GROUP_BASE);
 #endif
 
-	if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+	if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 		arena_find_free_space(arena_get_current(), &x, &y, TUX_WIDTH, TUX_HEIGHT);
 		space_move_object(arena_get_current()->spaceTux, tux, x, y);
 		//tux_set_proportion(tux, x, y);
 	}
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 	}
 }
@@ -397,7 +397,7 @@ static void bombBallExplosion(shot_t * shot)
 
 	space_add(arena_get_current()->spaceItem, item);
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		proto_send_del_server(PROTO_SEND_ALL, NULL, shot->id);
 		proto_send_additem_server(PROTO_SEND_ALL, NULL, item);
 	}
@@ -422,19 +422,19 @@ static void action_tux(space_t * space, tux_t * tux, shot_t * shot)
 		}
 
 		if (shot->gun == GUN_BOMBBALL) {
-			if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+			if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 				bombBallExplosion(shot);
 			}
 
 			return;
 		}
 
-		if (netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+		if (net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 			tux_event_tux_is_deadWIthShot(tux, shot);
 		}
 	}
 
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		proto_send_del_server(PROTO_SEND_ALL, NULL, shot->id);
 	}
 
@@ -448,7 +448,7 @@ static void action_shot(space_t * space, shot_t * shot, space_t * spaceTux)
 
 void tux_conflict_woth_shot(arena_t * arena)
 {
-	if (netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) { // na skusku
+	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) { // na skusku
 		return;
 	}
 
@@ -607,7 +607,7 @@ static void pickUpGun(tux_t * tux)
 			tux->pickup_time++;
 		}
 
-		if (tux->pickup_time == TUX_MAX_PICKUP && netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+		if (tux->pickup_time == TUX_MAX_PICKUP && net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 #ifndef NO_SOUND
 			sound_play("switch_gun", SOUND_GROUP_BASE);
 #endif
@@ -616,7 +616,7 @@ static void pickUpGun(tux_t * tux)
 			tux->shot[tux->gun] = GUN_MAX_SHOT;
 			tux->pickup_time = 0;
 
-			if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+			if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 				proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 			}
 		}
@@ -630,7 +630,7 @@ static void eventBonus(tux_t * tux)
 			tux->bonus_time--;
 		}
 
-		if (tux->bonus_time == 0 && netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+		if (tux->bonus_time == 0 && net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 			if (tux->bonus == BONUS_GHOST) {
 				int x, y, w, h;
 				tux_get_proportion(tux, &x, &y, &w, &h);
@@ -646,7 +646,7 @@ static void eventBonus(tux_t * tux)
 
 			tux->bonus = BONUS_NONE;
 
-			if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+			if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 				proto_send_newtux_server(PROTO_SEND_ALL, NULL, tux);
 			}
 		}

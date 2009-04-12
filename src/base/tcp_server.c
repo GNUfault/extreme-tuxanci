@@ -46,7 +46,7 @@
 static sock_tcp_t *sock_server_tcp;
 static sock_tcp_t *sock_server_tcp_second;
 
-client_t *serverTcp_new_client(sock_tcp_t * sock_tcp)
+client_t *server_tcp_new_client(sock_tcp_t * sock_tcp)
 {
 	client_t *new;
 
@@ -71,7 +71,7 @@ client_t *serverTcp_new_client(sock_tcp_t * sock_tcp)
 	return new;
 }
 
-void serverTcp_send_client_buffer(client_t * client)
+void server_tcp_send_client_buffer(client_t * client)
 {
 	void *data;
 	int len;
@@ -96,10 +96,10 @@ void serverTcp_send_client_buffer(client_t * client)
 	buffer_cut(client->sendBuffer, res);
 }
 
-void serverTcp_destroy_client(client_t * client)
+void server_tcp_destroy_client(client_t * client)
 {
-	checkFront_event(client);
-	serverTcp_send_client_buffer(client);
+	check_front_event(client);
+	server_tcp_send_client_buffer(client);
 
 #ifdef PUBLIC_SERVER
 	char str_log[STR_LOG_SIZE];
@@ -118,7 +118,7 @@ void serverTcp_destroy_client(client_t * client)
 	server_destroy_any_client(client);
 }
 
-int serverTcp_init(char *ip4, int port4, char *ip6, int port6)
+int server_tcp_init(char *ip4, int port4, char *ip6, int port6)
 {
 	int ret;
 
@@ -167,7 +167,7 @@ static void eventNewClient(sock_tcp_t * server_sock)
 	sock_tcp_diable_nagle(sock);
 	sock_tcp_set_non_block(sock);
 
-	client = serverTcp_new_client(sock);
+	client = server_tcp_new_client(sock);
 	list_add(listClient, client);
 }
 
@@ -196,7 +196,7 @@ static void eventTcpClient(client_t * client)
 	}
 }
 
-void serverTcp_set_select()
+void server_tcp_set_select()
 {
 	list_t *listClient;
 	int i;
@@ -224,7 +224,7 @@ void serverTcp_set_select()
 	}
 }
 
-int serverTcp_select_sock()
+int server_tcp_select_sock()
 {
 	list_t *listClient;
 	int count;
@@ -266,7 +266,7 @@ int serverTcp_select_sock()
 		if( select_is_change_sock_for_write(client->socket_tcp->sock) )
 		{
 			//printf("select_is_change_sock_for_write\n");
-			serverTcp_send_client_buffer(client);
+			server_tcp_send_client_buffer(client);
 			count++;
 		}
 */
@@ -275,7 +275,7 @@ int serverTcp_select_sock()
 	return count;
 }
 
-void serverTcp_quit()
+void server_tcp_quit()
 {
 	if (sock_server_tcp != NULL) {
 		DEBUG_MSG(_("Closing port: \"%d\"\n"), sock_tcp_get_port(sock_server_tcp));

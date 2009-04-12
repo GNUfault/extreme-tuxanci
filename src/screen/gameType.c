@@ -62,7 +62,7 @@ static void loadSession(widget_t * p)
 	director_t *director;
 	int i;
 
-	director = director_load(homeDirector_get());
+	director = director_load(home_director_get());
 
 	select_remove_all(p);
 
@@ -101,10 +101,10 @@ void screen_startGameType()
 
 	loadSession(selectSession);
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 
-void gameType_draw()
+void game_type_draw()
 {
 	int i;
 
@@ -114,7 +114,7 @@ void gameType_draw()
 		widget_t *this;
 
 		this = (widget_t *) listChoiceGroup->list[i];
-		choiceGroup_draw(this);
+		choice_group_draw(this);
 	}
 
 	label_draw(label_none);
@@ -122,25 +122,25 @@ void gameType_draw()
 	label_draw(label_client);
 	label_draw(label_load_session);
 
-	if (choiceGroup_get_status(check_server) == TRUE || choiceGroup_get_status(check_client) == TRUE) {
+	if (choice_group_get_status(check_server) == TRUE || choice_group_get_status(check_client) == TRUE) {
 		label_draw(label_port);
-		textField_draw(textfield_port);
+		text_field_draw(textfield_port);
 		label_draw(label_ip);
-		textField_draw(textfield_ip);
+		text_field_draw(textfield_ip);
 	}
 
-	if (choiceGroup_get_status(check_load_session) == TRUE) {
+	if (choice_group_get_status(check_load_session) == TRUE) {
 		label_draw(label_session);
 		select_draw(selectSession);
 	}
 #if 0
 	if (check_server->status == TRUE) {
-		gameType_set_ip(getParamElse("--ip", "127.0.0.1"));
-		gameType_set_port(atoi(getParamElse("--port", "2200")));
+		game_type_set_ip(getParamElse("--ip", "127.0.0.1"));
+		game_type_set_port(atoi(getParamElse("--port", "2200")));
 	}
 #endif
 
-	if (choiceGroup_get_status(check_client) == TRUE)
+	if (choice_group_get_status(check_client) == TRUE)
 		button_draw(button_browser);
 
 	button_draw(button_back);
@@ -148,7 +148,7 @@ void gameType_draw()
 
 }
 
-void gameType_event()
+void game_type_event()
 {
 	int i;
 
@@ -156,28 +156,28 @@ void gameType_event()
 		widget_t *this;
 
 		this = (widget_t *) listChoiceGroup->list[i];
-		choiceGroup_event(this);
+		choice_group_event(this);
 	}
 
-	if (choiceGroup_get_status(check_server) == TRUE || choiceGroup_get_status(check_client) == TRUE) {
-		textField_event(textfield_ip);
-		textField_event(textfield_port);
+	if (choice_group_get_status(check_server) == TRUE || choice_group_get_status(check_client) == TRUE) {
+		text_field_event(textfield_ip);
+		text_field_event(textfield_port);
 	}
 
-	if (choiceGroup_get_status(check_load_session) == TRUE) {
+	if (choice_group_get_status(check_load_session) == TRUE) {
 		select_event(selectSession);
 	}
 
 	button_event(button_back);
 	button_event(button_play);
 
-	if (choiceGroup_get_status(check_client) == TRUE)
+	if (choice_group_get_status(check_client) == TRUE)
 		button_event(button_browser);
 }
 
 void stopScreenGameType()
 {
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)
@@ -193,14 +193,14 @@ static void eventWidget(void *p)
 	if (button == button_play) {
 		char *str;
 
-		str = gameType_load_session();
+		str = game_type_load_session();
 
 		if (str != NULL) {
 			screen_set("world");
 			return;
 		}
 
-		if (publicServer_get_settingGameType() == NET_GAME_TYPE_CLIENT) {
+		if (public_server_get_settingGameType() == NET_GAME_TYPE_CLIENT) {
 			screen_set("downArena");
 			//screen_set("world");
 		} else {
@@ -213,7 +213,7 @@ static void eventWidget(void *p)
 	}
 }
 
-void gameType_init()
+void game_type_init()
 {
 	image_t *image;
 
@@ -225,10 +225,10 @@ void gameType_init()
 	button_browser = button_new(_("browser"), 300, 345, eventWidget);
 
 	listChoiceGroup = list_new();
-	check_none = choiceGroup_new(100, 150, FALSE, listChoiceGroup, eventWidget);
-	check_server = choiceGroup_new(100, 200, FALSE, listChoiceGroup, eventWidget);
-	check_client = choiceGroup_new(100, 250, FALSE, listChoiceGroup, eventWidget);
-	check_load_session = choiceGroup_new(100, 300, FALSE, listChoiceGroup, eventWidget);
+	check_none = choice_group_new(100, 150, FALSE, listChoiceGroup, eventWidget);
+	check_server = choice_group_new(100, 200, FALSE, listChoiceGroup, eventWidget);
+	check_client = choice_group_new(100, 250, FALSE, listChoiceGroup, eventWidget);
+	check_load_session = choice_group_new(100, 300, FALSE, listChoiceGroup, eventWidget);
 
 	if (isParamFlag("--server")) {
 		choiceGroup_set_status(check_server, TRUE);
@@ -247,17 +247,17 @@ void gameType_init()
 	label_port = label_new(_("port"), 300, 245, WIDGET_LABEL_LEFT);
 	label_session = label_new("load session :", 300, 145, WIDGET_LABEL_LEFT);
 
-	textfield_ip = textField_new(getParamElse("--ip", "127.0.0.1"),
+	textfield_ip = text_field_new(getParamElse("--ip", "127.0.0.1"),
 					  WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN,
 					  300, 180);
 
-	textfield_port = textField_new(getParamElse("--port", "6800"),
+	textfield_port = text_field_new(getParamElse("--port", "6800"),
 					    WIDGET_TEXTFIELD_FILTER_NUM, 300, 280);
 
 	selectSession = select_new(300, 185, eventWidget);
 
-	screen_register( screen_new("gameType", screen_startGameType, gameType_event,
-			gameType_draw, stopScreenGameType));
+	screen_register( screen_new("gameType", screen_startGameType, game_type_event,
+			game_type_draw, stopScreenGameType));
 }
 
 int setSettingGameType(int status)
@@ -280,17 +280,17 @@ int setSettingGameType(int status)
 	return -1;
 }
 
-int publicServer_get_settingGameType()
+int public_server_get_settingGameType()
 {
-	if (choiceGroup_get_status(check_none) == TRUE || choiceGroup_get_status(check_load_session) == TRUE) {
+	if (choice_group_get_status(check_none) == TRUE || choice_group_get_status(check_load_session) == TRUE) {
 		return NET_GAME_TYPE_NONE;
 	}
 
-	if (choiceGroup_get_status(check_server) == TRUE) {
+	if (choice_group_get_status(check_server) == TRUE) {
 		return NET_GAME_TYPE_SERVER;
 	}
 
-	if (choiceGroup_get_status(check_client) == TRUE) {
+	if (choice_group_get_status(check_client) == TRUE) {
 		return NET_GAME_TYPE_CLIENT;
 	}
 
@@ -299,52 +299,52 @@ int publicServer_get_settingGameType()
 	return -1;
 }
 
-char *gameType_load_session()
+char *game_type_load_session()
 {
-	if (choiceGroup_get_status(check_load_session) == TRUE) {
+	if (choice_group_get_status(check_load_session) == TRUE) {
 		return select_get_item(selectSession);
 	}
 
 	return NULL;
 }
 
-int gameType_set_ip(char *address)
+int game_type_set_ip(char *address)
 {
 	char str[STR_SIZE];
 
 	strcpy(str, address);
-	textField_set_text(textfield_ip, str);
+	text_field_set_text(textfield_ip, str);
 
 	return 1;
 }
 
-char *publicServer_get_settingIP()
+char *public_server_get_settingIP()
 {
-	return textField_get_text(textfield_ip);
+	return text_field_get_text(textfield_ip);
 }
 
-int gameType_set_port(int port)
+int game_type_set_port(int port)
 {
 	char str[STR_SIZE];
 
 	sprintf(str, "%d", port);
-	textField_set_text(textfield_port, str);
+	text_field_set_text(textfield_port, str);
 
 	return 0;
 }
 
-int publicServer_get_settingPort()
+int public_server_get_settingPort()
 {
-	return atoi(textField_get_text(textfield_port));
+	return atoi(text_field_get_text(textfield_port));
 }
 
-int publicServer_get_settingProto()
+int public_server_get_settingProto()
 {
-	if (strstr(textField_get_text(textfield_ip), ".") != NULL) {
+	if (strstr(text_field_get_text(textfield_ip), ".") != NULL) {
 		return PROTO_UDPv4;
 	}
 
-	if (strstr(textField_get_text(textfield_ip), ":") != NULL) {
+	if (strstr(text_field_get_text(textfield_ip), ":") != NULL) {
 		return PROTO_UDPv6;
 	}
 
@@ -353,7 +353,7 @@ int publicServer_get_settingProto()
 	return -1;
 }
 
-void gameType_quit()
+void game_type_quit()
 {
 	wid_image_destroy(image_backgorund);
 
@@ -366,8 +366,8 @@ void gameType_quit()
 	label_destroy(label_port);
 	label_destroy(label_session);
 
-	textField_destroy(textfield_ip);
-	textField_destroy(textfield_port);
+	text_field_destroy(textfield_ip);
+	text_field_destroy(textfield_port);
 
 	select_destroy(selectSession);
 
@@ -375,10 +375,10 @@ void gameType_quit()
 	button_destroy(button_play);
 	button_destroy(button_browser);
 
-	choiceGroup_destroy(check_none);
-	choiceGroup_destroy(check_server);
-	choiceGroup_destroy(check_client);
-	choiceGroup_destroy(check_load_session);
+	choice_group_destroy(check_none);
+	choice_group_destroy(check_server);
+	choice_group_destroy(check_client);
+	choice_group_destroy(check_load_session);
 
 	list_destroy(listChoiceGroup);
 }

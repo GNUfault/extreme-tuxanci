@@ -210,7 +210,7 @@ int init(export_fce_t * p)
 		return -1;
 	}
 
-	if ((fce_move_shot = export_fce->fce_shareFunction_get("move_shot")) == NULL) {
+	if ((fce_move_shot = export_fce->fce_share_function_get("move_shot")) == NULL) {
 		return -1;
 	}
 
@@ -277,11 +277,11 @@ static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
 	}
 
 	if (negPosition(shot->position) == pipe->position &&
-		export_fce->fce_netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+		export_fce->fce_net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 		moveShotFromPipe(shot, pipe);
 	} else {
 		if (shot->gun == GUN_BOMBBALL &&
-			export_fce->fce_netMultiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
+			export_fce->fce_net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
 			export_fce->fce_shot_bound_bombBall(shot);
 		} else {
 			//space_del_with_item(arena->spaceShot, shot, export_fce->fce_shot_destroy);
@@ -323,7 +323,7 @@ action_eventshot(space_t * space, shot_t * shot, space_t * p_spacePipe)
 							shot->y, shot->w, shot->h);
 
 	if (shot->del == TRUE) {
-		if (netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+		if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 			proto_send_del_server(PROTO_SEND_ALL, NULL, shot->id);
 		}
 
@@ -338,7 +338,7 @@ int event()
 	}
 
 	// na skusku
-	if (export_fce->fce_netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
+	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return 0;
 	}
 

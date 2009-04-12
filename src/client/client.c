@@ -125,7 +125,7 @@ int client_init(char *ip, int port)
 		return -1;
 	}
 
-	publicServer_get_settingNameRight(name);
+	public_server_get_settingNameRight(name);
 	proto_send_hello_client(name);
 
 	return 0;

@@ -5,11 +5,11 @@
 
 #    include "main.h"
 
-extern void mainMenu_start();
-extern void mainMenu_draw();
-extern void mainMenu_event();
-extern void mainMenu_stop();
-extern void mainMenu_init();
-extern void mainMenu_quit();
+extern void main_menu_start();
+extern void main_menu_draw();
+extern void main_menu_event();
+extern void main_menu_stop();
+extern void main_menu_init();
+extern void main_menu_quit();
 
 #endif

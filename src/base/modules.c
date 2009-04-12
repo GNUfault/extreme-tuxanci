@@ -30,11 +30,11 @@ static export_fce_t export_fce = {
 	.fce_image_get = image_get,
 #endif
 	.fce_module_load_dep = module_load_dep,
-	.fce_shareFunction_add = shareFunction_add,
-	.fce_shareFunction_get = shareFunction_get,
+	.fce_share_function_add = share_function_add,
+	.fce_share_function_get = share_function_get,
 
-	.fce_getValue = arenaFile_get_value,
-	.fce_netMultiplayer_get_game_type = netMultiplayer_get_game_type,
+	.fce_getValue = arena_file_get_value,
+	.fce_net_multiplayer_get_game_type = net_multiplayer_get_game_type,
 	.fce_tux_get_proportion = tux_get_proportion,
 	.fce_tux_set_proportion = tux_set_proportion,
 	.fce_tux_action = tux_action,
@@ -43,7 +43,7 @@ static export_fce_t export_fce = {
 
 	.fce_arena_get_current = arena_get_current,
 	.fce_arena_conflict_space = arena_conflict_space,
-	.fce_arena__is_free_space = arena__is_free_space,
+	.fce_arena_is_free_space = arena_is_free_space,
 	.fce_arena_find_free_space = arena_find_free_space,
 
 	.fce_proto_send_module_server = proto_send_module_server,
@@ -189,7 +189,7 @@ static int destroyModule(module_t * p)
 void module_init()
 {
 	listModule = list_new();
-	shareFunction_init();
+	share_function_init();
 }
 
 int isModuleLoaded(char *name)
@@ -304,5 +304,5 @@ int module_recv_msg(char *msg)
 void module_quit()
 {
 	list_destroy_item(listModule, destroyModule);
-	shareFunction_quit();
+	share_function_quit();
 }

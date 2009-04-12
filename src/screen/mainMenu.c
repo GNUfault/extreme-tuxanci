@@ -37,16 +37,16 @@ static void hotkey_escape()
 	game_quit();
 }
 
-void mainMenu_start()
+void main_menu_start()
 {
 #ifndef NO_SOUND
 	music_play("menu", MUSIC_GROUP_BASE);
 #endif
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 
-void mainMenu_draw()
+void main_menu_draw()
 {
 	wid_image_draw(image_backgorund);
 
@@ -57,7 +57,7 @@ void mainMenu_draw()
 	button_draw(button_end);
 }
 
-void mainMenu_event()
+void main_menu_event()
 {
 	button_event(button_play);
 	button_event(button_setting);
@@ -66,9 +66,9 @@ void mainMenu_event()
 	button_event(button_end);
 }
 
-void mainMenu_stop()
+void main_menu_stop()
 {
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)
@@ -98,7 +98,7 @@ static void eventWidget(void *p)
 	}
 }
 
-void mainMenu_init()
+void main_menu_init()
 {
 	image_t *image;
 
@@ -117,11 +117,11 @@ void mainMenu_init()
 	music_add("menu.ogg", "menu", MUSIC_GROUP_BASE);
 #endif
 
-	screen_register( screen_new("mainMenu", mainMenu_start, mainMenu_event,
-			mainMenu_draw, mainMenu_stop));
+	screen_register( screen_new("mainMenu", main_menu_start, main_menu_event,
+			main_menu_draw, main_menu_stop));
 }
 
-void mainMenu_quit()
+void main_menu_quit()
 {
 	wid_image_destroy(image_backgorund);
 

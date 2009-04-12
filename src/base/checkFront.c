@@ -43,12 +43,12 @@ static void destroyCheck(checkfront_t * p)
 	free(p);
 }
 
-list_t *checkFront_new()
+list_t *check_front_new()
 {
 	return list_new();
 }
 
-void checkFront_add_msg(list_t * list, char *msg, int type, int id)
+void check_front_add_msg(list_t * list, char *msg, int type, int id)
 {
 	if (type == CHECK_FRONT_TYPE_CHECK)
 		id_inc(id);
@@ -56,7 +56,7 @@ void checkFront_add_msg(list_t * list, char *msg, int type, int id)
 	list_add(list, newCheck(msg, type, id));
 }
 
-void checkFront_event(client_t * client)
+void check_front_event(client_t * client)
 {
 	my_time_t currentTime;
 	int i;
@@ -93,7 +93,7 @@ void checkFront_event(client_t * client)
 	}
 }
 
-void checkFront_del_msg(list_t * listCheckFront, int id)
+void check_front_del_msg(list_t * listCheckFront, int id)
 {
 	int i;
 
@@ -110,7 +110,7 @@ void checkFront_del_msg(list_t * listCheckFront, int id)
 	}
 }
 
-void checkFront_destroy(list_t * p)
+void check_front_destroy(list_t * p)
 {
 	assert(p != NULL);
 	list_destroy_item(p, destroyCheck);

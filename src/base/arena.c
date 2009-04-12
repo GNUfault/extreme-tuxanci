@@ -77,12 +77,12 @@ void arena_init()
 		printf("SCREEN_SPLIT_HORIZONTAL\n");
 	}
 
-	hotKey_register(SDLK_F3, hotkey_splitArena);
+	hot_key_register(SDLK_F3, hotkey_splitArena);
 }
 
 void arena_quit()
 {
-	unhotKey_register(SDLK_F3);
+	unhot_key_register(SDLK_F3);
 }
 #endif
 
@@ -127,7 +127,7 @@ arena_conflict_space(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int
 	return (x1 < x2 + w2 && x2 < x1 + w1 && y1 < y2 + h2 && y2 < y1 + h1);
 }
 
-int arena__is_free_space(arena_t * arena, int x, int y, int w, int h)
+int arena_is_free_space(arena_t * arena, int x, int y, int w, int h)
 {
 	if (x < 0 || y < 0 || x + w > arena->w || y + h > arena->h) {
 		return 0;
@@ -162,7 +162,7 @@ void arena_find_free_space(arena_t * arena, int *x, int *y, int w, int h)
 	do {
 		z_x = random() % (arena->w - w);
 		z_y = random() % (arena->h - h);
-	} while (arena__is_free_space(arena, z_x, z_y, w, h) == 0);
+	} while (arena_is_free_space(arena, z_x, z_y, w, h) == 0);
 
 	*x = z_x;
 	*y = z_y;
@@ -336,7 +336,7 @@ void drawSimpleArena(arena_t * arena)
 void arena_draw(arena_t * arena)
 {
 	if (isBigArena(arena) &&
-	    netMultiplayer_get_game_type() == NET_GAME_TYPE_NONE && !setting_is_ai()) {
+	    net_multiplayer_get_game_type() == NET_GAME_TYPE_NONE && !setting_is_ai()) {
 		tux_t *tux1;
 		tux_t *tux2;
 

@@ -9,7 +9,7 @@
 #include "widget.h"
 #include "widget_choicegroup.h"
 
-widget_t *choiceGroup_new(int x, int y, bool_t status, list_t * list, void (*fce_event) (void *))
+widget_t *choice_group_new(int x, int y, bool_t status, list_t * list, void (*fce_event) (void *))
 {
 	widget_choicegroup_t *new;
 	widget_t *widget;
@@ -27,7 +27,7 @@ widget_t *choiceGroup_new(int x, int y, bool_t status, list_t * list, void (*fce
 	return widget;
 }
 
-void choiceGroup_draw(widget_t * widget)
+void choice_group_draw(widget_t * widget)
 {
 	widget_choicegroup_t *p;
 	static image_t *g_choicegroup = NULL;
@@ -55,7 +55,7 @@ void choiceGroup_draw(widget_t * widget)
 		  WIDGET_CHOICEGROUP_WIDTH, WIDGET_CHOICEGROUP_HEIGHT);
 }
 
-void choiceGroup_set_active(widget_t * widget)
+void choice_group_set_active(widget_t * widget)
 {
 	widget_choicegroup_t *p;
 	int i;
@@ -82,7 +82,7 @@ void choiceGroup_set_active(widget_t * widget)
 	}
 }
 
-bool_t choiceGroup_get_status(widget_t * widget)
+bool_t choice_group_get_status(widget_t * widget)
 {
 	widget_choicegroup_t *p;
 
@@ -105,7 +105,7 @@ void choiceGroup_set_status(widget_t * widget, bool_t status)
 	p->status = status;
 }
 
-void choiceGroup_event(widget_t * widget)
+void choice_group_event(widget_t * widget)
 {
 	widget_choicegroup_t *p;
 	int x, y;
@@ -125,11 +125,11 @@ void choiceGroup_event(widget_t * widget)
 	if (x >= widget->x && x <= widget->x + WIDGET_CHOICEGROUP_WIDTH &&
 	    y >= widget->y && y <= widget->y + WIDGET_CHOICEGROUP_HEIGHT &&
 		interface_is_mouse_clicket()) {
-		choiceGroup_set_active(widget);
+		choice_group_set_active(widget);
 	}
 }
 
-void choiceGroup_destroy(widget_t * widget)
+void choice_group_destroy(widget_t * widget)
 {
 	widget_choicegroup_t *p;
 	int my_index;

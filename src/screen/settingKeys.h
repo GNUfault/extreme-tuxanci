@@ -16,12 +16,12 @@
 #    define KEY_LENGTH					12
 	
 #    include "main.h"
-extern void settingKey_int();
-extern void settingKey_draw();
-extern void settingKey_event();
-extern void settingKey_quit();
-extern void keyTable_init();
-extern int keyTable_get_key(int n);
-extern void keyTable_quit();
+extern void setting_key_int();
+extern void setting_key_draw();
+extern void setting_key_event();
+extern void setting_key_quit();
+extern void key_table_init();
+extern int key_table_get_key(int n);
+extern void key_table_quit();
 
 #endif							/*  */

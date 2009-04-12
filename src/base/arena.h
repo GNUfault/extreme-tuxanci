@@ -45,7 +45,7 @@ extern void arena_quit();
 extern arena_t *arena_new(int w, int h);
 extern int arena_conflict_space(int x1, int y1, int w1, int h1, int x2, int y2,
 						 int w2, int h2);
-extern int arena__is_free_space(arena_t * arena, int x, int y, int w, int h);
+extern int arena_is_free_space(arena_t * arena, int x, int y, int w, int h);
 extern void arena_find_free_space(arena_t * arena, int *x, int *y, int w, int h);
 extern void arena_get_center_screen(int *screen_x, int *screen_y, int x, int y,
 							int screen_size_x, int screen_size_y);

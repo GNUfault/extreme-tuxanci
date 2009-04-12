@@ -5,17 +5,17 @@
 
 #    include "main.h"
 
-extern void gameType_draw();
-extern void gameType_event();
-extern void gameType_init();
+extern void game_type_draw();
+extern void game_type_event();
+extern void game_type_init();
 extern int setSettingGameType(int status);
-extern int publicServer_get_settingGameType();
-extern char *gameType_load_session();
-extern int gameType_set_ip(char *address);
-extern char *publicServer_get_settingIP();
-extern int gameType_set_port(int port);
-extern int publicServer_get_settingPort();
-extern int publicServer_get_settingProto();
-extern void gameType_quit();
+extern int public_server_get_settingGameType();
+extern char *game_type_load_session();
+extern int game_type_set_ip(char *address);
+extern char *public_server_get_settingIP();
+extern int game_type_set_port(int port);
+extern int public_server_get_settingPort();
+extern int public_server_get_settingProto();
+extern void game_type_quit();
 
 #endif

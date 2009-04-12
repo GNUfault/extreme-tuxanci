@@ -65,7 +65,7 @@ static void proto_getarena(client_ds_t *client, char *msg)
 	arenaName = msg+9;
 
 	//printf("arena = >>%s<<\n", arenaName);
-	arenaFile = arenaFile_get_file_format_net_name(arenaName);
+	arenaFile = arena_file_get_file_format_net_name(arenaName);
 
 	if( arenaFile == NULL )
 	{
@@ -125,7 +125,7 @@ static void destroyClient(client_ds_t *client)
 	free(client);
 }
 
-int downServer_init(char *ip4, int port4)
+int down_server_init(char *ip4, int port4)
 {
 	sock_server_tcp = sock_tcp_bind(ip4, port4);
 
@@ -142,7 +142,7 @@ int downServer_init(char *ip4, int port4)
 	return 0;
 }
 
-int downServer_set_select()
+int down_server_set_select()
 {
 	int i;
 
@@ -264,7 +264,7 @@ static void sendFile(client_ds_t *client)
 	client->send += count;
 }
 
-int downServer_select_socket()
+int down_server_select_socket()
 {
 	int i;
 
@@ -303,7 +303,7 @@ int downServer_select_socket()
 	return 0;
 }
 
-int downServer_quit()
+int down_server_quit()
 {
 	sock_tcp_close(sock_server_tcp);
 	list_destroy_item(listClient, destroyClient);

@@ -60,7 +60,7 @@ void analyze_start()
 	music_play("menu", MUSIC_GROUP_BASE);
 #endif
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 
 void analyze_draw()
@@ -94,7 +94,7 @@ void analyze_stop()
 	label_destroy(widgetLabelMsg);
 	widgetLabelMsg = label_new("", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);
 
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 }
 
 static void eventWidget(void *p)

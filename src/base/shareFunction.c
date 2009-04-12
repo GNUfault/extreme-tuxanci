@@ -31,19 +31,19 @@ static void destroyShareFce(share_fce_item_t * p)
 	free(p);
 }
 
-void shareFunction_init()
+void share_function_init()
 {
 	listShareFce = list_new();
 }
 
-void shareFunction_add(char *name, void *function)
+void share_function_add(char *name, void *function)
 {
 	DEBUG_MSG(_("Adding  \"%s\" to share function.\n"), name);
 
 	list_add(listShareFce, newShareFceItem(name, function));
 }
 
-void *shareFunction_get(char *name)
+void *share_function_get(char *name)
 {
 	int i;
 
@@ -59,7 +59,7 @@ void *shareFunction_get(char *name)
 	return NULL;
 }
 
-void shareFunction_quit()
+void share_function_quit()
 {
 	list_destroy_item(listShareFce, destroyShareFce);
 }

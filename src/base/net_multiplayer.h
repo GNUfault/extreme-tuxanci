@@ -28,12 +28,12 @@
 #    define NET_MASTER_PORT		6800
 
 #    ifdef PUBLIC_SERVER
-extern int netMultiplayer_init_for_game_server(char *ip4, int port4, char *ip6, int port6);
+extern int net_multiplayer_init_for_game_server(char *ip4, int port4, char *ip6, int port6);
 #    endif
 
-extern int netMultiplayer_init(int type, char *ip, int port, int proto);
-extern int netMultiplayer_get_game_type();
-extern void netMultiplayer_event();
-extern void netMultiplayer_quit();
+extern int net_multiplayer_init(int type, char *ip, int port, int proto);
+extern int net_multiplayer_get_game_type();
+extern void net_multiplayer_event();
+extern void net_multiplayer_quit();
 
 #endif

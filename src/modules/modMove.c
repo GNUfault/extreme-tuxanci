@@ -29,7 +29,7 @@ static void move_tux(tux_t * tux, int x, int y, int w, int h)
 	int dist_x = 0, dist_y = 0;	// no warnning
 
 	if (tux->bonus == BONUS_GHOST ||
-		export_fce->fce_netMultiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
+		export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
 		return;
 	switch (tux->position) {
 	case TUX_UP:
@@ -53,14 +53,14 @@ static void move_tux(tux_t * tux, int x, int y, int w, int h)
 		break;
 	}
 	if (export_fce->
-		fce_arena__is_free_space(export_fce->fce_arena_get_current(), dist_x, dist_y,
+		fce_arena_is_free_space(export_fce->fce_arena_get_current(), dist_x, dist_y,
 						TUX_WIDTH, TUX_HEIGHT)) {
 		space_move_object(export_fce->fce_arena_get_current()->spaceTux, tux,
 						  dist_x, dist_y);
 #ifndef PUBLIC_SERVER
 		//sound_play("teleport", SOUND_GROUP_BASE);
 #endif
-		if (export_fce->fce_netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+		if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 			char msg[STR_PROTO_SIZE];
 			sprintf(msg, "movetux %d %d %d", tux->id, dist_x, dist_y);
 			if (tux->bonus == BONUS_HIDDEN)
@@ -159,7 +159,7 @@ move_shot(shot_t * shot, int position, int src_x, int src_y,
 
 	space_move_object(export_fce->fce_arena_get_current()->spaceShot, shot,
 					  new_x, new_y);
-	if (export_fce->fce_netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
+	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		char msg[STR_PROTO_SIZE];
 
 		sprintf(msg, "moveshot %d %d %d %d %d %d",
@@ -172,8 +172,8 @@ move_shot(shot_t * shot, int position, int src_x, int src_y,
 int init(export_fce_t * p)
 {
 	export_fce = p;
-	export_fce->fce_shareFunction_add("move_tux", (void *) move_tux);
-	export_fce->fce_shareFunction_add("move_shot", (void *) move_shot);
+	export_fce->fce_share_function_add("move_tux", (void *) move_tux);
+	export_fce->fce_share_function_add("move_shot", (void *) move_shot);
 
 	return 0;
 }
@@ -247,7 +247,7 @@ void cmdArena(char *line)
 
 void recvMsg(char *msg)
 {
-	if (export_fce->fce_netMultiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
 		return;
 
 	if (strncmp(msg, "movetux", 7) == 0)

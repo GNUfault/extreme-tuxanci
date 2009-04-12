@@ -87,7 +87,7 @@ void screen_startSettingKeys()
 	music_play("menu", MUSIC_GROUP_BASE);
 #endif
 
-	hotKey_register(SDLK_ESCAPE, hotkey_escape);
+	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 }
 static void setKeytableFromConfigFile(textFile_t * configFile) 
 {
@@ -158,7 +158,7 @@ keytable[KEY_TUX_LEFT_SWITCH_WEAPON] = atoi(val);
 } 
 void
 
- keyTable_init() 
+ key_table_init() 
 {
 	
 char path[STR_PATH_SIZE];
@@ -166,9 +166,9 @@ char path[STR_PATH_SIZE];
 /*
 	int i;
 */ 
-		sprintf(path, "%s/keycontrol.conf", homeDirector_get());
+		sprintf(path, "%s/keycontrol.conf", home_director_get());
 	
-keycontrolFile = textFile_load(path);
+keycontrolFile = text_file_load(path);
 	
 if (keycontrolFile == NULL) {
 		
@@ -176,7 +176,7 @@ fprintf(stderr, _("I was unable to load file: %s\n"), path);
 		
 fprintf(stderr, _("I try to create file: %s\n"), path);
 		
-keycontrolFile = textFile_new(path);
+keycontrolFile = text_file_new(path);
 	
 }
 	
@@ -198,7 +198,7 @@ setKeytableFromConfigFile(keycontrolFile);
 */ 
 }
 
-int keyTable_get_key(int n) 
+int key_table_get_key(int n) 
 {
 	
 //      printf("keytable[n] = %d\n", keytable[n]);
@@ -206,7 +206,7 @@ int keyTable_get_key(int n)
 
 }
 
-void settingKey_draw() 
+void setting_key_draw() 
 {
 	
 wid_image_draw(image_backgorund);
@@ -243,29 +243,29 @@ label_draw(tux_left_keyswitch);
 label_draw(tux_left_keyfire);
 	
 		// key values
-		catchKey_draw(tux_right_keyup_val);
+		catch_key_draw(tux_right_keyup_val);
 	
-catchKey_draw(tux_right_keydown_val);
+catch_key_draw(tux_right_keydown_val);
 	
-catchKey_draw(tux_right_keyleft_val);
+catch_key_draw(tux_right_keyleft_val);
 	
-catchKey_draw(tux_right_keyright_val);
+catch_key_draw(tux_right_keyright_val);
 	
-catchKey_draw(tux_right_keyswitch_val);
+catch_key_draw(tux_right_keyswitch_val);
 	
-catchKey_draw(tux_right_keyfire_val);
+catch_key_draw(tux_right_keyfire_val);
 	
-catchKey_draw(tux_left_keyup_val);
+catch_key_draw(tux_left_keyup_val);
 	
-catchKey_draw(tux_left_keydown_val);
+catch_key_draw(tux_left_keydown_val);
 	
-catchKey_draw(tux_left_keyleft_val);
+catch_key_draw(tux_left_keyleft_val);
 	
-catchKey_draw(tux_left_keyright_val);
+catch_key_draw(tux_left_keyright_val);
 	
-catchKey_draw(tux_left_keyswitch_val);
+catch_key_draw(tux_left_keyswitch_val);
 	
-catchKey_draw(tux_left_keyfire_val);
+catch_key_draw(tux_left_keyfire_val);
 
 } 
 static void
@@ -273,29 +273,29 @@ static void
  refreshKeytable() 
 {
 	
-keytable[6] = catchKey_get(tux_left_keyup_val);
+keytable[6] = catch_key_get(tux_left_keyup_val);
 	
-keytable[9] = catchKey_get(tux_left_keydown_val);
+keytable[9] = catch_key_get(tux_left_keydown_val);
 	
-keytable[8] = catchKey_get(tux_left_keyleft_val);
+keytable[8] = catch_key_get(tux_left_keyleft_val);
 	
-keytable[7] = catchKey_get(tux_left_keyright_val);
+keytable[7] = catch_key_get(tux_left_keyright_val);
 	
-keytable[10] = catchKey_get(tux_left_keyfire_val);
+keytable[10] = catch_key_get(tux_left_keyfire_val);
 	
-keytable[11] = catchKey_get(tux_left_keyswitch_val);
+keytable[11] = catch_key_get(tux_left_keyswitch_val);
 	
-keytable[0] = catchKey_get(tux_right_keyup_val);
+keytable[0] = catch_key_get(tux_right_keyup_val);
 	
-keytable[3] = catchKey_get(tux_right_keydown_val);
+keytable[3] = catch_key_get(tux_right_keydown_val);
 	
-keytable[2] = catchKey_get(tux_right_keyleft_val);
+keytable[2] = catch_key_get(tux_right_keyleft_val);
 	
-keytable[1] = catchKey_get(tux_right_keyright_val);
+keytable[1] = catch_key_get(tux_right_keyright_val);
 	
-keytable[4] = catchKey_get(tux_right_keyfire_val);
+keytable[4] = catch_key_get(tux_right_keyfire_val);
 	
-keytable[5] = catchKey_get(tux_right_keyswitch_val);
+keytable[5] = catch_key_get(tux_right_keyswitch_val);
 
 } 
 static void eventWidget(void *p) 
@@ -337,51 +337,51 @@ screen_set("setting");
 
 }
 
-void settingKey_event() 
+void setting_key_event() 
 {
 	
 button_event(button_back);
 	
-catchKey_event(tux_right_keyup_val);
+catch_key_event(tux_right_keyup_val);
 	
-catchKey_event(tux_right_keydown_val);
+catch_key_event(tux_right_keydown_val);
 	
-catchKey_event(tux_right_keyleft_val);
+catch_key_event(tux_right_keyleft_val);
 	
-catchKey_event(tux_right_keyright_val);
+catch_key_event(tux_right_keyright_val);
 	
-catchKey_event(tux_right_keyswitch_val);
+catch_key_event(tux_right_keyswitch_val);
 	
-catchKey_event(tux_right_keyfire_val);
+catch_key_event(tux_right_keyfire_val);
 	
-catchKey_event(tux_left_keyup_val);
+catch_key_event(tux_left_keyup_val);
 	
-catchKey_event(tux_left_keydown_val);
+catch_key_event(tux_left_keydown_val);
 	
-catchKey_event(tux_left_keyleft_val);
+catch_key_event(tux_left_keyleft_val);
 	
-catchKey_event(tux_left_keyright_val);
+catch_key_event(tux_left_keyright_val);
 	
-catchKey_event(tux_left_keyswitch_val);
+catch_key_event(tux_left_keyswitch_val);
 	
-catchKey_event(tux_left_keyfire_val);
+catch_key_event(tux_left_keyfire_val);
 
 } 
 void
 
  stopScreenSettingKeys() 
 {
-	unhotKey_register(SDLK_ESCAPE);
+	unhot_key_register(SDLK_ESCAPE);
 } 
 void
 
- settingKey_int() 
+ setting_key_int() 
 {
 	
 image_t * image;
 	
 
-keyTable_init();
+key_table_init();
 	
 image = image_get(IMAGE_GROUP_BASE, "screen_main");
 	
@@ -448,109 +448,109 @@ tux_right_keyswitch =
 					   tux_left_keyfire->y + 20, WIDGET_LABEL_LEFT);
 	
 tux_left_keyup_val =
-		catchKey_new(keytable[6], tux_left_keyup->x + 200,
+		catch_key_new(keytable[6], tux_left_keyup->x + 200,
 						  tux_left->y + 50, eventWidget);
 	
 tux_left_keydown_val =
-		catchKey_new(keytable[9], tux_left_keyup_val->x,
+		catch_key_new(keytable[9], tux_left_keyup_val->x,
 						  tux_left_keyup->y + 20, eventWidget);
 	
 tux_left_keyleft_val =
-		catchKey_new(keytable[8], tux_left_keyup_val->x,
+		catch_key_new(keytable[8], tux_left_keyup_val->x,
 						  tux_left_keydown->y + 20, eventWidget);
 	
 tux_left_keyright_val =
-		catchKey_new(keytable[7], tux_left_keyup_val->x,
+		catch_key_new(keytable[7], tux_left_keyup_val->x,
 						  tux_left_keyleft->y + 20, eventWidget);
 	
 tux_left_keyfire_val =
-		catchKey_new(keytable[10], tux_left_keyup_val->x,
+		catch_key_new(keytable[10], tux_left_keyup_val->x,
 						  tux_left_keyright->y + 20, eventWidget);
 	
 tux_left_keyswitch_val =
-		catchKey_new(keytable[11], tux_left_keyup_val->x,
+		catch_key_new(keytable[11], tux_left_keyup_val->x,
 						  tux_left_keyfire->y + 20, eventWidget);
 	
 tux_right_keyup_val =
-		catchKey_new(keytable[0],
+		catch_key_new(keytable[0],
 						  WINDOW_SIZE_X / 2 + tux_left_keyup_val->x,
 						  tux_left->y + 50, eventWidget);
 	
 tux_right_keydown_val =
-		catchKey_new(keytable[3],
+		catch_key_new(keytable[3],
 						  WINDOW_SIZE_X / 2 + tux_left_keyup_val->x,
 						  tux_left_keyup->y + 20, eventWidget);
 	
 tux_right_keyleft_val =
-		catchKey_new(keytable[2],
+		catch_key_new(keytable[2],
 						  WINDOW_SIZE_X / 2 + tux_left_keyup_val->x,
 						  tux_right_keydown->y + 20, eventWidget);
 	
 tux_right_keyright_val =
-		catchKey_new(keytable[1],
+		catch_key_new(keytable[1],
 						  WINDOW_SIZE_X / 2 + tux_left_keyup_val->x,
 						  tux_right_keyleft->y + 20, eventWidget);
 	
 tux_right_keyfire_val =
-		catchKey_new(keytable[4],
+		catch_key_new(keytable[4],
 						  WINDOW_SIZE_X / 2 + tux_left_keyup_val->x,
 						  tux_left_keyright->y + 20, eventWidget);
 	
 tux_right_keyswitch_val =
-		catchKey_new(keytable[5],
+		catch_key_new(keytable[5],
 						  WINDOW_SIZE_X / 2 + tux_left_keyup_val->x,
 						  tux_left_keyfire->y + 20, eventWidget);
 	
 screen_register(screen_new
 					("settingKeys", screen_startSettingKeys,
-					 settingKey_event, 
-settingKey_draw,
+					 setting_key_event, 
+setting_key_draw,
 					 stopScreenSettingKeys));
 
 }
 
-void keyTable_quit() 
+void key_table_quit() 
 {	
-	textFile_destroy(keycontrolFile);
+	text_file_destroy(keycontrolFile);
 }
 
 void saveKeyTable(textFile_t * configFile)
 {
 	char str[STR_SIZE];
 	
-	sprintf(str, "%d", catchKey_get(tux_left_keyup_val));
+	sprintf(str, "%d", catch_key_get(tux_left_keyup_val));
 	setValueInConfigFile(configFile, "TUX_LEFT_MOVE_UP", str);
-	sprintf(str, "%d", catchKey_get(tux_left_keydown_val));
+	sprintf(str, "%d", catch_key_get(tux_left_keydown_val));
 	setValueInConfigFile(configFile, "TUX_LEFT_MOVE_DOWN", str);
-	sprintf(str, "%d", catchKey_get(tux_left_keyleft_val));
+	sprintf(str, "%d", catch_key_get(tux_left_keyleft_val));
 	setValueInConfigFile(configFile, "TUX_LEFT_MOVE_LEFT", str);
-	sprintf(str, "%d", catchKey_get(tux_left_keyright_val));
+	sprintf(str, "%d", catch_key_get(tux_left_keyright_val));
 	setValueInConfigFile(configFile, "TUX_LEFT_MOVE_RIGHT", str);
-	sprintf(str, "%d", catchKey_get(tux_left_keyfire_val));
+	sprintf(str, "%d", catch_key_get(tux_left_keyfire_val));
 	setValueInConfigFile(configFile, "TUX_LEFT_SHOOT", str);
-	sprintf(str, "%d", catchKey_get(tux_left_keyswitch_val));
+	sprintf(str, "%d", catch_key_get(tux_left_keyswitch_val));
 	setValueInConfigFile(configFile, "TUX_LEFT_SWITCH_WEAPON", str);
 		
-	sprintf(str, "%d", catchKey_get(tux_right_keyup_val));
+	sprintf(str, "%d", catch_key_get(tux_right_keyup_val));
 	setValueInConfigFile(configFile, "TUX_RIGHT_MOVE_UP", str);
-	sprintf(str, "%d", catchKey_get(tux_right_keydown_val));
+	sprintf(str, "%d", catch_key_get(tux_right_keydown_val));
 	setValueInConfigFile(configFile, "TUX_RIGHT_MOVE_DOWN", str);
-	sprintf(str, "%d", catchKey_get(tux_right_keyleft_val));
+	sprintf(str, "%d", catch_key_get(tux_right_keyleft_val));
 	setValueInConfigFile(configFile, "TUX_RIGHT_MOVE_LEFT", str);
-	sprintf(str, "%d", catchKey_get(tux_right_keyright_val));	
+	sprintf(str, "%d", catch_key_get(tux_right_keyright_val));	
 	setValueInConfigFile(configFile, "TUX_RIGHT_MOVE_RIGHT", str);
-	sprintf(str, "%d", catchKey_get(tux_right_keyfire_val));
+	sprintf(str, "%d", catch_key_get(tux_right_keyfire_val));
 	setValueInConfigFile(configFile, "TUX_RIGHT_SHOOT", str);
-	sprintf(str, "%d", catchKey_get(tux_right_keyswitch_val));
+	sprintf(str, "%d", catch_key_get(tux_right_keyswitch_val));
 	setValueInConfigFile(configFile, "TUX_RIGHT_SWITCH_WEAPON", str);
 
-	textFile_save(configFile);
+	text_file_save(configFile);
 }
 
-void settingKey_quit() 
+void setting_key_quit() 
 {
 	saveKeyTable(keycontrolFile);
-	keyTable_quit();
+	key_table_quit();
 		
 	// key names
 	wid_image_destroy(image_backgorund);
@@ -571,19 +571,19 @@ void settingKey_quit()
 	label_destroy(tux_left_keyfire);
 		
 	// key values
-	catchKey_destroy(tux_right_keyup_val);
+	catch_key_destroy(tux_right_keyup_val);
 		
-	catchKey_destroy(tux_right_keydown_val);
-	catchKey_destroy(tux_right_keyleft_val);	
-	catchKey_destroy(tux_right_keyright_val);
-	catchKey_destroy(tux_right_keyswitch_val);
-	catchKey_destroy(tux_right_keyfire_val);
-	catchKey_destroy(tux_left_keyup_val);
-	catchKey_destroy(tux_left_keydown_val);
-	catchKey_destroy(tux_left_keyleft_val);
-	catchKey_destroy(tux_left_keyright_val);
-	catchKey_destroy(tux_left_keyswitch_val);
-	catchKey_destroy(tux_left_keyfire_val);
+	catch_key_destroy(tux_right_keydown_val);
+	catch_key_destroy(tux_right_keyleft_val);	
+	catch_key_destroy(tux_right_keyright_val);
+	catch_key_destroy(tux_right_keyswitch_val);
+	catch_key_destroy(tux_right_keyfire_val);
+	catch_key_destroy(tux_left_keyup_val);
+	catch_key_destroy(tux_left_keydown_val);
+	catch_key_destroy(tux_left_keyleft_val);
+	catch_key_destroy(tux_left_keyright_val);
+	catch_key_destroy(tux_left_keyswitch_val);
+	catch_key_destroy(tux_left_keyfire_val);
 	button_destroy(button_back);
 }
 

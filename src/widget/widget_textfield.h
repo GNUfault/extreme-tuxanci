@@ -31,11 +31,11 @@ typedef struct widget_textfield {
 	bool_t active;
 } widget_textfield_t;
 
-extern widget_t *textField_new(char *text, int filter, int x, int y);
-extern void textField_set_text(widget_t * widget, char *text);
-extern char *textField_get_text(widget_t * widget);
-extern void textField_draw(widget_t * widget);
-extern void textField_event(widget_t * widget);
-extern void textField_destroy(widget_t * widget);
+extern widget_t *text_field_new(char *text, int filter, int x, int y);
+extern void text_field_set_text(widget_t * widget, char *text);
+extern char *text_field_get_text(widget_t * widget);
+extern void text_field_draw(widget_t * widget);
+extern void text_field_event(widget_t * widget);
+extern void text_field_destroy(widget_t * widget);
 
 #endif
