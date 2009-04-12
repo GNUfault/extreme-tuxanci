@@ -10,10 +10,6 @@
 
 #    define MY_UDP
 
-#    ifndef __WIN32__
-#        define SUPPORT_IPv6
-#    endif
-
 typedef struct struct_sock_udp_t {
 #    ifndef __WIN32__
 	int sock;

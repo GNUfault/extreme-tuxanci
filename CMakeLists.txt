@@ -15,7 +15,7 @@
 # DEFAULT OPTIONS
 ###############################################################################
 option(WITH_SERVER		"Build the server instead of client"		OFF)
-option(ENABLE_IPV6		"Build with the ipv6 support"				OFF)
+option(ENABLE_IPV6		"Build with the ipv6 support"				ON)
 option(WITH_AUDIO		"Build with audio enabled"					ON)
 option(ENABLE_DEBUG		"Build debug features"						OFF)
 option(DEVELOPER		"Modify stuff to please tuxanci devs"		OFF)

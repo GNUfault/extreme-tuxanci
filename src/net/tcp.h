@@ -12,7 +12,6 @@
 #    include <windows.h>
 #    include <wininet.h>
 #    endif
-#    define SUPPORT_IPv6
 
 #    define	PROTO_TCPv4	0
 #    define	PROTO_TCPv6	1
