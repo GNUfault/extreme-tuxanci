@@ -9,6 +9,7 @@
 #include "interface.h"
 #include "audio.h"
 #include "music.h"
+#include "my_path.h"
 
 static list_t *listStorage;
 
@@ -58,11 +59,7 @@ static Mix_Music *loadMixMusic(char *file)
 
 	DEBUG_MSG(_("Loading a file with music: %s\n"), file);
 
-	if (isFillPath(file)) {
-		strcpy(str, file);
-	} else {
-		sprintf(str, PATH_MUSIC "%s", file);
-	}
+	path_set_prefix(str, STR_PATH_SIZE, PATH_PREFIX_MUSIC, file);
 
 	accessExistFile(str);
 

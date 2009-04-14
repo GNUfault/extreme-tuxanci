@@ -16,6 +16,7 @@
 #include "arenaFile.h"
 #include "proto.h"
 #include "shareFunction.h"
+#include "my_path.h"
 
 #ifndef PUBLIC_SERVER
 #    include "interface.h"
@@ -123,7 +124,10 @@ static void unmapImage(void *image)
 
 static void setModulePath(char *name, char *path)
 {
-	sprintf(path, PATH_MODULES "%s" MODULE_TYPE_UNIX, name);	// linux
+	path_set_prefix(path, STR_PATH_SIZE, PATH_PREFIX_MODULE, name);
+	strcat(path, ".so");
+	
+	//sprintf(path, PATH_MODULES "%s" MODULE_TYPE_UNIX, name);	// linux
 #ifdef __WIN32__
 	sprintf(path, PATH_MODULES "%s" MODULE_TYPE_WIN, name);	// windows
 #endif

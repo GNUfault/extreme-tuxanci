@@ -16,6 +16,7 @@
 #include "modules.h"
 #include "archive.h"
 #include "homeDirector.h"
+#include "my_path.h"
 
 #ifndef PUBLIC_SERVER
 #    include "configFile.h"
@@ -371,13 +372,17 @@ static void load_arenaFromDirector(char *director)
 
 void arena_file_init()
 {
+	char path[STR_PATH_SIZE];
+
 #ifndef PUBLIC_SERVER
 	assert(image_is_inicialized() == TRUE);
 #endif
 	isArenaFileInit = TRUE;
 	listArenaFile = list_new();
 
-	load_arenaFromDirector(PATH_ARENA);
+	path_set_prefix(path, STR_PATH_SIZE, PATH_PREFIX_ARENA, "");
+
+	load_arenaFromDirector(path);
 
 #ifndef PUBLIC_SERVER
 	load_arenaFromDirector(home_director_get());

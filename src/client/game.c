@@ -14,6 +14,7 @@
 #include "item.h"
 #include "shot.h"
 #include "arenaFile.h"
+#include "my_path.h"
 
 #include "image.h"
 #include "layer.h"
@@ -45,7 +46,8 @@
 static void initGame()
 {
 	home_director_create();
-
+	
+	path_init();
 	interface_init();
 	font_init();
 	layer_init();
@@ -77,6 +79,7 @@ static void initGame()
 
 void game_quit()
 {
+
 	interface_quit();
 
 	main_menu_quit();
@@ -105,6 +108,8 @@ void game_quit()
 	music_quit();
 	audio_quit();
 #endif
+
+	path_quit();
 
 	DEBUG_MSG(_("Quitting TUXANCI...\n"));
 
