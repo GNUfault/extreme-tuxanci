@@ -34,6 +34,7 @@
 #    define KEYBOARD_BUFFER_SIZE 256
 
 extern bool_t interface_is_inicialized();
+extern bool_t interface_is_use_open_gl();
 extern void interface_enable_keyboard_buffer();
 extern void interface_disable_keyboard_buffer();
 extern int interface_init();

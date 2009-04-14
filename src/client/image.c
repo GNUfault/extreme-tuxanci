@@ -64,8 +64,7 @@ static SDL_Surface *loadImage(const char *filename, int alpha)
 }
 
 
-#ifndef SUPPORT_OPENGL
-image_t *image_new(SDL_Surface * surface)
+image_t *image_new_sdl(SDL_Surface * surface)
 {
 	image_t *new;
 
@@ -78,7 +77,6 @@ image_t *image_new(SDL_Surface * surface)
 
 	return new;
 }
-#endif
 
 #ifdef SUPPORT_OPENGL
 /*
@@ -100,7 +98,7 @@ unsigned int closestpoweroftwo(unsigned int i)
  * surface is not needed for image_t after execution of image_new
  */
 
-image_t* image_new(SDL_Surface *surface)
+image_t* image_new_opengl(SDL_Surface *surface)
 {
 	image_t *new;
 	Uint32 rmask, gmask, bmask, amask;
@@ -151,6 +149,24 @@ image_t* image_new(SDL_Surface *surface)
 }
 #endif
 
+image_t* image_new(SDL_Surface *surface)
+{
+#ifdef SUPPORT_OPENGL
+	if( interface_is_use_open_gl() )
+	{
+		return image_new_opengl(surface);
+	}
+	else
+	{
+		return image_new_sdl(surface);
+	}
+#endif
+
+#ifndef SUPPORT_OPENGL
+	return image_new_sdl(surface);
+#endif
+}
+
 void image_destroy(image_t * p)
 {
 	assert(p != NULL);
@@ -160,7 +176,14 @@ void image_destroy(image_t * p)
 #endif
 
 #ifdef SUPPORT_OPENGL
-	glDeleteTextures(1, &p->tex_id);
+	if( interface_is_use_open_gl() )
+	{
+		glDeleteTextures(1, &p->tex_id);
+	}
+	else
+	{
+		SDL_FreeSurface((SDL_Surface *) p->image);
+	}
 #endif
 
 	free(p);
@@ -218,8 +241,7 @@ void image_del_all_image_in_group(char *group)
 	storage_del_all(listStorage, group, image_destroy);
 }
 
-#ifndef SUPPORT_OPENGL
-void image_draw(image_t * p, int x, int y, int px, int py, int w, int h)
+void image_draw_sdl(image_t * p, int x, int y, int px, int py, int w, int h)
 {
 	static SDL_Surface *screen = NULL;
 	SDL_Rect dst_rect, src_rect;
@@ -238,13 +260,13 @@ void image_draw(image_t * p, int x, int y, int px, int py, int w, int h)
 
 	SDL_BlitSurface(p->image, &src_rect, screen, &dst_rect);
 }
-#endif
+
 
 #ifdef SUPPORT_OPENGL
 /*
  * Draws image on screen at [x,y], with width w and height h, top-left corner on image is at [px,py]
  */
-void image_draw(image_t *image, int x,int y, int px, int py, int w, int h)
+void image_draw_opengl(image_t *image, int x,int y, int px, int py, int w, int h)
 {
 	/* x -coordinate of left border xx- coordinate of right border,
 	 * y -coordinate of top border yy- coordinate of bottom border,
@@ -287,6 +309,24 @@ void image_draw(image_t *image, int x,int y, int px, int py, int w, int h)
 	glEnd();
 }
 #endif
+
+void image_draw(image_t *image, int x,int y, int px, int py, int w, int h)
+{
+#ifdef SUPPORT_OPENGL
+	if( interface_is_use_open_gl() )
+	{
+		image_draw_opengl(image, x, y, px, py, w, h);
+	}
+	else
+	{
+		image_draw_sdl(image, x, y, px, py, w, h);
+	}
+#endif
+
+#ifndef SUPPORT_OPENGL
+	image_draw_sdl(image, x, y, px, py, w, h);
+#endif
+}
 
 /*
  * Odstrani zoznam obrazkov z pamate

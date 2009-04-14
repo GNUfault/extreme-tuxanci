@@ -40,6 +40,7 @@ typedef struct image_struct
 {
 	int w; // width of actual picture
 	int h; // height of actual picture
+	SDL_Surface *image;
 	GLuint tw; // width of allocated texture
 	GLuint th; // height of allocated texture
 	GLuint tex_id; // texture id

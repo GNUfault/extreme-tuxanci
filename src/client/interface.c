@@ -17,18 +17,18 @@ static SDL_Surface *screen;
 static SDL_TimerID timer;
 
 // window flags
-#ifndef SUPPORT_OPENGL
-static Uint32 g_win_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT;
-#endif
-
-#ifdef SUPPORT_OPENGL
-static Uint32 g_win_flags = SDL_OPENGL;
-#endif
+static Uint32 g_win_flags;
 
 static bool_t isInterfaceInit = FALSE;
 
 // flag, kterym se ridi zarazovani klaves do bufferu
 static bool_t keyboardBufferEnabled = FALSE;
+static bool_t use_open_gl;
+
+bool_t interface_is_use_open_gl()
+{
+	return use_open_gl;
+}
 
 bool_t interface_is_inicialized()
 {
@@ -124,21 +124,43 @@ int interface_init()
 #endif
 	// initialization of SDL
 	if (SDL_Init(SDL_SUBSYSTEMS) == -1) {
-		fprintf(stderr, "%s\n", SDL_GetError());
+		fprintf(stderr, "SDL_Init %s\n", SDL_GetError());
 		SDL_Quit();
 		return -1;
 	}
 
 #ifndef SUPPORT_OPENGL
+	use_open_gl = FALSE;
+	g_win_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT;
+
 	screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 #endif
 
 #ifdef SUPPORT_OPENGL
-	screen = SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
+	use_open_gl = ! isParamFlag("--disable-opengl");
+
+	if( interface_is_use_open_gl() )
+	{
+		g_win_flags = SDL_OPENGL;
+		screen = SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
+
+		if( screen == NULL )
+		{
+			use_open_gl = FALSE;
+			g_win_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT;
+			
+			screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
+		}
+	}
+	else
+	{
+		g_win_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT;
+		screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
+	}
 #endif
 
 	if (screen == NULL) {
-		fprintf(stderr, "%s\n", SDL_GetError());
+		fprintf(stderr, "SDL_SetVideoMode %s\n", SDL_GetError());
 		SDL_Quit();
 		return -1;
 	}
@@ -175,7 +197,14 @@ void interface_refresh()
 #endif
 
 #ifdef SUPPORT_OPENGL
-	SDL_GL_SwapBuffers();
+	if( interface_is_use_open_gl() )
+	{
+		SDL_GL_SwapBuffers();
+	}
+	else
+	{
+		SDL_Flip(screen);
+	}
 #endif
 }
 
