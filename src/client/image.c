@@ -6,7 +6,6 @@
 #include "main.h"
 #include "list.h"
 #include "storage.h"
-#include "my_path.h"
 
 #include "interface.h"
 #include "image.h"
@@ -40,7 +39,12 @@ static SDL_Surface *loadImage(const char *filename, int alpha)
 
 	char str[STR_PATH_SIZE];
 
-	path_set_prefix(str, STR_PATH_SIZE, PATH_PREFIX_IMAGE, filename);
+
+	if (isFillPath(filename)) {
+		strcpy(str, filename);
+	} else {
+		sprintf(str, PATH_IMAGE "%s", filename);
+	}
 
 	accessExistFile(str);
 

@@ -31,7 +31,6 @@
 #include "proto.h"
 #include "modules.h"
 #include "net_multiplayer.h"
-#include "my_path.h"
 
 #include "publicServer.h"
 #include "serverConfigFile.h"
@@ -242,7 +241,6 @@ int public_server_init()
 	int ret;
 	int i;
 
-	path_init();
 	id_init_list();
 	module_init();
 	arena_file_init();
@@ -340,7 +338,6 @@ void public_server_quit()
 	id_quit_list();
 	high_score_quit();
 	log_quit();
-	path_quit();
 
 	exit(0);
 }

@@ -42,7 +42,7 @@ SET ( SRC_base
 	${WORKDIR}/base/homeDirector	${WORKDIR}/base/proto
 	${WORKDIR}/base/shareFunction	${WORKDIR}/base/buffer
 	${WORKDIR}/base/archive ${WORKDIR}/base/downServer
-	 ${WORKDIR}/base/my_path ${WORKDIR}/net/dns
+	${WORKDIR}/net/dns
 )
 
 SET ( SRC_client
