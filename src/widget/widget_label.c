@@ -31,7 +31,7 @@ void label_draw(widget_t * widget)
 
 	switch (p->bind) {
 		case WIDGET_LABEL_RIGHT:
-			font_draw(p->text, widget->x + p->w, widget->y + p->h / 2, COLOR_WHITE);
+			font_draw(p->text, widget->x - p->w, widget->y + p->h / 2, COLOR_WHITE);
 			break;
 		case WIDGET_LABEL_LEFT:
 			font_draw(p->text, widget->x, widget->y + widget->h / 2, COLOR_WHITE);
