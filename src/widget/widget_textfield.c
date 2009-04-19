@@ -27,8 +27,7 @@ widget_t *text_field_new(char *text, int filter, int x, int y)
 	new->filter = filter;
 	font_text_size(text, &new->w, &new->h);
 
-	return widget_new(WIDGET_TYPE_TEXTFILED, x, y,
-			 WIDGET_TEXTFIELD_WIDTH, WIDGET_TEXTFIELD_HEIGHT, new);
+	return widget_new(WIDGET_TYPE_TEXTFILED, x, y, WIDGET_TEXTFIELD_WIDTH, WIDGET_TEXTFIELD_HEIGHT, new);
 }
 
 static void drawBackground(widget_t * widget)
@@ -42,19 +41,16 @@ static void drawBackground(widget_t * widget)
 
 	p = (widget_textfield_t *) widget->private_data;
 
-	if (g_textfield0 == NULL) {
+	if (g_textfield0 == NULL)
 		g_textfield0 = image_add("textfield0.png", IMAGE_ALPHA, "textfiled0", IMAGE_GROUP_BASE);
-	}
 
-	if (g_textfield1 == NULL) {
+	if (g_textfield1 == NULL)
 		g_textfield1 = image_add("textfield1.png", IMAGE_ALPHA, "textfiled1", IMAGE_GROUP_BASE);
-	}
 
-	if (p->active) {
+	if (p->active)
 		image_draw(g_textfield1, widget->x, widget->y, 0, 0, g_textfield1->w, g_textfield1->h);
-	} else {
+	else
 		image_draw(g_textfield0, widget->x, widget->y, 0, 0, g_textfield0->w, g_textfield0->h);
-	}
 }
 
 static void drawText(widget_t * widget)
@@ -70,16 +66,12 @@ static void drawText(widget_t * widget)
 	strcpy(str, p->text);
 
 	if (p->timeBlick > WIDGET_TEXTFIELD_TIME_BLICK_CURSOR / 2 && p->active == TRUE)
-	{
-		//strcat(str, ">");
 		strcat(str, "\f");
-	}
 
 	p->timeBlick++;
 
-	if (p->timeBlick == WIDGET_TEXTFIELD_TIME_BLICK_CURSOR) {
+	if (p->timeBlick == WIDGET_TEXTFIELD_TIME_BLICK_CURSOR)
 		p->timeBlick = 0;
-	}
 
 	//font_draw(str, p->x+WIDGET_TEXTFIELD_TEXT_OFFSET_X, p->y+p->h/2, COLOR_WHITE);
 	//printf("p->y: %d\nheight: %d\n p->h: %d\n", p->y, WIDGET_TEXTFIELD_HEIGHT, p->h);
@@ -111,7 +103,7 @@ void text_field_set_text(widget_t * widget, char *text)
 	font_text_size(text, &p->w, &p->h);
 }
 
-char *text_field_get_text(widget_t * widget)
+char *text_field_get_text(widget_t *widget)
 {
 	widget_textfield_t *p;
 
@@ -122,14 +114,9 @@ char *text_field_get_text(widget_t * widget)
 	return p->text;
 }
 
-static void checkText(widget_textfield_t * p)
+static void checkText(widget_textfield_t *p, unsigned len)
 {
-	int len;
 	int i;
-
-	//printf("check\n");
-
-	len = strlen(p->text);
 
 	for (i = 0; i < len; i++) {
 		char c;
@@ -160,7 +147,8 @@ static void checkText(widget_textfield_t * p)
 	
 			case WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN:
 				if ((c >= '0' && c <= '9') ||
-				    (c == '.' || c == ':' || c == '-')) {
+				    (c == '.' || c == ':' || c == '-') ||
+				    (c >= 'a' && c <= 'z')) {
 					isDel = FALSE;
 				}
 				break;
@@ -186,8 +174,6 @@ static void readKey (widget_textfield_t *p)
 	int len;
 	int i;
 
-	const int len_shift_map = 20;
-
 	char shift_map[] = {
 		'-', '_',
 		'=', '+',
@@ -198,7 +184,8 @@ static void readKey (widget_textfield_t *p)
 		'\\', '|',
 		',', '<',
 		'.', '>',
-		'/', '?'
+		'/', '?',
+		')', '(',
 	};
 
 	if (p->active == FALSE)
@@ -234,7 +221,7 @@ static void readKey (widget_textfield_t *p)
 			c = ' ';
 		else if (k.sym == SDLK_BACKSPACE && len > 0 ) {
 			p->text[len-1] = '\0';
-			checkText (p);
+			checkText (p, len);
 			break;
 		}
 
@@ -247,7 +234,7 @@ static void readKey (widget_textfield_t *p)
 			int n;
 			int m = 0;
 
-			for (n = 0; n < len_shift_map; n += 2) {
+			for (n = 0; n < sizeof (shift_map); n += 2) {
 				if (c == shift_map[n]) {
 					p->text[len] = shift_map[n+1];
 					m ++;
@@ -293,9 +280,9 @@ static void readKey (widget_textfield_t *p)
 				break;
 		}
 */
+		len ++;		
+		checkText (p, len);
 
-		checkText (p);
-		len ++;
 	}
 }
 

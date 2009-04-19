@@ -119,7 +119,21 @@ static void processMessageKey(SDL_keysym keysym)
 {
 	int w, h;
 	int len;
-	//int i;
+	unsigned n;
+
+	char shift_map[] = {
+		'-', '_',
+		'=', '+',
+		'[', '{',
+		']', '}',
+		';', ':',
+		'/', '\"',
+		'\\', '|',
+		',', '<',
+		'.', '>',
+		'/', '?',
+		')', '(',
+	};
 
 	if (line_atime < 100)
 		line_atime++;
@@ -145,9 +159,15 @@ static void processMessageKey(SDL_keysym keysym)
 		 */
 		char c = keysym.sym;
 
-		/* TODO: should correspond with ASCII table */
-		if (keysym.mod & KMOD_RSHIFT)
-			c --;
+		if (keysym.mod & KMOD_RSHIFT) {
+			for (n = 0; n < sizeof (shift_map); n += 2) {
+				if (c == shift_map[n]) {
+					c = shift_map[n+1];
+					break;
+				}
+			}
+		}
+			
 
 		line[len] = c;
 		return;

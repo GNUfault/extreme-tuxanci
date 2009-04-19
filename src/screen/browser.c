@@ -128,8 +128,7 @@ void browser_stop()
 
 	while (1) {
 		i = 0;
-		for (server = server_list.next; server != &server_list;
-			 server = server->next) {
+		for (server = server_list.next; server != &server_list; server = server->next) {
 			server->next->prev = server->prev;
 			server->prev->next = server->next;
 
@@ -165,7 +164,7 @@ static void eventWidget(void *p)
 		if (!server)
 			return;
 
-		/* server je offline */
+		/* server is offline */
 		if (!server->state)
 			return;
 
@@ -206,7 +205,7 @@ server_t *server_getcurr()
 	return 0;
 }
 
-int server_getinfo(server_t * server)
+int server_getinfo(server_t *server)
 {
 	struct sockaddr_in srv;
 	int mySocket;
@@ -550,7 +549,6 @@ static int LoadServers()
 		ctx->version = 0;
 		ctx->arena = 0;
 
-		//int ret = server_getinfo(ctx);
 		ret = server_getinfo(ctx);
 
 		srv.s_addr = ctx->ip;
