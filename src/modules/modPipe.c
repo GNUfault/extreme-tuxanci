@@ -221,8 +221,8 @@ int init(export_fce_t * p)
 
 static void action_drawpipe(space_t * space, pipe_t * pipe, void *p)
 {
-	UNUSET(space);
-	UNUSET(p);
+	UNUSED(space);
+	UNUSED(p);
 
 	drawPipe(pipe);
 }
@@ -299,7 +299,7 @@ static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
 	arena_t *arena;
 	tux_t *author;
 
-	UNUSET(space);
+	UNUSED(space);
 
 	arena = export_fce->fce_arena_get_current();
 
@@ -370,7 +370,7 @@ void cmdArena(char *line)
 
 void recvMsg(char *msg)
 {
-	UNUSET(msg);
+	UNUSED(msg);
 }
 
 int destroy()

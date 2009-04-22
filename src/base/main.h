@@ -28,7 +28,7 @@
 #define DEBUG_MSG(msg,arg...) 
 #endif
 
-#define UNUSET(var)	if( 0 && var ){}
+#define UNUSED(var)	if( 0 && var ){}
 
 
 extern char *getParam(char *s);

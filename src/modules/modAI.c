@@ -48,8 +48,8 @@ alternative_t *cloneAlternative(alternative_t * p, int route, int x, int y)
 
 	assert(p != NULL);
 
-	UNUSET(x);
-	UNUSET(y);
+	UNUSED(x);
+	UNUSED(y);
 
 	new = newAlternative(route, p->x, p->y);
 	new->first = p->first;
@@ -121,7 +121,7 @@ void destroyAlternative(alternative_t * p)
 
 static void cmd_ai(char *line)
 {
-	UNUSET(line);
+	UNUSED(line);
 }
 
 int init(export_fce_t * p)
@@ -134,10 +134,10 @@ int init(export_fce_t * p)
 #ifndef PUBLIC_SERVER
 int draw(int x, int y, int w, int h)
 {
-	UNUSET(x);
-	UNUSET(y);
-	UNUSET(w);
-	UNUSET(h);
+	UNUSED(x);
+	UNUSED(y);
+	UNUSED(w);
+	UNUSED(h);
 
 	return 0;
 }
@@ -167,7 +167,7 @@ static void shotTux(arena_t * arena, tux_t * tux_ai, tux_t * tux_rival)
 	int x_rival, y_rival;
 	int w, h;
 
-	UNUSET(arena);
+	UNUSED(arena);
 
 	export_fce->fce_tux_get_proportion(tux_ai, &x_ai, &y_ai, &w, &h);
 	export_fce->fce_tux_get_proportion(tux_rival, &x_rival, &y_rival, &w, &h);
@@ -336,8 +336,8 @@ static void tux_eventAI(tux_t * tux)
 
 static void action_tuxAI(space_t * space, tux_t * tux, void *p)
 {
-	UNUSET(space);
-	UNUSET(p);
+	UNUSED(space);
+	UNUSED(p);
 
 	if (tux->control == TUX_CONTROL_AI && tux->status == TUX_STATUS_ALIVE) {
 		tux_eventAI(tux);
@@ -394,10 +394,10 @@ int event()
 
 int isConflict(int x, int y, int w, int h)
 {
-	UNUSET(x);
-	UNUSET(y);
-	UNUSET(w);
-	UNUSET(h);
+	UNUSED(x);
+	UNUSED(y);
+	UNUSED(w);
+	UNUSED(h);
 
 	return 0;
 }
@@ -410,7 +410,7 @@ void cmdArena(char *line)
 
 void recvMsg(char *msg)
 {
-	UNUSET(msg);
+	UNUSED(msg);
 }
 
 int destroy()

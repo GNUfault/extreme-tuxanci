@@ -157,11 +157,11 @@ static void getStatusImgWall(void *p, int *id, int *x, int *y, int *w, int *h)
 
 static void setStatusImgWall(void *p, int x, int y, int w, int h)
 {
-	UNUSET(p);
-	UNUSET(x);
-	UNUSET(y);
-	UNUSET(w);
-	UNUSET(h);
+	UNUSED(p);
+	UNUSED(x);
+	UNUSED(y);
+	UNUSED(w);
+	UNUSED(h);
 }
 
 #endif
@@ -258,8 +258,8 @@ int init(export_fce_t * p)
 
 static void action_drawwall(space_t * space, wall_t * wall, void *p)
 {
-	UNUSET(space);
-	UNUSET(p);
+	UNUSED(space);
+	UNUSED(p);
 
 	drawWall(wall);
 }
@@ -283,8 +283,8 @@ static void action_eventwall(space_t * space, wall_t * wall, shot_t * shot)
 	arena_t *arena;
 	tux_t *author;
 
-	UNUSET(space);
-	UNUSET(wall);
+	UNUSED(space);
+	UNUSED(wall);
 
 	arena = export_fce->fce_arena_get_current();
 
@@ -346,7 +346,7 @@ void cmdArena(char *line)
 
 void recvMsg(char *msg)
 {
-	UNUSET(msg);
+	UNUSED(msg);
 }
 
 int destroy()

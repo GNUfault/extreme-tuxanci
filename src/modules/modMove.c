@@ -226,10 +226,10 @@ static void proto_moveshot(char *msg)
 
 int draw(int x, int y, int w, int h)
 {
-	UNUSET(x);
-	UNUSET(y);
-	UNUSET(w);
-	UNUSET(h);
+	UNUSED(x);
+	UNUSED(y);
+	UNUSED(w);
+	UNUSED(h);
 
 	return 0;
 }
@@ -243,17 +243,17 @@ int event()
 
 int isConflict(int x, int y, int w, int h)
 {
-	UNUSET(x);
-	UNUSET(y);
-	UNUSET(w);
-	UNUSET(h);
+	UNUSED(x);
+	UNUSED(y);
+	UNUSED(w);
+	UNUSED(h);
 
 	return 0;
 }
 
 void cmdArena(char *line)
 {
-	UNUSET(line);
+	UNUSED(line);
 }
 
 void recvMsg(char *msg)

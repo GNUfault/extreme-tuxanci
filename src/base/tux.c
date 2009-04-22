@@ -409,7 +409,7 @@ static void action_tux(space_t * space, tux_t * tux, shot_t * shot)
 {
 	arena_t *arena;
 
-	UNUSET(space);
+	UNUSED(space);
 	
 	arena = arena_get_current();
 
@@ -445,7 +445,7 @@ static void action_tux(space_t * space, tux_t * tux, shot_t * shot)
 
 static void action_shot(space_t * space, shot_t * shot, space_t * spaceTux)
 {
-	UNUSET(space);
+	UNUSED(space);
 
 	space_action_from_location(spaceTux, action_tux, shot, shot->x, shot->y, shot->w, shot->h);
 }
@@ -725,8 +725,8 @@ void tux_set_status(void *p, int x, int y, int w, int h)
 {
 	tux_t *tux;
 
-	UNUSET(w);
-	UNUSET(h);
+	UNUSED(w);
+	UNUSED(h);
 
 	tux = p;
 	tux_set_proportion(tux, x, y);
@@ -734,7 +734,7 @@ void tux_set_status(void *p, int x, int y, int w, int h)
 
 static void action_checkMine(space_t * space, item_t * item, tux_t * tux)
 {
-	UNUSET(space);
+	UNUSED(space);
 
 	if (item->type == ITEM_MINE && item->author_id == tux->id) {
 		item->author_id = ID_UNKNOWN;

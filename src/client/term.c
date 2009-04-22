@@ -77,8 +77,8 @@ static void action_refreshTerm(space_t * space, tux_t * tux, void *p)
 {
 	char str[STR_SIZE];
 
-	UNUSET(space);
-	UNUSET(p);
+	UNUSED(space);
+	UNUSED(p);
 
 	sprintf(str,
 			"name: %s "

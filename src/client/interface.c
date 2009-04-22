@@ -39,7 +39,7 @@ static Uint32 TimerCallback(Uint32 interval, void *param)
 {
 	SDL_Event event;
 
-	UNUSET(param);
+	UNUSED(param);
 
 	event.type = SDL_USEREVENT;
 	event.user.code = USR_EVT_TIMER;
