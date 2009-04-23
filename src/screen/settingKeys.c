@@ -143,8 +143,10 @@ void key_table_init()
 
 		keycontrolFile = text_file_new(path);
 
-		fprintf(stderr, _("I was unable to create file: %s\n"), path);
-		return;
+		if (keycontrolFile == NULL) {
+			fprintf(stderr, _("I was unable to create file: %s\n"), path);
+			return;
+		}
 	}
 	
 	setKeytableFromConfigFile(keycontrolFile);

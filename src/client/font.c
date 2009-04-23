@@ -52,6 +52,7 @@ void font_init()
 	fontconfig_quit();
 
 	if (TTF_Init() == -1) {
+		free(font_file);
 		fprintf(stderr, "%s\n", SDL_GetError());
 		return;
 	}
@@ -63,6 +64,7 @@ void font_init()
 
 	DEBUG_MSG(_("Loading font: \"%s\"\n"), font_file);
 
+	free(font_file);
 	isFontInit = TRUE;
 }
 

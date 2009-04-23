@@ -35,6 +35,7 @@
 #include "widget_textfield.h"
 #include "widget_check.h"
 #include "widget_select.h"
+#include "widget_statusbar.h"
 
 static widget_t *image_backgorund;
 
@@ -76,6 +77,8 @@ static widget_t *textfield_name_player1;
 static widget_t *textfield_name_player2;
 
 static widget_t *check_ai;
+
+static widget_t *statusbar;
 
 static textFile_t *configFile;
 
@@ -145,6 +148,8 @@ void setting_draw()
 
 	check_draw(check_ai);
 
+	statusbar_draw(statusbar);
+
 	button_draw(button_back);
 	button_draw(button_keys);
 }
@@ -174,6 +179,8 @@ void setting_event()
 	}
 
 	check_event(check_ai);
+
+	statusbar_event(statusbar);
 
 	button_event(button_back);
 	button_event(button_keys);
@@ -423,6 +430,21 @@ void setting_init()
 	image_bonus_4x = wid_image_new(580 + WIDGET_CHECK_WIDTH, 250, image_get(IMAGE_GROUP_BASE, "panel_4x"));;
 	image_bonus_hidden = wid_image_new(580 + WIDGET_CHECK_WIDTH, 300, image_get(IMAGE_GROUP_BASE, "panel_hidden"));;
 
+	statusbar = statusbar_new(400, 350);
+	statusbar_add(statusbar, check[GUN_DUAL_SIMPLE], "abc\n123\nkoniec");
+	statusbar_add(statusbar, check[GUN_SCATTER], "check 1");
+	statusbar_add(statusbar, check[GUN_TOMMY], "check 2");
+	statusbar_add(statusbar, check[GUN_LASSER], "check 3");
+	statusbar_add(statusbar, check[GUN_MINE], "check 4");
+	statusbar_add(statusbar, check[GUN_BOMBBALL], "check 5");
+
+	statusbar_add(statusbar, check[BONUS_SPEED], "check 6");
+	statusbar_add(statusbar, check[BONUS_SHOT], "check 7");
+	statusbar_add(statusbar, check[BONUS_TELEPORT], "check 8");
+	statusbar_add(statusbar, check[BONUS_GHOST], "check 9");
+	statusbar_add(statusbar, check[BONUS_4X], "check 10");
+	statusbar_add(statusbar, check[BONUS_HIDDEN], "check 11");
+
 	screen_register( screen_new("setting", screen_startSetting, setting_event,
 			setting_draw, stopScreenSetting));
 
@@ -532,6 +554,8 @@ void setting_quit()
 	for (i = BONUS_SPEED; i <= BONUS_HIDDEN; i++) {
 		check_destroy(check[i]);
 	}
+
+	statusbar_destroy(statusbar);
 
 	button_destroy(button_back);
 	button_destroy(button_keys);

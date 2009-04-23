@@ -14,6 +14,7 @@
 #    define WIDGET_TYPE_CHOICE		6
 #    define WIDGET_TYPE_IMAGE		7
 #    define WIDGET_TYPE_SELECT		8
+#    define WIDGET_TYPE_STATUSBAR		9
 
 typedef struct widget_struct {
 	int type;
