@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,13 +23,14 @@
 
 static export_fce_t *export_fce;
 
-static void move_tux(tux_t * tux, int x, int y, int w, int h)
+static void move_tux(tux_t *tux, int x, int y, int w, int h)
 {
-	int dist_x = 0, dist_y = 0;	// no warnning
+	int dist_x = 0, dist_y = 0;	/* no warnings */
 
-	if (tux->bonus == BONUS_GHOST ||
-		export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT)
+	if (tux->bonus == BONUS_GHOST || export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return;
+	}
+
 	switch (tux->position) {
 	case TUX_UP:
 		dist_x = x + w / 2;
@@ -49,27 +49,23 @@ static void move_tux(tux_t * tux, int x, int y, int w, int h)
 		dist_y = y + h + 20;
 		break;
 	default:
-		assert(!"Variable p->control has a really wierd value!");
+		assert(!_("[Debug] Variable p->control in modMove has a really weird value.\n"));
 		break;
 	}
-	if (export_fce->
-		fce_arena_is_free_space(export_fce->fce_arena_get_current(), dist_x, dist_y,
-						TUX_WIDTH, TUX_HEIGHT)) {
-		space_move_object(export_fce->fce_arena_get_current()->spaceTux, tux,
-						  dist_x, dist_y);
+
+	if (export_fce->fce_arena_is_free_space(export_fce->fce_arena_get_current(), dist_x, dist_y, TUX_WIDTH, TUX_HEIGHT)) {
+		space_move_object(export_fce->fce_arena_get_current()->spaceTux, tux, dist_x, dist_y);
 #ifndef PUBLIC_SERVER
-		//sound_play("teleport", SOUND_GROUP_BASE);
+		/*sound_play("teleport", SOUND_GROUP_BASE);*/
 #endif
 		if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 			char msg[STR_PROTO_SIZE];
 			sprintf(msg, "movetux %d %d %d", tux->id, dist_x, dist_y);
-			if (tux->bonus == BONUS_HIDDEN)
-				export_fce->fce_proto_send_module_server(PROTO_SEND_ONE,
-														 (client_t *) tux->
-														 client, msg);
-			else
-				export_fce->fce_proto_send_module_server(PROTO_SEND_ALL, NULL,
-														 msg);
+			if (tux->bonus == BONUS_HIDDEN) {
+				export_fce->fce_proto_send_module_server(PROTO_SEND_ONE, (client_t *) tux->client, msg);
+			} else {
+				export_fce->fce_proto_send_module_server(PROTO_SEND_ALL, NULL, msg);
+			}
 		}
 	}
 }
@@ -80,13 +76,12 @@ static int myAbs(int n)
 }
 
 
-static int getSppedShot(shot_t * shot)
+static int getSppedShot(shot_t *shot)
 {
-	return (myAbs(shot->px) >
-			myAbs(shot->py) ? myAbs(shot->px) : myAbs(shot->py));
+	return (myAbs(shot->px) > myAbs(shot->py) ? myAbs(shot->px) : myAbs(shot->py));
 }
 
-static void transformShot(shot_t * shot, int position)
+static void transformShot(shot_t *shot, int position)
 {
 	int speed;
 
@@ -113,18 +108,17 @@ static void transformShot(shot_t * shot, int position)
 	shot->position = position;
 	shot->isCanKillAuthor = TRUE;
 
-	if (shot->gun == GUN_LASSER)
+	if (shot->gun == GUN_LASSER) {
 		export_fce->fce_shot_transform_lasser(shot);
+	}
 }
 
-static void
-move_shot(shot_t * shot, int position, int src_x, int src_y,
-		  int dist_x, int dist_y, int dist_w, int dist_h)
+static void move_shot(shot_t *shot, int position, int src_x, int src_y, int dist_x, int dist_y, int dist_w, int dist_h)
 {
 	int offset = 0;
-	int new_x = 0, new_y = 0;	// no warninng
+	int new_x = 0, new_y = 0;	/* no warnings */
 
-	//printf("move_shot\n");
+	/*printf("move_shot\n");*/
 	switch (shot->position) {
 	case TUX_UP:
 	case TUX_DOWN:
@@ -157,19 +151,16 @@ move_shot(shot_t * shot, int position, int src_x, int src_y,
 		break;
 	}
 
-	space_move_object(export_fce->fce_arena_get_current()->spaceShot, shot,
-					  new_x, new_y);
+	space_move_object(export_fce->fce_arena_get_current()->spaceShot, shot, new_x, new_y);
 	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		char msg[STR_PROTO_SIZE];
 
-		sprintf(msg, "moveshot %d %d %d %d %d %d",
-				shot->id, shot->x, shot->y, shot->px, shot->py,
-				shot->position);
+		sprintf(msg, "moveshot %d %d %d %d %d %d", shot->id, shot->x, shot->y, shot->px, shot->py, shot->position);
 		export_fce->fce_proto_send_module_server(PROTO_SEND_ALL, NULL, msg);
 	}
 }
 
-int init(export_fce_t * p)
+int init(export_fce_t *p)
 {
 	export_fce = p;
 	export_fce->fce_share_function_add("move_tux", (void *) move_tux);
@@ -191,8 +182,9 @@ static void proto_movetux(char *msg)
 	space = export_fce->fce_arena_get_current()->spaceTux;
 	tux = space_get_object_id(space, id);
 
-	if (tux != NULL)
+	if (tux != NULL) {
 		space_move_object(space, tux, x, y);
+	}
 }
 
 static void proto_moveshot(char *msg)
@@ -204,13 +196,13 @@ static void proto_moveshot(char *msg)
 
 	assert(msg != NULL);
 
-	sscanf(msg, "%s %d %d %d %d %d %d",
-		   cmd, &shot_id, &x, &y, &px, &py, &position);
+	sscanf(msg, "%s %d %d %d %d %d %d", cmd, &shot_id, &x, &y, &px, &py, &position);
 
 	space = export_fce->fce_arena_get_current()->spaceShot;
 
-	if ((shot = space_get_object_id(space, shot_id)) == NULL)
+	if ((shot = space_get_object_id(space, shot_id)) == NULL) {
 		return;
+	}
 
 	space_move_object(space, shot, x, y);
 	shot->isCanKillAuthor = 1;
@@ -218,12 +210,12 @@ static void proto_moveshot(char *msg)
 	shot->px = px;
 	shot->py = py;
 
-	if (shot->gun == GUN_LASSER)
+	if (shot->gun == GUN_LASSER) {
 		export_fce->fce_shot_transform_lasser(shot);
+	}
 }
 
 #ifndef PUBLIC_SERVER
-
 int draw(int x, int y, int w, int h)
 {
 	UNUSED(x);
@@ -233,7 +225,6 @@ int draw(int x, int y, int w, int h)
 
 	return 0;
 }
-
 #endif
 
 int event()
@@ -258,8 +249,9 @@ void cmdArena(char *line)
 
 void recvMsg(char *msg)
 {
-	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER)
+	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		return;
+	}
 
 	if (strncmp(msg, "movetux", 7) == 0)
 		proto_movetux(msg);

@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,27 +12,29 @@
 #include "space.h"
 
 #ifndef PUBLIC_SERVER
-#    include "interface.h"
-#    include "image.h"
-#endif
-
-#ifdef PUBLIC_SERVER
-#    include "publicServer.h"
+#include "interface.h"
+#include "image.h"
+#else
+#include "publicServer.h"
 #endif
 
 typedef struct teleport_struct {
 	int id;
 
-	int x;						// poloha steny  
+	/* position of the teleport */
+	int x;
 	int y;
 
-	int w;						// rozmery steny
+	/* size of the teleport */
+	int w;
 	int h;
 
-	int layer;					// vrstva
+	/* layer in the arena where the teleport lies */
+	int layer;
 
 #ifndef PUBLIC_SERVER
-	image_t *img;				//obrazok
+	/* its image */
+	image_t *img;
 #endif
 } teleport_t;
 
@@ -42,16 +43,15 @@ static export_fce_t *export_fce;
 static space_t *spaceTeleport;
 static list_t *listTeleport;
 
-static void (*fce_move_tux) (tux_t * tux, int x, int y, int w, int h);
-static void (*fce_move_shot) (shot_t * shot, int position, int src_x,
+static void (*fce_move_tux) (tux_t *tux, int x, int y, int w, int h);
+static void (*fce_move_shot) (shot_t *shot, int position, int src_x,
 							  int src_y, int dist_x, int dist_y, int dist_w,
 							  int dist_h);
 
 #ifndef PUBLIC_SERVER
-teleport_t *newTeleport(int x, int y, int w, int h, int layer, image_t * img)
-#endif
-#ifdef PUBLIC_SERVER
-	teleport_t *newTeleport(int x, int y, int w, int h, int layer)
+teleport_t *newTeleport(int x, int y, int w, int h, int layer, image_t *img)
+#else
+teleport_t *newTeleport(int x, int y, int w, int h, int layer)
 #endif
 {
 	static int last_id = 0;
@@ -103,23 +103,19 @@ static void getStatusTeleport(void *p, int *id, int *x, int *y, int *w, int *h)
 }
 
 #ifndef PUBLIC_SERVER
-
-static void drawTeleport(teleport_t * p)
+static void drawTeleport(teleport_t *p)
 {
 	assert(p != NULL);
 
-	export_fce->fce_addLayer(p->img, p->x, p->y, 0, 0, p->img->w, p->img->h,
-							 p->layer);
+	export_fce->fce_addLayer(p->img, p->x, p->y, 0, 0, p->img->w, p->img->h, p->layer);
 }
-
 #endif
 
-static void destroyTeleport(teleport_t * p)
+static void destroyTeleport(teleport_t *p)
 {
 	assert(p != NULL);
 	free(p);
 }
-
 
 static void cmd_teleport(char *line)
 {
@@ -146,27 +142,26 @@ static void cmd_teleport(char *line)
 
 #ifndef PUBLIC_SERVER
 	new = newTeleport(atoi(str_x), atoi(str_y),
-					  atoi(str_w), atoi(str_h),
-					  atoi(str_layer),
-					  export_fce->fce_image_get(IMAGE_GROUP_USER, str_image));
-#endif
-
-#ifdef PUBLIC_SERVER
+			  atoi(str_w), atoi(str_h),
+			  atoi(str_layer),
+			  export_fce->fce_image_get(IMAGE_GROUP_USER, str_image));
+#else
 	new = newTeleport(atoi(str_x), atoi(str_y),
-					  atoi(str_w), atoi(str_h), atoi(str_layer));
+			  atoi(str_w), atoi(str_h),
+			  atoi(str_layer));
 #endif
 
 	if (spaceTeleport == NULL) {
-		spaceTeleport =
-			space_new(export_fce->fce_arena_get_current()->w,
-					 export_fce->fce_arena_get_current()->h, 320, 240,
-					 getStatusTeleport, setStatusTeleport);
+		spaceTeleport = space_new(export_fce->fce_arena_get_current()->w,
+					  export_fce->fce_arena_get_current()->h,
+					  320, 240,
+					  getStatusTeleport, setStatusTeleport);
 	}
 
 	space_add(spaceTeleport, new);
 }
 
-static teleport_t *getRandomTeleportBut(space_t * space, teleport_t * teleport)
+static teleport_t *getRandomTeleportBut(space_t *space, teleport_t *teleport)
 {
 	int my_index;
 
@@ -193,40 +188,37 @@ static int getRandomPosition()
 		return TUX_DOWN;
 	}
 
-	assert
-		(!"When generating random value in range 0 to 3 i got some other value?!");
+	assert(!_("[Error] Generated a random number which is not in range 0 to 3"));
 
-	return -1;					// no warnning
+	return -1;	/* no warnings */
 }
 
-static void teleportTux(tux_t * tux, teleport_t * teleport)
+static void teleportTux(tux_t *tux, teleport_t *teleport)
 {
 	teleport_t *distTeleport;
 
 	if (tux->bonus == BONUS_GHOST ||
-		export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
+	    export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return;
 	}
 
 	distTeleport = getRandomTeleportBut(spaceTeleport, teleport);
 
-	fce_move_tux(tux, distTeleport->x, distTeleport->y, distTeleport->w,
-				 distTeleport->h);
+	fce_move_tux(tux, distTeleport->x, distTeleport->y, distTeleport->w, distTeleport->h);
 }
 
-static void
-moveShotFromTeleport(shot_t * shot, teleport_t * teleport, space_t * space)
+static void moveShotFromTeleport(shot_t *shot, teleport_t *teleport, space_t *space)
 {
 	teleport_t *distTeleport;
 
 	distTeleport = getRandomTeleportBut(space, teleport);
 
 	fce_move_shot(shot, getRandomPosition(), teleport->x, teleport->y,
-				  distTeleport->x, distTeleport->y, distTeleport->w,
-				  distTeleport->h);
+		      distTeleport->x, distTeleport->y, distTeleport->w,
+		      distTeleport->h);
 }
 
-int init(export_fce_t * p)
+int init(export_fce_t *p)
 {
 	export_fce = p;
 
@@ -248,8 +240,7 @@ int init(export_fce_t * p)
 }
 
 #ifndef PUBLIC_SERVER
-
-static void action_drawteleport(space_t * space, teleport_t * teleport, void *p)
+static void action_drawteleport(space_t *space, teleport_t *teleport, void *p)
 {
 	UNUSED(space);
 	UNUSED(p);
@@ -263,14 +254,13 @@ int draw(int x, int y, int w, int h)
 		return 0;
 	}
 
-	space_action_from_location(spaceTeleport, action_drawteleport, NULL, x, y, w,
-							h);
+	space_action_from_location(spaceTeleport, action_drawteleport, NULL, x, y, w, h);
 
 	return 0;
 }
 #endif
 
-static void action_eventteleportshot(space_t * space, teleport_t * teleport, shot_t * shot)
+static void action_eventteleportshot(space_t *space, teleport_t *teleport, shot_t *shot)
 {
 	arena_t *arena;
 	tux_t *author;
@@ -281,30 +271,29 @@ static void action_eventteleportshot(space_t * space, teleport_t * teleport, sho
 
 	author = space_get_object_id(arena->spaceTux, shot->author_id);
 
-	if (author != NULL &&
-		author->bonus == BONUS_GHOST && author->bonus_time > 0) {
+	if (author != NULL && author->bonus == BONUS_GHOST && author->bonus_time > 0) {
 		return;
 	}
 
 	moveShotFromTeleport(shot, teleport, spaceTeleport);
 }
 
-static void action_eventshot(space_t * space, shot_t * shot, space_t * p_spaceTeleport)
+static void action_eventshot(space_t *space, shot_t *shot, space_t *p_spaceTeleport)
 {
 	UNUSED(space);
 
-	space_action_from_location(p_spaceTeleport, action_eventteleportshot, shot,
-							shot->x, shot->y, shot->w, shot->h);
+	space_action_from_location(p_spaceTeleport, action_eventteleportshot,
+				   shot, shot->x, shot->y, shot->w, shot->h);
 }
 
-static void action_eventteleporttux(space_t * space, teleport_t * teleport, tux_t * tux)
+static void action_eventteleporttux(space_t *space, teleport_t *teleport, tux_t *tux)
 {
 	UNUSED(space);
 
 	teleportTux(tux, teleport);
 }
 
-static void action_eventtux(space_t * space, tux_t * tux, space_t * p_spaceTeleport)
+static void action_eventtux(space_t *space, tux_t *tux, space_t *p_spaceTeleport)
 {
 	int x, y, w, h;
 
@@ -312,8 +301,7 @@ static void action_eventtux(space_t * space, tux_t * tux, space_t * p_spaceTelep
 
 	export_fce->fce_tux_get_proportion(tux, &x, &y, &w, &h);
 
-	space_action_from_location(p_spaceTeleport, action_eventteleporttux, tux, x, y,
-							w, h);
+	space_action_from_location(p_spaceTeleport, action_eventteleporttux, tux, x, y, w, h);
 }
 
 int event()
@@ -326,10 +314,8 @@ int event()
 		return 0;
 	}
 
-	space_action(export_fce->fce_arena_get_current()->spaceShot,
-				action_eventshot, spaceTeleport);
-	space_action(export_fce->fce_arena_get_current()->spaceTux, action_eventtux,
-				spaceTeleport);
+	space_action(export_fce->fce_arena_get_current()->spaceShot, action_eventshot, spaceTeleport);
+	space_action(export_fce->fce_arena_get_current()->spaceTux, action_eventtux, spaceTeleport);
 
 	return 0;
 }

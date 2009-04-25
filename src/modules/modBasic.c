@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,21 +12,19 @@
 #include "space.h"
 
 #ifndef PUBLIC_SERVER
-#    include "interface.h"
-#    include "image.h"
-#endif
-
-#ifdef PUBLIC_SERVER
-#    include "publicServer.h"
+#include "interface.h"
+#include "image.h"
+#else
+#include "publicServer.h"
 #endif
 
 static export_fce_t *export_fce;
 
-int init(export_fce_t * p)
+int init(export_fce_t *p)
 {
 	export_fce = p;
 
-	printf("Initializing Basic module.\n");
+	printf("[Debug] Initializing Basic module\n");
 	return 0;
 }
 
@@ -40,26 +37,26 @@ int draw(int x, int y, int w, int h)
 	UNUSED(w);
 	UNUSED(h);
 
-	printf("Drawing Basic module.\n");
+	printf("[Debug] Drawing Basic module\n");
 	return 0;
 }
 #endif
 
 int event()
 {
-	printf("Basic module catch event.\n");
+	printf("[Debug] Basic module catch event\n");
 	return 0;
 }
 
 int isConflict(int x, int y, int w, int h)
 {
-	printf("isConflict(%d, %d, %d, %d) in Basic module.\n", x, y, w, h);
+	printf("[Debug] isConflict(%d, %d, %d, %d) in Basic module\n", x, y, w, h);
 	return 0;
 }
 
 static void cmd_basic(char *line)
 {
-	printf("cmd_basic(%s) in Basic module.\n", line);
+	printf("[Debug] cmd_basic(%s) in Basic module\n", line);
 }
 
 void cmdArena(char *line)
@@ -70,11 +67,11 @@ void cmdArena(char *line)
 
 void recvMsg(char *msg)
 {
-	printf("recvMsg(%s) in Basic module.\n", msg);
+	printf("[Debug] recvMsg(%s) in Basic module\n", msg);
 }
 
 int destroy()
 {
-	printf("Destroying Basic module.\n");
+	printf("[Debug] Destroying Basic module\n");
 	return 0;
 }

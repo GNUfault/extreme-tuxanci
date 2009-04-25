@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -15,35 +14,37 @@
 #include "serverSendMsg.h"
 
 #ifndef PUBLIC_SERVER
-#    include "interface.h"
-#    include "image.h"
+#include "interface.h"
+#include "image.h"
 #endif
 
 #ifdef PUBLIC_SERVER
-#    include "publicServer.h"
+#include "publicServer.h"
 #endif
 
 typedef struct pipe_struct {
-	int x;						// poloha steny  
+	/* position of the pipe */
+	int x;
 	int y;
 
-	int w;						// rozmery steny
+	/* size of the pipe */
+	int w;
 	int h;
 
 	int id;
 	int id_out;
 	int position;
 
-	int layer;					// vrstva
+	/* layer in the arena where the pipe lies */
+	int layer;
 
 #ifndef PUBLIC_SERVER
-	image_t *img;				//obrazok
+	/* its image */
+	image_t *img;
 #endif
 } pipe_t;
 
-static void (*fce_move_shot) (shot_t * shot, int position, int src_x,
-							  int src_y, int dist_x, int dist_y, int dist_w,
-							  int dist_h);
+static void (*fce_move_shot) (shot_t *shot, int position, int src_x, int src_y, int dist_x, int dist_y, int dist_w, int dist_h);
 
 static export_fce_t *export_fce;
 
@@ -51,12 +52,9 @@ static list_t *listPipe;
 static space_t *spacePipe;
 
 #ifndef PUBLIC_SERVER
-static pipe_t *newPipe(int x, int y, int w, int h, int layer, int id,
-					   int id_out, int position, image_t * img)
-#endif
-#ifdef PUBLIC_SERVER
-	static pipe_t *newPipe(int x, int y, int w, int h, int layer, int id,
-						   int id_out, int position)
+static pipe_t *newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position, image_t *img)
+#else
+static pipe_t *newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position)
 #endif
 {
 	pipe_t *new;
@@ -108,23 +106,19 @@ static void getStatusPipe(void *p, int *id, int *x, int *y, int *w, int *h)
 }
 
 #ifndef PUBLIC_SERVER
-
-static void drawPipe(pipe_t * p)
+static void drawPipe(pipe_t *p)
 {
 	assert(p != NULL);
 
-	export_fce->fce_addLayer(p->img, p->x, p->y, 0, 0, p->img->w, p->img->h,
-							 p->layer);
+	export_fce->fce_addLayer(p->img, p->x, p->y, 0, 0, p->img->w, p->img->h, p->layer);
 }
-
 #endif
 
-static void destroyPipe(pipe_t * p)
+static void destroyPipe(pipe_t *p)
 {
 	assert(p != NULL);
 	free(p);
 }
-
 
 static void cmd_teleport(char *line)
 {
@@ -149,11 +143,9 @@ static void cmd_teleport(char *line)
 		return;
 	if (export_fce->fce_getValue(line, "id", str_id, STR_NUM_SIZE) != 0)
 		return;
-	if (export_fce->fce_getValue(line, "id_out", str_id_out, STR_NUM_SIZE) !=
-		0)
+	if (export_fce->fce_getValue(line, "id_out", str_id_out, STR_NUM_SIZE) != 0)
 		return;
-	if (export_fce->
-		fce_getValue(line, "position", str_position, STR_NUM_SIZE) != 0)
+	if (export_fce->fce_getValue(line, "position", str_position, STR_NUM_SIZE) != 0)
 		return;
 	if (export_fce->fce_getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0)
 		return;
@@ -162,45 +154,41 @@ static void cmd_teleport(char *line)
 
 #ifndef PUBLIC_SERVER
 	new = newPipe(atoi(str_x), atoi(str_y),
-				  atoi(str_w), atoi(str_h),
-				  atoi(str_layer), atoi(str_id), atoi(str_id_out),
-				  atoi(str_position),
-				  export_fce->fce_image_get(IMAGE_GROUP_USER, str_image));
-#endif
-
-#ifdef PUBLIC_SERVER
+		      atoi(str_w), atoi(str_h),
+		      atoi(str_layer), atoi(str_id), atoi(str_id_out),
+		      atoi(str_position),
+		      export_fce->fce_image_get(IMAGE_GROUP_USER, str_image));
+#else
 	new = newPipe(atoi(str_x), atoi(str_y),
-				  atoi(str_w), atoi(str_h),
-				  atoi(str_layer), atoi(str_id), atoi(str_id_out),
-				  atoi(str_position));
+		      atoi(str_w), atoi(str_h),
+		      atoi(str_layer), atoi(str_id), atoi(str_id_out),
+		      atoi(str_position));
 #endif
 
 	if (spacePipe == NULL) {
-		spacePipe =
-			space_new(export_fce->fce_arena_get_current()->w,
-					 export_fce->fce_arena_get_current()->h, 320, 240,
-					 getStatusPipe, setStatusPipe);
+		spacePipe = space_new(export_fce->fce_arena_get_current()->w,
+				      export_fce->fce_arena_get_current()->h, 320, 240,
+				      etStatusPipe, setStatusPipe);
 	}
 
 	space_add(spacePipe, new);
 }
 
-static void moveShotFromPipe(shot_t * shot, pipe_t * pipe)
+static void moveShotFromPipe(shot_t *shot, pipe_t *pipe)
 {
 	pipe_t *distPipe;
 
 	distPipe = space_get_object_id(spacePipe, pipe->id_out);
 
 	if (distPipe == NULL) {
-		fprintf(stderr, "Pipe ID for pipe \"%d\" was not found\n", pipe->id);
+		fprintf(stderr, "[Error] Pipe ID was not found [%d]\n", pipe->id);
 		return;
 	}
 
-	fce_move_shot(shot, distPipe->position, pipe->x, pipe->y,
-				  distPipe->x, distPipe->y, distPipe->w, distPipe->h);
+	fce_move_shot(shot, distPipe->position, pipe->x, pipe->y, distPipe->x, distPipe->y, distPipe->w, distPipe->h);
 }
 
-int init(export_fce_t * p)
+int init(export_fce_t *p)
 {
 	export_fce = p;
 
@@ -218,8 +206,7 @@ int init(export_fce_t * p)
 }
 
 #ifndef PUBLIC_SERVER
-
-static void action_drawpipe(space_t * space, pipe_t * pipe, void *p)
+static void action_drawpipe(space_t *space, pipe_t *pipe, void *p)
 {
 	UNUSED(space);
 	UNUSED(p);
@@ -234,7 +221,7 @@ int draw(int x, int y, int w, int h)
 	}
 
 	space_action_from_location(spacePipe, action_drawpipe, NULL, x, y, w, h);
-	//space_print(spacePipe);
+	/*space_print(spacePipe);*/
 
 	return 0;
 }
@@ -256,45 +243,14 @@ static int negPosition(int n)
 		return TUX_UP;
 
 	default:
-		assert(!"Tux is moving in another dimension maybe!");
+		assert(!_("[Error] Tux is probably moving in another dimension"));
 		break;
 	}
 
-	return -1;					// no warnning
+	return -1;	/* no warnings */
 }
 
-
-#if 0 //zaloha
-static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
-{
-	arena_t *arena;
-	tux_t *author;
-
-	arena = export_fce->fce_arena_get_current();
-
-	author = space_get_object_id(arena->spaceTux, shot->author_id);
-
-	if (author != NULL &&
-		author->bonus == BONUS_GHOST && author->bonus_time > 0) {
-		return;
-	}
-
-	if (negPosition(shot->position) == pipe->position &&
-		export_fce->fce_net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
-		moveShotFromPipe(shot, pipe);
-	} else {
-		if (shot->gun == GUN_BOMBBALL &&
-			export_fce->fce_net_multiplayer_get_game_type() != NET_GAME_TYPE_CLIENT) {
-			export_fce->fce_shot_bound_bombBall(shot);
-		} else {
-			//space_del_with_item(arena->spaceShot, shot, export_fce->fce_shot_destroy);
-			shot->del = TRUE;
-		}
-	}
-}
-#endif
-
-static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
+static void action_eventpipe(space_t *space, pipe_t *pipe, shot_t *shot)
 {
 	arena_t *arena;
 	tux_t *author;
@@ -305,12 +261,11 @@ static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
 
 	author = space_get_object_id(arena->spaceTux, shot->author_id);
 
-	if (author != NULL &&
-		author->bonus == BONUS_GHOST && author->bonus_time > 0) {
+	if (author != NULL && author->bonus == BONUS_GHOST && author->bonus_time > 0) {
 		return;
 	}
 
-	if (negPosition(shot->position) == pipe->position ) {
+	if (negPosition(shot->position) == pipe->position) {
 		moveShotFromPipe(shot, pipe);
 	} else {
 		if (shot->gun == GUN_BOMBBALL) {
@@ -321,11 +276,9 @@ static void action_eventpipe(space_t * space, pipe_t * pipe, shot_t * shot)
 	}
 }
 
-static void
-action_eventshot(space_t * space, shot_t * shot, space_t * p_spacePipe)
+static void action_eventshot(space_t *space, shot_t *shot, space_t *p_spacePipe)
 {
-	space_action_from_location(p_spacePipe, action_eventpipe, shot, shot->x,
-							shot->y, shot->w, shot->h);
+	space_action_from_location(p_spacePipe, action_eventpipe, shot, shot->x, shot->y, shot->w, shot->h);
 
 	if (shot->del == TRUE) {
 		if (net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
@@ -342,13 +295,12 @@ int event()
 		return 0;
 	}
 
-	// na skusku
+	/* just for a test */
 	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return 0;
 	}
 
-	space_action(export_fce->fce_arena_get_current()->spaceShot,
-				action_eventshot, spacePipe);
+	space_action(export_fce->fce_arena_get_current()->spaceShot, action_eventshot, spacePipe);
 
 	return 0;
 }
@@ -364,8 +316,9 @@ int isConflict(int x, int y, int w, int h)
 
 void cmdArena(char *line)
 {
-	if (strncmp(line, "pipe", 4) == 0)
+	if (strncmp(line, "pipe", 4) == 0) {
 		cmd_teleport(line);
+	}
 }
 
 void recvMsg(char *msg)

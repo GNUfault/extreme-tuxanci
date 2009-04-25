@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,30 +12,33 @@
 #include "space.h"
 
 #ifndef PUBLIC_SERVER
-#    include "interface.h"
-#    include "image.h"
+#include "interface.h"
+#include "image.h"
+#else
+#include "publicServer.h"
 #endif
 
-#ifdef PUBLIC_SERVER
-#    include "publicServer.h"
-#endif
-
+#ifndef PUBLIC_SERVER
 typedef struct wall_struct {
 	int id;
 
-	int x;						// poloha steny  
+	/* position of the teleport */
+	int x;
 	int y;
 
-	int w;						// rozmery steny
+	/* size of the teleport */
+	int w;
 	int h;
 
-	int img_x;					// poloha obrazka
+	int img_x;
 	int img_y;
 
-	int layer;					// vrstva
+	/* layer in the arena where the teleport lies */
+	int layer;
 
 #ifndef PUBLIC_SERVER
-	image_t *img;				//obrazok
+	/* its image */
+	image_t *img;
 #endif
 } wall_t;
 
@@ -51,12 +53,9 @@ static space_t *spaceImgWall;
 static list_t *listWall;
 
 #ifndef PUBLIC_SERVER
-wall_t *newWall(int x, int y, int w, int h,
-				int img_x, int img_y, int layer, image_t * img)
-#endif
-#ifdef PUBLIC_SERVER
-	wall_t *newWall(int x, int y, int w, int h,
-					int img_x, int img_y, int layer)
+wall_t *newWall(int x, int y, int w, int h, int img_x, int img_y, int layer, image_t *img)
+#else
+wall_t *newWall(int x, int y, int w, int h, int img_x, int img_y, int layer)
 #endif
 {
 	static int last_id = 0;
@@ -85,15 +84,18 @@ wall_t *newWall(int x, int y, int w, int h,
 
 #ifndef PUBLIC_SERVER
 
-void drawWall(wall_t * p)
+void drawWall(wall_t *p)
 {
 	assert(p != NULL);
 
-	export_fce->fce_addLayer(p->img, p->img_x, p->img_y, 0, 0, p->img->w,
-							 p->img->h, p->layer);
+	export_fce->fce_addLayer(p->img,
+				 p->img_x, p->img_y,
+				 0, 0,
+				 p->img->w, p->img->h,
+				 p->layer);
 }
 
-void drawListWall(list_t * list)
+void drawListWall(list_t *list)
 {
 	wall_t *thisWall;
 	int i;
@@ -109,7 +111,7 @@ void drawListWall(list_t * list)
 
 #endif
 
-void destroyWall(wall_t * p)
+void destroyWall(wall_t *p)
 {
 	assert(p != NULL);
 	free(p);
@@ -141,7 +143,6 @@ static void setStatusWall(void *p, int x, int y, int w, int h)
 }
 
 #ifndef PUBLIC_SERVER
-
 static void getStatusImgWall(void *p, int *id, int *x, int *y, int *w, int *h)
 {
 	wall_t *wall;
@@ -163,7 +164,6 @@ static void setStatusImgWall(void *p, int x, int y, int w, int h)
 	UNUSED(w);
 	UNUSED(h);
 }
-
 #endif
 
 static void cmd_wall(char *line)
@@ -216,25 +216,22 @@ static void cmd_wall(char *line)
 		img_y += y;
 	}
 #ifndef PUBLIC_SERVER
-	new =
-		newWall(x, y, w, h, img_x, img_y, layer,
-				export_fce->fce_image_get(IMAGE_GROUP_USER, str_image));
-#endif
-
-#ifdef PUBLIC_SERVER
+	new = newWall(x, y, w, h, img_x, img_y, layer,
+		      export_fce->fce_image_get(IMAGE_GROUP_USER, str_image));
+#else
 	new = newWall(x, y, w, h, img_x, img_y, layer);
 #endif
 
 	if (spaceWall == NULL) {
-		spaceWall =
-			space_new(export_fce->fce_arena_get_current()->w,
-					 export_fce->fce_arena_get_current()->h, 320, 240,
-					 getStatusWall, setStatusWall);
+		spaceWall = space_new(export_fce->fce_arena_get_current()->w,
+				      export_fce->fce_arena_get_current()->h,
+				      320, 240,
+				      getStatusWall, setStatusWall);
 
 #ifndef PUBLIC_SERVER
-		spaceImgWall =
-			space_new(export_fce->fce_arena_get_current()->w,
-					 export_fce->fce_arena_get_current()->h, 320, 240,
+		spaceImgWall = space_new(export_fce->fce_arena_get_current()->w,
+					 export_fce->fce_arena_get_current()->h,
+					 320, 240,
 					 getStatusImgWall, setStatusImgWall);
 #endif
 	}
@@ -246,7 +243,7 @@ static void cmd_wall(char *line)
 #endif
 }
 
-int init(export_fce_t * p)
+int init(export_fce_t *p)
 {
 	export_fce = p;
 	listWall = list_new();
@@ -255,8 +252,7 @@ int init(export_fce_t * p)
 }
 
 #ifndef PUBLIC_SERVER
-
-static void action_drawwall(space_t * space, wall_t * wall, void *p)
+static void action_drawwall(space_t *space, wall_t *wall, void *p)
 {
 	UNUSED(space);
 	UNUSED(p);
@@ -272,13 +268,13 @@ int draw(int x, int y, int w, int h)
 
 	space_action_from_location(spaceImgWall, action_drawwall, NULL, x, y, w, h);
 
-	//space_print(spaceWall);
+	/*space_print(spaceWall);*/
 
 	return 0;
 }
 #endif
 
-static void action_eventwall(space_t * space, wall_t * wall, shot_t * shot)
+static void action_eventwall(space_t *space, wall_t *wall, shot_t *shot)
 {
 	arena_t *arena;
 	tux_t *author;
@@ -290,8 +286,7 @@ static void action_eventwall(space_t * space, wall_t * wall, shot_t * shot)
 
 	author = space_get_object_id(arena->spaceTux, shot->author_id);
 
-	if (author != NULL &&
-		author->bonus == BONUS_GHOST && author->bonus_time > 0) {
+	if (author != NULL && author->bonus == BONUS_GHOST && author->bonus_time > 0) {
 		return;
 	}
 
@@ -302,15 +297,16 @@ static void action_eventwall(space_t * space, wall_t * wall, shot_t * shot)
 
 		return;
 	}
-	//space_del_with_item(arena->spaceShot, shot, export_fce->fce_shot_destroy);
+
+	/*space_del_with_item(arena->spaceShot, shot, export_fce->fce_shot_destroy);*/
 	shot->del = TRUE;
 }
 
-static void
-action_eventshot(space_t * space, shot_t * shot, space_t * p_spaceWall)
+static void action_eventshot(space_t *space, shot_t *shot, space_t *p_spaceWall)
 {
-	space_action_from_location(p_spaceWall, action_eventwall, shot, shot->x,
-							shot->y, shot->w, shot->h);
+	space_action_from_location(p_spaceWall, action_eventwall,
+				   shot, shot->x, shot->y,
+					 shot->w, shot->h);
 
 	if (shot->del == TRUE) {
 		space_del_with_item(space, shot, export_fce->fce_shot_destroy);
@@ -324,7 +320,7 @@ int event()
 	}
 
 	space_action(export_fce->fce_arena_get_current()->spaceShot,
-				action_eventshot, spaceWall);
+		     action_eventshot, spaceWall);
 
 	return 0;
 }
@@ -340,8 +336,9 @@ int isConflict(int x, int y, int w, int h)
 
 void cmdArena(char *line)
 {
-	if (strncmp(line, "wall", 4) == 0)
+	if (strncmp(line, "wall", 4) == 0) {
 		cmd_wall(line);
+	}
 }
 
 void recvMsg(char *msg)

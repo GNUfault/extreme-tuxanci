@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,10 +12,10 @@
 #include "space.h"
 
 #ifndef PUBLIC_SERVER
-#    include "interface.h"
-#    include "image.h"
+#include "interface.h"
+#include "image.h"
 #else
-#    include "publicServer.h"
+#include "publicServer.h"
 #endif
 
 static export_fce_t *export_fce;
@@ -42,7 +41,7 @@ alternative_t *newAlternative(int route, int x, int y)
 	return new;
 }
 
-alternative_t *cloneAlternative(alternative_t * p, int route, int x, int y)
+alternative_t *cloneAlternative(alternative_t *p, int route, int x, int y)
 {
 	alternative_t *new;
 
@@ -58,7 +57,7 @@ alternative_t *cloneAlternative(alternative_t * p, int route, int x, int y)
 	return new;
 }
 
-void forkAlternative(list_t * list, alternative_t * p, int w, int h)
+void forkAlternative(list_t *list, alternative_t *p, int w, int h)
 {
 	int x, y;
 
@@ -89,13 +88,13 @@ void forkAlternative(list_t * list, alternative_t * p, int w, int h)
 
 }
 
-void moveAlternative(alternative_t * p, int offset)
+void moveAlternative(alternative_t *p, int offset)
 {
 	assert(p != NULL);
 
 	p->step++;
 
-	//printf("move %d %d %d\n", p->x, p->y, p->step);
+	/*printf("move %d %d %d\n", p->x, p->y, p->step);*/
 
 	switch (p->route) {
 	case TUX_UP:
@@ -113,7 +112,7 @@ void moveAlternative(alternative_t * p, int offset)
 	}
 }
 
-void destroyAlternative(alternative_t * p)
+void destroyAlternative(alternative_t *p)
 {
 	assert(p != NULL);
 	free(p);
@@ -124,7 +123,7 @@ static void cmd_ai(char *line)
 	UNUSED(line);
 }
 
-int init(export_fce_t * p)
+int init(export_fce_t *p)
 {
 	export_fce = p;
 
@@ -143,7 +142,7 @@ int draw(int x, int y, int w, int h)
 }
 #endif
 
-tux_t *findOtherTux(space_t * space)
+tux_t *findOtherTux(space_t *space)
 {
 	int i;
 
@@ -160,7 +159,7 @@ tux_t *findOtherTux(space_t * space)
 	return NULL;
 }
 
-static void shotTux(arena_t * arena, tux_t * tux_ai, tux_t * tux_rival)
+static void shotTux(arena_t *arena, tux_t *tux_ai, tux_t *tux_rival)
 {
 	const int limit = 20;
 	int x_ai, y_ai;
@@ -193,7 +192,7 @@ static void shotTux(arena_t * arena, tux_t * tux_ai, tux_t * tux_rival)
 	}
 }
 
-static void tux_eventAI(tux_t * tux)
+static void tux_eventAI(tux_t *tux)
 {
 	arena_t *arena;
 	tux_t *rivalTux;
@@ -212,7 +211,7 @@ static void tux_eventAI(tux_t * tux)
 	int countDo = 0;
 
 	export_fce->fce_tux_get_proportion(tux, &x, &y, &w, &h);
-	//printf("tux AI %d %d\n", x, y);
+	/*printf("tux AI %d %d\n", x, y);*/
 
 	arena = export_fce->fce_arena_get_current();
 
@@ -229,7 +228,7 @@ static void tux_eventAI(tux_t * tux)
 	shotTux(arena, tux, rivalTux);
 
 	export_fce->fce_tux_get_proportion(rivalTux, &rival_x, &rival_y, NULL, NULL);
-	//printf("tux rival %d %d\n", rival_x, rival_y);
+	/*printf("tux rival %d %d\n", rival_x, rival_y);*/
 
 	list_add(listAlternative, newAlternative(TUX_UP, x, y - (h + 10)));
 	list_add(listAlternative, newAlternative(TUX_RIGHT, x + (w + 10), y));
@@ -245,7 +244,7 @@ static void tux_eventAI(tux_t * tux)
 
 			int j;
 
-			//printf("listFork->count = %d\n", listFork->count);
+			/*printf("listFork->count = %d\n", listFork->count);*/
 
 			for (j = 0; j < listFork->count; j++) {
 				list_add(listAlternative, listFork->list[j]);
@@ -283,17 +282,17 @@ static void tux_eventAI(tux_t * tux)
 		if (export_fce->
 			fce_arena_conflict_space(this->x, this->y, w, h, rival_x, rival_y, w,
 							  h)) {
-			//printf("this->step = %d\n", this->step);
+			/*printf("this->step = %d\n", this->step);*/
 
 			list_del(listAlternative, my_index);
 			list_add(listDst, this);
 			my_index--;
-			//continue;
+			/*continue;*/
 			break;
 		}
 
 		if (export_fce->fce_arena_is_free_space(arena, this->x, this->y, w, h) == 0) {
-			//forkAlternative(listFork, this, w*2, h*2);
+			/*forkAlternative(listFork, this, w*2, h*2);*/
 			list_del_item(listAlternative, my_index, destroyAlternative);
 			my_index--;
 			countDel++;
@@ -306,13 +305,13 @@ static void tux_eventAI(tux_t * tux)
 	int minStep = 1000;
 	int recRoute = 0;
 
-	//printf("------------\n");
+	/*printf("------------\n");*/
 	for (i = 0; i < listDst->count; i++) {
 		alternative_t *this;
 
 		this = (alternative_t *) listDst->list[i];
 
-		//printf("XXX step %d route = %d\n", this->step, this->first);
+		/*printf("XXX step %d route = %d\n", this->step, this->first);*/
 		if (this->step < minStep) {
 			minStep = this->step;
 			recRoute = this->first;
@@ -334,7 +333,7 @@ static void tux_eventAI(tux_t * tux)
 */
 }
 
-static void action_tuxAI(space_t * space, tux_t * tux, void *p)
+static void action_tuxAI(space_t *space, tux_t *tux, void *p)
 {
 	UNUSED(space);
 	UNUSED(p);
@@ -350,7 +349,7 @@ int event()
 	my_time_t curentTime;
 	arena_t *arena;
 	int countTuxAI;
-	//int i;
+	/*int i;*/
 
 	if (lastEvent == 0) {
 		lastEvent = export_fce->fce_timer_get_current_time();
@@ -363,7 +362,7 @@ int event()
 	}
 
 	lastEvent = export_fce->fce_timer_get_current_time();
-	//printf("event AI\n");
+	/*printf("event AI\n");*/
 
 	arena = export_fce->fce_arena_get_current();
 
