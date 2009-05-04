@@ -20,11 +20,11 @@ ELSE(ZIP_LIBRARIES AND ZIP_INCLUDE_DIR)
 
 	SET(ZIP_NAMES zip)
 	FIND_LIBRARY(ZIP_LIBRARIES NAMES ${ZIP_NAMES}
+		PATH_SUFFIXES lib64 lib
 		PATHS
-		${CMAKE_SOURCE_DIR}/packaging/windows/LibZip/lib
-		/usr/local/lib
-		/usr/lib
-		NO_DEFAULT_PATH
+		${CMAKE_SOURCE_DIR}/packaging/windows/LibZip
+		/usr/local
+		/usr
 	)
 
 	# handle the QUIETLY and REQUIRED arguments and set ZIP_FOUND to TRUE if 
