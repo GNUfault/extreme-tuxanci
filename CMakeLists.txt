@@ -46,13 +46,11 @@ ENDIF ( WITH_SERVER )
 MESSAGE ( "<******************************>" )
 MESSAGE ( "Configure for ${APPNAME} Started" )
 MESSAGE ( "<******************************>" )
-
 CMAKE_MINIMUM_REQUIRED ( VERSION 2.6.0 )
 CMAKE_MINIMUM_REQUIRED ( VERSION 2.6.0 FATAL_ERROR )
 IF ( COMMAND cmake_policy )
 	cmake_policy( SET CMP0003 NEW )
 ENDIF ( COMMAND cmake_policy )
-
 SET ( CMAKE_COLOR_MAKEFILE ON )
 SET ( CMAKE_BUILD_TYPE_SHARED_LIBS ON )
 SET ( CMAKE_C_FLAGS $ENV{CFLAGS} )
@@ -148,7 +146,6 @@ ENDIF ( Apple )
 ###############################################################################
 MESSAGE ( STATUS "<Locating ZIP library>" )
 FIND_PACKAGE ( ZIP REQUIRED )
-
 IF ( NOT WITH_SERVER )
 	MESSAGE ( STATUS "<Locating Fontconfig>" )
 	FIND_PACKAGE ( Fontconfig REQUIRED )
