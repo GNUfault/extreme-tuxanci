@@ -21,7 +21,7 @@ ELSE(ZIP_LIBRARIES AND ZIP_INCLUDE_DIR)
 	SET(ZIP_NAMES zip)
 	FIND_LIBRARY(ZIP_LIBRARIES NAMES ${ZIP_NAMES}
 		PATHS
-		${CMAKE_SOURCE_DIR}/packaging/windows/SDL/
+		${CMAKE_SOURCE_DIR}/packaging/windows/LibZip/
 		/usr/local/include
 		/usr/include
 		NO_DEFAULT_PATH
