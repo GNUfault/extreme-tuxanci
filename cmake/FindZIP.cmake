@@ -10,10 +10,22 @@ IF(ZIP_LIBRARIES AND ZIP_INCLUDE_DIR)
 	# Already in cache, be silent
 	SET(ZIP_FIND_QUIETLY TRUE)
 ELSE(ZIP_LIBRARIES AND ZIP_INCLUDE_DIR)
-	FIND_PATH(ZIP_INCLUDE_DIR zip.h)
+	FIND_PATH(ZIP_INCLUDE_DIR zip.h
+		PATHS
+		${CMAKE_SOURCE_DIR}/packaging/windows/LibZip/include
+		/usr/local/include
+		/usr/include
+		NO_DEFAULT_PATH
+	)
 
 	SET(ZIP_NAMES zip)
-	FIND_LIBRARY(ZIP_LIBRARIES NAMES ${ZIP_NAMES})
+	FIND_LIBRARY(ZIP_LIBRARIES NAMES ${ZIP_NAMES}
+		PATHS
+		${CMAKE_SOURCE_DIR}/packaging/windows/SDL/
+		/usr/local/include
+		/usr/include
+		NO_DEFAULT_PATH
+	)
 
 	# handle the QUIETLY and REQUIRED arguments and set ZIP_FOUND to TRUE if 
 	# all listed variables are TRUE
