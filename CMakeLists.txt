@@ -14,14 +14,15 @@
 ###############################################################################
 # DEFAULT OPTIONS
 ###############################################################################
-option(WITH_SERVER		"Build the server instead of client"		OFF)
-option(ENABLE_IPV6		"Build with the ipv6 support"				ON)
-option(WITH_AUDIO		"Build with audio enabled"					ON)
-option(ENABLE_DEBUG		"Build debug features"						OFF)
-option(DEVELOPER		"Modify stuff to please tuxanci devs"		OFF)
-option(WITH_NLS			"Build the translations"					ON)
-option(Apple			"Build some apple quirks. USE ONLY ON MAC!"	OFF)
-option(WITH_OPENGL		"Use opengl as renderer instead of SW"		ON)
+OPTION (WITH_SERVER		"Build the server instead of client"		OFF)
+OPTION (ENABLE_IPV6		"Build with the ipv6 support"				ON)
+OPTION (WITH_AUDIO		"Build with audio enabled"					ON)
+OPTION (ENABLE_DEBUG	"Build debug features"						OFF)
+OPTION (DEVELOPER		"Modify stuff to please tuxanci devs"		OFF)
+OPTION (WITH_NLS		"Build the translations"					ON)
+OPTION (Apple			"Build some apple quirks. USE ONLY ON MAC!"	OFF)
+OPTION (WITH_OPENGL		"Use opengl as renderer instead of SW"		ON)
+OPTION (CROSSCOMPILE	"Crosscompile tuxanci defined by ENV{TARGET}" OFF)
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
@@ -55,6 +56,12 @@ SET ( CMAKE_COLOR_MAKEFILE ON )
 SET ( CMAKE_BUILD_TYPE_SHARED_LIBS ON )
 SET ( CMAKE_C_FLAGS $ENV{CFLAGS} )
 SET ( CMAKE_CXX_FLAGS $ENV{CXXFLAGS} )
+SET ( CMAKE_LINK_FLAGS $ENV{LDFLAGS} )
+IF ( CROSSCOMPILE )
+	SET ( CMAKE_C_COMPILER "$ENV{TARGET}-gcc" )
+	SET ( CMAKE_CXX_COMPILER "$ENV{TARGET}-g++" )
+	MESSAGE ( "CROSSCOMPILE with gcc to target: $ENV{TARGET}" )
+ENDIF ( CROSSCOMPILE )
 # this specify location of additional cmake sources
 SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 #various variables
@@ -198,6 +205,7 @@ INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README
 MESSAGE ( STATUS "<Printing out environment settings>" )
 MESSAGE ( STATUS "<******************************>" )
 MESSAGE ( STATUS "CFlags: ${CMAKE_C_FLAGS}" )
+MESSAGE ( STATUS "LDFLAGS: ${CMAKE_CXX_FLAGS}" )
 MESSAGE ( STATUS "PREFIX: ${CMAKE_INSTALL_PREFIX}" )
 MESSAGE ( STATUS "ETC directory: ${CMAKE_CONF_PATH}" )
 MESSAGE ( STATUS "DOC directory: ${CMAKE_DOC_PATH}" )
