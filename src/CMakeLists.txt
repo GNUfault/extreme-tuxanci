@@ -22,64 +22,15 @@ ENDIF ( BUILD_SERVER )
 ###############################################################################
 # SOURCE SPECIFICATION
 ###############################################################################
-# Command for finding correct file names in directory, replace DIR with
-# directory name you want eg: base
-# find ./ -maxdepth 1 -type f -name \*.c |grep "$" |sed -e 's/^\.\//\$\{WORKDIR\}\/DIR\//' -e 's/\.c//' |tr '\n' ' '
-SET ( SRC_base
-	${WORKDIR}/net/udp ${WORKDIR}/net/tcp
-	${WORKDIR}/base/udp_server
-	${WORKDIR}/base/main	${WORKDIR}/base/shot
-	${WORKDIR}/base/space	${WORKDIR}/base/checkFront
-	${WORKDIR}/base/storage	${WORKDIR}/base/myTimer
-	${WORKDIR}/base/protect	${WORKDIR}/base/list
-	${WORKDIR}/base/arena	${WORKDIR}/base/server
-	${WORKDIR}/base/serverSelect	${WORKDIR}/base/serverSendMsg
-	${WORKDIR}/base/textFile ${WORKDIR}/base/gun
-	${WORKDIR}/base/arenaFile	${WORKDIR}/base/modules
-	${WORKDIR}/base/net_multiplayer ${WORKDIR}/base/index
-	${WORKDIR}/base/item	${WORKDIR}/base/tux
-	${WORKDIR}/base/director	${WORKDIR}/base/idManager
-	${WORKDIR}/base/homeDirector	${WORKDIR}/base/proto
-	${WORKDIR}/base/shareFunction	${WORKDIR}/base/buffer
-	${WORKDIR}/base/archive ${WORKDIR}/base/downServer
-	${WORKDIR}/net/dns
-)
-
-SET ( SRC_client
-	${WORKDIR}/client/layer	${WORKDIR}/client/term
-	${WORKDIR}/client/screen	${WORKDIR}/client/interface
-	${WORKDIR}/client/client	${WORKDIR}/client/chat
-	${WORKDIR}/client/configFile	${WORKDIR}/client/saveLoad
-	${WORKDIR}/client/font	${WORKDIR}/client/game
-	${WORKDIR}/client/radar	${WORKDIR}/client/panel
-	${WORKDIR}/client/image	${WORKDIR}/client/keyboardBuffer
-	${WORKDIR}/client/pauza	${WORKDIR}/client/saveDialog
-	${WORKDIR}/client/hotKey ${WORKDIR}/client/fontConfig
-
-	${WORKDIR}/screen/choiceArena
-	${WORKDIR}/screen/settingKeys	${WORKDIR}/screen/table
-	${WORKDIR}/screen/setting	${WORKDIR}/screen/credits
-	${WORKDIR}/screen/world	${WORKDIR}/screen/analyze
-	${WORKDIR}/screen/mainMenu	${WORKDIR}/screen/browser
-	${WORKDIR}/screen/gameType	${WORKDIR}/screen/downArena
-
-	${WORKDIR}/widget/widget_check	${WORKDIR}/widget/widget_button
-	${WORKDIR}/widget/widget_textfield	${WORKDIR}/widget/widget_label
-	${WORKDIR}/widget/widget_buttonimage	${WORKDIR}/widget/widget_image
-	${WORKDIR}/widget/widget_select	${WORKDIR}/widget/widget_catchkey
-	${WORKDIR}/widget/widget_choicegroup	${WORKDIR}/widget/widget_statusbar
-	${WORKDIR}/widget/widget
-)
-
-SET ( SRC_audio
-	${WORKDIR}/audio/audio	${WORKDIR}/audio/music
-	${WORKDIR}/audio/sound
-)
-
-SET ( SRC_server
-	${WORKDIR}/server/log	${WORKDIR}/server/serverConfigFile
-	${WORKDIR}/server/highScore	${WORKDIR}/server/publicServer
-)
+FILE ( GLOB DIRS * )
+FOREACH ( dir ${DIRS} )
+	GET_FILENAME_COMPONENT (fn ${dir} NAME)
+	IF ( ${fn} STREQUAL "modules" )
+		ADD_SUBDIRECTORY ( ${fn} )
+	ELSE ( ${fn} STREQUAL "modules"  )
+		INCLUDE ( ${fn}/CMakeLists.txt OPTIONAL )
+	ENDIF ( ${fn} STREQUAL "modules" )
+ENDFOREACH ( dir )
 ###############################################################################
 # INCLUDE CONFIGURED HEADERS
 ###############################################################################
@@ -94,10 +45,11 @@ ENDIF ( ENABLE_IPV6 )
 # AUDIO CHECK
 ###############################################################################
 IF ( NOT BUILD_SERVER )
+	SET ( SRC_compile ${SRC_net} ${SRC_widget} ${SRC_screen} ${SRC_base} ${SRC_client} )
 	IF ( WITH_AUDIO )
 		MESSAGE ( STATUS "<Building with audio as requested>" )
-		SET ( SRC_compile ${SRC_base} ${SRC_client} ${SRC_audio} )
-		INCLUDE_DIRECTORIES ( ${WORKDIR}/audio )
+		SET ( SRC_compile ${SRC_compile} ${SRC_audio} )
+		INCLUDE_DIRECTORIES ( ${CMAKE_CURRENT_SOURCE_DIR}/audio )
 	ELSE ( WITH_AUDIO )
 		ADD_DEFINITIONS ( -DNO_SOUND )
 	ENDIF ( WITH_AUDIO )
@@ -109,15 +61,11 @@ IF ( WITH_OPENGL )
 	ADD_DEFINITIONS ( -DSUPPORT_OPENGL )
 ENDIF ( WITH_OPENGL )
 ###############################################################################
-# MODULES
-###############################################################################
-ADD_SUBDIRECTORY ( modules )
-###############################################################################
 # SERVER COMPILATION
 ###############################################################################
 IF ( BUILD_SERVER )
 	MESSAGE ( STATUS "<Building server as requested>" )
-	SET ( SRC_compile ${SRC_base} ${SRC_server} )
+	SET ( SRC_compile ${SRC_net} ${SRC_server} ${SRC_base} )
 	ADD_EXECUTABLE ( ${APPNAME} ${SRC_compile} )
 ELSE ( BUILD_SERVER )
 ###############################################################################

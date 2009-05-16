@@ -8,6 +8,7 @@ LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
 ###############################################################################
 # SOURCE SPECIFICATION
 ###############################################################################
+INCLUDE_DIRECTORIES ( ${CMAKE_BINARY_DIR}/src/base/ )
 IF ( BUILD_SERVER )
 	SET ( SRC_base_modules
 		${WORKDIR}/server/publicServer.h

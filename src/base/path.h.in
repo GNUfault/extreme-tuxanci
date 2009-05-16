@@ -1,4 +1,3 @@
-
 #ifndef PATH_H
 	#cmakedefine USE_MAGICK
 	#define TUXANCI_VERSION				"@TUXANCI_VERSION@"
