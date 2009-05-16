@@ -58,15 +58,19 @@ HOWTO COMPILE
 		cmake version 2.6.0 and above
 
 	Now we have two options what we can do:
-	(all commands are supposed to be written in tuxanci sources directory)
+	(all commands are supposed to be written in tuxanci/build directory;
+	If such does not exist just create it :])
+
+	NOTE: if you want to see all variable options definable by cmake just
+	run ccmake instead of cmake.
 	Building Client
 	---------------
-		$ cmake .
+		$ cmake ..
 		$ make
 		# make install
 	Building Server
 	--------------
-		$ cmake . -DServer=1
+		$ cmake .. -DBUILD_SERVER=1
 		$ make
 		# make install
 	Removing current install
@@ -85,7 +89,7 @@ HOWTO COMPILE
 
 		# ADDITIONAL OPTIONS FOR CMAKE
 		#option(ENABLE_IPV6      "Build with the ipv6 support"               OFF)
-		#option(WITH_SERVER      "Build the server instead of client"        OFF)
+		#option(BUILD_SERVER      "Build the server instead of client"        OFF)
 		#option(WITH_AUDIO       "Build with audio enabled"                  ON)
 		#option(ENABLE_DEBUG     "Build debug features"                      OFF)
 		#option(WITH_NLS         "Build the translations"                    ON)
