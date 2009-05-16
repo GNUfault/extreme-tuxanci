@@ -16,9 +16,9 @@
 
 FIND_PATH(GETTEXT_INCLUDE_DIR libintl.h
 		PATHS
-		${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/include
 		/usr/local/include
 		/usr/include
+		${CMAKE_SOURCE_DIR}/packaging/windows/Gettext/include
 		NO_DEFAULT_PATH
 )
 
