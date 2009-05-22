@@ -1,10 +1,12 @@
-
 #ifndef WIDGET_LABEL_H
+#define WIDGET_LABEL_H
 
-#    define WIDGET_LABEL_H
+#include "main.h"
+#include "widget.h"
 
-#    include "main.h"
-#    include "widget.h"
+#define WIDGET_LABEL_RIGHT	1
+#define WIDGET_LABEL_LEFT	2
+#define WIDGET_LABEL_CENTER	3
 
 typedef struct widget_label {
 	int w, h;
@@ -12,13 +14,9 @@ typedef struct widget_label {
 	int bind;
 } widget_label_t;
 
-#    define WIDGET_LABEL_RIGHT	1
-#    define WIDGET_LABEL_LEFT	2
-#    define WIDGET_LABEL_CENTER	3
-
 extern widget_t *label_new(char *text, int x, int y, int bind);
-extern void label_draw(widget_t * widget);
-extern void label_event(widget_t * widget);
-extern void label_destroy(widget_t * widget);
+extern void label_draw(widget_t *widget);
+extern void label_event(widget_t *widget);
+extern void label_destroy(widget_t *widget);
 
-#endif
+#endif /* WIDGET_LABEL_H */
