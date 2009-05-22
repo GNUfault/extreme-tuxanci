@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -12,7 +11,7 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
+#include "music.h"
 #endif
 
 #include "mainMenu.h"
@@ -43,7 +42,7 @@ static analyze_t *newAnalyze(char *name, int score)
 	return new;
 }
 
-static void destroyAnalyze(analyze_t * p)
+static void destroyAnalyze(analyze_t *p)
 {
 	free(p->name);
 	free(p);
@@ -71,12 +70,12 @@ void analyze_draw()
 	wid_image_draw(image_backgorund);
 
 	for (i = 0; i < listWidgetLabelName->count; i++) {
-		this = (widget_t *) (listWidgetLabelName->list[i]);
+		this = (widget_t *) listWidgetLabelName->list[i];
 		label_draw(this);
 	}
 
 	for (i = 0; i < listWidgetLabelScore->count; i++) {
-		this = (widget_t *) (listWidgetLabelScore->list[i]);
+		this = (widget_t *) listWidgetLabelScore->list[i];
 		label_draw(this);
 	}
 
@@ -101,7 +100,7 @@ static void eventWidget(void *p)
 {
 	widget_t *button;
 
-	button = (widget_t *) (p);
+	button = (widget_t *) p;
 
 	if (button == button_ok) {
 		screen_set("mainMenu");
@@ -138,15 +137,17 @@ void analyze_end()
 		analyze_t *this;
 		char *str;
 
-		this = (analyze_t *) (listAnalyze->list[i]);
+		this = (analyze_t *) listAnalyze->list[i];
 
-		list_add(listWidgetLabelName, label_new(this->name, 100,
-							    200 + 20 * i, WIDGET_LABEL_LEFT));
+		list_add(listWidgetLabelName, label_new(this->name,
+			 100, 200 + 20 * i,
+			 WIDGET_LABEL_LEFT));
 
 		str = getString(this->score);
 
-		list_add(listWidgetLabelScore, label_new(str, WINDOW_SIZE_X - 100,
-							     200 + 20 * i, WIDGET_LABEL_RIGHT));
+		list_add(listWidgetLabelScore, label_new(str,
+			 WINDOW_SIZE_X - 100, 200 + 20 * i,
+			 WIDGET_LABEL_RIGHT));
 
 		free(str);
 	}
@@ -163,10 +164,10 @@ void analyze_init()
 	listWidgetLabelScore = list_new();
 	listAnalyze = list_new();
 
-	button_ok = button_new("OK", WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
-				    WINDOW_SIZE_Y - 100, eventWidget);
+	button_ok = button_new(_("OK"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
+				     WINDOW_SIZE_Y - 100, eventWidget);
 
-	screen_register( screen_new("analyze", analyze_start, analyze_event,
+	screen_register(screen_new("analyze", analyze_start, analyze_event,
 			analyze_draw, analyze_stop));
 
 	widgetLabelMsg = label_new("", WINDOW_SIZE_X / 2, 250, WIDGET_LABEL_CENTER);

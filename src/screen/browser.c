@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -15,16 +14,16 @@
 #include "hotKey.h"
 
 #ifndef __WIN32__
-#    include <sys/socket.h>
-#    include <sys/select.h>
-#    include <sys/types.h>
-#    include <netinet/in.h>
-#    include <arpa/inet.h>
-#    include <netdb.h>
-#else
-#    include <windows.h>
-#    include <wininet.h>
-#endif
+#include <sys/socket.h>
+#include <sys/select.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#else /* __WIN32__ */
+#include <windows.h>
+#include <wininet.h>
+#endif /* __WIN32__ */
 
 #include <unistd.h>
 #include <fcntl.h>
@@ -36,7 +35,7 @@
 extern int errno;
 
 #ifndef NO_SOUND
-#    include "music.h"
+#include "music.h"
 #endif
 
 #include "gameType.h"
@@ -120,8 +119,8 @@ void browser_stop()
 	unsigned i = 0;
 	server_t *server;
 
-	//list_destroy_item(select_server->list, free);
-	//select_server->list = list_new();
+	/*list_destroy_item(select_server->list, free);*/
+	/*select_server->list = list_new();*/
 	select_remove_all(select_server);
 
 	hot_key_unregister(SDLK_ESCAPE);
@@ -132,14 +131,17 @@ void browser_stop()
 			server->next->prev = server->prev;
 			server->prev->next = server->next;
 
-			if (server->name)
+			if (server->name) {
 				free(server->name);
+			}
 
-			if (server->version)
+			if (server->version) {
 				free(server->version);
+			}
 
-			if (server->arena)
+			if (server->arena) {
 				free(server->arena);
+			}
 
 			free(server);
 
@@ -147,8 +149,9 @@ void browser_stop()
 			break;
 		}
 
-		if (!i)
+		if (!i) {
 			return;
+		}
 	}
 }
 
@@ -156,17 +159,19 @@ static void eventWidget(void *p)
 {
 	widget_t *button;
 
-	button = (widget_t *) (p);
+	button = (widget_t *) p;
 
 	if (button == button_play) {
 		server_t *server = server_getcurr();
 
-		if (!server)
+		if (!server) {
 			return;
+		}
 
 		/* server is offline */
-		if (!server->state)
+		if (!server->state) {
 			return;
+		}
 
 		struct in_addr srv;
 		srv.s_addr = server->ip;
@@ -194,10 +199,10 @@ server_t *server_getcurr()
 	int i = 0;
 	server_t *server;
 
-	for (server = server_list.next; server != &server_list;
-		 server = server->next) {
-		if (i == select_get_index(select_server))
+	for (server = server_list.next; server != &server_list; server = server->next) {
+		if (i == select_get_index(select_server)) {
 			return server;
+		}
 
 		i++;
 	}
@@ -214,19 +219,19 @@ int server_getinfo(server_t *server)
 		return -1;
 	}
 #ifndef __WIN32__
-	// Lets make socket non-blocking
+	/* let's make the socket non-blocking */
 	int oldFlag = fcntl(mySocket, F_GETFL, 0);
 	if (fcntl(mySocket, F_SETFL, oldFlag | O_NONBLOCK) == -1) {
 		return -1;
 	}
-#else
+#else /* __WIN32__ */
 	unsigned long arg = 1;
-	// Operation is  FIONBIO. Parameter is pointer on non-zero number.
+	/* Operation is  FIONBIO. Parameter is pointer on non-zero number */
 	if (ioctlsocket(mySocket, FIONBIO, &arg) == SOCKET_ERROR) {
 		WSACleanup();
 		return -1;
 	}
-#endif
+#endif /* __WIN32__ */
 
 	struct timeval tv;
 
@@ -243,31 +248,35 @@ int server_getinfo(server_t *server)
 
 	if (connect(mySocket, (struct sockaddr *) &srv, sizeof(srv)) == -1) {
 #ifndef __WIN32__
-		if (errno != EINPROGRESS)
+		if (errno != EINPROGRESS) {
 			return -1;
-#else
+		}
+#else /* __WIN32__ */
 		if (WSAGetLastError() != WSAEWOULDBLOCK) {
 			WSACleanup();
 			return -1;
 		}
-#endif
+#endif /* __WIN32__ */
 	}
 
 	int ret = select(mySocket + 1, NULL, &myset, NULL, &tv);
 
-	if (ret == -1)
+	if (ret == -1) {
 		return 0;
+	}
 
-	if (ret == 0)
+	if (ret == 0) {
 		return -2;
+	}
 
 	char request[8];
 	memcpy(request, "status\n", 7);
 
 	int r = send(mySocket, request, 7, 0);
 
-	if (r == -1)
+	if (r == -1) {
 		return -2;
+	}
 
 	FD_ZERO(&myset);
 	FD_SET(mySocket, &myset);
@@ -276,8 +285,9 @@ int server_getinfo(server_t *server)
 
 	char *str = (char *) malloc(sizeof(char) * 257);
 
-	if (!str)
+	if (!str) {
 		return -1;
+	}
 
 	while (1) {
 		int sel = select(mySocket + 1, &myset, NULL, NULL, &tv);
@@ -286,10 +296,10 @@ int server_getinfo(server_t *server)
 			free(str);
 #ifndef __WIN32__
 			close(mySocket);
-#else
+#else /* __WIN32__ */
 			closesocket(mySocket);
 			WSACleanup();
-#endif
+#endif /* __WIN32__ */
 			return -2;
 		}
 
@@ -297,10 +307,10 @@ int server_getinfo(server_t *server)
 			free(str);
 #ifndef __WIN32__
 			close(mySocket);
-#else
+#else /* __WIN32__ */
 			closesocket(mySocket);
 			WSACleanup();
-#endif
+#endif /* __WIN32__ */
 			return -2;
 		}
 
@@ -308,23 +318,24 @@ int server_getinfo(server_t *server)
 			free(str);
 #ifndef __WIN32__
 			close(mySocket);
-#else
+#else /* __WIN32__ */
 			closesocket(mySocket);
 			WSACleanup();
-#endif
+#endif /* __WIN32__ */
 			return -1;
 		}
 
-		if (ret > 0)
+		if (ret > 0) {
 			break;
+		}
 	}
 
 #ifndef __WIN32__
 	close(mySocket);
-#else
+#else /* __WIN32__ */
 	closesocket(mySocket);
 	WSACleanup();
-#endif
+#endif /* __WIN32__ */
 
 	server->ping = 1000 - (tv.tv_usec / 1000);
 	/*
@@ -335,7 +346,7 @@ int server_getinfo(server_t *server)
 	   "uptime: D\n"
 	 */
 
-	//unsigned i = 0;
+	/*unsigned i = 0;*/
 	int i = 0;
 
 	while (i < ret) {
@@ -347,8 +358,10 @@ int server_getinfo(server_t *server)
 
 	unsigned name = 0;
 
-	if (strstr(str, "name: "))
+	/* get server's name */
+	if (strstr(str, "name: ")) {
 		name = 1;
+	}
 
 	int len = 0;
 
@@ -358,8 +371,9 @@ int server_getinfo(server_t *server)
 			unsigned name_len = strlen(str + 6);
 			server->name = (char *) malloc(sizeof(char) * (name_len + 2));
 
-			if (!server->name)
+			if (!server->name) {
 				return 0;
+			}
 
 			memcpy(server->name, str + 6, name_len + 1);
 			server->name[name_len + 1] = '\0';
@@ -367,15 +381,18 @@ int server_getinfo(server_t *server)
 	}
 
 	/* HACK */
-	if (!name)
+	if (!name) {
 		len = -1;
+	}
 
+	/* get server's version */
 	if (!strncmp(str + len + 1, "version: ", 9)) {
 		unsigned ver_len = strlen(str + len + 10);
 		server->version = (char *) malloc(sizeof(char) * (ver_len + 2));
 
-		if (!server->version)
+		if (!server->version) {
 			return 0;
+		}
 
 		memcpy(server->version, str + len + 10, ver_len + 1);
 		server->version[ver_len + 1] = '\0';
@@ -383,31 +400,35 @@ int server_getinfo(server_t *server)
 
 	len += strlen(str + len + 1) + 1;
 
-
-	if (!strncmp(str + len + 1, "clients: ", 9))
+	/* get server's connected clients count */
+	if (!strncmp(str + len + 1, "clients: ", 9)) {
 		server->clients = atoi(str + len + 10);
+	}
 
 	len += strlen(str + len + 1) + 1;
 
-
-	if (!strncmp(str + len + 1, "maxclients: ", 12))
+	/* get server's maximum connected clients count */
+	if (!strncmp(str + len + 1, "maxclients: ", 12)) {
 		server->maxclients = atoi(str + len + 13);
+	}
 
 	len += strlen(str + len + 1) + 1;
 
-
-	if (!strncmp(str + len + 1, "uptime: ", 8))
+	/* get server's uptime */
+	if (!strncmp(str + len + 1, "uptime: ", 8)) {
 		server->uptime = atoi(str + len + 9);
+	}
 
 	len += strlen(str + len + 1) + 1;
 
-
+	/* get server's arena */
 	if (!strncmp(str + len + 1, "arena: ", 7)) {
 		unsigned arena_len = strlen(str + len + 9);
 		server->arena = (char *) malloc(sizeof(char) * (arena_len + 2));
 
-		if (!server->arena)
+		if (!server->arena) {
 			return 0;
+		}
 
 		memcpy(server->arena, str + len + 8, arena_len + 1);
 		server->arena[arena_len + 1] = '\0';
@@ -421,27 +442,26 @@ int server_getinfo(server_t *server)
 	return 1;
 }
 
+/*
+ * Get server list
+ */
 static int LoadServers()
-// Get server list
 {
 #ifndef __WIN32__
 	int s;
-#else
+#else /* __WIN32__ */
 	SOCKET s;
-#endif
+#endif /* __WIN32__ */
 
 	char buf[1025];
 
-	/* TODO: dodelat TCP makro */
+	/* TODO: TCP macro */
 	struct sockaddr_in server;
 	char *master_server_ip;
 
 	master_server_ip = dns_resolv(NET_MASTER_SERVER_DOMAIN);
 
-	//printf("master_server_ip = %s\n", master_server_ip);
-
-	if (master_server_ip == NULL)	// master server is down
-	{
+	if (master_server_ip == NULL) {		/* master server is down? */
 		return -1;
 	}
 
@@ -451,34 +471,36 @@ static int LoadServers()
 
 	free(master_server_ip);
 
-	if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
 		return 0;
+	}
 
+	/* Set to nonblocking socket mode */
 #ifndef __WIN32__
-	// Lets make socket non-blocking
 	int oldFlag = fcntl(s, F_GETFL, 0);
 	if (fcntl(s, F_SETFL, oldFlag | O_NONBLOCK) == -1) {
 		return -1;
 	}
-#else
+#else /* __WIN32__ */
 	unsigned long arg = 1;
-	// Operation is  FIONBIO. Parameter is pointer on non-zero number.
+	/* Operation is  FIONBIO. Parameter is pointer on non-zero number. */
 	if (ioctlsocket(s, FIONBIO, &arg) == SOCKET_ERROR) {
 		WSACleanup();
 		return -1;
 	}
-#endif
+#endif /* __WIN32__ */
 
 	if (connect(s, (struct sockaddr *) &server, sizeof(server)) == -1) {
 #ifndef __WIN32__
-		if (errno != EINPROGRESS)
+		if (errno != EINPROGRESS) {
 			return -1;
-#else
+		}
+#else /* __WIN32__ */
 		if (WSAGetLastError() != WSAEWOULDBLOCK) {
 			WSACleanup();
 			return -1;
 		}
-#endif
+#endif /* __WIN32__ */
 	}
 
 	struct timeval tv;
@@ -493,11 +515,11 @@ static int LoadServers()
 
 	int ret = select(s + 1, NULL, &myset, NULL, &tv);
 
-	if (ret == -1)
+	if (ret == -1) {
 		return 0;
-
-	if (ret == 0)
+	} else if (ret == 0) {
 		return -2;
+	}
 
 	/* send request for server list */
 	send(s, "l", 1, 0);
@@ -507,23 +529,24 @@ static int LoadServers()
 
 	ret = select(s + 1, &myset, NULL, NULL, &tv);
 
-	if (ret == -1)
+	if (ret == -1) {
 		return 0;
-
-	if (ret == 0)
+	} else if (ret == 0) {
 		return -2;
+	}
 
 	int len = recv(s, buf, 1024, 0);
 
 #ifndef __WIN32__
 	close(s);
-#else
+#else /* __WIN32__ */
 	closesocket(s);
 	WSACleanup();
-#endif
+#endif /* __WIN32__ */
 
-	if (len <= 0)
+	if (len <= 0) {
 		return 0;
+	}
 
 	int i = 0;
 	char list[256];
@@ -540,7 +563,7 @@ static int LoadServers()
 
 		server_t *ctx;
 
-		// alloc and init context
+		/* alloc and init context */
 		ctx = (server_t *) malloc(sizeof(server_t));
 
 		ctx->ip = header->ip;
@@ -562,10 +585,11 @@ static int LoadServers()
 			/*sprintf (list, "%s (%s) - %s:%d - %s - %d/%d - %dms", ctx->name ? ctx->name : "Unknown", ctx->version, address, ctx->port,
 			   ctx->arena ? ctx->arena : "Unknown", ctx->clients, ctx->maxclients, ctx->ping); */
 
-			if (ctx->name)
+			if (ctx->name) {
 				memcpy(list, ctx->name, strlen(ctx->name));
-			else
+			} else {
 				memcpy(list, "Unknown", 7);
+			}
 
 			memcpy(list + 30, ctx->version, strlen(ctx->version));
 
@@ -590,7 +614,7 @@ static int LoadServers()
 
 		select_add(select_server, list);
 
-		// add into list
+		/* add server to server list */
 		ctx->next = &server_list;
 		ctx->prev = server_list.prev;
 		ctx->prev->next = ctx;
@@ -598,8 +622,9 @@ static int LoadServers()
 
 		i += sizeof(response_head) + 1;
 
-		if (buf[i - 1] != '\n' || (i + 1) > len)
+		if (buf[i - 1] != '\n' || (i + 1) > len) {
 			break;
+		}
 	}
 
 	return 1;
@@ -616,16 +641,18 @@ static int RefreshServers()
 	struct in_addr srv;
 
 	server_t *server;
-	for (server = server_list.next; server != &server_list;
-		 server = server->next) {
-		if (server->name)
+	for (server = server_list.next; server != &server_list; server = server->next) {
+		if (server->name) {
 			free(server->name);
+		}
 
-		if (server->version)
+		if (server->version) {
 			free(server->version);
+		}
 
-		if (server->arena)
+		if (server->arena) {
 			free(server->arena);
+		}
 
 		server->name = 0;
 		server->version = 0;
@@ -644,10 +671,11 @@ static int RefreshServers()
 			memset(list, ' ', 254);
 			list[255] = '\0';
 
-			if (server->name)
+			if (server->name) {
 				memcpy(list, server->name, strlen(server->name));
-			else
+			} else {
 				memcpy(list, "Unknown", 7);
+			}
 
 			memcpy(list + 30, server->version, strlen(server->version));
 
@@ -671,7 +699,6 @@ static int RefreshServers()
 		}
 
 		select_add(select_server, list);
-
 	}
 
 	return 1;
@@ -684,27 +711,24 @@ void browser_init()
 	image = image_get(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = wid_image_new(0, 0, image);
 
-	button_back =
-		button_new(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
-	button_play =
-		button_new(_("Play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100,
-						eventWidget);
-	button_refresh =
-		button_new(_("Refresh"), WINDOW_SIZE_X / 2 - 50,
-						WINDOW_SIZE_Y - 100, eventWidget);
+	button_back = button_new(_("Back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
+	button_play = button_new(_("Play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100,
+				 eventWidget);
+	button_refresh = button_new(_("Refresh"),
+				    WINDOW_SIZE_X / 2 - 50, WINDOW_SIZE_Y - 100,
+				    eventWidget);
 
-	label_server = label_new(_("server"), 120, 145, WIDGET_LABEL_LEFT);
-	label_version = label_new(_("version"), 290, 145, WIDGET_LABEL_LEFT);
+	label_server = label_new(_("Server"), 120, 145, WIDGET_LABEL_LEFT);
+	label_version = label_new(_("Version"), 290, 145, WIDGET_LABEL_LEFT);
 	label_address = label_new(_("IP"), 400, 145, WIDGET_LABEL_LEFT);
-	label_arena = label_new(_("arena"), 550, 145, WIDGET_LABEL_LEFT);
-	label_players = label_new(_("clients"), 645, 145, WIDGET_LABEL_LEFT);
-	label_ping = label_new(_("ping"), 720, 145, WIDGET_LABEL_LEFT);
+	label_arena = label_new(_("Arena"), 550, 145, WIDGET_LABEL_LEFT);
+	label_players = label_new(_("Clients"), 645, 145, WIDGET_LABEL_LEFT);
+	label_ping = label_new(_("Ping"), 720, 145, WIDGET_LABEL_LEFT);
 
 	select_server = select_new(50, label_server->y + 40, eventWidget);
 
-	screen_register(screen_new
-				   ("browser", browser_start, browser_event,
-					browser_draw, browser_stop));
+	screen_register(screen_new("browser", browser_start, browser_event,
+			browser_draw, browser_stop));
 
 	server_list.next = &server_list;
 	server_list.prev = &server_list;

@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <assert.h>
 
@@ -12,7 +11,7 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
+#include "music.h"
 #endif
 
 #include "mainMenu.h"
@@ -31,18 +30,18 @@ static widget_t *button_back;
 static widget_t *button_next;
 static widget_t *button_prev;
 
-//static list_t *listWidgetButtonimage; // map buttons to be showed and handled - well, show_map_buttons is used instead
-static list_t *listAllWidgetButtonimage; // all map buttons
-static int handled_map_button_group; // 0 - first 6 buttons, 1 - second 6 buttons, ....
+/*static list_t *listWidgetButtonimage;*/	/* map buttons to be showed and handled - well, show_map_buttons is used instead now */
+static list_t *listAllWidgetButtonimage;	/* all map buttons */
+static int handled_map_button_group;		/* 0 - first 6 buttons, 1 - second 6 buttons, ... */
 static void activateHandledMapButtonGroup();
 static struct show_map_buttons { 
-	// geez, it'd be nicer to used two lists
-	// but how the hell is list_t supposed to be used?! :-)
-	int min; // see activateHandledMapButtonGroup for desc
-	int max; //
-	int next; // 0: max is last item+1 in listAllWidgetButtonimage, otherwise 1
-	int prev; // 0: min is first item in listAllWidgetButtonimage, otherwise 1
-} show_map_buttons = { 0,0,0,0 } ;
+	/* geez, it'd be nicer to use two lists
+	   but how the hell list_t is supposed to be used?! :-) */
+	int min;	/* see activateHandledMapButtonGroup for description */
+	int max;
+	int next;	/* 0: max is last item+1 in listAllWidgetButtonimage, otherwise 1 */
+	int prev;	/* 0: min is first item in listAllWidgetButtonimage, otherwise 1 */
+} show_map_buttons = { 0,0,0,0 };
 static arenaFile_t *currentArena;
 
 static void hotkey_escape()
@@ -71,7 +70,7 @@ void choice_arena_draw()
 	if (show_map_buttons.prev) { button_draw(button_prev); }
 
 	for (i = show_map_buttons.min ; i < show_map_buttons.max; i++) {
-		button_image_draw((widget_t*)listAllWidgetButtonimage->list[i]);
+		button_image_draw((widget_t *) listAllWidgetButtonimage->list[i]);
 	}
 }
 
@@ -85,7 +84,7 @@ void choice_arena_event()
 	if (show_map_buttons.prev) { button_event(button_prev); }
 
 	for (i = show_map_buttons.min ; i < show_map_buttons.max; i++) {
-		button_image_event((widget_t*)listAllWidgetButtonimage->list[i]);
+		button_image_event((widget_t *) listAllWidgetButtonimage->list[i]);
 	}
 }
 
@@ -99,12 +98,12 @@ static void button_eventImage(void *p)
 	widget_t *buttonimage;
 	int i;
 
-	buttonimage = (widget_t *) (p);
+	buttonimage = (widget_t *) p;
 
 	for (i = show_map_buttons.min; i < show_map_buttons.max; i++) { 
 		widget_t *this;
 
-		this = (widget_t *) (listAllWidgetButtonimage->list[i]);
+		this = (widget_t *) listAllWidgetButtonimage->list[i];
 
 		if (buttonimage == this) {
 			button_image_set_active(this, TRUE);
@@ -120,7 +119,7 @@ arenaFile_t *choice_arena_get()
 	return currentArena;
 }
 
-void choice_arena_set(arenaFile_t * arenaFile)
+void choice_arena_set(arenaFile_t *arenaFile)
 {
 	widget_t *widget_buttonimage;
 	int id;
@@ -138,7 +137,7 @@ static void eventWidget(void *p)
 {
 	widget_t *button;
 
-	button = (widget_t *) (p);
+	button = (widget_t *) p;
 
 	if (button == button_play) {
 		screen_set("world");
@@ -147,12 +146,14 @@ static void eventWidget(void *p)
 	if (button == button_back) {
 		screen_set("gameType");
 	}
+
 	if (button == button_next) {
 		if (show_map_buttons.next) {
 			handled_map_button_group++;
 			activateHandledMapButtonGroup();
 		}
 	}
+
 	if (button == button_prev) {
 		if (show_map_buttons.prev) {
 			handled_map_button_group--;
@@ -161,20 +162,30 @@ static void eventWidget(void *p)
 	}
 }
 
-// groups of 6 map buttons to be shown and handled
-// the group is set by static global variable handled_map_button_group
-// sets static global show_map_buttons.min to index of first button to be drawn in listAllButtonimage
-// and show_map_buttons.max to index of last button to be drawn+1 in listAllButtonimage
+/*
+ * groups of 6 map buttons to be shown and handled
+ * the group is set by static global variable handled_map_button_group
+ * sets static global show_map_buttons.min to index of first button to be drawn in listAllButtonimage
+ * and show_map_buttons.max to index of last button to be drawn+1 in listAllButtonimage
+ */
 static void activateHandledMapButtonGroup(void) {
 	int min = handled_map_button_group * 6;
 	min = min < 0 ? 0 : min;
 	min = min <= arena_file_get_count() ? min : arena_file_get_count();
-	int max = min+6 <= arena_file_get_count() ? min+6 : arena_file_get_count();
+	int max = min + 6 <= arena_file_get_count() ? min + 6 : arena_file_get_count();
 
-	if (min) { show_map_buttons.prev = 1; }
-	else { show_map_buttons.prev = 0; }
-	if (max < arena_file_get_count()) { show_map_buttons.next = 1; }
-	else { show_map_buttons.next = 0; }
+	if (min) {
+		show_map_buttons.prev = 1;
+	} else {
+		show_map_buttons.prev = 0;
+	}
+
+	if (max < arena_file_get_count()) {
+		show_map_buttons.next = 1;
+	} else {
+		show_map_buttons.next = 0;
+	}
+
 	show_map_buttons.min = min;
 	show_map_buttons.max = max;
 }
@@ -187,11 +198,11 @@ void choice_arena_init()
 	image = image_get(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = wid_image_new(0, 0, image);
 
-	button_back = button_new(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
-	button_play = button_new(_("play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
+	button_back = button_new(_("Back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
+	button_play = button_new(_("Play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
 
-	button_prev = button_new(_("prev maps"), 250, WINDOW_SIZE_Y - 100, eventWidget);
-	button_next = button_new(_("next maps"), WINDOW_SIZE_X-350, WINDOW_SIZE_Y - 100, eventWidget);
+	button_prev = button_new(_("Previous maps"), 250, WINDOW_SIZE_Y - 100, eventWidget);
+	button_next = button_new(_("Next maps"), WINDOW_SIZE_X-350, WINDOW_SIZE_Y - 100, eventWidget);
 
 	listAllWidgetButtonimage = list_new();
 	currentArena = NULL;
@@ -202,14 +213,16 @@ void choice_arena_init()
 		int x, y;
 
 		arenaFile = arena_file_get(i);
-		//image = image_add(arena_file_get_image(i), IMAGE_NO_ALPHA, "none", IMAGE_GROUP_BASE);
+		/*image = image_add(arena_file_get_image(i), IMAGE_NO_ALPHA, "none", IMAGE_GROUP_BASE);*/
 		image = arena_file_load_image(arenaFile,  arena_file_get_image(arenaFile),
-					   IMAGE_GROUP_BASE, "none", IMAGE_NO_ALPHA);
+					      IMAGE_GROUP_BASE, "none", IMAGE_NO_ALPHA);
 
-		// only 6 map buttons can be shown at once;
-		// set buttons' positions in each group to the corresponding values
-		// handled_map_button_group and activateHandledMapButtonGroup is used 
-		// to choose group to be shown and handled
+		/*
+		  only 6 map buttons can be shown at once;
+		  set buttons' positions in each group to the corresponding values
+		  handled_map_button_group and activateHandledMapButtonGroup is used 
+		  to choose group to be shown and handled
+		*/
 		int pos = i % 6 ;
 		x = 100 + 200 * (pos - 3 * (pos / 3));
 		y = 150 + 200 * (pos / 3);
@@ -226,7 +239,7 @@ void choice_arena_init()
 		activateHandledMapButtonGroup();
 	}
 
-	screen_register( screen_new("chiceArena", screen_startChoiceArena,
+	screen_register(screen_new("chiceArena", screen_startChoiceArena,
 			choice_arena_event, choice_arena_draw,
 			stopScreenChoiceArena));
 }

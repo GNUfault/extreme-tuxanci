@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <assert.h>
 
@@ -12,7 +11,7 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
+#include "music.h"
 #endif
 
 #include "credits.h"
@@ -81,7 +80,7 @@ void scredits_event()
 		offset = 0;
 	}
 
-	//printf("offset = %d\n", offset);
+	/*printf("offset = %d\n", offset);*/
 }
 
 void scredits_stop()
@@ -93,7 +92,7 @@ static void eventWidget(void *p)
 {
 	widget_t *button;
 
-	button = (widget_t *) (p);
+	button = (widget_t *) p;
 
 	if (button == button_back) {
 		screen_set("mainMenu");
@@ -108,8 +107,8 @@ void scredits_init()
 	image = image_get(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = wid_image_new(0, 0, image);
 
-	button_back = button_new(_("back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
-						 WINDOW_SIZE_Y - 80, eventWidget);
+	button_back = button_new(_("Back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
+					    WINDOW_SIZE_Y - 80, eventWidget);
 
 	listWidgetLabel = list_new();
 
@@ -135,8 +134,8 @@ void scredits_init()
 			widget_t *label;
 			char line[STR_SIZE];
 
-			sprintf(line, _("Credit file not found... %s/%s"), PATH_DOC,
-					SCREEN_CREDITS_FILE);
+			sprintf(line, _("[Error] Credits file not found [%s]: %s\n"),
+				PATH_DOC, SCREEN_CREDITS_FILE);
 
 			label = label_new(line, WINDOW_SIZE_X / 2,
 						(WINDOW_SIZE_Y - 100) + i * 20,
@@ -146,8 +145,8 @@ void scredits_init()
 		}
 	}
 
-	screen_register(screen_new ("credits", scredits_start, scredits_event,
-				scredits_draw, scredits_stop));
+	screen_register(screen_new("credits", scredits_start, scredits_event,
+			scredits_draw, scredits_stop));
 }
 
 void scredits_quit()

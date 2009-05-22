@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -16,7 +15,7 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
+#include "music.h"
 #endif
 
 #include "gameType.h"
@@ -57,7 +56,7 @@ static widget_t *textfield_port;
 
 static widget_t *selectSession;
 
-static void loadSession(widget_t * p)
+static void loadSession(widget_t *p)
 {
 	director_t *director;
 	int i;
@@ -133,19 +132,19 @@ void game_type_draw()
 		label_draw(label_session);
 		select_draw(selectSession);
 	}
-#if 0
+/*	
 	if (check_server->status == TRUE) {
 		game_type_set_ip(getParamElse("--ip", "127.0.0.1"));
 		game_type_set_port(atoi(getParamElse("--port", "2200")));
 	}
-#endif
+*/	
 
-	if (choice_group_get_status(check_client) == TRUE)
+	if (choice_group_get_status(check_client) == TRUE) {
 		button_draw(button_browser);
+	}
 
 	button_draw(button_back);
 	button_draw(button_play);
-
 }
 
 void game_type_event()
@@ -171,8 +170,9 @@ void game_type_event()
 	button_event(button_back);
 	button_event(button_play);
 
-	if (choice_group_get_status(check_client) == TRUE)
+	if (choice_group_get_status(check_client) == TRUE) {
 		button_event(button_browser);
+	}
 }
 
 void stopScreenGameType()
@@ -184,7 +184,7 @@ static void eventWidget(void *p)
 {
 	widget_t *button;
 
-	button = (widget_t *) (p);
+	button = (widget_t *) p;
 
 	if (button == button_back) {
 		screen_set("mainMenu");
@@ -201,10 +201,11 @@ static void eventWidget(void *p)
 			return;
 		}
 
-		if (public_server_get_settingGameType() == NET_GAME_TYPE_CLIENT)
+		if (public_server_get_settingGameType() == NET_GAME_TYPE_CLIENT) {
 			screen_set("downArena");
-		else
+		} else {
 			screen_set("chiceArena");
+		}
 
 		return;
 	}
@@ -222,9 +223,9 @@ void game_type_init()
 	image = image_get(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = wid_image_new(0, 0, image);
 
-	button_back = button_new(_("back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
-	button_play = button_new(_("play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
-	button_browser = button_new(_("browser"), 300, 345, eventWidget);
+	button_back = button_new(_("Back"), 100, WINDOW_SIZE_Y - 100, eventWidget);
+	button_play = button_new(_("Play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
+	button_browser = button_new(_("Browser"), 300, 345, eventWidget);
 
 	listChoiceGroup = list_new();
 	check_none = choice_group_new(100, 150, FALSE, listChoiceGroup, eventWidget);
@@ -243,22 +244,22 @@ void game_type_init()
 	label_none = label_new(_("Local game"), 130, 145, WIDGET_LABEL_LEFT);
 	label_server = label_new(_("Set up a server"), 130, 195, WIDGET_LABEL_LEFT);
 	label_client = label_new(_("Network game"), 130, 245, WIDGET_LABEL_LEFT);
-	label_load_session = label_new("load session", 130, 295, WIDGET_LABEL_LEFT);
+	label_load_session = label_new(_("Load saved game"), 130, 295, WIDGET_LABEL_LEFT);
 
 	label_ip = label_new(_("IP"), 300, 145, WIDGET_LABEL_LEFT);
-	label_port = label_new(_("port"), 300, 245, WIDGET_LABEL_LEFT);
-	label_session = label_new("load session :", 300, 145, WIDGET_LABEL_LEFT);
+	label_port = label_new(_("Port"), 300, 245, WIDGET_LABEL_LEFT);
+	label_session = label_new(_("Load saved game:"), 300, 145, WIDGET_LABEL_LEFT);
 
 	textfield_ip = text_field_new(getParamElse("--ip", "127.0.0.1"),
-					  WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN,
-					  300, 180);
+					WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN,
+					300, 180);
 
 	textfield_port = text_field_new(getParamElse("--port", "6800"),
-					    WIDGET_TEXTFIELD_FILTER_NUM, 300, 280);
+					WIDGET_TEXTFIELD_FILTER_NUM, 300, 280);
 
 	selectSession = select_new(300, 185, eventWidget);
 
-	screen_register( screen_new("gameType", screen_startGameType, game_type_event,
+	screen_register(screen_new("gameType", screen_startGameType, game_type_event,
 			game_type_draw, stopScreenGameType));
 }
 
@@ -296,7 +297,7 @@ int public_server_get_settingGameType()
 		return NET_GAME_TYPE_CLIENT;
 	}
 
-	assert(!_("Unknown game type!"));
+	assert(!_("[Error] Unknown game type"));
 
 	return -1;
 }
@@ -350,7 +351,7 @@ int public_server_get_settingProto()
 		return PROTO_UDPv6;
 	}
 
-	DEBUG_MSG(_("Unknown IP protocol!\n"));
+	DEBUG_MSG(_("[Error] Unknown version of IP protocol\n"));
 
 	return -1;
 }

@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -17,8 +16,8 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
-#    include "sound.h"
+#include "music.h"
+#include "sound.h"
 #endif
 
 #include "mainMenu.h"
@@ -70,9 +69,10 @@ static widget_t *tux_left_keyswitch_val;
 static widget_t *tux_left_keyfire_val;
 
 
-/* TODO: add key images 
- *	 possible variant will be reusing widget_image for current widget_label so there wont 
- *	 be key names but only images */
+/* TODO: add key images
+ *	 possible variant will be reusing widget_image for current widget_label so there won't
+ *	 be key names but only images
+ */
 
 static void hotkey_escape()
 {
@@ -107,7 +107,7 @@ static void setKeytableFromConfigFile(textFile_t *configFile)
 	loadValueFromConfigFile(configFile, "TUX_RIGHT_SHOOT", val, STR_SIZE, "48");
 	keytable[KEY_TUX_RIGHT_SHOOT] = atoi(val);
 		
-	loadValueFromConfigFile(configFile, "TUX_RIGHT_SWITCH_WEAPON", val,  STR_SIZE, "49");
+	loadValueFromConfigFile(configFile, "TUX_RIGHT_SWITCH_WEAPON", val, STR_SIZE, "49");
 	keytable[KEY_TUX_RIGHT_SWITCH_WEAPON] = atoi(val);
 		
 	loadValueFromConfigFile(configFile, "TUX_LEFT_MOVE_UP", val, STR_SIZE, "119");
@@ -125,7 +125,7 @@ static void setKeytableFromConfigFile(textFile_t *configFile)
 	loadValueFromConfigFile(configFile, "TUX_LEFT_SHOOT", val, STR_SIZE, "113");
 	keytable[KEY_TUX_LEFT_SHOOT] = atoi(val);
 		
-	loadValueFromConfigFile(configFile, "TUX_LEFT_SWITCH_WEAPON", val,  STR_SIZE, "9");
+	loadValueFromConfigFile(configFile, "TUX_LEFT_SWITCH_WEAPON", val, STR_SIZE, "9");
 	keytable[KEY_TUX_LEFT_SWITCH_WEAPON] = atoi(val);
 } 
 
@@ -138,13 +138,13 @@ void key_table_init()
 	keycontrolFile = text_file_load(path);
 
 	if (keycontrolFile == NULL) {
-		fprintf(stderr, _("I was unable to load file: %s\n"), path);
-		fprintf(stderr, _("I try to create file: %s\n"), path);
+		fprintf(stderr, _("[Error] Unable to load config file [%s]\n"), path);
+		fprintf(stderr, _("[Debug] Creating config file [%s]\n"), path);
 
 		keycontrolFile = text_file_new(path);
 
 		if (keycontrolFile == NULL) {
-			fprintf(stderr, _("I was unable to create file: %s\n"), path);
+			fprintf(stderr, _("[Error] Unable to create config file [%s]\n"), path);
 			return;
 		}
 	}
@@ -154,7 +154,7 @@ void key_table_init()
 
 int key_table_get_key(int n) 
 {
-//      printf("keytable[n] = %d\n", keytable[n]);
+	/*printf("keytable[n] = %d\n", keytable[n]);*/
 	return keytable[n];
 }
 
@@ -217,13 +217,14 @@ static void eventWidget(void *p)
 	widget_t *button;
 	widget_t *catcher;
 
-	button = (widget_t *) (p);
-	catcher = (widget_t *) (p);
+	button = (widget_t *) p;
+	catcher = (widget_t *) p;
 	
-	if (button == button_back)
+	if (button == button_back) {
 		screen_set("setting");
+	}
 	
-	//events on value
+	/* events on value */
 	if ((catcher == tux_left_keyup_val) ||
 	    (catcher == tux_left_keydown_val) ||
 	    (catcher == tux_left_keyleft_val) ||
@@ -237,8 +238,9 @@ static void eventWidget(void *p)
 	    (catcher == tux_right_keyswitch_val) ||
 	    (catcher == tux_right_keyfire_val)) {
 		/* draw press any key picture
-		  this will be done by widget catchkey
-		  check if there is no other key with new value (what to revert if yes?) */
+		   this will be done by widget catchkey
+		   check if there is no other key with new value (what to revert if yes?)
+		 */
 
 		refreshKeytable();
 	}
@@ -284,14 +286,14 @@ void setting_key_int()
 	tux_left_keydown = label_new(_("Down:"), tux_left_keyup->x, tux_left_keyup->y + 20, WIDGET_LABEL_LEFT);
 	tux_left_keyleft = label_new(_("Left:"), tux_left_keyup->x, tux_left_keydown->y + 20, WIDGET_LABEL_LEFT);
 	tux_left_keyright = label_new(_("Right:"), tux_left_keyup->x, tux_left_keyleft->y + 20, WIDGET_LABEL_LEFT);
-	tux_left_keyfire = label_new(_("Fire gun:"), tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
+	tux_left_keyfire = label_new(_("Fire:"), tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
 	tux_left_keyswitch = label_new(_("Switch gun:"), tux_left_keyup->x, tux_left_keyfire->y + 20, WIDGET_LABEL_LEFT);
 	tux_right = label_new(_("Player 1"), WINDOW_SIZE_X / 2 + WINDOW_SIZE_X / 4, tux_left->y, WIDGET_LABEL_CENTER);
 	tux_right_keyup = label_new(_("Up:"), WINDOW_SIZE_X / 2 + tux_left_keyup->x, tux_left->y + 50, WIDGET_LABEL_LEFT);
 	tux_right_keydown = label_new(_("Down:"), WINDOW_SIZE_X / 2 + tux_left_keyup->x, tux_left_keyup->y + 20, WIDGET_LABEL_LEFT);
 	tux_right_keyleft = label_new(_("Left:"), WINDOW_SIZE_X / 2 + tux_left_keyup->x, tux_right_keydown->y + 20, WIDGET_LABEL_LEFT);
 	tux_right_keyright = label_new(_("Right:"), WINDOW_SIZE_X / 2 + tux_left_keyup->x, tux_right_keyleft->y + 20, WIDGET_LABEL_LEFT);
-	tux_right_keyfire = label_new(_("Fire gun:"), WINDOW_SIZE_X / 2 + tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
+	tux_right_keyfire = label_new(_("Fire:"), WINDOW_SIZE_X / 2 + tux_left_keyup->x, tux_left_keyright->y + 20, WIDGET_LABEL_LEFT);
 	tux_right_keyswitch = label_new(_("Switch gun:"), WINDOW_SIZE_X / 2 + tux_left_keyup->x, tux_left_keyfire->y + 20, WIDGET_LABEL_LEFT);
 
 	tux_left_keyup_val = catch_key_new(keytable[6], tux_left_keyup->x + 200, tux_left->y + 55, eventWidget);
@@ -306,8 +308,8 @@ void setting_key_int()
 	tux_right_keyright_val = catch_key_new(keytable[1], WINDOW_SIZE_X / 2 + tux_left_keyup_val->x, tux_right_keyleft->y + 25, eventWidget);
 	tux_right_keyfire_val =	catch_key_new(keytable[4], WINDOW_SIZE_X / 2 + tux_left_keyup_val->x, tux_left_keyright->y + 25, eventWidget);
 	tux_right_keyswitch_val = catch_key_new(keytable[5], WINDOW_SIZE_X / 2 + tux_left_keyup_val->x, tux_left_keyfire->y + 25, eventWidget);
-		
-	screen_register(screen_new ("settingKeys", screen_startSettingKeys, setting_key_event, setting_key_draw, stopScreenSettingKeys));
+
+	screen_register(screen_new("settingKeys", screen_startSettingKeys, setting_key_event, setting_key_draw, stopScreenSettingKeys));
 }
 
 void key_table_quit() 
@@ -388,4 +390,3 @@ void setting_key_quit()
 
 	button_destroy(button_back);
 }
-

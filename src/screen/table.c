@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -14,7 +13,7 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
+#include "music.h"
 #endif
 
 #include "table.h"
@@ -87,7 +86,7 @@ static void eventWidget(void *p)
 {
 	widget_t *button;
 
-	button = (widget_t *) (p);
+	button = (widget_t *) p;
 
 	if (button == button_back) {
 		screen_set("mainMenu");
@@ -99,7 +98,7 @@ static void setWidgetLabel()
 	int i;
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("Highscore file: \"%s\" was not loaded!"), SCREEN_TABLE_FILE_HIGHSCORE_NAME);
+		fprintf(stderr, _("[Error] Didn't load the high score file [%s]"), SCREEN_TABLE_FILE_HIGHSCORE_NAME);
 
 		return;
 	}
@@ -148,20 +147,20 @@ static void loadHighscoreFile()
 	textFile = text_file_load(path);
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("I am unable to load: \"%s\"!\n"), path);
-		fprintf(stderr, _("Creating: \"%s\"\n"), path);
+		fprintf(stderr, _("[Error] Unable to load the high score file [%s]\n"), path);
+		fprintf(stderr, _("[Debug] Creating the high score file [%s]\n"), path);
 		textFile = text_file_new(path);
 	} else {
 		return;
 	}
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("I was unable to create: \"%s\"!\n"), path);
+		fprintf(stderr, _("[Error] Unable to create the high score file [%s]\n"), path);
 		return;
 	}
 
 	for (i = 0; i < SCREEN_TABLE_MAX_PLAYERS; i++) {
-		list_add(textFile->text, strdup("no_name 0"));
+		list_add(textFile->text, strdup("--- 0"));
 	}
 
 	text_file_save(textFile);
@@ -201,8 +200,8 @@ void table_init()
 	image = image_add("screen_table.png", IMAGE_NO_ALPHA, "screen_table", IMAGE_GROUP_BASE);
 	image_backgorund = wid_image_new(0, 0, image);
 
-	button_back = button_new(_("back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
-						 WINDOW_SIZE_Y - 100, eventWidget);
+	button_back = button_new(_("Back"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2,
+				 WINDOW_SIZE_Y - 100, eventWidget);
 
 	loadHighscoreFile();
 	listWidgetLabelNumer = NULL;

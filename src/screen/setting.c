@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -18,8 +17,8 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
-#    include "sound.h"
+#include "music.h"
+#include "sound.h"
 #endif
 
 #include "mainMenu.h"
@@ -40,7 +39,7 @@
 static widget_t *image_backgorund;
 
 static widget_t *button_back;
-static widget_t *button_keys;	// setting of keycontrols
+static widget_t *button_keys;		/* setting of keycontrols */
 
 static widget_t *label_count_round;
 static widget_t *label_name_player1;
@@ -196,8 +195,8 @@ static void eventWidget(void *p)
 	widget_t *my_button;
 	widget_t *my_check;
 
-	my_button = (widget_t *) (p);
-	my_check = (widget_t *) (p);
+	my_button = (widget_t *) p;
+	my_check = (widget_t *) p;
 
 	if (my_button == button_back) {
 		screen_set("mainMenu");
@@ -228,30 +227,27 @@ static void initSettingFile()
 	configFile = text_file_load(path);
 
 	if (configFile == NULL) {
-		fprintf(stderr, _("I am unable to load: \"%s\"!\n"), path);
-		fprintf(stderr, _("Creating: \"%s\"\n"), path);
+		fprintf(stderr, _("[Error] Unable to load config file [%s]\n"), path);
+		fprintf(stderr, _("[Debug] Creating config file [%s]\n"), path);
 
 		configFile = text_file_new(path);
 	}
 
 	if (configFile == NULL) {
-		fprintf(stderr, _("I was unable to create: \"%s\"!\n"), path);
+		fprintf(stderr, _("[Error] Unable to create config file [%s]\n"), path);
 		return;
 	}
 
 	loadValueFromConfigFile(configFile, "COUNT_ROUND", val, STR_SIZE, "15");
 	text_field_set_text(textfield_count_cound, val);
 
-	loadValueFromConfigFile(configFile, "NAME_PLAYER_RIGHT", val, STR_SIZE,
-							NAME_PLAYER_RIGHT);
+	loadValueFromConfigFile(configFile, "NAME_PLAYER_RIGHT", val, STR_SIZE, NAME_PLAYER_RIGHT);
 	text_field_set_text(textfield_name_player1, val);
 
-	loadValueFromConfigFile(configFile, "NAME_PLAYER_LEFT", val, STR_SIZE,
-							NAME_PLAYER_LEFT);
+	loadValueFromConfigFile(configFile, "NAME_PLAYER_LEFT", val, STR_SIZE, NAME_PLAYER_LEFT);
 	text_field_set_text(textfield_name_player2, val);
 
-	loadValueFromConfigFile(configFile, "GUN_DUAL_SIMPLE", val, STR_SIZE,
-							"YES");
+	loadValueFromConfigFile(configFile, "GUN_DUAL_SIMPLE", val, STR_SIZE, "YES");
 	check_set_status(check[GUN_DUAL_SIMPLE], isYesOrNO(val));
 	loadValueFromConfigFile(configFile, "GUN_SCATTER", val, STR_SIZE, "YES");
 	check_set_status(check[GUN_SCATTER], isYesOrNO(val));
@@ -268,8 +264,7 @@ static void initSettingFile()
 	check_set_status(check[BONUS_SPEED], isYesOrNO(val));
 	loadValueFromConfigFile(configFile, "BONUS_SHOT", val, STR_SIZE, "YES");
 	check_set_status(check[BONUS_SHOT], isYesOrNO(val));
-	loadValueFromConfigFile(configFile, "BONUS_TELEPORT", val, STR_SIZE,
-							"YES");
+	loadValueFromConfigFile(configFile, "BONUS_TELEPORT", val, STR_SIZE, "YES");
 	check_set_status(check[BONUS_TELEPORT], isYesOrNO(val));
 	loadValueFromConfigFile(configFile, "BONUS_GHOST", val, STR_SIZE, "YES");
 	check_set_status(check[BONUS_GHOST], isYesOrNO(val));
@@ -298,7 +293,7 @@ static void initSettingFile()
 static void saveAndDestroyConfigFile()
 {
 	if (configFile == NULL) {
-		fprintf(stderr, _("I am unable to save configure file, because config file was not initialised!\n"));
+		fprintf(stderr, _("[Error] Unable to save config file - not initialized\n"));
 		return;
 	}
 
@@ -324,11 +319,10 @@ static void saveAndDestroyConfigFile()
 	setValueInConfigFile(configFile, "SOUND", getYesOrNo(check_get_status(check_sound)));
 #endif
 
-	if( choice_arena_get() != NULL )
-	{
+	if (choice_arena_get() != NULL) {
 		setValueInConfigFile(configFile, "ARENA", arena_file_get_net_name(choice_arena_get()));
 	}
-	//TODO
+	/* TODO */
 
 	text_file_save(configFile);
 	text_file_destroy(configFile);
@@ -342,24 +336,24 @@ void setting_init()
 	image = image_get(IMAGE_GROUP_BASE, "screen_main");
 	image_backgorund = wid_image_new(0, 0, image);
 
-	button_back = button_new(_("back"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
+	button_back = button_new(_("Back"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100, eventWidget);
 
-	button_keys = button_new(_("controls"), WINDOW_SIZE_X - 200,
-				      button_back->y - WIDGET_BUTTON_HEIGHT - 10, eventWidget);
+	button_keys = button_new(_("Controls"), WINDOW_SIZE_X - 200,
+				 button_back->y - WIDGET_BUTTON_HEIGHT - 10, eventWidget);
 
 #ifndef NO_SOUND
 	label_music = label_new(_("Music:"), 100, WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
 
-	check_music = check_new(label_music->x + label_music->w + 10,
-				     WINDOW_SIZE_Y - 80, music_is_active(), eventWidget);
+	check_music = check_new(label_music->x + label_music->w + 10, WINDOW_SIZE_Y - 80,
+				music_is_active(), eventWidget);
 	label_sound = label_new(_("Sound:"), check_music->x + WIDGET_CHECK_WIDTH + 10,
-				     WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
+			 	WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
 
-	check_sound = check_new(label_sound->x + label_sound->w + 10,
-				     WINDOW_SIZE_Y - 80, sound_is_active(), eventWidget);
+	check_sound = check_new(label_sound->x + label_sound->w + 10, WINDOW_SIZE_Y - 80,
+				sound_is_active(), eventWidget);
 
 	label_ai = label_new(_("AI:"), check_sound->x + WIDGET_CHECK_WIDTH + 10,
-			 	  WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
+			     WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
 #else
 	label_ai = label_new(_("AI:"), 100, WINDOW_SIZE_Y - 85, WIDGET_LABEL_LEFT);
 #endif
@@ -371,17 +365,17 @@ void setting_init()
 	label_name_player2 = label_new(_("Player 2:"), 100, WINDOW_SIZE_Y - 120, WIDGET_LABEL_LEFT);
 
 	textfield_count_cound = text_field_new(getParamElse("--count", "15"),
-				WIDGET_TEXTFIELD_FILTER_NUM,
-				110 + label_count_round->w,
-				 WINDOW_SIZE_Y - 200);
+					       WIDGET_TEXTFIELD_FILTER_NUM,
+					       110 + label_count_round->w,
+					       WINDOW_SIZE_Y - 200);
 
 	textfield_name_player1 = text_field_new(getParamElse("--name1", NAME_PLAYER_RIGHT),
-				WIDGET_TEXTFIELD_FILTER_ALPHANUM,
-				110 + label_count_round->w, WINDOW_SIZE_Y - 160);
+						WIDGET_TEXTFIELD_FILTER_ALPHANUM,
+						110 + label_count_round->w, WINDOW_SIZE_Y - 160);
 
 	textfield_name_player2 = text_field_new(getParamElse("--name2", NAME_PLAYER_LEFT),
-				WIDGET_TEXTFIELD_FILTER_ALPHANUM,
-				110 + label_count_round->w, WINDOW_SIZE_Y - 120);
+						WIDGET_TEXTFIELD_FILTER_ALPHANUM,
+						110 + label_count_round->w, WINDOW_SIZE_Y - 120);
 
 	for (i = GUN_DUAL_SIMPLE; i <= GUN_BOMBBALL; i++) {
 		int x = 0;
@@ -431,21 +425,21 @@ void setting_init()
 	image_bonus_hidden = wid_image_new(580 + WIDGET_CHECK_WIDTH, 300, image_get(IMAGE_GROUP_BASE, "panel_hidden"));;
 
 	statusbar = statusbar_new(400, 350);
-	statusbar_add(statusbar, check[GUN_DUAL_SIMPLE], "abc\n123\nkoniec");
-	statusbar_add(statusbar, check[GUN_SCATTER], "check 1");
-	statusbar_add(statusbar, check[GUN_TOMMY], "check 2");
-	statusbar_add(statusbar, check[GUN_LASSER], "check 3");
-	statusbar_add(statusbar, check[GUN_MINE], "check 4");
-	statusbar_add(statusbar, check[GUN_BOMBBALL], "check 5");
+	statusbar_add(statusbar, check[GUN_DUAL_SIMPLE], _("Dual simple gun"));
+	statusbar_add(statusbar, check[GUN_SCATTER], _("Scatter"));
+	statusbar_add(statusbar, check[GUN_TOMMY], _("Tommy"));
+	statusbar_add(statusbar, check[GUN_LASSER], _("Laser beam"));
+	statusbar_add(statusbar, check[GUN_MINE], _("Mine"));
+	statusbar_add(statusbar, check[GUN_BOMBBALL], _("Bomb ball"));
 
-	statusbar_add(statusbar, check[BONUS_SPEED], "check 6");
-	statusbar_add(statusbar, check[BONUS_SHOT], "check 7");
-	statusbar_add(statusbar, check[BONUS_TELEPORT], "check 8");
-	statusbar_add(statusbar, check[BONUS_GHOST], "check 9");
-	statusbar_add(statusbar, check[BONUS_4X], "check 10");
-	statusbar_add(statusbar, check[BONUS_HIDDEN], "check 11");
+	statusbar_add(statusbar, check[BONUS_SPEED], _("Speed bonus"));
+	statusbar_add(statusbar, check[BONUS_SHOT], _("Unfinite ammo"));
+	statusbar_add(statusbar, check[BONUS_TELEPORT], _("Unkillable bonus"));
+	statusbar_add(statusbar, check[BONUS_GHOST], _("No-walls bonus"));
+	statusbar_add(statusbar, check[BONUS_4X], _("1 shot to 4 directions bonus"));
+	statusbar_add(statusbar, check[BONUS_HIDDEN], _("Unvisibility bonus"));
 
-	screen_register( screen_new("setting", screen_startSetting, setting_event,
+	screen_register(screen_new("setting", screen_startSetting, setting_event,
 			setting_draw, stopScreenSetting));
 
 	initSettingFile();

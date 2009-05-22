@@ -83,8 +83,8 @@ void daemonize()
 	ipid = getpid() + 1;
 
 	printf("The Tuxanci game server started with PID %d\n", ipid);
-	/* fork again so we become process group leader 
-	 * and cannot regain a controlling tty 
+	/* fork again so we become process group leader
+	 * and cannot regain a controlling tty
 	 */
 	i = fork();
 
@@ -189,7 +189,7 @@ static int public_server_register()
 	}
 #else /* __WIN32__ */
 	unsigned long arg = 1;
-	// Operation is  FIONBIO. Parameter is pointer on non-zero number.
+	/* Operation is  FIONBIO. Parameter is pointer on non-zero number */
 	if (ioctlsocket(s, FIONBIO, &arg) == SOCKET_ERROR) {
 		WSACleanup();
 		return -1;
@@ -198,8 +198,9 @@ static int public_server_register()
 
 	if (connect(s, (struct sockaddr *) &server, sizeof(server)) == -1) {
 #ifndef __WIN32__
-		if (errno != EINPROGRESS)
+		if (errno != EINPROGRESS) {
 			return -1;
+		}
 #else /* __WIN32__ */
 		if (WSAGetLastError() != WSAEWOULDBLOCK) {
 			WSACleanup();

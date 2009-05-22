@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <assert.h>
 
@@ -11,7 +10,7 @@
 #include "hotKey.h"
 
 #ifndef NO_SOUND
-#    include "music.h"
+#include "music.h"
 #endif
 
 #include "mainMenu.h"
@@ -75,7 +74,7 @@ static void eventWidget(void *p)
 {
 	widget_t *button;
 
-	button = (widget_t *) (p);
+	button = (widget_t *) p;
 
 	if (button == button_play) {
 		screen_set("gameType");
@@ -102,9 +101,8 @@ void main_menu_init()
 {
 	image_t *image;
 
-	image =
-		image_add("screen_main.png", IMAGE_NO_ALPHA, "screen_main",
-					 IMAGE_GROUP_BASE);
+	image = image_add("screen_main.png", IMAGE_NO_ALPHA,
+			  "screen_main", IMAGE_GROUP_BASE);
 	image_backgorund = wid_image_new(0, 0, image);
 
 	button_play = button_new(_("Start game"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 200, eventWidget);
@@ -117,7 +115,7 @@ void main_menu_init()
 	music_add("menu.ogg", "menu", MUSIC_GROUP_BASE);
 #endif
 
-	screen_register( screen_new("mainMenu", main_menu_start, main_menu_event,
+	screen_register(screen_new("mainMenu", main_menu_start, main_menu_event,
 			main_menu_draw, main_menu_stop));
 }
 
