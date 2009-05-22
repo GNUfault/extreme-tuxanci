@@ -193,12 +193,25 @@ ADD_SUBDIRECTORY ( src )
 # DATA INSTALLATION
 ###############################################################################
 ADD_SUBDIRECTORY ( data )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/LICENCE
-	DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/AUTHORS
-	DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
-INSTALL ( FILES ${CMAKE_SOURCE_DIR}/README
-	DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
+# install the doc data compressed
+FIND_PACKAGE ( BZIP2 REQUIRED )
+SET ( tuxanci_docs
+	${CMAKE_CURRENT_SOURCE_DIR}/LICENCE
+	${CMAKE_CURRENT_SOURCE_DIR}/AUTHORS
+	${CMAKE_CURRENT_SOURCE_DIR}/README
+)
+FOREACH ( doc ${tuxanci_docs} )
+	GET_FILENAME_COMPONENT( _doc ${doc} NAME_WE )
+	ADD_CUSTOM_COMMAND ( OUTPUT ${_doc}.bz2
+		COMMAND ${BZIP2_TOOL} -c ${doc} > ${_doc}.bz2
+		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
+		DEPENDS ${doc}
+	)
+	INSTALL ( FILES ${CMAKE_BINARY_DIR}/${_doc}.bz2
+		DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
+	LIST(APPEND _docFiles ${_doc}.bz2 )
+ENDFOREACH ( doc )
+ADD_CUSTOM_TARGET(docs ALL DEPENDS ${_docFiles})
 ###############################################################################
 # GOODBYE INFORMATIONS (VARIABLES SETTINGS)
 ###############################################################################
