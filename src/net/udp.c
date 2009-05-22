@@ -55,7 +55,7 @@ void sock_udp_destroy(sock_udp_t *p)
 sock_udp_t *sock_udp_bind(char *address, int port)
 {
 	sock_udp_t *new;
-	ret = -1;	/* no warnings */
+	int res = -1;	/* no warnings */
 
 	assert(port > 0 && port < 65535);
 

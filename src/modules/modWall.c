@@ -18,7 +18,6 @@
 #include "publicServer.h"
 #endif
 
-#ifndef PUBLIC_SERVER
 typedef struct wall_struct {
 	int id;
 

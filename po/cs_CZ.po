@@ -719,7 +719,7 @@ msgstr "Změna zbraně:"
 
 #: src/screen/screen_settingKeys.c:413
 msgid "Player 1"
-msgstr "Hráč 1:"
+msgstr "Hráč 1"
 
 #: src/screen/screen_settingKeys.c:417
 msgid "Up:"

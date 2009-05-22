@@ -168,7 +168,7 @@ static void cmd_teleport(char *line)
 	if (spacePipe == NULL) {
 		spacePipe = space_new(export_fce->fce_arena_get_current()->w,
 				      export_fce->fce_arena_get_current()->h, 320, 240,
-				      etStatusPipe, setStatusPipe);
+				      getStatusPipe, setStatusPipe);
 	}
 
 	space_add(spacePipe, new);
