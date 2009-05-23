@@ -1,25 +1,15 @@
-/*
- * keyboardBuffer.h
- *
- *  Created on: 1.8.2008
- *      Author: Karel Podvolecky
- *
- *  Jednoducha fronta stisknutych klaves.
- */
-
 #ifndef KEYBOARD_BUFFER_H
+#define KEYBOARD_BUFFER_H
 
-#    define KEYBOARD_BUFFER_H
-
-#    include <SDL.h>
-#    include "main.h"
+#include <SDL.h>
+#include "main.h"
 
 typedef struct {
-	SDL_keysym *buff;			/* buffer klaves (kod dle SDLKey enumu) */
-	int size;					/* aktualni velikost alokovaneho bufferu (v poctu uchovatelnych klaves) */
-	int count;					/* pocet klaves aktualne v bufferu */
-	int begin;					/* ukazatel na zacatek bufferu (tj. kam se pridavaji klavesy) */
-	int end;					/* ukazatel na konec bufferu (tj. odkud se odebiraji klavesy) */
+	SDL_keysym *buff;			/* buffer of keys (code according to the SDLKey enum) */
+	int size;				/* up-to-date size of allocated buffer (size == number of saveable keys) */
+	int count;				/* up-to-date number of keys saved in the buffer */
+	int begin;				/* pointer to the beginning of the buffer (i.e. where to add new keys to) */
+	int end;				/* pointer to the end of the buffer (i.e. where to remove old keys from) */
 } keyboardBuffer_t;
 
 extern void keyboard_buffer_init(int size);
@@ -31,4 +21,4 @@ extern int keyboard_buffer_get_count();
 extern bool_t keyboard_buffer_is_any_key();
 extern void keyboard_buffer_quit();
 
-#endif							/* KEYBOARDBUFFER_H_ */
+#endif /* KEYBOARD_BUFFER_H */

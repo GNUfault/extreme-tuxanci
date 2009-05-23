@@ -1,53 +1,42 @@
-
 #ifndef MY_LAYER_H
+#define MY_LAYER_H
 
-#    define MY_LAYER_H
-
-#    include "main.h"
-#    include "image.h"
+#include "main.h"
+#include "image.h"
 
 typedef struct layer_str {
-	int x;						//suradnice obrazka na obrazovke
+	/* coordinates of the image */
+	int x;
 	int y;
 
-	int w;						//rozmery obrazka na obrazovke
+	/* size of the image */
+	int w;
 	int h;
 
-	int px;						//suradnice casti surfrace
+	/* coordinates of a part of the surface */
+	int px;
 	int py;
 
-	int pw;						//rozmeri casti surfrace
+	/* size of a part of the surface */
+	int pw;
 	int ph;
 
+	/* in which layer to lay it */
 	int layer;
 
-	image_t *image;				//dane surfrace
+	/* image of the surface */
+	image_t *image;
 } layer_t;
 
 extern bool_t layer_is_inicialized();
 extern void layer_init();
 
-/*
- * Add image to queue for rendering
- * *img - image to be rendered
- * x,y - coordinates where to draw the image
- * w,h - width and height of rendered part of image
- * px,py - coordinates of upper left corner of rendered part of image
- * layer - on which layer to draw
- *          (0 - under tuxanci | 1 - same as tuxanci | 2 - over tuxancami)
- */
+extern void addLayer(image_t *img, int x, int y, int px, int py, int w, int h, int player);
 
-extern void addLayer(image_t * img,
-					 int x, int y, int px, int py, int w, int h, int player);
-
-/*
- * Draws queue on the screen
- */
 extern void layer_draw_all();
 extern void layer_draw_center(int x, int y);
-extern void layer_draw_slpit(int local_x, int local_y, int x, int y, int w,
-						   int h);
+extern void layer_draw_slpit(int local_x, int local_y, int x, int y, int w, int h);
 extern void layer_flush();
 extern void layer_quit();
 
-#endif
+#endif /* MY_LAYER_H */
