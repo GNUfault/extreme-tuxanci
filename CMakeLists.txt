@@ -194,7 +194,7 @@ ADD_SUBDIRECTORY ( src )
 ###############################################################################
 ADD_SUBDIRECTORY ( data )
 # install the doc data compressed
-FIND_PACKAGE ( BZIP2 REQUIRED )
+FIND_PACKAGE ( GZIP REQUIRED )
 SET ( tuxanci_docs
 	${CMAKE_CURRENT_SOURCE_DIR}/LICENCE
 	${CMAKE_CURRENT_SOURCE_DIR}/AUTHORS
@@ -202,12 +202,12 @@ SET ( tuxanci_docs
 )
 FOREACH ( doc ${tuxanci_docs} )
 	GET_FILENAME_COMPONENT( _doc ${doc} NAME_WE )
-	ADD_CUSTOM_COMMAND ( OUTPUT ${_doc}.bz2
-		COMMAND ${BZIP2_TOOL} -c ${doc} > ${_doc}.bz2
+	ADD_CUSTOM_COMMAND ( OUTPUT ${_doc}.gz
+		COMMAND ${GZIP_TOOL} -c ${doc} > ${_doc}.gz
 		WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
 		DEPENDS ${doc}
 	)
-	INSTALL ( FILES ${CMAKE_BINARY_DIR}/${_doc}.bz2
+	INSTALL ( FILES ${CMAKE_BINARY_DIR}/${_doc}.gz
 		DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
 	LIST(APPEND _docFiles ${_doc}.bz2 )
 ENDFOREACH ( doc )
