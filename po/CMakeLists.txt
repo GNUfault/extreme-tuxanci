@@ -9,6 +9,12 @@ SET ( _gmoFiles )
 ###############################################################################
 # CREATE .MO FOR EACH .PO
 ###############################################################################
+# How are languages installed:
+# Check if there is env variable LINGUAS
+# if it is unset, install all languages
+# if it is empty, dont install any language
+# if it is set to some value, install those
+###############################################################################
 FOREACH ( _current_PO_FILE ${_po_files} )
 	GET_FILENAME_COMPONENT( _lang ${_current_PO_FILE} NAME_WE )
 	SET( _gmoFile ${CMAKE_BINARY_DIR}/po/${_lang}.gmo )
