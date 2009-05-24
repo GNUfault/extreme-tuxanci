@@ -1,9 +1,8 @@
-
 #ifndef DIRECTOR_H
-#    define DIRECTOR_H
+#define DIRECTOR_H
 
-#    include "main.h"
-#    include "list.h"
+#include "main.h"
+#include "list.h"
 
 typedef struct director_struct {
 	char *path;
@@ -12,4 +11,5 @@ typedef struct director_struct {
 
 extern director_t *director_load(char *s);
 extern void director_destroy(director_t * p);
-#endif
+
+#endif /* DIRECTOR_H */

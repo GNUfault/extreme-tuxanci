@@ -1,30 +1,28 @@
-
 #ifndef ARENA_H
+#define ARENA_H
 
-#    define ARENA_H
+#include "main.h"
 
-#    include "main.h"
+#ifndef PUBLIC_SERVER
+#include "image.h"
+#endif /* PUBLIC_SERVER */
 
-#    ifndef PUBLIC_SERVER
-#        include "image.h"
-#    endif
+#include "list.h"
+#include "space.h"
 
-#    ifdef __WIN32__
-#        define random rand
-#    endif
+#ifdef __WIN32__
+#define random rand
+#endif /* __WIN32__ */
 
-#    define SCREEN_SPLIT_HORIZONTAL		1
-#    define SCREEN_SPLIT_VERTICAL		2
-
-#    include "list.h"
-#    include "space.h"
+#define SCREEN_SPLIT_HORIZONTAL		1
+#define SCREEN_SPLIT_VERTICAL		2
 
 typedef struct arena_struct {
-#    ifndef PUBLIC_SERVER
+#ifndef PUBLIC_SERVER
 	char music[STR_SIZE];
 
 	image_t *background;
-#    endif
+#endif /* PUBLIC_SERVER */
 	int w, h;
 
 	list_t *listTimer;
@@ -35,24 +33,23 @@ typedef struct arena_struct {
 
 	int countRound;
 	int max_countRound;
-
 } arena_t;
 
-extern void arena_set_current(arena_t * p);
+extern void arena_set_current(arena_t *p);
 extern arena_t *arena_get_current();
 extern void arena_init();
 extern void arena_quit();
 extern arena_t *arena_new(int w, int h);
-extern int arena_conflict_space(int x1, int y1, int w1, int h1, int x2, int y2,
-						 int w2, int h2);
-extern int arena_is_free_space(arena_t * arena, int x, int y, int w, int h);
-extern void arena_find_free_space(arena_t * arena, int *x, int *y, int w, int h);
+extern int arena_conflict_space(int x1, int y1, int w1, int h1,
+				int x2, int y2, int w2, int h2);
+extern int arena_is_free_space(arena_t *arena, int x, int y, int w, int h);
+extern void arena_find_free_space(arena_t *arena, int *x, int *y, int w, int h);
 extern void arena_get_center_screen(int *screen_x, int *screen_y, int x, int y,
-							int screen_size_x, int screen_size_y);
-#    ifndef PUBLIC_SERVER
-extern void arena_draw(arena_t * arena);
-#    endif
-extern void arena_event(arena_t * arena);
-extern void arena_destroy(arena_t * p);
+				    int screen_size_x, int screen_size_y);
+#ifndef PUBLIC_SERVER
+extern void arena_draw(arena_t *arena);
+#endif /* PUBLIC_SERVER */
+extern void arena_event(arena_t *arena);
+extern void arena_destroy(arena_t *p);
 
-#endif
+#endif /* ARENA_H */

@@ -1,16 +1,13 @@
-
 #ifndef SERVER_SEND_MSG_H
+#define SERVER_SEND_MSG_H
 
-#    define SERVER_SEND_MSG_H
+#include "server.h"
 
-#    include "server.h"
+#define PROTO_SEND_ONE			0
+#define PROTO_SEND_ALL			1
+#define PROTO_SEND_BUT			3
+#define PROTO_SEND_ALL_SEES_TUX		4
 
-#    define PROTO_SEND_ONE			0
-#    define PROTO_SEND_ALL			1
-#    define PROTO_SEND_BUT			3
-#    define PROTO_SEND_ALL_SEES_TUX		4
+extern void send_msg_to_client(int type, client_t *client, char *msg, int type2, int id);
 
-extern void send_msg_to_client(int type, client_t * client, char *msg, int type2,
-							int id);
-
-#endif
+#endif /* SERVER_SEND_MSG_H */

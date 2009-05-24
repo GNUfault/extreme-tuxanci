@@ -1,12 +1,12 @@
-
 #ifndef PROTECT_H
-#    define PROTECT_H
-#    define PROTECT_PING_INTERVAL_TIMEOUT	5000
-#    define PROTECT_SPEED_INTERVAL_TIMEOUT	40
-#    define PROTECT_SPEED_AVARAGE			10
+#define PROTECT_H
 
-#    include "main.h"
-#    include "myTimer.h"
+#include "main.h"
+#include "myTimer.h"
+
+#define PROTECT_PING_INTERVAL_TIMEOUT	5000
+#define PROTECT_SPEED_INTERVAL_TIMEOUT	40
+#define PROTECT_SPEED_AVARAGE		10
 
 typedef struct protect_struct {
 	my_time_t lastPing;
@@ -17,8 +17,9 @@ typedef struct protect_struct {
 } protect_t;
 
 extern protect_t *newProtect();
-extern void refreshLastMove(protect_t * p);
-extern void rereshLastPing(protect_t * p);
-extern bool_t isDown(protect_t * p);
-extern void destroyProtect(protect_t * p);
-#endif
+extern void refreshLastMove(protect_t *p);
+extern void rereshLastPing(protect_t *p);
+extern bool_t isDown(protect_t *p);
+extern void destroyProtect(protect_t *p);
+
+#endif /* PROTECT_H */

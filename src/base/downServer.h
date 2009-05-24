@@ -1,6 +1,4 @@
-
 #ifndef DOWN_SERVER_H
-
 #define DOWN_SERVER_H
 
 #include "list.h"
@@ -12,4 +10,4 @@ extern int down_server_set_select();
 extern int down_server_select_socket();
 extern int down_server_quit();
 
-#endif
+#endif /* DOWN_SERVER_H */
