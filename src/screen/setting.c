@@ -433,7 +433,7 @@ void setting_init()
 	statusbar_add(statusbar, check[GUN_BOMBBALL], _("Bomb ball"));
 
 	statusbar_add(statusbar, check[BONUS_SPEED], _("Speed bonus"));
-	statusbar_add(statusbar, check[BONUS_SHOT], _("Unfinite ammo"));
+	statusbar_add(statusbar, check[BONUS_SHOT], _("Infinite ammo"));
 	statusbar_add(statusbar, check[BONUS_TELEPORT], _("Unkillable bonus"));
 	statusbar_add(statusbar, check[BONUS_GHOST], _("No-walls bonus"));
 	statusbar_add(statusbar, check[BONUS_4X], _("1 shot to 4 directions bonus"));

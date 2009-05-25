@@ -42,7 +42,7 @@ int table_add(char *name, int score)
 	int i;
 
 	if (score <= 0) {
-		return -1;	/* Ha ha ha */
+		return -1;	/* ha ha ha */
 	}
 
 	for (i = 0; i < HIGHSCORE_MAX_PLAYERS; i++) {

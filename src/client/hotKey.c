@@ -78,7 +78,7 @@ void hot_key_unregister(SDLKey key)
 	hotkey = findHotkey(key);
 
 	if (hotkey == NULL) {
-		assert(!_("[Error] Unregisterring not registerred hotkey"));
+		assert(!_("[Error] Unregistering not registered hotkey"));
 	}
 
 	my_index = list_search(listHotKey, hotkey);
@@ -93,7 +93,7 @@ void hot_key_enable(SDLKey key)
 	hotkey = findHotkey(key);
 
 	if (hotkey == NULL) {
-		assert(!_("[Error] Enabling not registerred hotkey"));
+		assert(!_("[Error] Enabling not registered hotkey"));
 	}
 
 	lastActive = timer_get_current_time();
@@ -107,7 +107,7 @@ void hot_key_disable(SDLKey key)
 	hotkey = findHotkey(key);
 
 	if (hotkey == NULL) {
-		assert(!_("[Error] Disabling not registerred hotkey"));
+		assert(!_("[Error] Disabling not registered hotkey"));
 	}
 
 	lastActive = timer_get_current_time();
