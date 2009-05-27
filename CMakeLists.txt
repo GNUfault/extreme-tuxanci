@@ -27,14 +27,13 @@ OPTION (CROSSCOMPILE	"Crosscompile tuxanci defined by ENV{TARGET}" OFF)
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
-SET ( TUXANCI_VERSION "0.21.99" CACHE STRING "Version" ) # update with releases
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
 SET ( CMAKE_CONF_PATH "/etc" CACHE PATH "Config path prefix" )
 SET ( CMAKE_INSTALL_PREFIX "/usr/local/" CACHE PATH "Install path prefix" )
-SET ( CMAKE_LOCALE_PATH "${CMAKE_INSTALL_PREFIX}/share/locale" CACHE PATH "Locale path prefix" )
-SET ( CMAKE_DATA_PATH "${CMAKE_INSTALL_PREFIX}/share/" CACHE PATH "Data path prefix" )
-SET ( CMAKE_LIB_PATH "${CMAKE_INSTALL_PREFIX}/lib/" CACHE PATH "Library path prefix" )
+SET ( CMAKE_LOCALE_PATH "share/locale" CACHE PATH "Locale path prefix" )
+SET ( CMAKE_DATA_PATH "share/" CACHE PATH "Data path prefix" )
+SET ( CMAKE_LIB_PATH "lib/" CACHE PATH "Library path prefix" )
 SET ( LIB_INSTALL_DIR "${CMAKE_LIB_PATH}" )
 ###############################################################################
 # BASIC PROJECT VALUES
@@ -67,10 +66,10 @@ ENDIF ( CROSSCOMPILE )
 SET ( CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" )
 #various variables
 SET ( CMAKE_INSTALL_ETCDIR ${CMAKE_CONF_PATH} )
-SET ( CMAKE_DOC_PATH "${CMAKE_INSTALL_PREFIX}/share/doc/${APPNAME}" CACHE PATH "Doc path prefix" )
-SET ( CMAKE_INSTALL_BINDIR "${CMAKE_INSTALL_PREFIX}/bin" CACHE PATH "Binary path prefix" )
-SET ( CMAKE_INSTALL_ICONDIR "${CMAKE_INSTALL_PREFIX}/pixmaps" CACHE PATH "Icon path prefix" )
-SET ( CMAKE_INSTALL_DESKTOPDIR "${CMAKE_INSTALL_PREFIX}/applications" CACHE	PATH "Desktop file path prefix")
+SET ( CMAKE_DOC_PATH "share/doc/${APPNAME}" CACHE PATH "Doc path prefix" )
+SET ( CMAKE_INSTALL_BINDIR "bin" CACHE PATH "Binary path prefix" )
+SET ( CMAKE_INSTALL_ICONDIR "share/pixmaps" CACHE PATH "Icon path prefix" )
+SET ( CMAKE_INSTALL_DESKTOPDIR "share/applications" CACHE	PATH "Desktop file path prefix")
 SET ( CMAKE_INSTALL_LOCALEDIR ${CMAKE_LOCALE_PATH} )
 SET ( CMAKE_INSTALL_DATADIR ${CMAKE_DATA_PATH} )
 SET ( CMAKE_INSTALL_LIBDIR ${LIB_INSTALL_DIR} )
@@ -90,11 +89,14 @@ SET ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Tuxanci is first tux shooter inspired b
 SET ( CPACK_PACKAGE_VENDOR "Tuxanci team <team@tuxanci.org>" )
 SET ( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENCE" )
 SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README" )
-SET ( CPACK_GENERATOR "STGZ;TGZ" )
-SET ( CPACK_SOURCE_GENERATOR "STGZ;TGZ" )
+SET ( CPACK_GENERATOR "TGZ" )
+SET ( CPACK_SOURCE_GENERATOR "TGZ" )
 SET ( CPACK_PACKAGE_VERSION_MAJOR "0" )
-SET ( CPACK_PACKAGE_VERSION_MINOR "22" )
-SET ( CPACK_PACKAGE_VERSION_PATCH "0" )
+SET ( CPACK_PACKAGE_VERSION_MINOR "21" )
+SET ( CPACK_PACKAGE_VERSION_PATCH "99" )
+SET ( TUXANCI_VERSION 
+	"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
+)
 SET ( CPACK_STRIP_FILES "src/tuxanci" )
 SET ( CPACK_SET_DESTDIR "ON" )
 SET ( CPACK_SOURCE_PACKAGE_FILE_NAME "tuxanci-${TUXANCI_VERSION}" )
