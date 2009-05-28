@@ -17,7 +17,7 @@
 OPTION (BUILD_SERVER        "Build the server instead of client"           OFF)
 OPTION (ENABLE_IPV6         "Build with the ipv6 support"                  ON)
 OPTION (WITH_AUDIO          "Build with audio enabled"                     ON)
-OPTION (ENABLE_DEBUG        "Build debug features"                         OFF)
+OPTION (ENABLE_DEBUG        "Build debug features"                         ON)
 OPTION (ENABLE_COMPRESSION  "Compress documentation files"                 OFF)
 OPTION (DEVELOPER           "Modify stuff to please tuxanci devs"          OFF)
 OPTION (PACKAGE             "Define building binary package"               OFF)
