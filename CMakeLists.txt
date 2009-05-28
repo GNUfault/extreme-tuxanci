@@ -14,12 +14,13 @@
 ###############################################################################
 # DEFAULT OPTIONS
 ###############################################################################
-OPTION (BUILD_SERVER		"Build the server instead of client"		OFF)
+OPTION (BUILD_SERVER	"Build the server instead of client"		OFF)
 OPTION (ENABLE_IPV6		"Build with the ipv6 support"				ON)
 OPTION (WITH_AUDIO		"Build with audio enabled"					ON)
 OPTION (ENABLE_DEBUG	"Build debug features"						OFF)
-OPTION (ENABLE_COMPRESSION    "Compress documentation files"              OFF)
+OPTION (ENABLE_COMPRESSION    "Compress documentation files"        OFF)
 OPTION (DEVELOPER		"Modify stuff to please tuxanci devs"		OFF)
+OPTION (PACKAGE			"Define building binary package"			OFF)
 OPTION (WITH_NLS		"Build the translations"					ON)
 OPTION (Apple			"Build some apple quirks. USE ONLY ON MAC!"	OFF)
 OPTION (WITH_OPENGL		"Use opengl as renderer instead of SW"		ON)
@@ -30,7 +31,11 @@ OPTION (CROSSCOMPILE	"Crosscompile tuxanci defined by ENV{TARGET}" OFF)
 SET ( WORKDIR ${CMAKE_SOURCE_DIR}/src )
 # data because some distributions want different data placement
 SET ( CMAKE_CONF_PATH "/etc" CACHE PATH "Config path prefix" )
-SET ( CMAKE_INSTALL_PREFIX "/usr/local/" CACHE PATH "Install path prefix" )
+IF ( PACKAGE )
+	SET ( CMAKE_INSTALL_PREFIX "/" CACHE PATH "Install path prefix" )
+ELSE ( PACKAGE )
+	SET ( CMAKE_INSTALL_PREFIX "/usr/local/" CACHE PATH "Install path prefix" )
+ENDIF ( PACKAGE )
 SET ( CMAKE_LOCALE_PATH "share/locale" CACHE PATH "Locale path prefix" )
 SET ( CMAKE_DATA_PATH "share/" CACHE PATH "Data path prefix" )
 SET ( CMAKE_LIB_PATH "lib/" CACHE PATH "Library path prefix" )
@@ -74,6 +79,10 @@ SET ( CMAKE_INSTALL_LOCALEDIR ${CMAKE_LOCALE_PATH} )
 SET ( CMAKE_INSTALL_DATADIR ${CMAKE_DATA_PATH} )
 SET ( CMAKE_INSTALL_LIBDIR ${LIB_INSTALL_DIR} )
 SET ( CMAKE_INSTALL_DOCDIR ${CMAKE_DOC_PATH} )
+# defines to determine if we build package or not
+IF ( PACKAGE )
+	ADD_DEFINITIONS ( -DBUILD_PACKAGE )
+ENDIF ( PACKAGE )
 # uninstall
 CONFIGURE_FILE (
   "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"

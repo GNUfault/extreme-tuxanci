@@ -4,19 +4,22 @@
 #include "main.h"
 
 #cmakedefine USE_MAGICK
+#ifdef BUILD_PACKAGE
+	#define PACKAGE_PREFIX "../"
+#else /* BUILD_PACKAGE */
+	#define PACKAGE_PREFIX ""
+#endif /* BUILD_PACKAGE */
 #define TUXANCI_VERSION		"@TUXANCI_VERSION@"
-#define PREFIX			"@CMAKE_INSTALL_PREFIX@"
-#ifndef PUBLIC_SERVER
-	#define APPNAME		"tuxanci"
-#else /* PUBLIC_SERVER */
-	#define APPNAME		"tuxanci-server"
-	#define SERVER_CONFIG	"@CMAKE_CONF_PATH@" "/"	APPNAME	"/server.conf"
+#define PREFIX			PACKAGE_PREFIX "@CMAKE_INSTALL_PREFIX@" "/"
+#define APPNAME			"@APPNAME@"
+#ifdef PUBLIC_SERVER
+	#define SERVER_CONFIG	PREFIX "@CMAKE_CONF_PATH@" "/"	APPNAME	"/server.conf"
 #endif /* PUBLIC_SERVER */
-#define PATH_DIR		"@CMAKE_DATA_PATH@"	"/"	APPNAME "/"
+#define PATH_DIR		PREFIX "@CMAKE_DATA_PATH@"	"/"	APPNAME "/"
 
 /* windows bug */
 #ifndef __WIN32__
-	#define PATH_MODULES 	"@LIB_INSTALL_DIR@" "/"	APPNAME	"/"
+	#define PATH_MODULES 	PREFIX "@LIB_INSTALL_DIR@" "/"	APPNAME	"/"
 #else /* __WIN32__ */
 	#define PATH_MODULES 	PREFIX
 #endif /* __WIN32__ */
@@ -25,8 +28,8 @@
 #define PATH_ARENA		PATH_DIR		"arena/"
 #define PATH_SOUND		PATH_DIR		"sound/"
 #define PATH_MUSIC		PATH_DIR		"music/"
-#define PATH_LOCALE		"@CMAKE_LOCALE_PATH@"	"/"
-#define PATH_DOC		"@CMAKE_DOC_PATH@"	"/"
+#define PATH_LOCALE		PREFIX "@CMAKE_LOCALE_PATH@"	"/"
+#define PATH_DOC		PREFIX "@CMAKE_DOC_PATH@"	"/"
 #define PACKAGE			"tuxanci"
 
 #endif /* PATH_H */
