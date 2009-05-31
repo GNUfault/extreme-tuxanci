@@ -40,11 +40,10 @@ void music_init()
 	isMusicInit = TRUE;
 	var_music_is_active = TRUE;
 
-	if (isParamFlag("--no-music")) {
+	if (isParamFlag("--no-music"))
 		music_set_active(FALSE);
-	} else if (isParamFlag("--music")) {
+	else if (isParamFlag("--music"))
 		music_set_active(TRUE);
-	}
 }
 
 /*
@@ -57,11 +56,10 @@ static Mix_Music *loadMixMusic(char *file)
 
 	DEBUG_MSG(_("[Debug] Loading music [%s]\n"), file);
 
-	if (isFillPath(file)) {
+	if (isFillPath(file))
 		strcpy(str, file);
-	} else {
+	else
 		sprintf(str, PATH_MUSIC "%s", file);
-	}
 
 	accessExistFile(str);
 
@@ -80,9 +78,8 @@ static Mix_Music *loadMixMusic(char *file)
  */
 static void playMixMusic()
 {
-	if (currentMusic != NULL) {
+	if (currentMusic != NULL)
 		Mix_PlayMusic(currentMusic, 1000);
-	}
 }
 
 /*
@@ -100,9 +97,8 @@ void music_add(char *file, char *name, char *group)
 {
 	Mix_Music *new;
 
-	if (isMusicInit == FALSE) {
+	if (isMusicInit == FALSE)
 		return;
-	}
 
 	assert(file != NULL);
 	assert(name != NULL);
@@ -117,9 +113,8 @@ void music_add(char *file, char *name, char *group)
  */
 void music_stop()
 {
-	if (isMusicInit == FALSE || var_music_is_active == FALSE) {
+	if (isMusicInit == FALSE || var_music_is_active == FALSE)
 		return;
-	}
 
 	if (currentMusic != NULL) {
 		DEBUG_MSG(_("[Debug] Stopping playing music\n"));
@@ -144,9 +139,8 @@ void music_play(char *name, char *group)
 		isStrInit = 1;
 	}
 
-	if (isMusicInit == FALSE || var_music_is_active == FALSE) {
+	if (isMusicInit == FALSE || var_music_is_active == FALSE)
 		return;
-	}
 
 	if (currentMusic != NULL &&
 	    strcmp(currentMusic_group, group) == 0 &&
@@ -154,9 +148,8 @@ void music_play(char *name, char *group)
 		return;
 	}
 
-	if (currentMusic != NULL) {
+	if (currentMusic != NULL)
 		music_stop();
-	}
 
 	currentMusic = storage_get(listStorage, group, name);
 	strcpy(currentMusic_group, group);
@@ -208,9 +201,8 @@ char *music_get_current()
  */
 void music_del_all_in_group(char *group)
 {
-	if (isMusicInit == FALSE) {
+	if (isMusicInit == FALSE)
 		return;
-	}
 
 	storage_del_all(listStorage, group, destroyMusic);
 }
@@ -220,9 +212,8 @@ void music_del_all_in_group(char *group)
  */
 void music_quit()
 {
-	if (isMusicInit == FALSE) {
+	if (isMusicInit == FALSE)
 		return;
-	}
 
 	DEBUG_MSG(_("[Debug] Shutting down music\n"));
 
