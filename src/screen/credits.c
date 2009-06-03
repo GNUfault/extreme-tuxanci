@@ -122,7 +122,7 @@ void scredits_init()
 
 			line = (char *) textFile->text->list[i];
 
-			label = label_new(line, WINDOW_SIZE_X / 2 - WINDOW_SIZE_X / 4,
+			label = label_new(line, WINDOW_SIZE_X / 3 - WINDOW_SIZE_X / 4,
 						(WINDOW_SIZE_Y - 100) + i * 20,
 						 WIDGET_LABEL_LEFT);
 

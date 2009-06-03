@@ -1,34 +1,33 @@
-###
-# Programming
-###
-
 Dušan Ďurech (Oroborus) <dusan.d@centrum.sk>
 Jabber ID: oroborus@jabbim.sk
-Project leader; main programmer
-
-Tomáš Jedrzejek (ZeXx86) <zexx86@gmail.com>
-Jabber ID: ZeXx86@jabber.cz
-Additional programmer & Master Server programmer
+Main developer
 
 Michal Zima (xHire) <xhire@tuxportal.cz>
-Jabber ID: Miczek@gmail.com
-Project manager; additional programmer
-
-Tomáš Chvátal (scarab) <tomas.chvatal@gmail.com>
-Jabber ID: Scarabeus_IV@isgeek.info
-Cmake stuff; Windows port; translations coordinator
-
-Karel Podvolecký (kapo)
-Keyboard improvements (buffer, pressing etc.)
-
-
-###
-# Graphics, music, arenas
-###
+Jabber ID: xhire@jabbim.cz
+Project manager & coordinator of the development; website maintainer
 
 Jiří Helebrant (helb) <helb@helb.cz>
 Jabber ID: helb@helb.cz
-Main graphic designer
+Main graphic designer & creator of arenas
+
+Tomáš Jedrzejek (ZeXx86) <zexx86@gmail.com>
+Jabber ID: zexx86@zexos.org
+Programmer of Master Server, much of the network stuff & other significant optimizations
+
+Tomáš Chvátal (scarab) <tomas.chvatal@gmail.com>
+Jabber ID: scarabeus_iv@isgeek.info
+Programmer of CMake build-installation system; Gentoo ebuild maintainer
+
+Petr Sýkora (Glubo) <petr.sykora@gmail.com>
+Jabber ID: petrsykora@jabber.cz
+Occasional programmer - OpenGL rendering
+
+Karel Podvolecký (kapo) <karel.podvolecky@gmail.com>
+Jabber ID: kapo@jabber.ok.cvut.cz
+Occasional programmer - keyboard improvements (buffer, pressing etc.)
+
+Petr L. (Timoo) <daac@post.cz>
+Port for Mac OS X
 
 Roman Kabelka (CJ Neti) <neti@cjneti.net>
-Sound designer
+Author of the music
