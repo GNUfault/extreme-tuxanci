@@ -20,11 +20,15 @@ OPTION (WITH_AUDIO          "Build with audio enabled"                     ON)
 OPTION (ENABLE_DEBUG        "Build debug features"                         ON)
 OPTION (ENABLE_COMPRESSION  "Compress documentation files"                 OFF)
 OPTION (DEVELOPER           "Modify stuff to please tuxanci devs"          OFF)
+MARK_AS_ADVANCED ( DEVELOPER )
 OPTION (PACKAGE             "Define building binary package"               OFF)
+MARK_AS_ADVANCED ( PACKAGE )
 OPTION (WITH_NLS            "Build the translations"                       ON)
 OPTION (Apple               "Build some apple quirks. USE ONLY ON MAC!"    OFF)
+MARK_AS_ADVANCED ( Apple )
 OPTION (WITH_OPENGL         "Use opengl as renderer instead of SW"         ON)
 OPTION (CROSSCOMPILE        "Crosscompile tuxanci defined by ENV{TARGET}"  OFF)
+MARK_AS_ADVANCED ( CROSSCOMPILE )
 ###############################################################################
 # IMPORTANT DEFINITIONS [PREFIX,...]
 ###############################################################################
@@ -106,6 +110,7 @@ SET ( CPACK_PACKAGE_VERSION_PATCH "99" )
 SET ( TUXANCI_VERSION 
 	"${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
 )
+MARK_AS_ADVANCED ( TUXANCI_VERSION )
 SET ( CPACK_STRIP_FILES "src/tuxanci" )
 SET ( CPACK_SET_DESTDIR "ON" )
 SET ( CPACK_SOURCE_PACKAGE_FILE_NAME "tuxanci-${TUXANCI_VERSION}" )

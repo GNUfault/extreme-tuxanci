@@ -4,6 +4,7 @@
 # LINKING ( for modules )
 ###############################################################################
 SET ( SONAME_VERSION "0" CACHE STRING "SONAME Version" )
+MARK_AS_ADVANCED ( SONAME_VERSION )
 LINK_LIBRARIES ( ${CMAKE_DL_LIBS} )
 ###############################################################################
 # SOURCE SPECIFICATION
