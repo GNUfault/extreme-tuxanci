@@ -7,12 +7,15 @@
 #define WIDGET_TYPE_BUTTON		2
 #define WIDGET_TYPE_BUTTONIMAGE		3
 #define WIDGET_TYPE_TEXTFILED		4
-#define WIDGET_TYPE_CATCHKEY		4
-#define WIDGET_TYPE_CHECK		5
-#define WIDGET_TYPE_CHOICE		6
-#define WIDGET_TYPE_IMAGE		7
-#define WIDGET_TYPE_SELECT		8
-#define WIDGET_TYPE_STATUSBAR		9
+#define WIDGET_TYPE_CATCHKEY		5
+#define WIDGET_TYPE_CHECK		6
+#define WIDGET_TYPE_CHOICE		7
+#define WIDGET_TYPE_IMAGE		8
+#define WIDGET_TYPE_SELECT		9
+#define WIDGET_TYPE_STATUSBAR		10
+#define WIDGET_TYPE_CONTAINER		11
+
+#define WIDGET_NONE_VALUE	-1
 
 typedef struct widget_struct {
 	int type;
@@ -26,6 +29,8 @@ extern void widget_set_location(widget_t *p, int x, int y);
 extern void widget_get_location(widget_t *p, int *x, int *y);
 extern void widget_get_size(widget_t *p, int w, int h);
 extern void widget_set_size(widget_t *p, int *w, int *h);
+extern void widget_draw(widget_t *p);
+extern void widget_event(widget_t *p);
 extern void widget_destroy(widget_t *p);
 
 #endif /* WIDGET_H */

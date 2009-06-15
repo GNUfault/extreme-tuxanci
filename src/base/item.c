@@ -427,7 +427,6 @@ static void tux_event_tux_is_deadWithItem(tux_t *tux, item_t *item)
 		}
 	}
 
-	world_inc_round();
 	tux_event_tux_is_dead(tux);
 }
 

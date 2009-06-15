@@ -16,6 +16,7 @@ extern void world_init();
 extern void world_set_arena(arenaFile_t *arenaFile);
 extern void world_do_end();
 extern void world_inc_round();
+extern bool_t world_is_match_end();
 extern tux_t *world_get_control_tux(int control_type);
 extern void world_set_control_tux(tux_t *tux, int control_type);
 extern void world_tux_control(tux_t *p);

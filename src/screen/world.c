@@ -111,6 +111,15 @@ void world_inc_round()
 	}
 }
 
+bool_t world_is_match_end()
+{
+	if (arena->max_countRound == WORLD_COUNT_ROUND_UNLIMITED) {
+		return FALSE;
+	}
+
+	return (arena->countRound >= arena->max_countRound);
+}
+
 void prepareArena()
 {
 	tux_t *tux;

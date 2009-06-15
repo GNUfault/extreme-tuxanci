@@ -308,6 +308,8 @@ void tux_event_tux_is_dead(tux_t *tux)
 		return;
 	}
 
+	world_inc_round();
+
 #ifndef NO_SOUND
 	sound_play("dead", SOUND_GROUP_BASE);
 #endif /* NO_SOUND */
@@ -359,7 +361,6 @@ static void tux_event_tux_is_deadWIthShot(tux_t *tux, shot_t *shot)
 
 	}
 
-	world_inc_round();
 	tux_event_tux_is_dead(tux);
 }
 

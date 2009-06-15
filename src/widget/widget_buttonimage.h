@@ -2,6 +2,7 @@
 #define WIDGET_BUTTONIMAGE_H
 
 #include "main.h"
+#include "image.h"
 #include "widget.h"
 
 #define WIDGET_BUTTONIMAGE_TIME	10

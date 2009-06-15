@@ -27,6 +27,11 @@
 
 #define UNUSED(var)		if (0 && var) {}
 
+#define FATAL(msg,arg...)				\
+		do{					\
+			fprintf(stderr, msg, ##arg);	\
+			abort(0);			\
+		}while(0)
 
 extern char *getParam(char *s);
 extern char *getParamElse(char *s1, char *s2);

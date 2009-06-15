@@ -22,9 +22,11 @@
 #include "widget_textfield.h"
 #include "widget_check.h"
 #include "widget_image.h"
+#include "widget_container.h"
 
 static widget_t *image_backgorund;
 
+static widget_t *widget_container;
 static widget_t *button_play;
 static widget_t *button_setting;
 static widget_t *button_table;
@@ -49,20 +51,26 @@ void main_menu_draw()
 {
 	wid_image_draw(image_backgorund);
 
+	widget_container_draw(widget_container);
+/*
 	button_draw(button_play);
 	button_draw(button_setting);
 	button_draw(button_table);
 	button_draw(button_credits);
 	button_draw(button_end);
+*/
 }
 
 void main_menu_event()
 {
+	widget_container_event(widget_container);
+/*
 	button_event(button_play);
 	button_event(button_setting);
 	button_event(button_table);
 	button_event(button_credits);
 	button_event(button_end);
+*/
 }
 
 void main_menu_stop()
@@ -105,11 +113,21 @@ void main_menu_init()
 			  "screen_main", IMAGE_GROUP_BASE);
 	image_backgorund = wid_image_new(0, 0, image);
 
-	button_play = button_new(_("Start game"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 200, eventWidget);
-	button_setting = button_new(_("Settings"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 250, eventWidget);
-	button_table = button_new(_("Highscore"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 300, eventWidget);
-	button_credits = button_new(_("Credits"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 350, eventWidget);
-	button_end = button_new(_("Quit game"), WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 400, eventWidget);
+	widget_container = widget_container_new(WINDOW_SIZE_X / 2 - WIDGET_BUTTON_WIDTH / 2, 200, WIDGET_BUTTON_WIDTH, 300);
+
+	button_play = button_new(_("Start game"), WIDGET_NONE_VALUE, WIDGET_NONE_VALUE, eventWidget);
+	button_setting = button_new(_("Settings"), WIDGET_NONE_VALUE, WIDGET_NONE_VALUE, eventWidget);
+	button_table = button_new(_("Highscore"), WIDGET_NONE_VALUE, WIDGET_NONE_VALUE, eventWidget);
+	button_credits = button_new(_("Credits"), WIDGET_NONE_VALUE, WIDGET_NONE_VALUE, eventWidget);
+	button_end = button_new(_("Quit game"), WIDGET_NONE_VALUE, WIDGET_NONE_VALUE, eventWidget);
+
+	widget_container_add(widget_container, button_play);
+	widget_container_add(widget_container, button_setting);
+	widget_container_add(widget_container, button_table);
+	widget_container_add(widget_container, button_credits);
+	widget_container_add(widget_container, button_end);
+
+	widget_set_layout_table(widget_container, 1, 5, 0, 50);
 
 #ifndef NO_SOUND
 	music_add("menu.ogg", "menu", MUSIC_GROUP_BASE);
