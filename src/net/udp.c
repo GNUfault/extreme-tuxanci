@@ -116,6 +116,7 @@ sock_udp_t *sock_udp_bind(char *address, int port)
 sock_udp_t *sock_udp_connect(char *address, int port)
 {
 	sock_udp_t *new;
+	char *domain;
 
 	assert(address != NULL);
 	assert(port > 0 && port < 65536);
@@ -143,7 +144,7 @@ sock_udp_t *sock_udp_connect(char *address, int port)
 		return NULL;
 	}
 
-	char *domain = dns_resolv(address);
+	domain = dns_resolv(address);
 
 	if (domain) {
 		address = domain;

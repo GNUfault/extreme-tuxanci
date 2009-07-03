@@ -10,6 +10,7 @@
 
 #include <string.h>
 #include "main.h"
+#include "dns.h"
 
 char *dns_resolv(char *domain)
 {
