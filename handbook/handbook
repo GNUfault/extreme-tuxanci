@@ -28,10 +28,6 @@
 - keep them clear and following standard scheme
 - if a filename is to be mentioned, don't use any quotes and try to situate it to the end of the string
 
-* Code style
-- you can use kr.sh script for basic orientation, but think with your head and correct all bull shits
-- at the end of each file leave one empty line
-
 * Writing a module
 
 * Creating a package
