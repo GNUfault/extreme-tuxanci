@@ -1,12 +1,10 @@
 #ifndef WIDGET_CONTAINER_H
-
 #define WIDGET_CONTAINER_H
 
 #include "list.h"
 #include "widget.h"
 
 typedef struct widget_container {
-
 	list_t *listWidget;
 } widget_container_t;
 

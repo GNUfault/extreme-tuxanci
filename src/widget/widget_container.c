@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <assert.h>
 
@@ -44,14 +43,13 @@ void widget_set_layout_table(widget_t *widget, int countW, int countH, int w, in
 		for (j = 0; j < countW; j++) {
 			widget_t *widget_tmp;
 
-			if( count >= p->listWidget->count )
-			{
+			if (count >= p->listWidget->count) {
 				break;
 			}
 
-			widget_tmp = (widget_t*)p->listWidget->list[count];
+			widget_tmp = (widget_t *) p->listWidget->list[count];
 	
-			widget_set_location(widget_tmp, widget->x+j*w, widget->y+i*h);
+			widget_set_location(widget_tmp, widget->x + j * w, widget->y + i * h);
 			count++;
 		}
 	}
@@ -70,7 +68,7 @@ void widget_container_draw(widget_t *widget)
 	for (i = 0; i < p->listWidget->count; i++) {
 		widget_t *widget;
 
-		widget = (widget_t*)p->listWidget->list[i];
+		widget = (widget_t *) p->listWidget->list[i];
 
 		widget_draw(widget);
 	}
@@ -89,7 +87,7 @@ void widget_container_event(widget_t *widget)
 	for (i = 0; i < p->listWidget->count; i++) {
 		widget_t *widget;
 
-		widget = (widget_t*)p->listWidget->list[i];
+		widget = (widget_t *) p->listWidget->list[i];
 
 		widget_event(widget);
 	}

@@ -15,7 +15,7 @@
 #define WIDGET_TYPE_STATUSBAR		10
 #define WIDGET_TYPE_CONTAINER		11
 
-#define WIDGET_NONE_VALUE	-1
+#define WIDGET_NONE_VALUE		-1
 
 typedef struct widget_struct {
 	int type;
