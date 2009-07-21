@@ -2,43 +2,44 @@
 # Once done this will define
 #
 #  CAIRO_FOUND - system has Cairo
-#  CAIRO_CFLAGS - the Cairo CFlags
 #  CAIRO_LIBRARIES - Link these to use Cairo
+#  CAIRO_INCLUDE_DIR - where to find zip.h, etc.
 #
 # Copyright (c) 2007, Pino Toscano, <pino@kde.org>
+# Copyright (c) 2009, Tomas Chvatal, <scarabeus@gentoo.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
-if (NOT WIN32)
-  include(UsePkgConfig)
+IF(CAIRO_LIBRARIES AND CAIRO_INCLUDE_DIR)
+	# Already in cache, be silent
+	SET(CAIRO_FIND_QUIETLY TRUE)
+ELSE(CAIRO_LIBRARIES AND CAIRO_INCLUDE_DIR)
+	# we need the svg cairo part so why not :]
+	# normally we should search for cairo.h only
+	FIND_PATH ( CAIRO_INCLUDE_DIR cairo-svg.h
+		PATHS
+		/usr/local/include
+		/usr/include
+		NO_DEFAULT_PATH
+	)
+	FIND_LIBRARY ( CAIRO_LIBRARIES cairo
+		PATH_SUFFIXES lib64 lib
+		PATHS
+		/usr/local
+		/usr
+		NO_DEFAULT_PATH
+	)
+	# handle the QUIETLY and REQUIRED arguments and set ZIP_FOUND to TRUE if
+	# all listed variables are TRUE
+	INCLUDE(FindPackageHandleStandardArgs)
+	FIND_PACKAGE_HANDLE_STANDARD_ARGS(ZIP DEFAULT_MSG ZIP_LIBRARIES ZIP_INCLUDE_DIR)
+	IF(NOT ZIP_FOUND)
+		IF(ZIP_REQUIRED)
+			MESSAGE(FATAL_ERROR "libcairo not found")
+		ENDIF(ZIP_REQUIRED)
+		SET(ZIP_LIBRARIES)
+	ENDIF(NOT ZIP_FOUND)
+ENDIF(CAIRO_LIBRARIES AND CAIRO_INCLUDE_DIR)
 
-  pkgconfig(cairo _LibCairoIncDir _LibCairoLinkDir _CairoLinkFlags _CairoCflags)
-  set (CAIRO_FOUND FALSE)
-  if (_LibCairoIncDir)
-
-    if (CAIRO_VERSION)
-
-      exec_program(${PKGCONFIG_EXECUTABLE} ARGS --atleast-version=${CAIRO_VERSION} cairo RETURN_VALUE _return_VALUE OUTPUT_VARIABLE _pkgconfigDevNull)
-      if(_return_VALUE STREQUAL "0")
-        set (CAIRO_CFLAGS ${_CairoCflags})
-        set (CAIRO_LIBRARIES ${_CairoLinkFlags})
-      endif(_return_VALUE STREQUAL "0")
-
-    else (CAIRO_VERSION)
-      set (CAIRO_CFLAGS ${_CairoCflags})
-      set (CAIRO_LIBRARIES ${_CairoLinkFlags})
-    endif (CAIRO_VERSION)
-
-    include(FindPackageHandleStandardArgs)
-    find_package_handle_standard_args(Cairo DEFAULT_MSG CAIRO_LIBRARIES CAIRO_CFLAGS)
-
-  endif (_LibCairoIncDir)
-
-endif(NOT WIN32)
-
-mark_as_advanced(
-  CAIRO_CFLAGS
-  CAIRO_LIBRARIES
-)
-
+MARK_AS_ADVANCED( CAIRO_LIBRARIES CAIRO_INCLUDE_DIR )
