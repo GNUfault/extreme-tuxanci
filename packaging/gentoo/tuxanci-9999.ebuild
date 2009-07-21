@@ -29,6 +29,7 @@ RDEPEND="
 		media-libs/libsdl[X,opengl?]
 		media-libs/sdl-ttf[X]
 		media-libs/sdl-image[png]
+		x11-libs/cairo[X,svg]
 		alsa? (
 			media-libs/sdl-mixer[vorbis]
 		)
