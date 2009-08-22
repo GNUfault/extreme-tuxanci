@@ -57,9 +57,9 @@ ENDIF ( NOT BUILD_SERVER )
 ###############################################################################
 # OPENGL CHECK
 ###############################################################################
-IF ( WITH_OPENGL )
+IF ( WITH_OPENGL AND NOT BUILD_SERVER )
 	ADD_DEFINITIONS ( -DSUPPORT_OPENGL )
-ENDIF ( WITH_OPENGL )
+ENDIF ( WITH_OPENGL AND NOT BUILD_SERVER )
 ###############################################################################
 # SERVER COMPILATION
 ###############################################################################
