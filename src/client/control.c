@@ -5,7 +5,7 @@
 #include "main.h"
 #include "control.h"
 
-control_t* control_new(SDLKey arg_up, SDLKey arg_right, SDLKey arg_left,
+control_t *control_new(SDLKey arg_up, SDLKey arg_right, SDLKey arg_left,
 		       SDLKey arg_down, SDLKey arg_shot, SDLKey arg_switch)
 {
 	control_t *tmp;

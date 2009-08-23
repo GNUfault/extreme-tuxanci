@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,14 +10,13 @@
 #include "configFile.h"
 #include "config.h"
 
-typedef struct setting_int_struct
-{
-	int key;		/* identifikacny kluc */
-	char *param;		/* parameter programu */
-	char *var;		/* premenna v config subore */
-	int type;		/* typ udaju - retazec/cislo */
-	int value_int;		/* hodnota cele cislo */
-	char *value_str;	/* hodnota retazec */
+typedef struct setting_int_struct {
+	int key;		/* identification key */
+	char *param;		/* parameter of the program */
+	char *var;		/* variable in the config file */
+	int type;		/* type of the data - string/number */
+	int value_int;		/* numeric data */
+	char *value_str;	/* textual data */
 } config_t;
 
 #define CONFIG_TYPE_INT	1
@@ -55,7 +53,7 @@ static config_t config_list[] =
 
 static textFile_t *config_file;
 
-static config_t* find_config(int key)
+static config_t *find_config(int key)
 {
 	int i;
 
@@ -165,11 +163,11 @@ int config_get_int_value(int key)
 
 	assert(tmp != NULL);
 	assert(tmp->type == CONFIG_TYPE_INT);
-	
+
 	return tmp->value_int;
 }
 
-char* config_get_str_value(int key)
+char *config_get_str_value(int key)
 {
 	config_t *tmp;
 
@@ -177,7 +175,7 @@ char* config_get_str_value(int key)
 
 	assert(tmp != NULL);
 	assert(tmp->type == CONFIG_TYPE_STR);
-	
+
 	return tmp->value_str;
 }
 
@@ -189,7 +187,7 @@ void config_set_int_value(int key, int n)
 
 	assert(tmp != NULL);
 	assert(tmp->type == CONFIG_TYPE_INT);
-	
+
 	tmp->value_int = n;
 }
 
@@ -201,9 +199,9 @@ void config_set_str_value(int key, char *str)
 
 	assert(tmp != NULL);
 	assert(tmp->type == CONFIG_TYPE_STR);
-	
+
 	if (tmp->value_str != NULL) {
-		free(tmp->value_str);	// musi to byt alokovane
+		free(tmp->value_str);	/* has to be allocated */
 	}
 
 	tmp->value_str = strdup(str);

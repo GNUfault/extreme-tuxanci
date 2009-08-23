@@ -8,7 +8,7 @@ typedef struct widget_container {
 	list_t *listWidget;
 } widget_container_t;
 
-extern widget_t* widget_container_new(int x, int y, int w, int h);
+extern widget_t *widget_container_new(int x, int y, int w, int h);
 extern void widget_container_add(widget_t *widget, widget_t *widget_add);
 extern void widget_set_layout_table(widget_t *widget, int countW, int countH, int w, int h);
 extern void widget_container_draw(widget_t *widget);

@@ -5,7 +5,7 @@
 #include "widget.h"
 #include "widget_container.h"
 
-widget_t* widget_container_new(int x, int y, int w, int h)
+widget_t *widget_container_new(int x, int y, int w, int h)
 {
 	widget_container_t *new;
 

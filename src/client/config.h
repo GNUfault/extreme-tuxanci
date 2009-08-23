@@ -28,16 +28,15 @@
 #define CFG_NET_IP		21
 #define CFG_NET_PORT		22
 
-#define	CONFIG_LIST_COUNT	22
+#define CONFIG_LIST_COUNT	22
 
 extern int config_init();
 extern void config_load();
 extern void config_save();
 extern int config_get_int_value(int key);
-extern char* config_get_str_value(int key);
+extern char *config_get_str_value(int key);
 extern void config_set_int_value(int key, int n);
 extern void config_set_str_value(int key, char *str);
 extern int config_quit();
 
 #endif /* CONFIG_H */
- 
