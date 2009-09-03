@@ -18,6 +18,9 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include <sys/types.h> 
+#include <sys/stat.h> 
+
 #include "main.h"
 #include "list.h"
 #include "tux.h"
@@ -369,7 +372,7 @@ int public_server_init()
 	server_set_max_clients(atoi(public_server_get_setting("MAX_CLIENTS", "--max-clients", "32")));
 
 	if (public_server_register() < 0) {
-		printf(stderr, _("[Error] Unable to contact MasterServer\n"));
+		fprintf(stderr, _("[Error] Unable to contact MasterServer\n"));
 		/* TODO: Why not to log it? */
 	}
 
