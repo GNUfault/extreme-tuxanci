@@ -15,8 +15,6 @@ ENDIF ( NOT BUILD_SERVER )
 ###############################################################################
 IF ( NOT BUILD_SERVER )
 	INSTALL ( FILES tuxanci.svg
-		DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
-	INSTALL ( FILES tuxanci.svg
 		DESTINATION ${CMAKE_INSTALL_ICONDIR}/ )
 	INSTALL ( FILES tuxanci.desktop
 		DESTINATION ${CMAKE_INSTALL_DESKTOPDIR}/ )
