@@ -59,7 +59,7 @@ void log_add(int type, char *msg)
 			tm_struct->tm_hour, tm_struct->tm_min, tm_struct->tm_sec,
 			str_type, msg);
 
-	fprintf(logFile, str);
+	fprintf(logFile, "%s", str);
 
 	fflush(logFile);
 }
