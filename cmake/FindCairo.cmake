@@ -18,6 +18,7 @@ ELSE(CAIRO_LIBRARIES AND CAIRO_INCLUDE_DIR)
 	# we need the svg cairo part so why not :]
 	# normally we should search for cairo.h only
 	FIND_PATH ( CAIRO_INCLUDE_DIR cairo-svg.h
+		PATH_SUFFIXES cairo
 		PATHS
 		/usr/local/include
 		/usr/include
