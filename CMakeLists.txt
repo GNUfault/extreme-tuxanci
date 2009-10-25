@@ -129,14 +129,14 @@ INCLUDE ( CPack )
 # DEBUG/DEVELOPER STUFF
 ###############################################################################
 IF ( ENABLE_DEBUG )
-	SET ( CMAKE_C_FLAGS "-g -O0 -Wall -pipe")
+	SET ( CMAKE_C_FLAGS "-g -O0 -Wall -pipe -ggdb")
 	ADD_DEFINITIONS ( -DDEBUG )
 	# SET ( CMAKE_VERBOSE_MAKEFILE on )
 ENDIF ( ENABLE_DEBUG )
 IF ( DEVELOPER )
 	ADD_DEFINITIONS ( -DDEBUG )
 	# if somebody asks yes i am insane
-	SET ( CMAKE_C_FLAGS "-g -O0 -pipe -Wall -Wshadow -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wold-style-definition -Wdeclaration-after-statement -Wmissing-declarations -Wmissing-prototypes -Wredundant-decls -Wmissing-noreturn -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wformat-nonliteral -Wformat-security -Wswitch-enum -Wswitch-default -Winit-self -Wmissing-include-dirs -Wundef -Waggregate-return -Wmissing-format-attribute -Wnested-externs -Wunsafe-loop-optimizations" )
+	SET ( CMAKE_C_FLAGS "-g -ggdb -O0 -pipe -Wall -Wshadow -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wold-style-definition -Wdeclaration-after-statement -Wmissing-declarations -Wmissing-prototypes -Wredundant-decls -Wmissing-noreturn -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wformat-nonliteral -Wformat-security -Wswitch-enum -Wswitch-default -Winit-self -Wmissing-include-dirs -Wundef -Waggregate-return -Wmissing-format-attribute -Wnested-externs -Wunsafe-loop-optimizations" )
 ENDIF ( DEVELOPER )
 ###############################################################################
 # BASIC DIRECTORIES FOR INCLUSION
