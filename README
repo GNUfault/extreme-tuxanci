@@ -52,7 +52,7 @@ HOWTO COMPILE
 	rather using binary modules.
 	First of all we need some libraries:
 		(g)libc, SDL, SDL_image, SDL_ttf, optionally SDL_mixer,
-		gettext, libzzip
+		optionally opengl, gettext, libzip
 
 	And some applications:
 		cmake version 2.6.0 and above
@@ -77,25 +77,6 @@ HOWTO COMPILE
 	-----------------------
 		Same for both client and server
 		# make uninstall
-	Notes
-	-----
-		Compilation on windows is little bit tricky. You need MinGW
-		<http://www.mingw.org/> and CMake <http://www.cmake.org/>. Then follow
-		those steps above. Only add cmake option -G "MinGW Makefiles". If cmd
-		say that no make.exe command found you need to use absolute path. Do
-		not specify PREFIX!! There is also known bug when in path to game dir
-		is space separator -> Compilation will die with error file not found,
-		you have to place source to some directory with no space in its path.
-
-		# ADDITIONAL OPTIONS FOR CMAKE
-		#option(ENABLE_IPV6      "Build with the ipv6 support"               OFF)
-		#option(BUILD_SERVER      "Build the server instead of client"        OFF)
-		#option(WITH_AUDIO       "Build with audio enabled"                  ON)
-		#option(ENABLE_DEBUG     "Build debug features"                      OFF)
-		#option(WITH_NLS         "Build the translations"                    ON)
-		#option(Apple            "Build some apple quirks. USE ONLY ON MAC!" OFF)
-		#option(WITH_OPENGL      "Use opengl as renderer instead of SW"      ON)
-
 GAME USAGE
 ==========
 	Starting game is simple tuxanci-VERSION or tuxanci-server-V. based on what we

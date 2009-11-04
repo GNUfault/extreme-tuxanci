@@ -170,30 +170,32 @@ ENDIF ( Apple )
 ###############################################################################
 # LIBS SEARCH
 ###############################################################################
-MESSAGE ( STATUS "<Locating ZIP library>" )
-FIND_PACKAGE ( ZIP REQUIRED )
+MESSAGE ( STATUS "<Searching PkgConfig>" )
+FIND_PACKAGE ( PkgConfig REQUIRED )
+pkg_check_modules(ZIP REQUIRED libzip)
+INCLUDE_DIRECTORIES( ${ZIP_INCLUDE_DIRS} )
 IF ( NOT BUILD_SERVER )
-	MESSAGE ( STATUS "<Locating Cairo>" )
-	FIND_PACKAGE ( Cairo REQUIRED )
-	MESSAGE ( STATUS "<Locating Fontconfig>" )
-	FIND_PACKAGE ( Fontconfig REQUIRED )
+	# cairo not needed until we start actually using the svg files
+	#pkg_check_modules(CAIRO REQUIRED cairo>=1.8.8)
+	#pkg_check_modules(CAIRO_SVG REQUIRED cairo-svg>=1.8.8)
+	INCLUDE_DIRECTORIES( ${CAIRO_INCLUDE_DIRS} )
+	pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+	INCLUDE_DIRECTORIES ( ${FONTCONFIG_INCLUDE_DIRS} )
 	IF ( WITH_OPENGL )
-		MESSAGE ( STATUS "<Locating OpenGL>" )
-		FIND_PACKAGE ( OpenGL REQUIRED )
-		INCLUDE_DIRECTORIES ( ${OPENGL_INCLUDE_DIR} )
+		pkg_check_modules(OPENGL REQUIRED gl>=7.5)
+		INCLUDE_DIRECTORIES ( ${OPENGL_INCLUDE_DIRS} )
 	ENDIF ( WITH_OPENGL )
-	MESSAGE ( STATUS "<Locating SDL>" )
-	FIND_PACKAGE ( SDL REQUIRED )
-	FIND_PACKAGE ( SDL_image REQUIRED )
+	pkg_check_modules(SDL REQUIRED sdl)
+	INCLUDE_DIRECTORIES ( ${SDL_INCLUDE_DIRS} )
+	pkg_check_modules(SDLIMAGE REQUIRED SDL_image)
+	INCLUDE_DIRECTORIES ( ${SDLIMAGE_INCLUDE_DIRS} )
+	pkg_check_modules(SDLTTF REQUIRED SDL_image)
 	FIND_PACKAGE ( SDL_ttf REQUIRED )
 	IF ( WITH_AUDIO )
-		FIND_PACKAGE ( SDL_mixer REQUIRED )
-		INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIR} )
+		pkg_check_modules(SDLMIXER REQUIRED SDL_mixer)
+		INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIRS} )
 	ENDIF ( WITH_AUDIO )
 	INCLUDE_DIRECTORIES (
-		${FONTCONFIG_INCLUDE_DIR}
-		${SDL_INCLUDE_DIR}
-		${SDLTTF_INCLUDE_DIR}
 		${SDLIMAGE_INCLUDE_DIR}
 	)
 ENDIF ( NOT BUILD_SERVER )
@@ -214,30 +216,12 @@ ADD_SUBDIRECTORY ( src )
 # DATA INSTALLATION
 ###############################################################################
 ADD_SUBDIRECTORY ( data )
-# install the doc data compressed
-FIND_PACKAGE ( GZIP REQUIRED )
 SET ( tuxanci_docs
 	${CMAKE_CURRENT_SOURCE_DIR}/LICENCE
 	${CMAKE_CURRENT_SOURCE_DIR}/AUTHORS
 	${CMAKE_CURRENT_SOURCE_DIR}/README
 )
-IF ( ENABLE_COMPRESSION )
-	FOREACH ( doc ${tuxanci_docs} )
-		GET_FILENAME_COMPONENT( _doc ${doc} NAME_WE )
-		ADD_CUSTOM_COMMAND ( OUTPUT ${_doc}.gz
-			COMMAND ${GZIP_TOOL} -c ${doc} > ${_doc}.gz
-			WORKING_DIRECTORY "${CMAKE_BINARY_DIR}"
-			DEPENDS ${doc}
-		)
-		INSTALL ( FILES ${CMAKE_BINARY_DIR}/${_doc}.gz
-			DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
-		LIST ( APPEND _docFiles ${_doc}.gz )
-	ENDFOREACH ( doc )
-	ADD_CUSTOM_TARGET ( docs ALL DEPENDS ${_docFiles} )
-ELSE ( ENABLE_COMPRESSION )
-	INSTALL ( FILES ${tuxanci_docs}
-		DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
-ENDIF ( ENABLE_COMPRESSION )
+INSTALL ( FILES ${tuxanci_docs} DESTINATION ${CMAKE_INSTALL_DOCDIR}/ )
 ###############################################################################
 # GOODBYE INFORMATIONS (VARIABLES SETTINGS)
 ###############################################################################
