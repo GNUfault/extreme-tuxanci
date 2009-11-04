@@ -190,14 +190,10 @@ IF ( NOT BUILD_SERVER )
 	pkg_check_modules(SDLIMAGE REQUIRED SDL_image)
 	INCLUDE_DIRECTORIES ( ${SDLIMAGE_INCLUDE_DIRS} )
 	pkg_check_modules(SDLTTF REQUIRED SDL_image)
-	FIND_PACKAGE ( SDL_ttf REQUIRED )
 	IF ( WITH_AUDIO )
 		pkg_check_modules(SDLMIXER REQUIRED SDL_mixer)
 		INCLUDE_DIRECTORIES ( ${SDLMIXER_INCLUDE_DIRS} )
 	ENDIF ( WITH_AUDIO )
-	INCLUDE_DIRECTORIES (
-		${SDLIMAGE_INCLUDE_DIR}
-	)
 ENDIF ( NOT BUILD_SERVER )
 ###############################################################################
 # GETTEXT SUPPORT

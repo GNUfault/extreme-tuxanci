@@ -4,19 +4,31 @@
 # LINKING ( for binary )
 ###############################################################################
 IF ( BUILD_SERVER )
-	LINK_LIBRARIES (  ${ZIP_LIBRARIES} ${CMAKE_DL_LIBS} )
+	LINK_LIBRARIES (
+		${ZIP_LIBRARIES}
+		${CMAKE_DL_LIBS}
+	)
 ELSE ( BUILD_SERVER )
 	IF ( WITH_OPENGL )
 		LINK_LIBRARIES ( ${OPENGL_LIBRARIES} )
 	ENDIF ( WITH_OPENGL )
 	IF  ( WITH_AUDIO )
-		LINK_LIBRARIES ( ${ZIP_LIBRARIES} ${SDL_LIBRARIES} ${SDLIMAGE_LIBRARIES}
-		${SDLTTF_LIBRARY} ${SDLMIXER_LIBRARIES} )
+		LINK_LIBRARIES (
+			${SDL_LIBRARIES}
+			${SDLIMAGE_LIBRARIES}
+			${SDLMIXER_LIBRARIES}
+		)
 	ELSE ( WITH_AUDIO )
-		LINK_LIBRARIES ( ${ZIP_LIBRARIES} ${SDL_LIBRARIES} ${SDLIMAGE_LIBRARIES}
-		${SDLTTF_LIBRARY} )
+		LINK_LIBRARIES (
+			${SDL_LIBRARIES}
+			${SDLIMAGE_LIBRARIES}
+		)
 	ENDIF ( WITH_AUDIO )
-	LINK_LIBRARIES ( ${CAIRO_LIBRARIES} ${FONTCONFIG_LIBRARIES} SDLmain )
+	LINK_LIBRARIES (
+		${ZIP_LIBRARIES}
+		${CAIRO_LIBRARIES}
+		${FONTCONFIG_LIBRARIES}
+	)
 ENDIF ( BUILD_SERVER )
 
 ###############################################################################
@@ -45,7 +57,12 @@ ENDIF ( ENABLE_IPV6 )
 # AUDIO CHECK
 ###############################################################################
 IF ( NOT BUILD_SERVER )
-	SET ( SRC_compile ${SRC_net} ${SRC_widget} ${SRC_screen} ${SRC_base} ${SRC_client} )
+	SET ( SRC_compile ${SRC_net}
+		${SRC_widget}
+		${SRC_screen}
+		${SRC_base}
+		${SRC_client}
+	)
 	IF ( WITH_AUDIO )
 		MESSAGE ( STATUS "<Building with audio as requested>" )
 		SET ( SRC_compile ${SRC_compile} ${SRC_audio} )
