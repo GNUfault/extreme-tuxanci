@@ -13,25 +13,25 @@ DESCRIPTION="Tuxanci is first tux shooter inspired by game Bulanci."
 HOMEPAGE="http://www.tuxanci.org/"
 if [[ ${PV} = 9999* ]]; then
 	SRC_URI=""
+	KEYWORDS=""
 else
 	SRC_URI="http://download.${PN}.org/${P}.tar.bz2"
+	KEYWORDS="~amd64 ~x86"
 fi
 LICENSE="GPL-2"
 
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
 IUSE="debug dedicated +ipv6 nls opengl +sound"
-# alsa is used only when building client
 
+# >=x11-libs/cairo-1.8.8[X,svg]
 RDEPEND="
 	!dedicated? (
-		media-libs/fontconfig
+		>=media-libs/fontconfig-2.7.0
 		media-libs/libsdl[X,opengl?]
 		media-libs/sdl-ttf[X]
-		media-libs/sdl-image[png]
-		x11-libs/cairo[X,svg]
+		>=media-libs/sdl-image-1.2.10[png]
 		sound? (
-			media-libs/sdl-mixer[vorbis]
+			>=media-libs/sdl-mixer-1.2.11[vorbis]
 		)
 	)
 	>=dev-libs/libzip-0.9"
