@@ -67,13 +67,13 @@ static void *getFce(module_t *p, char *s)
 	ret = dlsym(p->image, s);
 
 	if ((error = dlerror()) != NULL) {
-		fprintf(stderr, _("[Error] Use of getFce function failed: %s\n"), error);
+		error("Use of getFce function failed: %s", error);
 		return NULL;
 	}
 #else /* __WIN32__ */
 	FARPROC ret = GetProcAddress((HMODULE) p->image, (LPCSTR) s);
 	if (!ret) {
-		fprintf(stderr, _("[Error] Use of getFce function failed: %s\n"), s);
+		error("Use of getFce function failed: %s", s);
 	}
 #endif /* __WIN32__ */
 
@@ -144,7 +144,7 @@ static module_t *newModule(char *name)
 	image = mapImage(path);
 
 	if (image == NULL) {
-		fprintf(stderr, _("[Error] Unable to map image of new module [%s]\n"), name);
+		error("Unable to map image of new module [%s]", name);
 		return NULL;
 	}
 
@@ -161,10 +161,10 @@ static module_t *newModule(char *name)
 	ret->fce_cmd = getFce(ret, "cmdArena");
 	ret->fce_recvMsg = getFce(ret, "recvMsg");
 
-	DEBUG_MSG(_("[Debug] Loading module [%s]\n"), name);
+	debug("Loading module [%s]", name);
 
 	if (ret->fce_init(&export_fce) != 0) {
-		fprintf(stderr, _("[Error] Unable to load module [%s]\n"), name);
+		error("Unable to load module [%s]", name);
 		unmapImage(image);
 		free(ret->name);
 		free(ret);
@@ -178,7 +178,7 @@ static int destroyModule(module_t *p)
 {
 	assert(p != NULL);
 
-	DEBUG_MSG(_("[Debug] Unloading module [%s]\n"), p->name);
+	debug("Unloading module [%s]", p->name);
 
 	p->fce_destroy();
 	unmapImage(p->image);
@@ -216,14 +216,14 @@ int module_load(char *name)
 	module_t *module;
 
 	if (isModuleLoaded(name)) {
-		fprintf(stderr, ("[Error] Unable to load already loaded module [%s]\n"), name);
+		error("Unable to load already loaded module [%s]", name);
 		return -1;
 	}
 
 	module = newModule(name);
 
 	if (module == NULL) {
-		fprintf(stderr, _("[Error] Unable to load module [%s]\n"), name);
+		error("Unable to load module [%s]", name);
 		return -1;
 	}
 

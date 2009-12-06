@@ -108,14 +108,14 @@ void config_load()
 	config_file = text_file_load(path);
 
 	if (config_file == NULL) {
-		fprintf(stderr, _("[Error] Unable to load config file [%s]\n"), path);
-		fprintf(stderr, _("[Debug] Creating config file [%s]\n"), path);
+		error("Unable to load config file [%s]", path);
+		debug("Creating config file [%s]", path);
 
 		config_file = text_file_new(path);
 	}
 
 	if (config_file == NULL) {
-		fprintf(stderr, _("[Error] Unable to create config file [%s]\n"), path);
+		error("Unable to create config file [%s]", path);
 		return;
 	}
 

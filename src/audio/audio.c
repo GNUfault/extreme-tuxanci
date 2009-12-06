@@ -25,15 +25,15 @@ void audio_init()
 		return;
 	}
 
-	DEBUG_MSG(_("[Debug] Initializing audio\n"));
+	debug("Initializing audio");
 
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO) == -1) {
-		fprintf(stderr, _("[Error] Unable to initialize audio: %s\n"), SDL_GetError());
+		error("Unable to initialize audio: %s", SDL_GetError());
 		return;
 	}
 
 	if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, 2, 1024) == -1) {
-		fprintf(stderr, _("[Error] Unable to create proper audio settings: %s\n"), Mix_GetError());
+		error("Unable to create proper audio settings: %s", Mix_GetError());
 		return;
 	}
 
@@ -48,7 +48,7 @@ void audio_init()
  */
 void audio_quit()
 {
-	DEBUG_MSG(_("[Debug] Shutting down audio\n"));
+	debug("Shutting down audio");
 
 	Mix_CloseAudio();
 	isAudioInit = TRUE;

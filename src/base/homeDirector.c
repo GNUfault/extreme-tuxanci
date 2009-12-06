@@ -18,21 +18,21 @@ void home_director_create()
 	envHome = getenv("USERPROFILE");
 #endif /* __WIN32__ */
 	if (envHome == NULL) {
-		fprintf(stderr, _("[Error] Environment variable HOME not found\n"));
+		error("Environment variable HOME not found");
 		exit(0);
 	}
 
 	sprintf(homeDirector, "%s/%s", envHome, HOMEDIRECTOR_NAME);
 
 	if (access(homeDirector, F_OK) != 0) {
-		DEBUG_MSG(_("[Debug] Creating home directory [%s]\n"), homeDirector);
+		debug("Creating home directory [%s]", homeDirector);
 
 #ifndef __WIN32__
 		if (mkdir(homeDirector, 0755) != 0) {
 #else /* __WIN32__ */
 		if (mkdir(homeDirector) != 0) {
 #endif /* __WIN32__ */
-			fprintf(stderr, _("[Error] Unable to create home directory [%s]\n"), homeDirector);
+			error("Unable to create home directory [%s]", homeDirector);
 			exit(0);
 		}
 	}

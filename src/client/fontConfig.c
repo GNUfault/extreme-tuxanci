@@ -14,7 +14,7 @@ int fontconfig_init()
 	res = FcInit();
 	
 	if (res == 0) {
-		fprintf(stderr, _("[Error] Unable to init fontconfig library\n"));
+		error("Unable to init fontconfig library");
 		return 1;
 	}
 

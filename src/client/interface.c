@@ -63,21 +63,20 @@ void hotkey_screen()
 	}
 
 	if (SDL_WM_ToggleFullScreen(screen) == 0) {
-		fprintf(stderr, _("[Error] Unable to switch to the fullscreen mode\n"));
+		error("Unable to switch to the fullscreen mode");
 
 		SDL_FreeSurface(screen);
 		screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, WIN_BPP, g_win_flags);
 
 		if (screen == NULL) {
-			fprintf(stderr, _("[Error] Unable to switch to the window mode: %s\n"),
-				SDL_GetError());
+			error("Unable to switch to the window mode: %s", SDL_GetError());
 			return;
 		}
 	}
 }
 
 #ifdef SUPPORT_OPENGL
-/*
+/**
  * Sets video mode and sets up OpenGL for this change
  */
 SDL_Surface *SetVideoMode(int width, int height, int bpp, Uint32 flags)
@@ -116,11 +115,11 @@ SDL_Surface *SetVideoMode(int width, int height, int bpp, Uint32 flags)
 
 int interface_init()
 {
-	DEBUG_MSG(_("[Debug] Initializing SDL\n"));
+	debug("Initializing SDL");
 
 	/* initialization of SDL */
 	if (SDL_Init(SDL_SUBSYSTEMS) == -1) {
-		fprintf(stderr, _("[Error] Unable to initialize SDL: %s\n"), SDL_GetError());
+		error("Unable to initialize SDL: %s", SDL_GetError());
 		SDL_Quit();
 		return -1;
 	}
@@ -150,14 +149,14 @@ int interface_init()
 #endif /* SUPPORT_OPENGL */
 
 	if (screen == NULL) {
-		fprintf(stderr, _("[Error] Unable to create interface: %s\n"), SDL_GetError());
+		error("Unable to create interface: %s", SDL_GetError());
 		SDL_Quit();
 		return -1;
 	}
-	/*
-	 * enable unicode by default for keyboard support - it is bit more
+	/**
+	 * enable unicode by default for keyboard support - it is a bit more
 	 * consuming than the nonsdl but can draw more characters
-	*/
+	 */
 	SDL_EnableUNICODE(1);
 	SDL_WM_SetCaption(WINDOW_TITLE, NULL);
 
@@ -212,10 +211,11 @@ int interface_is_press_any_key()
 
 	mapa = SDL_GetKeyState(NULL);
 
-	for (i = SDLK_BACKSPACE; i < SDLK_KP9; i++)
+	for (i = SDLK_BACKSPACE; i < SDLK_KP9; i++) {
 		if (mapa[i] == SDL_PRESSED) {
 			return 1;
 		}
+	}
 
 	return 0;
 }
@@ -227,10 +227,11 @@ void printPressAnyKey()
 
 	mapa = SDL_GetKeyState(NULL);
 
-	for (i = SDLK_BACKSPACE; i < SDLK_KP9; i++)
+	for (i = SDLK_BACKSPACE; i < SDLK_KP9; i++) {
 		if (mapa[i] == SDL_PRESSED) {
-			printf(_("[Debug] Pressed key [SDL: %d]\n"), i);
+			debug("Pressed key [SDL: %d]", i);
 		}
+	}
 
 }
 
@@ -318,8 +319,7 @@ int eventAction()
 							  WIN_BPP, g_win_flags);
 
 				if (screen == NULL) {
-					fprintf(stderr, _("[Error] Unable to change resolution of the window: %s\n"),
-						SDL_GetError());
+					error("Unable to change resolution of the window: %s", SDL_GetError());
 					return 0;
 				}
 				break;
@@ -348,7 +348,7 @@ void interface_event()
 
 void interface_quit()
 {
-	DEBUG_MSG(_("[Debug] Shutting down SDL\n"));
+	debug("Shutting down SDL");
 
 	hot_key_quit();
 	keyboard_buffer_quit();

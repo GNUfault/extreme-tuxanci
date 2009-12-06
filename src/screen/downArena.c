@@ -287,7 +287,7 @@ static void readArenaFromStatus()
 
 			connectToDownServer();
 
-			printf("[Debug] arenaNetName: %s\n", arenaNetName);
+			debug("arenaNetName: %s", arenaNetName);
 		}
 	}
 }

@@ -85,7 +85,7 @@ void save_arena(char *filename, arena_t *arena)
 
 	sprintf(path, "%s/%s.sav", home_director_get(), filename);
 
-	DEBUG_MSG(_("[Debug] Saving game [%s]\n"), path);
+	debug("Saving game [%s]", path);
 
 	textFile = text_file_new(path);
 
@@ -94,7 +94,7 @@ void save_arena(char *filename, arena_t *arena)
 		text_file_save(textFile);
 		text_file_destroy(textFile);
 	} else {
-		fprintf(stderr, _("[Error] Unable to save game [%s]\n"), path);
+		error("Unable to save game [%s]", path);
 	}
 }
 
@@ -251,7 +251,7 @@ void load_arena(char *filename)
 
 	sprintf(path, "%s/%s", home_director_get(), filename);
 
-	DEBUG_MSG(_("[Debug] Loading arena [%s]\n"), path);
+	debug("Loading arena [%s]", path);
 
 	textFile = text_file_load(path);
 
@@ -259,6 +259,6 @@ void load_arena(char *filename)
 		loadContextArenaFromTextFile(textFile);
 		text_file_destroy(textFile);
 	} else {
-		fprintf(stderr, _("[Error] Unable to load saved game [%s]\n"), path);
+		error("Unable to load saved game [%s]", path);
 	}
 }

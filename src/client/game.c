@@ -111,7 +111,7 @@ void game_quit()
 	audio_quit();
 #endif /* NO_SOUND */
 
-	DEBUG_MSG(_("[Debug] Shutting down the game\n"));
+	debug("Shutting down the game");
 
 	exit(0);
 }

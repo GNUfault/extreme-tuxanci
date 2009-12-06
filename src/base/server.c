@@ -281,7 +281,7 @@ void server_send_client(client_t *p, char *msg)
 
 #ifndef PUBLIC_SERVER
 		if (isParamFlag("--send")) {
-			printf(_("[Debug] Sending: %s"), msg);
+			debug("Sending: %s", msg);
 		}
 #endif /* PUBLIC_SERVER */
 
@@ -308,7 +308,7 @@ static void client_eventWorkRecvList(client_t *client)
 
 #ifndef PUBLIC_SERVER
 		if (isParamFlag("--recv")) {
-			printf(_("[Debug] Received: %s"), line);
+			debug("Received: %s", line);
 		}
 #endif /* PUBLIC_SERVER */
 

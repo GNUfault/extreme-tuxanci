@@ -79,7 +79,7 @@ void button_event(widget_t *widget)
 				    WIDGET_BUTTON_HEIGHT, MOUSE_BUF_CLICK)) {
 		my_time = WIDGET_BUTTON_TIME;
 
-		DEBUG_MSG(_("[Debug] Caught some button event\n"));
+		debug("Caught some button event");
 
 		p->fce_event(widget);
 	}

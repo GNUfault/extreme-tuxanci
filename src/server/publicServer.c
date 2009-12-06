@@ -125,7 +125,7 @@ void daemonize()
 	/* lock the file */
 	if (lockf(lockfd, F_TLOCK, 0) < 0) {
 		perror("[Error] Lock: lockf\n");
-		printf("[Warning] The Tuxanci game server is already running\n");
+		warning("The Tuxanci game server is already running");
 		exit(0);
 	}
 	#else /* __CYGWIN__ */
@@ -138,7 +138,7 @@ void daemonize()
 		lock.l_len = 0;
 		
 		if (fcntl(lockfd, F_SETLK, &lock) < 0) {
-			printf("[Warning] The Tuxanci game server is already running\n");
+			warning("The Tuxanci game server is already running");
 			exit(0);
 		}
 	}
@@ -321,7 +321,7 @@ static void load_arena()
 	choice_arenaFile = arena_file_get_file_format_net_name(public_server_get_setting("ARENA", "--arena", "FAGN"));
 
 	if (choice_arenaFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to load arena [%s]\n"), public_server_get_setting("ARENA", "--arena", "FAGN"));
+		error("Unable to load arena [%s]", public_server_get_setting("ARENA", "--arena", "FAGN"));
 		/* TODO: Why not to log it? */
 		exit(-1);
 	}
@@ -364,7 +364,7 @@ int public_server_init()
 	ret = public_server_initNetwork();
 
 	if (ret < 0) {
-		fprintf(stderr, _("[Error] Unable to initialize network socket\n"));
+		error("Unable to initialize network socket");
 		/* TODO: Why not to log it? */
 		return -1;
 	}
@@ -372,7 +372,7 @@ int public_server_init()
 	server_set_max_clients(atoi(public_server_get_setting("MAX_CLIENTS", "--max-clients", "32")));
 
 	if (public_server_register() < 0) {
-		fprintf(stderr, _("[Error] Unable to contact MasterServer\n"));
+		error("Unable to contact MasterServer");
 		/* TODO: Why not to log it? */
 	}
 
@@ -412,7 +412,7 @@ void public_server_event()
 
 void my_handler_quit(int n)
 {
-	DEBUG_MSG("[Debug] Received signal %d\n", n);
+	debug("Received signal %d", n);
 	/* TODO: Why not to log it? */
 
 	isSignalEnd = TRUE;
@@ -422,7 +422,7 @@ void my_handler_quit(int n)
 
 void public_server_quit()
 {
-	DEBUG_MSG(_("[Debug] Shutting down the Tuxanci game server\n"));
+	debug("Shutting down the Tuxanci game server");
 	/* TODO: Why not to log it? */
 
 	net_multiplayer_quit();

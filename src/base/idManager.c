@@ -34,7 +34,7 @@ static void destroyIdItem(id_item_t *p)
 
 void id_init_list()
 {
-	DEBUG_MSG(_("[Debug] Initializing ID manager\n"));
+	debug("Initializing ID manager");
 
 	listID = list_new();
 	lastID = 0;
@@ -67,7 +67,7 @@ static int findNewID()
 	assert(listID != NULL);
 
 	if (listID->count >= MAX_ID - 1) {
-		assert(!_("[Error] There is no free ID left"));
+		fatal("There is no free ID left");
 	}
 
 	do {
@@ -106,7 +106,7 @@ void id_inc(int id)
 	index = id_is_register(id);
 
 	if (index == -1) {
-		fprintf(stderr, _("[Error] Trying to increment counter of never registered ID [%d]"), id);
+		error("Trying to increment counter of never registered ID [%d]", id);
 		assert(0);
 		return;		/* ha ha ha */
 	}
@@ -129,7 +129,7 @@ void id_del(int id)
 	index = id_is_register(id);
 
 	if (index == -1) {
-		fprintf(stderr, _("[Error] Trying to delete never registered ID [%d]"), id);
+		error("Trying to delete never registered ID [%d]", id);
 		assert(0);
 		return;		/* ha ha ha */
 	}
@@ -177,21 +177,21 @@ void infoID(int id)
 	index = id_is_register(id);
 
 	if (index == -1) {
-		DEBUG_MSG(_("[Debug] Getting information of nonexistent ID [%d]\n"), id);
+		debug("Getting information of nonexistent ID [%d]", id);
 
 		return;
 	}
 
 	this = listID->list[index];
 
-	DEBUG_MSG(_("[Debug] ID information [%d]: used %d times\n"), this->id, this->count);
+	debug("ID information [%d]: used %d times", this->id, this->count);
 
 	return;
 }
 
 void id_quit_list()
 {
-	DEBUG_MSG(_("[Debug] Shutting down ID manager\n"));
+	debug("Shutting down ID manager");
 
 	assert(listID != NULL);
 	list_destroy_item(listID, destroyIdItem);

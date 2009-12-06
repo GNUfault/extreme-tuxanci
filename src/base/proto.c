@@ -59,7 +59,7 @@ void proto_recv_error_client(char *msg)
 		return;
 	}
 
-	DEBUG_MSG(_("[Debug] Communication error [%d]\n"), errorcode);
+	debug("Communication error [%d]", errorcode);
 
 	switch (errorcode) {
 		case PROTO_ERROR_CODE_BAD_VERSION:
@@ -84,7 +84,7 @@ void proto_send_hello_client(char *name)
 	snprintf(msg, STR_PROTO_SIZE, "hello %s %s\n",
 		 getParamElse("--version", TUXANCI_VERSION), name);
 
-	printf(_("[Debug] Sending: %s\n"), msg);
+	debug("Sending: %s", msg);
 	client_send(msg);
 }
 #endif /* PUBLIC_SERVER */

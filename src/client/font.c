@@ -38,7 +38,7 @@ void font_init()
 	}
 */
 	if (font_list == NULL) {
-		fprintf(stderr, _("[Error] Unable to locate a font\n"));
+		error("Unable to locate a font");
 		return;
 	}
 
@@ -50,7 +50,7 @@ void font_init()
 
 	if (TTF_Init() == -1) {
 		free(font_file);
-		fprintf(stderr, "%s\n", SDL_GetError());
+		error("SDL: %s", SDL_GetError());
 		return;
 	}
 
@@ -59,7 +59,7 @@ void font_init()
 	g_font = TTF_OpenFont(font_file, fontSize);
 	TTF_SetFontStyle(g_font, TTF_STYLE_NORMAL);
 
-	DEBUG_MSG(_("[Debug] Loading font [%s]\n"), font_file);
+	debug("Loading font [%s]", font_file);
 
 	free(font_file);
 	isFontInit = TRUE;
@@ -150,7 +150,7 @@ void font_quit()
 	TTF_CloseFont(g_font);
 	TTF_Quit();
 
-	DEBUG_MSG(_("[Debug] Unloading font\n"));
+	debug("Unloading font");
 
 	isFontInit = FALSE;
 }

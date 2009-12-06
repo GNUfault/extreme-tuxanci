@@ -17,16 +17,16 @@ void high_score_init(char *file)
 	textFile = text_file_load(file);
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to load high score [%s]\n"), file);
-		fprintf(stderr, _("[Debug] Creating high score file [%s]\n"), file);
+		error("Unable to load high score [%s]", file);
+		debug("Creating high score file [%s]", file);
 		textFile = text_file_new(file);
 	} else {
-		DEBUG_MSG(_("[Debug] Loading high score file [%s]\n"), file);
+		debug("Loading high score file [%s]", file);
 		return;
 	}
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to create high score file [%s]\n"), file);
+		error("Unable to create high score file [%s]", file);
 		return;
 	}
 

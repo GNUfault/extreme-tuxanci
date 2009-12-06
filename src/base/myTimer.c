@@ -124,7 +124,7 @@ void timer_event(list_t *listTimer)
 				}
 				break;
 			default:
-				assert(!_("[Error] Bad setting of the timer"));
+				fatal("Bad setting of the timer");
 				break;
 		}
 	}
@@ -146,7 +146,7 @@ void timer_del(list_t *listTimer, int id)
 		}
 	}
 
-	fprintf(stderr, _("[Error] Unable to delete event from the timer as it is not present in it [%d]\n"), id);
+	error("Unable to delete event from the timer as it is not present in it [%d]", id);
 	assert(0);
 }
 

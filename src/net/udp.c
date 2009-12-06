@@ -32,7 +32,7 @@ static int getProto(char *str)
 	if (strstr(str, ":") != NULL)
 		return PROTO_UDPv6;
 
-	assert(!_("[Error] Network protocol not detected"));
+	fatal("Network protocol not detected");
 	return -1;
 }
 
@@ -74,7 +74,7 @@ sock_udp_t *sock_udp_bind(char *address, int port)
 #endif
 
 	if (new->sock < 0) {
-		fprintf(stderr, _("[Error] Unable to create UDP socket\n"));
+		error("Unable to create UDP socket");
 		sock_udp_destroy(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -102,7 +102,7 @@ sock_udp_t *sock_udp_bind(char *address, int port)
 #endif
 
 	if (res < 0) {
-		fprintf(stderr, _("[Error] Unable to bind UDP socket to [%s]:%d\n"), address, port);
+		error("Unable to bind UDP socket to [%s]:%d", address, port);
 		sock_udp_destroy(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -136,7 +136,7 @@ sock_udp_t *sock_udp_connect(char *address, int port)
 #endif
 
 	if (new->sock < 0) {
-		fprintf(stderr, _("[Error] Unable to create UDP socket for connecting\n"));
+		error("Unable to create UDP socket for connecting");
 		sock_udp_destroy(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -227,7 +227,7 @@ int sock_udp_read(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 
 		sock_udp_get_ip(dst, str_ip, STR_IP_SIZE);
 
-		fprintf(stderr, _("[Error] Unable to read from UDP socket [%s]:%d (read %d bytes)\n"), str_ip, sock_udp_get_port(dst), size);
+		error("Unable to read from UDP socket [%s]:%d (read %d bytes)", str_ip, sock_udp_get_port(dst), size);
 
 #ifdef __WIN32__
 		WSACleanup();
@@ -265,7 +265,7 @@ int sock_udp_write(sock_udp_t *src, sock_udp_t *dst, void *address, int len)
 
 		sock_udp_get_ip(dst, str_ip, STR_IP_SIZE);
 
-		fprintf(stderr, _("[Error] Unable to write to socket [%s]:%d with protocol %d (written %d bytes)\n"), str_ip, sock_udp_get_port(dst), dst->proto, size);
+		error("Unable to write to socket [%s]:%d with protocol %d (written %d bytes)", str_ip, sock_udp_get_port(dst), dst->proto, size);
 
 #ifdef __WIN32__
 		WSACleanup();
@@ -309,7 +309,7 @@ int sock_udp_get_port(sock_udp_t *p)
 	}
 #endif
 
-	assert(!_("[Error] Bad IP protocol"));
+	fatal("Bad IP protocol");
 
 	return -1;
 }

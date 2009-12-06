@@ -49,7 +49,7 @@ static void move_tux(tux_t *tux, int x, int y, int w, int h)
 		dist_y = y + h + 20;
 		break;
 	default:
-		assert(!_("[Debug] Variable p->control in modMove has a really weird value.\n"));
+		fatal("Variable p->control in modMove has a really weird value.");
 		break;
 	}
 

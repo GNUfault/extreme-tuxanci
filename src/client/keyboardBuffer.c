@@ -57,7 +57,7 @@ bool_t keyboard_buffer_push(SDL_keysym key)
 	assert(keyboardBuffer != NULL);
 
 	if (keyboardBuffer->count >= keyboardBuffer->size) {
-		fprintf(stderr, _("[Error] Keyboard buffer overrun - dropping the key [%02x]\n"), key.sym);
+		error("Keyboard buffer overrun - dropping the key [%02x]", key.sym);
 		return FALSE;
 	}
 
@@ -82,7 +82,7 @@ SDL_keysym keyboard_buffer_pop()
 	assert(keyboardBuffer != NULL);
 
 	if (keyboardBuffer->count <= 0) {
-		fprintf(stderr, _("[Error] Keyboard buffer underrun\n"));
+		error("Keyboard buffer underrun");
 		return emptyKey;
 	}
 
@@ -133,7 +133,7 @@ void keyboard_buffer_quit()
 	assert(keyboardBuffer != NULL);
 
 	if (keyboardBuffer->count > 0) {
-		fprintf(stderr, _("[Warning] Shutting down non-empty keyboard buffer\n"));
+		warning("Shutting down non-empty keyboard buffer");
 	}
 
 	free(keyboardBuffer->buff);

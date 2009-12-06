@@ -138,13 +138,13 @@ void key_table_init()
 	keycontrolFile = text_file_load(path);
 
 	if (keycontrolFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to load config file [%s]\n"), path);
-		fprintf(stderr, _("[Debug] Creating config file [%s]\n"), path);
+		error("Unable to load config file [%s]", path);
+		debug("Creating config file [%s]", path);
 
 		keycontrolFile = text_file_new(path);
 
 		if (keycontrolFile == NULL) {
-			fprintf(stderr, _("[Error] Unable to create config file [%s]\n"), path);
+			error("Unable to create config file [%s]", path);
 			return;
 		}
 	}

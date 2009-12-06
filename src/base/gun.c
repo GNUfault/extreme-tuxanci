@@ -47,7 +47,7 @@ static void modificiationCopuse(int courser, int right_x, int right_y, int *dest
 			*dest_y = right_x;
 			break;
 		default:
-			assert(!_("[Debug] Wrong Tux course change"));
+			fatal("Wrong Tux course change");
 			break;
 	}
 }

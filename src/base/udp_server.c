@@ -95,9 +95,9 @@ int server_udp_init(char *ip4, int port4, char *ip6, int port6)
 
 		if (sock_server_udp != NULL) {
 			ret++;
-			DEBUG_MSG(_("[Debug] Starting server on [%s]:%d\n"), ip4, port4);
+			debug("Starting server on [%s]:%d", ip4, port4);
 		} else {
-			DEBUG_MSG(_("[Error] Unable to start server on [%s]:%d\n"), ip4, port4);
+			debug("Unable to start server on [%s]:%d", ip4, port4);
 		}
 	}
 
@@ -106,9 +106,9 @@ int server_udp_init(char *ip4, int port4, char *ip6, int port6)
 
 		if (sock_server_udp_second != NULL) {
 			ret++;
-			DEBUG_MSG(_("[Debug] Starting server on [%s]:%d\n"), ip6, port6);
+			debug("Starting server on [%s]:%d", ip6, port6);
 		} else {
-			DEBUG_MSG(_("[Error] Unable to start server on [%s]:%d\n"), ip6, port6);
+			debug("Unable to start server on [%s]:%d", ip6, port6);
 		}
 	}
 
@@ -177,7 +177,7 @@ static void client_eventUdpSelect(sock_udp_t *sock_server)
 	}
 
 	if (client == NULL) {
-		fprintf(stderr, _("[Error] UDP client not found\n"));
+		error("UDP client not found");
 		return;
 	}
 
@@ -230,15 +230,15 @@ int server_udp_select_sock()
 
 void server_udp_quit()
 {
-	DEBUG_MSG(_("[Debug] Shutting down UDP\n"));
+	debug("Shutting down UDP");
 
 	if (sock_server_udp != NULL) {
-		DEBUG_MSG(_("[Debug] Closing IPv4 [port %d]\n"), sock_udp_get_port(sock_server_udp));
+		debug("Closing IPv4 [port %d]", sock_udp_get_port(sock_server_udp));
 		sock_udp_close(sock_server_udp);
 	}
 
 	if (sock_server_udp_second != NULL) {
-		DEBUG_MSG(_("[Debug] Closing IPv6 [port %d]\n"), sock_udp_get_port(sock_server_udp_second));
+		debug("Closing IPv6 [port %d]", sock_udp_get_port(sock_server_udp_second));
 		sock_udp_close(sock_server_udp_second);
 	}
 }

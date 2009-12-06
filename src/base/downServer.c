@@ -123,7 +123,7 @@ int down_server_init(char *ip4, int port4)
 	sock_server_tcp = sock_tcp_bind(ip4, port4);
 
 	if (sock_server_tcp == NULL) {
-		fprintf(stderr, _("[Error] Unable to initialize download server\n"));
+		error("Unable to initialize download server");
 		return -1;
 	}
 

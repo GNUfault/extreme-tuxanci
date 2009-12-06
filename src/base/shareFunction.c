@@ -37,7 +37,7 @@ void share_function_init()
 
 void share_function_add(char *name, void *function)
 {
-	DEBUG_MSG(_("[Debug] Adding new shared function [%s]\n"), name);
+	debug("Adding new shared function [%s]", name);
 
 	list_add(listShareFce, newShareFceItem(name, function));
 }

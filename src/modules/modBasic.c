@@ -24,7 +24,7 @@ int init(export_fce_t *p)
 {
 	export_fce = p;
 
-	printf("[Debug] Initializing Basic module\n");
+	debug("Initializing Basic module");
 	return 0;
 }
 
@@ -37,26 +37,26 @@ int draw(int x, int y, int w, int h)
 	UNUSED(w);
 	UNUSED(h);
 
-	printf("[Debug] Drawing Basic module\n");
+	debug("Drawing Basic module");
 	return 0;
 }
 #endif
 
 int event()
 {
-	printf("[Debug] Basic module catch event\n");
+	debug("Basic module catch event");
 	return 0;
 }
 
 int isConflict(int x, int y, int w, int h)
 {
-	printf("[Debug] isConflict(%d, %d, %d, %d) in Basic module\n", x, y, w, h);
+	debug("isConflict(%d, %d, %d, %d) in Basic module", x, y, w, h);
 	return 0;
 }
 
 static void cmd_basic(char *line)
 {
-	printf("[Debug] cmd_basic(%s) in Basic module\n", line);
+	debug("cmd_basic(%s) in Basic module", line);
 }
 
 void cmdArena(char *line)
@@ -67,11 +67,11 @@ void cmdArena(char *line)
 
 void recvMsg(char *msg)
 {
-	printf("[Debug] recvMsg(%s) in Basic module\n", msg);
+	debug("recvMsg(%s) in Basic module", msg);
 }
 
 int destroy()
 {
-	printf("[Debug] Destroying Basic module\n");
+	debug("Destroying Basic module");
 	return 0;
 }

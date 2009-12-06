@@ -273,7 +273,7 @@ void space_print(space_t *p)
 {
 	int i, j;
 
-	printf(_("[Debug] Debugging space:\n"));
+	debug("Debugging space:");
 
 	for (i = 0; i < p->h; i++) {
 		for (j = 0; j < p->w; j++) {

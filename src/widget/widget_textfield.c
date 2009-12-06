@@ -162,7 +162,7 @@ static void checkText(widget_textfield_t *p, unsigned len)
 				break;
 	
 			default:
-				assert(!_("[Error] Bad text filter!"));
+				fatal("Bad text filter!");
 				break;
 		}
 

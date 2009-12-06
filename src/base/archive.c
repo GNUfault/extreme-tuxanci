@@ -29,20 +29,20 @@ char *archive_extract_file(char *archive, char *filename)
 	zipArchive = zip_open(archive, 0, &err);
 
 	if (zipArchive == NULL) {
-		fprintf(stderr, _("[Error] Unable to open archive [%s]\n"), archive);
+		error("Unable to open archive [%s]", archive);
 		return NULL;
 	}
 
 	zipFile = zip_fopen(zipArchive, filename, ZIP_FL_UNCHANGED);
 
 	if (zipFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to extract the file [%s] from archive [%s]\n"), filename, archive);
+		error("Unable to extract the file [%s] from archive [%s]", filename, archive);
 		zip_close(zipArchive);
 		return NULL;
 	}
 
 	if ((file = fopen(name, "wb")) == NULL) {
-		fprintf(stderr, _("[Error] Unable to create temporary file [%s]\n"), name);
+		error("Unable to create temporary file [%s]", name);
 		zip_fclose(zipFile);
 		zip_close(zipArchive);
 		return NULL;

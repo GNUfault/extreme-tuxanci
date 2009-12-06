@@ -47,7 +47,7 @@ static int getProto(char *str)
 	if (strstr(str, ":") != NULL)
 		return PROTO_TCPv6;
 
-	assert(!_("[Error] Network protocol not detected"));
+	fatal("Network protocol not detected");
 	return -1;
 }
 
@@ -76,7 +76,7 @@ sock_tcp_t *sock_tcp_bind(char *address, int port)
 #endif
 
 	if (new->sock < 0) {
-		fprintf(stderr, _("[Error] Unable to create TCP socket\n"));
+		error("Unable to create TCP socket");
 		sock_tcp_destroy(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -115,7 +115,7 @@ sock_tcp_t *sock_tcp_bind(char *address, int port)
 #endif /* SUPPORT_IPv6 */
 
 	if (ret < 0) {
-		fprintf(stderr, _("[Error] Unable to bind to TCP port [%d]\n"), port);
+		error("Unable to bind to TCP port [%d]", port);
 		sock_tcp_destroy(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -206,7 +206,7 @@ int sock_tcp_get_port(sock_tcp_t *p)
 	}
 #endif
 
-	assert(!_("[Error] Bad IP protocol"));
+	fatal("Bad IP protocol");
 
 	return -1;
 }
@@ -234,7 +234,7 @@ sock_tcp_t *sock_tcp_connect(char *ip, int port)
 #endif
 
 	if (new->sock < 0) {
-		fprintf(stderr, _("[Error] Unable to create TCP socket for connecting\n"));
+		error("Unable to create TCP socket for connecting");
 		sock_tcp_destroy(new);
 #ifdef __WIN32__
 		WSACleanup();
@@ -262,7 +262,7 @@ sock_tcp_t *sock_tcp_connect(char *ip, int port)
 #endif
 
 	if (ret < 0) {
-		fprintf(stderr, "[Error] Unable to connect to [%s]:%d\n", ip, port);
+		error("Unable to connect to [%s]:%d", ip, port);
 		sock_tcp_destroy(new);
 #ifdef __WIN32__
 		WSACleanup();

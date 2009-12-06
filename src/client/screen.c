@@ -56,7 +56,7 @@ void screen_register(screen_t *p)
 {
 	assert(p != NULL);
 
-	DEBUG_MSG(_("[Debug] Registering screen [%s]\n"), p->name);
+	debug("Registering screen [%s]", p->name);
 
 	list_add(listScreen, p);
 }
@@ -103,14 +103,14 @@ void screen_switch()
 	layer_flush();
 
 	if (currentScreen != NULL) {
-		DEBUG_MSG(_("[Debug] Stopping screen [%s]\n"), currentScreen->name);
+		debug("Stopping screen [%s]", currentScreen->name);
 		currentScreen->fce_stop();
 	}
 
 	currentScreen = futureScreen;
 	futureScreen = NULL;
 
-	DEBUG_MSG(_("[Debug] Starting screen [%s]\n"), currentScreen->name);
+	debug("Starting screen [%s]", currentScreen->name);
 
 	currentScreen->fce_start();
 }

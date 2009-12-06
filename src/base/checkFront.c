@@ -87,7 +87,7 @@ void check_front_event(client_t *client)
 				}
 				break;
 			default:
-				assert(!_("[Error] Wrong type of the event front"));
+				fatal("Wrong type of the event front");
 				break;
 		}
 	}

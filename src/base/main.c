@@ -99,8 +99,8 @@ int *newInt(int x)
 void accessExistFile(const char *s)
 {
 	if (access(s, F_OK) != 0) {
-		fprintf(stderr, _("[Error] File not found [%s]\n"), s);
-		fprintf(stderr, _("[Error] Shutting down the game\n"));
+		error("File not found [%s]", s);
+		error("Shutting down the game");
 		exit(-1);
 	}
 }
@@ -165,8 +165,8 @@ int main(int argc, char *argv[])
 
 	/* let's initialize WinSock */
 	if (WSAStartup(wVersionRequested, &data) != 0) {
-		fprintf(stderr, _("[Error] Initialization of WinSock failed\n"));
-		fprintf(stderr, _("[Error] Shutting down the game\n"));
+		error("Initialization of WinSock failed");
+		error("Shutting down the game");
 		exit(-1);
 	}
 #endif /* __WIN32__ */

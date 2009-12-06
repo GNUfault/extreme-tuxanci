@@ -147,6 +147,6 @@ void loadValueFromConfigFile(textFile_t * textFile, char *env, char *val, int le
 		sprintf(line, "%s=\"%s\"", env, butVal);
 		list_add(textFile->text, strdup(line));
 
-		DEBUG_MSG(_("[Debug] Expanding config file [%s]\n"), line);
+		debug("Expanding config file [%s]", line);
 	}
 }

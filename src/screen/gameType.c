@@ -302,7 +302,7 @@ int public_server_get_settingGameType()
 		return NET_GAME_TYPE_CLIENT;
 	}
 
-	assert(!_("[Error] Unknown game type"));
+	fatal("Unknown game type");
 
 	return -1;
 }
@@ -356,7 +356,7 @@ int public_server_get_settingProto()
 		return PROTO_UDPv6;
 	}
 
-	DEBUG_MSG(_("[Error] Unknown version of IP protocol\n"));
+	debug("Unknown version of IP protocol");
 
 	return -1;
 }

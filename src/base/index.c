@@ -23,14 +23,14 @@ static index_item_t *index_item_new(int key, void *data)
 #ifdef DEBUG_INDEX
 static void printIndexItem(index_item_t *p)
 {
-	printf(_("[Debug] Index [%d] contains: %p\n"), p->key, p->data);
+	debug("Index [%d] contains: %p", p->key, p->data);
 }
 
 static void printListIndexItem(list_t *list)
 {
 	int i;
 
-	printf(_("List:\n"));
+	debug("List:");
 
 	for (i = 0; i < list->count; i++) {
 		index_item_t *this;
@@ -60,7 +60,7 @@ static void checkList(list_t *list)
 
 		if (prev >= this) {
 			printListIndexItem(list);
-			assert(!_("Error"));
+			fatal("Error in list");
 		}
 
 		prev = this;
@@ -100,10 +100,10 @@ void index_add(list_t *list, int key, void *data)
 
 #ifdef DEBUG_INDEX
 		if (++count == len * 5) {
-			printf(_("[Error] Cyclic error\n"));
+			error("Cyclic error");
 			printIndexItem(item);
 			printListIndexItem(list);
-			assert(0);
+			abort(0);
 		}
 #endif /* DEBUG_INDEX */
 

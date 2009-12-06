@@ -72,7 +72,7 @@ void *storage_get(list_t *list, char *group, char *name)
 		}
 	}
 
-	DEBUG_MSG(_("[Error] Storage item not found [%s %s]\n"), group, name);
+	debug("Storage item not found [%s %s]", group, name);
 
 	return NULL;
 }

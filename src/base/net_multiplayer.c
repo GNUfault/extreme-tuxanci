@@ -54,7 +54,7 @@ int net_multiplayer_init(int type, char *ip, int port, int proto)
 			switch (proto) {
 				case PROTO_UDPv4:
 					if (server_init(ip, port, NULL, 0) != 1) {
-						fprintf(stderr, _("[Error] Unable to initialize multiplayer game\n"));
+						error("Unable to initialize multiplayer game");
 						netGameType = NET_GAME_TYPE_NONE;
 						return -1;
 					}
@@ -62,7 +62,7 @@ int net_multiplayer_init(int type, char *ip, int port, int proto)
 
 				case PROTO_UDPv6:
 					if (server_init(NULL, 0, ip, port) != 1) {
-						fprintf(stderr, _("[Error] Unable to initialize multiplayer game\n"));
+						error("Unable to initialize multiplayer game");
 						netGameType = NET_GAME_TYPE_NONE;
 						return -1;
 					}
@@ -73,7 +73,7 @@ int net_multiplayer_init(int type, char *ip, int port, int proto)
 #ifndef PUBLIC_SERVER
 		case NET_GAME_TYPE_CLIENT:
 			if (client_init(ip, port) != 0) {
-				fprintf(stderr, _("[Error] Unable to join multiplayer game\n"));
+				error("Unable to join multiplayer game");
 				netGameType = NET_GAME_TYPE_NONE;
 				return -1;
 			}
@@ -81,7 +81,7 @@ int net_multiplayer_init(int type, char *ip, int port, int proto)
 #endif /* PUBLIC_SERVER */
 
 		default:
-			fprintf(stderr, _("[Error] Unknown type of the network game [%d]\n"), netGameType);
+			error("Unknown type of the network game [%d]", netGameType);
 			assert(0);
 			break;
 	}
@@ -106,7 +106,7 @@ void net_multiplayer_event()
 #endif /* PUBLIC_SERVER */
 
 		default:
-			fprintf(stderr, _("[Error] Unknown type of the network game [%d]\n"), netGameType);
+			error("Unknown type of the network game [%d]", netGameType);
 			assert(0);
 			break;
 	}
@@ -129,7 +129,7 @@ void net_multiplayer_quit()
 #endif /* PUBLIC_SERVER */
 
 		default:
-			fprintf(stderr, _("[Error] Unknown type of the network game [%d]\n"), netGameType);
+			error("Unknown type of the network game [%d]", netGameType);
 			assert(0);
 			break;
 	}

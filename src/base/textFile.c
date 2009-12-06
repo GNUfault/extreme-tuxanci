@@ -50,7 +50,7 @@ static void createLine(list_t *list, char *p, int len)
 			break;
 		}
 
-		length_line = (int) (end_line - (begin_line));
+		length_line = (int) (end_line - begin_line);
 
 		line = malloc((length_line + 1) * sizeof(char));
 		memset(line, 0, (length_line + 1) * sizeof(char));
@@ -64,7 +64,7 @@ static void createLine(list_t *list, char *p, int len)
 	} while (begin_line != NULL);
 }
 
-/*
+/**
  * Loads file *s and returns him formatted to textFile_t*
  */
 textFile_t *text_file_load(char *s)
@@ -78,20 +78,20 @@ textFile_t *text_file_load(char *s)
 	assert(s != NULL);
 
 	if (lstat(s, &buf) < 0) {
-		fprintf(stderr, _("[Error] Unable to get file status [%s]\n"), s);
+		error("Unable to get file status [%s]", s);
 		return NULL;
 	}
 
 	file_length = buf.st_size;
 	if ((file = fopen(s, "rb")) == NULL) {
-		fprintf(stderr, _("[Error] Unable to open file for reading [%s]\n"), s);
+		error("Unable to open file for reading [%s]", s);
 		return NULL;
 	}
 
 	p = malloc(file_length * sizeof(char));
 
 	if (fread(p, file_length * sizeof(char), 1, file) != 1) {
-		fprintf(stderr, _("[Error] Unable to read data from file [%s]\n"), s);
+		error("Unable to read data from file [%s]", s);
 		fclose(file);
 		return NULL;
 	}
@@ -106,7 +106,7 @@ textFile_t *text_file_load(char *s)
 	return ret;
 }
 
-/*
+/**
  * Prints the text saved in *p into stdout
  */
 void text_file_print(textFile_t *p)
@@ -115,7 +115,7 @@ void text_file_print(textFile_t *p)
 
 	assert(p != NULL);
 
-	printf(_("[Debug] Printing file [%s]\n\n"), p->file);
+	debug("Printing file [%s]", p->file);
 
 	for (i = 0; i < p->text->count; i++) {
 		printf("%3d >> %s\n", i, (char *) p->text->list[i]);
@@ -138,7 +138,7 @@ void text_file_save(textFile_t *p)
 	fclose(file);
 }
 
-/*
+/**
  * Removes text saved in *p from the memory
  */
 void text_file_destroy(textFile_t *p)

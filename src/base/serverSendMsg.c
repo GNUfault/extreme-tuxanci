@@ -138,7 +138,7 @@ void send_msg_to_client(int type, client_t *client, char *msg, int type2, int id
 #endif /* PUBLIC_SERVER */
 			break;
 		default:
-			fprintf(stderr, _("[Error] Unknown type of target group of players [%d]\n"), type);
+			error("Unknown type of target group of players [%d]", type);
 			assert(0);
 			break;
 	}

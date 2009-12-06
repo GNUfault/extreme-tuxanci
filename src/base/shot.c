@@ -113,7 +113,7 @@ shot_t *shot_new(int x, int y, int px, int py, int gun, int author_id)
 			break;
 	
 		default:
-			fprintf(stderr, _("[Error] Unknown type of gun [%d]\n"), gun);
+			error("Unknown type of gun [%d]", gun);
 			assert(0);
 			break;
 	}

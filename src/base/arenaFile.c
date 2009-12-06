@@ -128,7 +128,7 @@ static void cmd_arena(arena_t **arena, char *line)
 	*/
 	arena_set_current(*arena);
 
-	DEBUG_MSG(_("[Debug] Arena loaded\n"));
+	debug("Arena loaded");
 }
 
 static void cmd_module_load(char *line)
@@ -354,11 +354,11 @@ static void load_arenaFromDirector(char *director)
 	director_t *p;
 	int i;
 
-	DEBUG_MSG(_("[Debug] Loading arena files [%s]\n"), director);
+	debug("Loading arena files [%s]", director);
 	p = director_load(director);
 
 	if (p == NULL) {
-		fprintf(stderr, _("[Error] Directory not found [%s]\n"), director);
+		error("Directory not found [%s]", director);
 		exit(-1);
 	}
 
@@ -376,7 +376,7 @@ static void load_arenaFromDirector(char *director)
 				sprintf(path, "%s/%s", director, line);
 			}
 
-			DEBUG_MSG(_("[Debug] Loading arena [%s]\n"), line);
+			debug("Loading arena [%s]", line);
 
 			accessExistFile(path);
 			arena_file_load(path);

@@ -33,7 +33,7 @@ void music_init()
 		return;
 	}
 
-	DEBUG_MSG(_("[Debug] Initializing music\n"));
+	debug("Initializing music");
 
 	listStorage = storage_new();
 	currentMusic = NULL;
@@ -55,7 +55,7 @@ static Mix_Music *loadMixMusic(char *file)
 	Mix_Music *mixer;
 	char str[STR_PATH_SIZE];
 
-	DEBUG_MSG(_("[Debug] Loading music [%s]\n"), file);
+	debug("Loading music [%s]", file);
 
 	if (isFillPath(file)) {
 		strcpy(str, file);
@@ -68,7 +68,7 @@ static Mix_Music *loadMixMusic(char *file)
 	mixer = Mix_LoadMUS(str);
 
 	if (mixer == NULL) {
-		fprintf(stderr, _("[Error] Unable to load music [%s]\n"), file);
+		error("Unable to load music [%s]", file);
 		return NULL;
 	}
 
@@ -122,7 +122,7 @@ void music_stop()
 	}
 
 	if (currentMusic != NULL) {
-		DEBUG_MSG(_("[Debug] Stopping playing music\n"));
+		debug("Stopping playing music");
 
 		Mix_HaltMusic();
 		currentMusic = NULL;
@@ -163,7 +163,7 @@ void music_play(char *name, char *group)
 	strcpy(currentMusic_name, name);
 
 	if (currentMusic != NULL) {
-		DEBUG_MSG(_("[Debug] Playing music [%s]\n"), name);
+		debug("Playing music [%s]", name);
 
 		playMixMusic();
 	}
@@ -224,7 +224,7 @@ void music_quit()
 		return;
 	}
 
-	DEBUG_MSG(_("[Debug] Shutting down music\n"));
+	debug("Shutting down music");
 
 	music_stop();
 	storage_destroy(listStorage, destroyMusic);

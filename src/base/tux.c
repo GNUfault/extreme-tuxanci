@@ -148,7 +148,7 @@ void tux_get_course(int n, int *x, int *y)
 			break;
 	
 		default:
-			fprintf(stderr, _("[Error] Unknown direction of the tux [%d]\n"), n);
+			error("Unknown direction of the tux [%d]", n);
 			assert(0);
 			break;
 	}
@@ -185,7 +185,7 @@ void tux_draw(tux_t *tux)
 			break;
 	
 		default:
-			fprintf(stderr, _("[Error] Unknown direction of the tux [%d]\n"), tux->position);
+			error("Unknown direction of the tux [%d]", tux->position);
 			assert(0);
 			break;
 	}

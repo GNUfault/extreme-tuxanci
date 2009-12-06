@@ -98,7 +98,7 @@ static void setWidgetLabel()
 	int i;
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("[Error] Didn't load the high score file [%s]"), SCREEN_TABLE_FILE_HIGHSCORE_NAME);
+		error("Didn't load the high score file [%s]", SCREEN_TABLE_FILE_HIGHSCORE_NAME);
 
 		return;
 	}
@@ -147,15 +147,15 @@ static void loadHighscoreFile()
 	textFile = text_file_load(path);
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to load the high score file [%s]\n"), path);
-		fprintf(stderr, _("[Debug] Creating the high score file [%s]\n"), path);
+		error("Unable to load the high score file [%s]", path);
+		debug("Creating the high score file [%s]", path);
 		textFile = text_file_new(path);
 	} else {
 		return;
 	}
 
 	if (textFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to create the high score file [%s]\n"), path);
+		error("Unable to create the high score file [%s]", path);
 		return;
 	}
 

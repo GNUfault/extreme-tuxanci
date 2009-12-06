@@ -15,11 +15,11 @@ int log_init(char *name)
 	logFile = fopen(name, "a");
 
 	if (logFile == NULL) {
-		fprintf(stderr, _("[Error] Unable to open log file [%s]\n"), name);
+		error("Unable to open log file [%s]", name);
 		return -1;
 	}
 
-	DEBUG_MSG(_("[Debug] Using log file [%s]\n"), name);
+	debug("Using log file [%s]", name);
 
 	log_add(LOG_INF, "Logging started");
 
@@ -54,7 +54,7 @@ void log_add(int type, char *msg)
 		str_type = "ERROR";
 		break;
 	default:
-		assert(!_("[Error] Unknown type of the logging string"));
+		fatal("Unknown type of the logging string");
 		break;
 	}
 

@@ -68,12 +68,12 @@ void arena_init()
 
 	if (getParam("--split-vertical")) {
 		splitType = SCREEN_SPLIT_VERTICAL;
-		printf(_("[Debug] Set vertical screen splitting\n"));
+		debug("Set vertical screen splitting");
 	}
 
 	if (getParam("--split-horizontal")) {
 		splitType = SCREEN_SPLIT_HORIZONTAL;
-		printf(_("[Debug] Set horizontal screen splitting\n"));
+		debug("Set horizontal screen splitting");
 	}
 
 	hot_key_register(SDLK_F3, hotkey_splitArena);
@@ -268,7 +268,7 @@ static void drawSplitArenaForTux(arena_t *arena, tux_t *tux, int location_x, int
 		default:
 			screen_x = -1;
 			screen_y = -1;
-			assert(!_("[Error] Unknown method of splitting the screen"));
+			fatal("Unknown method of splitting the screen");
 			break;
 	}
 
@@ -285,7 +285,7 @@ static void drawSplitArenaForTux(arena_t *arena, tux_t *tux, int location_x, int
 		default:
 			screen_x = -1;
 			screen_y = -1;
-			assert(!_("[Error] Unknown method of splitting the screen"));
+			fatal("Unknown method of splitting the screen");
 			break;
 	}
 }

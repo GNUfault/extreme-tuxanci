@@ -181,7 +181,7 @@ static void moveShotFromPipe(shot_t *shot, pipe_t *pipe)
 	distPipe = space_get_object_id(spacePipe, pipe->id_out);
 
 	if (distPipe == NULL) {
-		fprintf(stderr, "[Error] Pipe ID was not found [%d]\n", pipe->id);
+		error("Pipe ID was not found [%d]", pipe->id);
 		return;
 	}
 
@@ -243,7 +243,7 @@ static int negPosition(int n)
 		return TUX_UP;
 
 	default:
-		assert(!_("[Error] Tux is probably moving in another dimension"));
+		fatal("Tux is probably moving in another dimension");
 		break;
 	}
 

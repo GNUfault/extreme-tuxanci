@@ -25,7 +25,7 @@ void image_init()
 {
 	assert(interface_is_inicialized() == TRUE);
 
-	DEBUG_MSG(_("[Debug] Initializing image database\n"));
+	debug("Initializing image database");
 
 	listStorage = storage_new();
 	isImageDataInit = TRUE;
@@ -47,12 +47,12 @@ static SDL_Surface *loadImage(const char *filename, int alpha)
 	accessExistFile(str);
 
 	if ((tmp = IMG_Load(str)) == NULL) {
-		fprintf(stderr, "%s\n", SDL_GetError());
+		error("SDL: %s", SDL_GetError());
 		return NULL;
 	}
 
 	if ((ret = (alpha) ? SDL_DisplayFormatAlpha(tmp) : SDL_DisplayFormat(tmp)) == NULL) {
-		fprintf(stderr, "%s\n", SDL_GetError());
+		error("SDL: %s", SDL_GetError());
 		SDL_FreeSurface(tmp);
 		return NULL;
 	}
@@ -197,7 +197,7 @@ image_t *image_add(char *file, int alpha, char *name, char *group)
 
 	storage_add(listStorage, group, name, new);
 
-	DEBUG_MSG(_("[Debug] Loading image [%s]\n"), file);
+	debug("Loading image [%s]", file);
 
 	return new;
 }
@@ -316,7 +316,7 @@ void image_draw(image_t *image, int x,int y, int px, int py, int w, int h)
  */
 void image_quit()
 {
-	DEBUG_MSG(_("[Debug] Shutting down image database\n"));
+	debug("Shutting down image database");
 
 	storage_destroy(listStorage, image_destroy);
 	isImageDataInit = FALSE;

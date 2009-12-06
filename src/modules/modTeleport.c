@@ -188,7 +188,7 @@ static int getRandomPosition()
 		return TUX_DOWN;
 	}
 
-	assert(!_("[Error] Generated a random number which is not in range 0 to 3"));
+	fatal("Generated a random number which is not in range 0 to 3");
 
 	return -1;	/* no warnings */
 }

@@ -68,7 +68,7 @@ void setGameType()
 				   public_server_get_settingPort(), public_server_get_settingProto());
 
 	if (ret != 0) {
-		fprintf(stderr, _("[Error] Unable to initialize network\n"));
+		error("Unable to initialize network");
 		world_do_end();
 	}
 }
@@ -317,7 +317,7 @@ void world_tux_control(tux_t *p)
 
 	switch (p->control) {
 		case TUX_CONTROL_NONE:
-			assert(!_("[Error] Controls not defined"));
+			fatal("Controls not defined");
 			break;
 
 		case TUX_CONTROL_KEYBOARD_RIGHT:
@@ -502,6 +502,6 @@ void world_init()
 
 void world_quit()
 {
-	DEBUG_MSG(_("[Debug] Shutting down the world screen\n"));
+	debug("Shutting down the world screen");
 	isScreenWorldInit = FALSE;
 }

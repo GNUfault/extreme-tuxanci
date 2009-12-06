@@ -2,12 +2,6 @@
 #define MSG_H
 
 #ifdef DEBUG
-#define DEBUG_MSG(msg,arg...)	printf(msg, ##arg)
-#else /* DEBUG */
-#define DEBUG_MSG(msg,arg...) 
-#endif /* DEBUG * */
-
-#ifdef DEBUG
 #define debug(msg,arg...)	fprintf(stdout, "%s ", _("[Debug]"));   fprintf(stdout, _(msg), ##arg); fprintf(stdout, "\n")
 #else /* DEBUG */
 #define debug(msg,arg...)
