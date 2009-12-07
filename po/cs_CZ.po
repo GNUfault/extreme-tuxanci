@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxanci\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-11-30 23:26+0100\n"
+"POT-Creation-Date: 2009-12-07 19:40+0100\n"
 "PO-Revision-Date: 2008-10-25 11:55+0100\n"
 "Last-Translator: xHire <xhire@tuxportal.cz>\n"
 "Language-Team: \n"
@@ -15,800 +15,752 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/audio/audio.c:30
-#, fuzzy, c-format
-msgid "Error! Unable to initialize audio: %s\n"
-msgstr "Nemohu inicializovat zvuk: %s\n"
-
-#: src/audio/audio.c:36
-#, c-format
-msgid "Unable to create proper audio settings: %s\n"
-msgstr "Nemohu správně nastavit zvuk: %s\n"
-
-#: src/audio/audio.c:44
-#, fuzzy
-msgid "Initializing audio\n"
-msgstr "Zapínám zvukový systém...\n"
-
-#: src/audio/audio.c:57
-#, fuzzy
-msgid "Quitting audio\n"
-msgstr "Vypínám zvuk...\n"
-
-#: src/audio/music.c:48
-#, fuzzy
-msgid "Initializing music\n"
-msgstr "Zapínám hudbu...\n"
-
-#: src/audio/music.c:59
-#, fuzzy, c-format
-msgid "Loading a file with music: %s\n"
-msgstr "Nahrávám map file: %s\n"
-
-#: src/audio/music.c:72
-#, fuzzy, c-format
-msgid "Unable to load music from file %s\n"
-msgstr "Nemohu načíst hudbu ze souboru: %s\n"
-
-#: src/audio/music.c:125
-#, fuzzy
-msgid "Stopping music\n"
-msgstr "Zastavuji přehrávání hudby...\n"
-
-#: src/audio/music.c:165
-#, fuzzy, c-format
-msgid "Playing music from file %s\n"
-msgstr "Přehrávám hudbu ze souboru %s\n"
-
-#: src/audio/music.c:229
-#, fuzzy
-msgid "Quitting music\n"
-msgstr "Vypínám hudbu...\n"
-
-#: src/audio/sound.c:45
-#, fuzzy
-msgid "Initializing sound\n"
-msgstr "Zapínám zvuk...\n"
-
-#: src/audio/sound.c:57
-#, c-format
-msgid "Loading sound file: %s\n"
-msgstr "Nahrávám soubor se zvukem: %s\n"
-
-#: src/audio/sound.c:64
-#, fuzzy, c-format
-msgid "Unable to load sound from file %s with error: %s\n"
-msgstr "Nemohu načíst zvuk ze souboru: %s s chybou: %s\n"
-
-#: src/audio/sound.c:77
-#, fuzzy, c-format
-msgid "Unable to play sound with error: %s\n"
-msgstr "Nemohu na pozadí přehrát zvuk s chybou: %s\n"
-
-#: src/audio/sound.c:146
-#, fuzzy
-msgid "Quitting sound\n"
-msgstr "Vypínám zvuk...\n"
-
-#: src/base/arenaFile.c:123
-msgid "Loaded new arena...\n"
-msgstr "Nahrána nová aréna...\n"
-
-#: src/base/arenaFile.c:336
-#, fuzzy, c-format
-msgid "Load arena file from %s\n"
-msgstr "Nahrávám arénu: %s\n"
-
-#: src/base/arenaFile.c:341
-#, c-format
-msgid "Director %s not found !\n"
+#: src/base/downServer.c:68
+msgid "[Error] Arena not found\n"
 msgstr ""
 
-#: src/base/arenaFile.c:360
-#, c-format
-msgid "Loading arena: %s\n"
-msgstr "Nahrávám arénu: %s\n"
-
-#: src/base/checkFront.c:90
-msgid "Bad type of front!"
-msgstr "Špatný typ fronty!"
-
-#: src/base/gun.c:51
-msgid "There is wrong value in course variable!"
-msgstr "V proměnné course je divná hodnota!"
-
-#: src/base/homeDirector.c:22
-#, c-format
-msgid "Environment variable HOME not found!\n"
-msgstr "Proměnná prostředí HOME nenalezena!\n"
-
-#: src/base/homeDirector.c:30
-#, c-format
-msgid "Creating home directory %s.\n"
-msgstr "Vytvářím domovský adresář %s.\n"
-
-#: src/base/homeDirector.c:37
-#, c-format
-msgid "Unable to create home directory!\n"
-msgstr "Nemohu vytvořit domovský adresář!\n"
-
-#: src/base/idManager.c:41
-msgid "Starting ID manger\n"
-msgstr "Spouštím ID manger\n"
-
-#: src/base/idManager.c:71
-msgid "No free ID left!"
-msgstr "Nezbývá žádné volné ID!"
-
-#: src/base/idManager.c:110 src/base/idManager.c:132
-msgid "This kind of ID was never registered!"
-msgstr "Tento druh ID nebyl nikdy registrován!"
-
-#: src/base/idManager.c:179
-#, c-format
-msgid "ID %d does not exist\n"
-msgstr "ID %d neexistuje\n"
-
-#: src/base/idManager.c:186
-#, c-format
-msgid "ID %d (count %d)\n"
-msgstr "ID %d (počet %d)\n"
-
-#: src/base/idManager.c:193
-msgid "Quitting ID manger\n"
-msgstr "Končím ID manger\n"
-
-#: src/base/main.c:97
-#, c-format
-msgid ""
-"File %s not found !\n"
-"Program shutdown !\n"
+#: src/base/downServer.c:76
+msgid "[Error] Server has some problem\n"
 msgstr ""
-"Soubor %s nenalezen !\n"
-"Vypínám program !\n"
 
-#: src/base/main.c:163
+#: src/base/downServer.c:82
 #, c-format
-msgid ""
-"WinSock initialization failed !\n"
-"Program shutdown !\n"
+msgid "OK %d\n"
 msgstr ""
-"Inicializace WinSock selhala !\n"
-"Vypínám program !\n"
 
-#: src/base/modules.c:70 src/base/modules.c:76
+#: src/base/index.c:52
 #, c-format
-msgid "Error %s occured when using getFce function!\n"
-msgstr "Při použití getFce nastala chyba %s!\n"
-
-#: src/base/modules.c:146
-#, c-format
-msgid "Unable to map file %s!\n"
-msgstr "Nemohu namapovat soubor %s!\n"
-
-#: src/base/modules.c:163
-#, c-format
-msgid "Loading module: \"%s\"\n"
-msgstr "Načítám modul: \"%s\"\n"
-
-#: src/base/modules.c:166
-#, c-format
-msgid "Failed initialization of module \"%s\""
-msgstr "Inicializace modulu \"%s\" selhala."
-
-#: src/base/modules.c:184
-msgid "Destroing module...\n"
-msgstr "Odebírám modul...\n"
-
-#: src/base/modules.c:222
-#, c-format
-msgid "Loading module %s failed!\n"
-msgstr "Načítání modulu % selhalo!\n"
-
-#: src/base/myTimer.c:126
-msgid "Timer is really weirdly set!"
-msgstr "Časovač je doopravdy podivně nastavený!"
-
-#: src/base/myTimer.c:147
-msgid "There is no such ID!"
-msgstr "Takové ID tu fakt není!"
-
-#: src/base/net_multiplayer.c:57 src/base/net_multiplayer.c:64
-#, c-format
-msgid "Unable to inicialize network game as server!\n"
-msgstr "Nemohu spustit síťovou hru jako server!\n"
-
-#: src/base/net_multiplayer.c:75
-#, c-format
-msgid "Unable to inicialize network game as client!\n"
-msgstr "Nemohu spustit síťovou hru!\n"
-
-#: src/base/net_multiplayer.c:82 src/base/net_multiplayer.c:105
-#: src/base/net_multiplayer.c:126
-msgid "Variable netGameType has a really weird value!"
-msgstr "Proměnná netGameType má doopravdy podivnou hodnotu!"
+msgid "Nothing\n"
+msgstr ""
 
 #: src/base/proto.c:66
-#, c-format
-msgid "Proto error code: \"%d\"\n"
-msgstr "Kód protokolové chyby: \"%d\"\n"
+msgid "Cannot connect to the server. You have incompatible version of the game."
+msgstr ""
 
 #: src/base/proto.c:70
-msgid "Version of your client isn't supported by the server."
-msgstr "Verze tvého klienta není podporována serverem."
+msgid "Connection timeout"
+msgstr ""
 
 #: src/base/proto.c:74
-msgid "The timeout of ping from server is out"
-msgstr "Vypršel čas na odpověď ze serveru"
+msgid "Server is full"
+msgstr ""
 
-#: src/base/proto.c:78
-msgid "The maximum amount of connected players has been exceeded!"
-msgstr "Maximum současně připojených hráčů bylo překročeno!"
-
-#: src/base/server.c:277 src/client/client.c:151
-#, c-format
-msgid "Sending: \"%s\""
-msgstr "Posílám: \"%s\""
-
-#: src/base/server.c:304 src/client/client.c:224
-#, c-format
-msgid "Recieved: \"%s\""
-msgstr "Přijato: \"%s\""
-
-#: src/base/serverSendMsg.c:139 src/base/shot.c:124 src/base/tux.c:153
-msgid "Type variable has a really wierd value!"
-msgstr "Proměnná se směrem Tuxánka má doopravdy podivnou hodnotu!"
-
-#: src/base/shareFunction.c:41
-#, c-format
-msgid "Adding  \"%s\" to share function.\n"
-msgstr "Přidávám \"%s\" do sdílené funkce.\n"
-
-#: src/base/storage.c:75
-#, c-format
-msgid "%s %s was not found in storage!\n"
-msgstr "%s %s nebylo na skladě nalezeno!\n"
-
-#: src/base/tcp_server.c:66 src/base/udp_server.c:64
-#, c-format
-msgid "New client \"%s\" on port \"%d\" connected"
+#: src/base/udp_server.c:62
+#, fuzzy, c-format
+msgid "New player [%s]:%d connected"
 msgstr "Nový klient \"%s\" připojen na portu \"%d\""
 
-#: src/base/tcp_server.c:109 src/base/udp_server.c:80
-#, c-format
-msgid "Client \"%s\" on port \"%d\" disconnected"
+#: src/base/udp_server.c:78
+#, fuzzy, c-format
+msgid "Player [%s]:%d disconnected"
 msgstr "Klient \"%s\" na portu \"%d\" je odpojen"
 
-#: src/base/tcp_server.c:134 src/base/tcp_server.c:148
-#: src/base/udp_server.c:100 src/base/udp_server.c:111
-#, c-format
-msgid "Starting server: \"%s\" on port: \"%d\"\n"
-msgstr "Spouštím server: \"%s\" na portu: \"%d\"\n"
-
-#: src/base/tcp_server.c:136 src/base/tcp_server.c:151
-#: src/base/udp_server.c:102 src/base/udp_server.c:113
-#, c-format
-msgid "Starting server: \"%s\" on port: \"%d\" FAILED!\n"
-msgstr "Spouštění serveru: \"%s\" na portu: \"%d\" SELHALO\n"
-
-#: src/base/tcp_server.c:281 src/base/tcp_server.c:286
-#: src/base/udp_server.c:236 src/base/udp_server.c:241
-#, c-format
-msgid "Closing port: \"%d\"\n"
-msgstr "Zavírám port: \"%d\"\n"
-
-#: src/base/textFile.c:82
-#, c-format
-msgid "ERROR: unable to get file status for %s!\n"
-msgstr "CHYBA: nemohu získat status souboru %s!\n"
-
-#: src/base/textFile.c:88
-#, c-format
-msgid "ERROR: unable to open file %s for reading\n"
-msgstr "CHYBA: nemohu otevřít soubor %s pro čtení\n"
-
-#: src/base/textFile.c:95
-#, c-format
-msgid "ERROR: unable to read data from file %s\n"
-msgstr "CHYBA: nemohu číst data ze souboru %s\n"
-
-#: src/base/textFile.c:120
-#, c-format
-msgid ""
-"Printing file: \"%s\"\n"
-"\n"
-msgstr "Tisknu soubor: \"%s\"\n"
-
-#: src/base/tux.c:190
-msgid "p->control has a really wierd value!"
-msgstr "p->control má doopravdy podivnou hodnotu!"
-
-#: src/base/udp_server.c:182
-#, c-format
-msgid "Client was not FOUND!\n"
-msgstr "Klient NENALEZEN!\n"
-
-#: src/base/udp_server.c:245
-msgid "Quitting UDP\n"
-msgstr "Končím UDP\n"
-
-#: src/base/downServer.c:72
-msgid "ERR Arena not found !\n"
-msgstr ""
-
-#: src/base/downServer.c:81
-msgid "ERR Server has a problem !\n"
-msgstr ""
-
-#: src/base/downServer.c:134
-#, fuzzy, c-format
-msgid "Unable to initialize download server!\n"
+#: src/client/client.c:136
+#, fuzzy
+msgid "Unable to connect to the game server"
 msgstr "Nemohu spustit síťovou hru jako server!\n"
 
-#: src/client/client.c:99
-#, c-format
-msgid "Connected to: %s on port: %d via UDP\n"
-msgstr "Připojeno k: %s na portu %d přes UDP\n"
-
-#: src/client/client.c:136
-#, c-format
-msgid "Server did not respond!\n"
-msgstr "Server neodpověděl!\n"
-
-#: src/client/client.c:137
-msgid "Server is not running or being blocked. I was unable to connect."
-msgstr "Server neběží, nebo je blokován. Nemohl jsem se připojit."
-
-#: src/client/client.c:316
-#, c-format
-msgid "down: %d\n"
-msgstr "dolů: %d\n"
-
-#: src/client/client.c:316
-#, c-format
-msgid "up  : %d\n"
-msgstr "nahoru  : %d\n"
-
-#: src/client/client.c:342
-msgid "Closing UDP connection.\n"
-msgstr "Zavírám UDP spojení.\n"
-
-#: src/client/configFile.c:144
-#, c-format
-msgid "ADDING: \"%s\" into config file.\n"
-msgstr "PŘIDÁVÁM: \"%s\" do konfiguračního souboru.\n"
-
-#: src/client/font.c:39
-#, c-format
-msgid "Loading font: \"%s\"\n"
-msgstr "Nahrávám písmo: \"%s\"\n"
-
-#: src/client/font.c:131
-msgid "Unloading font\n"
-msgstr "Uvolňuji font\n"
-
-#: src/client/game.c:109
-msgid "Quitting TUXANCI...\n"
-msgstr "Končím TUXANCI...\n"
-
-#: src/client/image.c:29
-msgid "Initializing image database\n"
-msgstr "Inicializuji databázi obrázků\n"
-
-#: src/client/image.c:189
-#, c-format
-msgid "Loading image %s\n"
-msgstr "Nahrávám obrázek %s\n"
-
-#: src/client/image.c:296
-msgid "Quitting image database\n"
-msgstr "Zavírám databázi obrázků\n"
-
-#: src/client/interface.c:70
-#, c-format
-msgid "Unable to switch to FULLSCREEN mode!\n"
-msgstr "Nemohu přepnout do režimu celé obrazovky!\n"
-
-#: src/client/interface.c:76
-#, c-format
-msgid "Unable to switch to WINDOW mode! Error: %s\n"
-msgstr "Nemohu se přepnout do okenního režimu! Chyba: %s\n"
-
-#: src/client/interface.c:122
-msgid "Initializing SDL system\n"
-msgstr "Inicializuji SDL systém\n"
-
-#: src/client/interface.c:212
-#, c-format
-msgid "Pressed key with SDL value: %d\n"
-msgstr "Stisknuta klávesa s SDL hodnotou: %d\n"
-
-#: src/client/interface.c:303
-#, c-format
-msgid "Unable to change WINDOW resolution! Error: %s\n"
-msgstr "Nemohu změnit rozlišení! Chyba: %s\n"
-
-#: src/client/interface.c:332
-msgid "Quitting SDL\n"
-msgstr "Končím SDL\n"
-
-#: src/client/keyboardBuffer.c:69
-#, c-format
-msgid "Keyboard Buffer overrun! Dropping key: %02x\n"
-msgstr "Přetečení bufferu klávesnice! Zahazuji klávesu: %02x\n"
-
-#: src/client/keyboardBuffer.c:94
-#, c-format
-msgid "Keyboard Buffer underrun!\n"
-msgstr "Podtečení bufferu klávesnice!\n"
-
-#: src/client/keyboardBuffer.c:145
-#, c-format
-msgid "Keyboard buffer is not empty!\n"
-msgstr "Buffer klávesnice není prázdný!\n"
-
-#: src/client/saveLoad.c:85
-#, c-format
-msgid "Saving game to: \"%s\"\n"
-msgstr "Ukládám hru do: \"%s\"\n"
-
-#: src/client/saveLoad.c:94
-#, c-format
-msgid "I was unable to save: \"%s\"\n"
-msgstr "Nemohl jsem uložit: \"%s\"\n"
-
-#: src/client/saveLoad.c:251
-#, c-format
-msgid "Loadig game from file: \"%s\"\n"
-msgstr "Nahrávám hru ze souboru: \"%s\"\n"
-
-#: src/client/saveLoad.c:259
-#, c-format
-msgid "Unable to load save: \"%s\"\n"
-msgstr "Nemohu nahrát uložení: \"%s\"\n"
-
-#: src/client/screen.c:60
-#, c-format
-msgid "Registering screen: \"%s\"\n"
-msgstr "Registruji obrazovku: \"%s\"\n"
-
-#: src/client/screen.c:107
-#, c-format
-msgid "Stopping screen: \"%s\"\n"
-msgstr "Ukončuji obrazovku: \"%s\"\n"
-
-#: src/client/screen.c:116
-#, c-format
-msgid "Starting screen: \"%s\"\n"
-msgstr "Zapínám obrazovku: \"%s\"\n"
-
-#: src/net/tcp.c:66 src/net/udp.c:129
-#, c-format
-msgid "Unable to create socket when connecting!\n"
-msgstr "Nemohu vytvořit soket během připojování!\n"
-
-#: src/net/tcp.c:95
-#, c-format
-msgid "Unable to bint to port: %d\n"
-msgstr "Nemohu se připojit na port: %d\n"
-
-#: src/net/tcp.c:168 src/net/udp.c:301
-msgid "Bad IP proto!"
-msgstr "Špatný IP protokol!"
-
-#: src/net/tcp.c:196
-#, c-format
-msgid "Unable to create TCP socket!\n"
-msgstr "Nemohu vytvořit TCP soket!\n"
-
-#: src/net/udp.c:68
-#, c-format
-msgid "Unable to create socket when binding!\n"
-msgstr "Nemohu vytvořit soket během připojování!\n"
-
-#: src/net/udp.c:96
-#, c-format
-msgid "Unable to set socket %s %d!\n"
-msgstr "Nemohu nastavit soket %s %d!\n"
-
-#: src/net/udp.c:216
-#, c-format
-msgid "Unable to read form socket %d %s %d!\n"
-msgstr "Nemohu číst ze soketu %d %s %d!\n"
-
-#: src/net/udp.c:256
-#, c-format
-msgid "Unable to write on socket %d %s %d!\n"
-msgstr "Nemohu zapisovat do soketu %d %s %d!\n"
-
-#: src/screen/screen_browser.c:680 src/screen/screen_choiceArena.c:140
-#: src/screen/screen_credits.c:102 src/screen/screen_downArena.c:376
-#: src/screen/screen_gameType.c:214 src/screen/screen_setting.c:329
-#: src/screen/screen_table.c:195
-msgid "back"
-msgstr "zpět"
-
-#: src/screen/screen_browser.c:682
-msgid "Play"
-msgstr "Hraj"
-
-#: src/screen/screen_browser.c:685
-msgid "Refresh"
-msgstr "Obnovit"
-
-#: src/screen/screen_browser.c:688
-msgid "server"
-msgstr "server"
-
-#: src/screen/screen_browser.c:689
-msgid "version"
-msgstr "verze"
-
-#: src/screen/screen_browser.c:690 src/screen/screen_gameType.c:237
-msgid "IP"
-msgstr "IP"
-
-#: src/screen/screen_browser.c:691
-msgid "arena"
-msgstr "aréna"
-
-#: src/screen/screen_browser.c:692
-msgid "clients"
-msgstr "klienti"
-
-#: src/screen/screen_browser.c:693
-msgid "ping"
-msgstr "ping"
-
-#: src/screen/screen_choiceArena.c:141 src/screen/screen_gameType.c:215
-msgid "play"
-msgstr "hraj"
-
-#: src/screen/screen_credits.c:127
-#, c-format
-msgid "Credit file not found... %s/%s"
-msgstr "Soubor s autory nenalezen... %s/%s"
-
-#: src/screen/screen_gameType.c:216
-msgid "browser"
-msgstr "vyhledávač"
-
-#: src/screen/screen_gameType.c:232
-msgid "Local game"
-msgstr "Lokální hra"
-
-#: src/screen/screen_gameType.c:233
-msgid "Set up a server"
-msgstr "Vytvořit server"
-
-#: src/screen/screen_gameType.c:234
-msgid "Network game"
-msgstr "Síťová hra"
-
-#: src/screen/screen_gameType.c:238
-msgid "port"
-msgstr "port"
-
-#: src/screen/screen_gameType.c:288
-msgid "Unknown game type!"
-msgstr "Neznámý typ hry!"
-
-#: src/screen/screen_gameType.c:342
-msgid "Unknown IP protocol!\n"
-msgstr "Neznámý IP protokol!\n"
-
-#: src/screen/screen_mainMenu.c:101
-msgid "Start game"
-msgstr "Spustit hru"
-
-#: src/screen/screen_mainMenu.c:102
-msgid "Settings"
-msgstr "Nastavení"
-
-#: src/screen/screen_mainMenu.c:103
-msgid "Highscore"
-msgstr "Nejvyšší skóre"
-
-#: src/screen/screen_mainMenu.c:104
-msgid "Credits"
-msgstr "Autoři"
-
-#: src/screen/screen_mainMenu.c:105
-msgid "Quit game"
-msgstr "Ukončit hru"
-
-#: src/screen/screen_setting.c:215 src/screen/screen_table.c:142
-#: src/server/highScore.c:21
-#, c-format
-msgid "I am unable to load: \"%s\"!\n"
-msgstr "Nemohu nahrát: \"%s\"!\n"
-
-#: src/screen/screen_setting.c:216 src/screen/screen_table.c:143
-#: src/server/highScore.c:22
-#, c-format
-msgid "Creating: \"%s\"\n"
-msgstr "Vytvářím: \"%s\"\n"
-
-#: src/screen/screen_setting.c:222 src/screen/screen_table.c:150
-#: src/server/highScore.c:31
-#, c-format
-msgid "I was unable to create: \"%s\"!\n"
-msgstr "Nemohu vytvořit: \"%s\"!\n"
-
-#: src/screen/screen_setting.c:285
-#, c-format
-msgid ""
-"I am unable to save configure file, because config file was not "
-"initialised!\n"
-msgstr "Nemohu uložit nastavení, protože konfigurační soubor nebyl načten!\n"
-
-#: src/screen/screen_setting.c:331
-msgid "controls"
-msgstr "ovládání"
-
-#: src/screen/screen_setting.c:335
-msgid "Music:"
-msgstr "Hudba:"
-
-#: src/screen/screen_setting.c:339
-msgid "Sound:"
-msgstr "Zvuk:"
-
-#: src/screen/screen_setting.c:345 src/screen/screen_setting.c:348
-msgid "AI:"
-msgstr "AI:"
-
-#: src/screen/screen_setting.c:353
-msgid "No. of rounds:"
-msgstr "Počet kol:"
-
-#: src/screen/screen_setting.c:354
-msgid "Player 1:"
-msgstr "Hráč 1:"
-
-#: src/screen/screen_setting.c:355
-msgid "Player 2:"
-msgstr "Hráč 2:"
-
-#: src/screen/screen_settingKeys.c:166
-#, c-format
-msgid "I was unable to load file: %s\n"
-msgstr "Nemohu načíst soubor: %s\n"
-
-#: src/screen/screen_settingKeys.c:168
-#, c-format
-msgid "I try to create file: %s\n"
-msgstr "Zkouším vytvořit soubor: %s\n"
-
-#: src/screen/screen_settingKeys.c:176
-#, c-format
-msgid "I was unable to create file: %s\n"
-msgstr "Nemohu vytvořit soubor: %s\n"
-
-#: src/screen/screen_settingKeys.c:382
+#: src/client/panel.c:149
+msgid "Recived new chat message"
+msgstr ""
+
+#: src/client/saveDialog.c:68
+msgid "Save as:"
+msgstr ""
+
+#: src/client/saveDialog.c:76
+msgid "Save"
+msgstr ""
+
+#: src/client/saveDialog.c:80
+#: src/screen/browser.c:714
+#: src/screen/credits.c:110
+#: src/screen/downArena.c:372
+#: src/screen/gameType.c:229
+#: src/screen/choiceArena.c:202
+#: src/screen/setting.c:282
+#: src/screen/settingKeys.c:282
+#: src/screen/table.c:203
 msgid "Back"
 msgstr "Zpět"
 
-#: src/screen/screen_settingKeys.c:386
+#: src/screen/analyze.c:167
+msgid "OK"
+msgstr ""
+
+#: src/screen/browser.c:715
+#: src/screen/gameType.c:230
+#: src/screen/choiceArena.c:203
+msgid "Play"
+msgstr "Hraj"
+
+#: src/screen/browser.c:717
+msgid "Refresh"
+msgstr "Obnovit"
+
+#: src/screen/browser.c:721
+#, fuzzy
+msgid "Server"
+msgstr "server"
+
+#: src/screen/browser.c:722
+#, fuzzy
+msgid "Version"
+msgstr "verze"
+
+#: src/screen/browser.c:723
+#: src/screen/gameType.c:254
+msgid "IP"
+msgstr "IP"
+
+#: src/screen/browser.c:724
+#, fuzzy
+msgid "Arena"
+msgstr "aréna"
+
+#: src/screen/browser.c:725
+#, fuzzy
+msgid "Clients"
+msgstr "klienti"
+
+#: src/screen/browser.c:726
+#, fuzzy
+msgid "Ping"
+msgstr "ping"
+
+#: src/screen/credits.c:137
+#, fuzzy, c-format
+msgid "[Error] Credits file not found [%s]: %s\n"
+msgstr "Soubor s autory nenalezen... %s/%s"
+
+#: src/screen/downArena.c:67
+#, fuzzy, c-format
+msgid "Error! Unable to connect to [%s]:%d download server"
+msgstr "Nemohu spustit síťovou hru jako server!\n"
+
+#: src/screen/downArena.c:87
+#, c-format
+msgid "Connecting to [%s]:%d download server"
+msgstr ""
+
+#: src/screen/downArena.c:108
+#, c-format
+msgid "Error! Game server [%s]:%d is off"
+msgstr ""
+
+#: src/screen/downArena.c:120
+#, c-format
+msgid "Error! Unable to send message to [%s]:%d game server"
+msgstr ""
+
+#: src/screen/downArena.c:136
+#, c-format
+msgid "Error! Unable to connect to [%s]:%d game server"
+msgstr ""
+
+#: src/screen/downArena.c:144
+#, c-format
+msgid "Connecting to [%s]:%d game server"
+msgstr ""
+
+#: src/screen/downArena.c:200
+#, c-format
+msgid "Downloading: %d/%d"
+msgstr ""
+
+#: src/screen/downArena.c:223
+#, c-format
+msgid "Error! Receiving buffer is full"
+msgstr ""
+
+#: src/screen/downArena.c:375
+msgid "none"
+msgstr ""
+
+#: src/screen/gameType.c:231
+#, fuzzy
+msgid "Browser"
+msgstr "vyhledávač"
+
+#: src/screen/gameType.c:249
+msgid "Local game"
+msgstr "Lokální hra"
+
+#: src/screen/gameType.c:250
+msgid "Set up a server"
+msgstr "Vytvořit server"
+
+#: src/screen/gameType.c:251
+msgid "Network game"
+msgstr "Síťová hra"
+
+#: src/screen/gameType.c:252
+#, fuzzy
+msgid "Load saved game"
+msgstr "Lokální hra"
+
+#: src/screen/gameType.c:255
+#, fuzzy
+msgid "Port"
+msgstr "port"
+
+#: src/screen/gameType.c:256
+#, fuzzy
+msgid "Load saved game:"
+msgstr "Lokální hra"
+
+#: src/screen/choiceArena.c:205
+msgid "Previous maps"
+msgstr ""
+
+#: src/screen/choiceArena.c:206
+msgid "Next maps"
+msgstr ""
+
+#: src/screen/mainMenu.c:118
+msgid "Start game"
+msgstr "Spustit hru"
+
+#: src/screen/mainMenu.c:119
+msgid "Settings"
+msgstr "Nastavení"
+
+#: src/screen/mainMenu.c:120
+msgid "Highscore"
+msgstr "Nejvyšší skóre"
+
+#: src/screen/mainMenu.c:121
+msgid "Credits"
+msgstr "Autoři"
+
+#: src/screen/mainMenu.c:122
+msgid "Quit game"
+msgstr "Ukončit hru"
+
+#: src/screen/setting.c:284
+#, fuzzy
+msgid "Controls"
+msgstr "ovládání"
+
+#: src/screen/setting.c:288
+msgid "Music:"
+msgstr "Hudba:"
+
+#: src/screen/setting.c:292
+msgid "Sound:"
+msgstr "Zvuk:"
+
+#: src/screen/setting.c:298
+#: src/screen/setting.c:301
+msgid "AI:"
+msgstr "AI:"
+
+#: src/screen/setting.c:306
+msgid "No. of rounds:"
+msgstr "Počet kol:"
+
+#: src/screen/setting.c:307
+msgid "Player 1:"
+msgstr "Hráč 1:"
+
+#: src/screen/setting.c:308
+msgid "Player 2:"
+msgstr "Hráč 2:"
+
+#: src/screen/setting.c:371
+msgid "Dual simple gun"
+msgstr ""
+
+#: src/screen/setting.c:372
+msgid "Scatter"
+msgstr ""
+
+#: src/screen/setting.c:373
+msgid "Tommy"
+msgstr ""
+
+#: src/screen/setting.c:374
+msgid "Laser beam"
+msgstr ""
+
+#: src/screen/setting.c:375
+msgid "Mine"
+msgstr ""
+
+#: src/screen/setting.c:376
+msgid "Bomb ball"
+msgstr ""
+
+#: src/screen/setting.c:378
+msgid "Speed bonus"
+msgstr ""
+
+#: src/screen/setting.c:379
+msgid "Infinite ammo"
+msgstr ""
+
+#: src/screen/setting.c:380
+msgid "Unkillable bonus"
+msgstr ""
+
+#: src/screen/setting.c:381
+msgid "No-walls bonus"
+msgstr ""
+
+#: src/screen/setting.c:382
+msgid "1 shot to 4 directions bonus"
+msgstr ""
+
+#: src/screen/setting.c:383
+msgid "Unvisibility bonus"
+msgstr ""
+
+#: src/screen/settingKeys.c:284
 msgid "Player 2"
 msgstr "Hráč 2"
 
-#: src/screen/screen_settingKeys.c:390
+#: src/screen/settingKeys.c:285
 msgid "Up"
 msgstr "Nahoru"
 
-#: src/screen/screen_settingKeys.c:393 src/screen/screen_settingKeys.c:421
+#: src/screen/settingKeys.c:286
+#: src/screen/settingKeys.c:293
 msgid "Down:"
 msgstr "Dolů:"
 
-#: src/screen/screen_settingKeys.c:397 src/screen/screen_settingKeys.c:425
+#: src/screen/settingKeys.c:287
+#: src/screen/settingKeys.c:294
 msgid "Left:"
 msgstr "Vleva:"
 
-#: src/screen/screen_settingKeys.c:401 src/screen/screen_settingKeys.c:429
+#: src/screen/settingKeys.c:288
+#: src/screen/settingKeys.c:295
 msgid "Right:"
 msgstr "Vpravo:"
 
-#: src/screen/screen_settingKeys.c:405 src/screen/screen_settingKeys.c:433
-msgid "Fire gun:"
+#: src/screen/settingKeys.c:289
+#: src/screen/settingKeys.c:296
+#, fuzzy
+msgid "Fire:"
 msgstr "Střelba:"
 
-#: src/screen/screen_settingKeys.c:409 src/screen/screen_settingKeys.c:437
+#: src/screen/settingKeys.c:290
+#: src/screen/settingKeys.c:297
 msgid "Switch gun:"
 msgstr "Změna zbraně:"
 
-#: src/screen/screen_settingKeys.c:413
+#: src/screen/settingKeys.c:291
 msgid "Player 1"
 msgstr "Hráč 1"
 
-#: src/screen/screen_settingKeys.c:417
+#: src/screen/settingKeys.c:292
 msgid "Up:"
 msgstr "Nahoru:"
 
-#: src/screen/screen_table.c:93
-#, c-format
-msgid "Highscore file: \"%s\" was not loaded!"
-msgstr "Soubor se skóre: \"%s\" nebyl načten!"
+#, fuzzy
+#~ msgid "Error! Unable to initialize audio: %s\n"
+#~ msgstr "Nemohu inicializovat zvuk: %s\n"
 
-#: src/screen/screen_world.c:69
-#, c-format
-msgid "Network initialization error!\n"
-msgstr "Chyba při inicializaci sítě!\n"
+#~ msgid "Unable to create proper audio settings: %s\n"
+#~ msgstr "Nemohu správně nastavit zvuk: %s\n"
 
-#: src/screen/screen_world.c:430
-msgid "Tux has not defined controls!"
-msgstr "Tuxánek nemá nastavené ovládání!"
+#, fuzzy
+#~ msgid "Initializing audio\n"
+#~ msgstr "Zapínám zvukový systém...\n"
 
-#: src/screen/screen_world.c:607
-msgid "Quitting screen world\n"
-msgstr "Ukončuji hlavní obrazovku\n"
+#, fuzzy
+#~ msgid "Quitting audio\n"
+#~ msgstr "Vypínám zvuk...\n"
 
-#: src/server/log.c:19
-#, c-format
-msgid "Opening logfile \"%s\" failed!\n"
-msgstr "Otevírání souboru \"%s\" selhalo!\n"
+#, fuzzy
+#~ msgid "Initializing music\n"
+#~ msgstr "Zapínám hudbu...\n"
 
-#: src/server/log.c:23
-#, c-format
-msgid "I use logfile: \"%s\")\n"
-msgstr "Používám logovací soubor: \"%s\")\n"
+#, fuzzy
+#~ msgid "Loading a file with music: %s\n"
+#~ msgstr "Nahrávám map file: %s\n"
 
-#: src/server/log.c:54
-msgid "Really bad log value!"
-msgstr "Opravdu špatná hodnota logu!"
+#, fuzzy
+#~ msgid "Unable to load music from file %s\n"
+#~ msgstr "Nemohu načíst hudbu ze souboru: %s\n"
 
-#: src/server/publicServer.c:230
-#, fuzzy, c-format
-msgid "I dont load arena %s!\n"
-msgstr "Nahrávám arénu: %s\n"
+#, fuzzy
+#~ msgid "Stopping music\n"
+#~ msgstr "Zastavuji přehrávání hudby...\n"
 
-#: src/server/publicServer.c:255
-#, c-format
-msgid "I was unable to open config file!\n"
-msgstr "Nemohu otevřít konfigurační soubor!\n"
+#, fuzzy
+#~ msgid "Playing music from file %s\n"
+#~ msgstr "Přehrávám hudbu ze souboru %s\n"
 
-#: src/server/publicServer.c:272
-#, c-format
-msgid "Unable to initialize network socket!\n"
-msgstr "Nemohu inicializovat síťový soket!\n"
+#, fuzzy
+#~ msgid "Quitting music\n"
+#~ msgstr "Vypínám hudbu...\n"
 
-#: src/server/publicServer.c:279
-#, c-format
-msgid "Unable to contact MasterServer!)\n"
-msgstr "Nedaří se kontaktovat MasterServer!)\n"
+#, fuzzy
+#~ msgid "Initializing sound\n"
+#~ msgstr "Zapínám zvuk...\n"
 
-#: src/server/publicServer.c:326
-msgid "Quitting public server\n"
-msgstr "Ukončuji veřejný server\n"
+#~ msgid "Loading sound file: %s\n"
+#~ msgstr "Nahrávám soubor se zvukem: %s\n"
 
-#: src/server/serverConfigFile.c:40
-#, c-format
-msgid "Loading configuration from: \"%s\"\n"
-msgstr "Načítám nastavení z: \"%s\"\n"
+#, fuzzy
+#~ msgid "Unable to load sound from file %s with error: %s\n"
+#~ msgstr "Nemohu načíst zvuk ze souboru: %s s chybou: %s\n"
 
-#: src/server/serverConfigFile.c:48
-#, c-format
-msgid "I was unable to load config file. Falling back to defaults!\n"
-msgstr "Nemohu načíst konfigurační soubor. Používám výchozí hodnoty!\n"
+#, fuzzy
+#~ msgid "Unable to play sound with error: %s\n"
+#~ msgstr "Nemohu na pozadí přehrát zvuk s chybou: %s\n"
 
-#: src/server/highScore.c:26
-#, c-format
-msgid "Scorefile: \"%s\"\n"
-msgstr "Soubor se skóre: \"%s\"\n"
+#, fuzzy
+#~ msgid "Quitting sound\n"
+#~ msgstr "Vypínám zvuk...\n"
 
-#: src/widget/widget_button.c:84
-msgid "Event caught\n"
-msgstr "Událost zachycena\n"
+#~ msgid "Loaded new arena...\n"
+#~ msgstr "Nahrána nová aréna...\n"
 
-#: src/widget/widget_textfield.c:169
-msgid "Bad filter!"
-msgstr "Špatný filtr!"
+#, fuzzy
+#~ msgid "Load arena file from %s\n"
+#~ msgstr "Nahrávám arénu: %s\n"
+
+#~ msgid "Loading arena: %s\n"
+#~ msgstr "Nahrávám arénu: %s\n"
+
+#~ msgid "Bad type of front!"
+#~ msgstr "Špatný typ fronty!"
+
+#~ msgid "There is wrong value in course variable!"
+#~ msgstr "V proměnné course je divná hodnota!"
+
+#~ msgid "Environment variable HOME not found!\n"
+#~ msgstr "Proměnná prostředí HOME nenalezena!\n"
+
+#~ msgid "Creating home directory %s.\n"
+#~ msgstr "Vytvářím domovský adresář %s.\n"
+
+#~ msgid "Unable to create home directory!\n"
+#~ msgstr "Nemohu vytvořit domovský adresář!\n"
+
+#~ msgid "Starting ID manger\n"
+#~ msgstr "Spouštím ID manger\n"
+
+#~ msgid "No free ID left!"
+#~ msgstr "Nezbývá žádné volné ID!"
+
+#~ msgid "This kind of ID was never registered!"
+#~ msgstr "Tento druh ID nebyl nikdy registrován!"
+
+#~ msgid "ID %d does not exist\n"
+#~ msgstr "ID %d neexistuje\n"
+
+#~ msgid "ID %d (count %d)\n"
+#~ msgstr "ID %d (počet %d)\n"
+
+#~ msgid "Quitting ID manger\n"
+#~ msgstr "Končím ID manger\n"
+
+#~ msgid ""
+#~ "File %s not found !\n"
+#~ "Program shutdown !\n"
+#~ msgstr ""
+#~ "Soubor %s nenalezen !\n"
+#~ "Vypínám program !\n"
+
+#~ msgid ""
+#~ "WinSock initialization failed !\n"
+#~ "Program shutdown !\n"
+#~ msgstr ""
+#~ "Inicializace WinSock selhala !\n"
+#~ "Vypínám program !\n"
+
+#~ msgid "Error %s occured when using getFce function!\n"
+#~ msgstr "Při použití getFce nastala chyba %s!\n"
+
+#~ msgid "Unable to map file %s!\n"
+#~ msgstr "Nemohu namapovat soubor %s!\n"
+
+#~ msgid "Loading module: \"%s\"\n"
+#~ msgstr "Načítám modul: \"%s\"\n"
+
+#~ msgid "Failed initialization of module \"%s\""
+#~ msgstr "Inicializace modulu \"%s\" selhala."
+
+#~ msgid "Destroing module...\n"
+#~ msgstr "Odebírám modul...\n"
+
+#~ msgid "Loading module %s failed!\n"
+#~ msgstr "Načítání modulu % selhalo!\n"
+
+#~ msgid "Timer is really weirdly set!"
+#~ msgstr "Časovač je doopravdy podivně nastavený!"
+
+#~ msgid "There is no such ID!"
+#~ msgstr "Takové ID tu fakt není!"
+
+#~ msgid "Unable to inicialize network game as client!\n"
+#~ msgstr "Nemohu spustit síťovou hru!\n"
+
+#~ msgid "Variable netGameType has a really weird value!"
+#~ msgstr "Proměnná netGameType má doopravdy podivnou hodnotu!"
+
+#~ msgid "Proto error code: \"%d\"\n"
+#~ msgstr "Kód protokolové chyby: \"%d\"\n"
+
+#~ msgid "Version of your client isn't supported by the server."
+#~ msgstr "Verze tvého klienta není podporována serverem."
+
+#~ msgid "The timeout of ping from server is out"
+#~ msgstr "Vypršel čas na odpověď ze serveru"
+
+#~ msgid "The maximum amount of connected players has been exceeded!"
+#~ msgstr "Maximum současně připojených hráčů bylo překročeno!"
+
+#~ msgid "Sending: \"%s\""
+#~ msgstr "Posílám: \"%s\""
+
+#~ msgid "Recieved: \"%s\""
+#~ msgstr "Přijato: \"%s\""
+
+#~ msgid "Type variable has a really wierd value!"
+#~ msgstr "Proměnná se směrem Tuxánka má doopravdy podivnou hodnotu!"
+
+#~ msgid "Adding  \"%s\" to share function.\n"
+#~ msgstr "Přidávám \"%s\" do sdílené funkce.\n"
+
+#~ msgid "%s %s was not found in storage!\n"
+#~ msgstr "%s %s nebylo na skladě nalezeno!\n"
+
+#~ msgid "Starting server: \"%s\" on port: \"%d\"\n"
+#~ msgstr "Spouštím server: \"%s\" na portu: \"%d\"\n"
+
+#~ msgid "Starting server: \"%s\" on port: \"%d\" FAILED!\n"
+#~ msgstr "Spouštění serveru: \"%s\" na portu: \"%d\" SELHALO\n"
+
+#~ msgid "Closing port: \"%d\"\n"
+#~ msgstr "Zavírám port: \"%d\"\n"
+
+#~ msgid "ERROR: unable to get file status for %s!\n"
+#~ msgstr "CHYBA: nemohu získat status souboru %s!\n"
+
+#~ msgid "ERROR: unable to open file %s for reading\n"
+#~ msgstr "CHYBA: nemohu otevřít soubor %s pro čtení\n"
+
+#~ msgid "ERROR: unable to read data from file %s\n"
+#~ msgstr "CHYBA: nemohu číst data ze souboru %s\n"
+
+#~ msgid ""
+#~ "Printing file: \"%s\"\n"
+#~ "\n"
+#~ msgstr "Tisknu soubor: \"%s\"\n"
+
+#~ msgid "p->control has a really wierd value!"
+#~ msgstr "p->control má doopravdy podivnou hodnotu!"
+
+#~ msgid "Client was not FOUND!\n"
+#~ msgstr "Klient NENALEZEN!\n"
+
+#~ msgid "Quitting UDP\n"
+#~ msgstr "Končím UDP\n"
+
+#~ msgid "Connected to: %s on port: %d via UDP\n"
+#~ msgstr "Připojeno k: %s na portu %d přes UDP\n"
+
+#~ msgid "Server did not respond!\n"
+#~ msgstr "Server neodpověděl!\n"
+
+#~ msgid "Server is not running or being blocked. I was unable to connect."
+#~ msgstr "Server neběží, nebo je blokován. Nemohl jsem se připojit."
+
+#~ msgid "down: %d\n"
+#~ msgstr "dolů: %d\n"
+
+#~ msgid "up  : %d\n"
+#~ msgstr "nahoru  : %d\n"
+
+#~ msgid "Closing UDP connection.\n"
+#~ msgstr "Zavírám UDP spojení.\n"
+
+#~ msgid "ADDING: \"%s\" into config file.\n"
+#~ msgstr "PŘIDÁVÁM: \"%s\" do konfiguračního souboru.\n"
+
+#~ msgid "Loading font: \"%s\"\n"
+#~ msgstr "Nahrávám písmo: \"%s\"\n"
+
+#~ msgid "Unloading font\n"
+#~ msgstr "Uvolňuji font\n"
+
+#~ msgid "Quitting TUXANCI...\n"
+#~ msgstr "Končím TUXANCI...\n"
+
+#~ msgid "Initializing image database\n"
+#~ msgstr "Inicializuji databázi obrázků\n"
+
+#~ msgid "Loading image %s\n"
+#~ msgstr "Nahrávám obrázek %s\n"
+
+#~ msgid "Quitting image database\n"
+#~ msgstr "Zavírám databázi obrázků\n"
+
+#~ msgid "Unable to switch to FULLSCREEN mode!\n"
+#~ msgstr "Nemohu přepnout do režimu celé obrazovky!\n"
+
+#~ msgid "Unable to switch to WINDOW mode! Error: %s\n"
+#~ msgstr "Nemohu se přepnout do okenního režimu! Chyba: %s\n"
+
+#~ msgid "Initializing SDL system\n"
+#~ msgstr "Inicializuji SDL systém\n"
+
+#~ msgid "Pressed key with SDL value: %d\n"
+#~ msgstr "Stisknuta klávesa s SDL hodnotou: %d\n"
+
+#~ msgid "Unable to change WINDOW resolution! Error: %s\n"
+#~ msgstr "Nemohu změnit rozlišení! Chyba: %s\n"
+
+#~ msgid "Quitting SDL\n"
+#~ msgstr "Končím SDL\n"
+
+#~ msgid "Keyboard Buffer overrun! Dropping key: %02x\n"
+#~ msgstr "Přetečení bufferu klávesnice! Zahazuji klávesu: %02x\n"
+
+#~ msgid "Keyboard Buffer underrun!\n"
+#~ msgstr "Podtečení bufferu klávesnice!\n"
+
+#~ msgid "Keyboard buffer is not empty!\n"
+#~ msgstr "Buffer klávesnice není prázdný!\n"
+
+#~ msgid "Saving game to: \"%s\"\n"
+#~ msgstr "Ukládám hru do: \"%s\"\n"
+
+#~ msgid "I was unable to save: \"%s\"\n"
+#~ msgstr "Nemohl jsem uložit: \"%s\"\n"
+
+#~ msgid "Loadig game from file: \"%s\"\n"
+#~ msgstr "Nahrávám hru ze souboru: \"%s\"\n"
+
+#~ msgid "Unable to load save: \"%s\"\n"
+#~ msgstr "Nemohu nahrát uložení: \"%s\"\n"
+
+#~ msgid "Registering screen: \"%s\"\n"
+#~ msgstr "Registruji obrazovku: \"%s\"\n"
+
+#~ msgid "Stopping screen: \"%s\"\n"
+#~ msgstr "Ukončuji obrazovku: \"%s\"\n"
+
+#~ msgid "Starting screen: \"%s\"\n"
+#~ msgstr "Zapínám obrazovku: \"%s\"\n"
+
+#~ msgid "Unable to create socket when connecting!\n"
+#~ msgstr "Nemohu vytvořit soket během připojování!\n"
+
+#~ msgid "Unable to bint to port: %d\n"
+#~ msgstr "Nemohu se připojit na port: %d\n"
+
+#~ msgid "Bad IP proto!"
+#~ msgstr "Špatný IP protokol!"
+
+#~ msgid "Unable to create TCP socket!\n"
+#~ msgstr "Nemohu vytvořit TCP soket!\n"
+
+#~ msgid "Unable to create socket when binding!\n"
+#~ msgstr "Nemohu vytvořit soket během připojování!\n"
+
+#~ msgid "Unable to set socket %s %d!\n"
+#~ msgstr "Nemohu nastavit soket %s %d!\n"
+
+#~ msgid "Unable to read form socket %d %s %d!\n"
+#~ msgstr "Nemohu číst ze soketu %d %s %d!\n"
+
+#~ msgid "Unable to write on socket %d %s %d!\n"
+#~ msgstr "Nemohu zapisovat do soketu %d %s %d!\n"
+
+#~ msgid "back"
+#~ msgstr "zpět"
+
+#~ msgid "play"
+#~ msgstr "hraj"
+
+#~ msgid "Unknown game type!"
+#~ msgstr "Neznámý typ hry!"
+
+#~ msgid "Unknown IP protocol!\n"
+#~ msgstr "Neznámý IP protokol!\n"
+
+#~ msgid "I am unable to load: \"%s\"!\n"
+#~ msgstr "Nemohu nahrát: \"%s\"!\n"
+
+#~ msgid "Creating: \"%s\"\n"
+#~ msgstr "Vytvářím: \"%s\"\n"
+
+#~ msgid "I was unable to create: \"%s\"!\n"
+#~ msgstr "Nemohu vytvořit: \"%s\"!\n"
+
+#~ msgid "I am unable to save configure file, because config file was not initialised!\n"
+#~ msgstr "Nemohu uložit nastavení, protože konfigurační soubor nebyl načten!\n"
+
+#~ msgid "I was unable to load file: %s\n"
+#~ msgstr "Nemohu načíst soubor: %s\n"
+
+#~ msgid "I try to create file: %s\n"
+#~ msgstr "Zkouším vytvořit soubor: %s\n"
+
+#~ msgid "I was unable to create file: %s\n"
+#~ msgstr "Nemohu vytvořit soubor: %s\n"
+
+#~ msgid "Highscore file: \"%s\" was not loaded!"
+#~ msgstr "Soubor se skóre: \"%s\" nebyl načten!"
+
+#~ msgid "Network initialization error!\n"
+#~ msgstr "Chyba při inicializaci sítě!\n"
+
+#~ msgid "Tux has not defined controls!"
+#~ msgstr "Tuxánek nemá nastavené ovládání!"
+
+#~ msgid "Quitting screen world\n"
+#~ msgstr "Ukončuji hlavní obrazovku\n"
+
+#~ msgid "Opening logfile \"%s\" failed!\n"
+#~ msgstr "Otevírání souboru \"%s\" selhalo!\n"
+
+#~ msgid "I use logfile: \"%s\")\n"
+#~ msgstr "Používám logovací soubor: \"%s\")\n"
+
+#~ msgid "Really bad log value!"
+#~ msgstr "Opravdu špatná hodnota logu!"
+
+#, fuzzy
+#~ msgid "I dont load arena %s!\n"
+#~ msgstr "Nahrávám arénu: %s\n"
+
+#~ msgid "I was unable to open config file!\n"
+#~ msgstr "Nemohu otevřít konfigurační soubor!\n"
+
+#~ msgid "Unable to initialize network socket!\n"
+#~ msgstr "Nemohu inicializovat síťový soket!\n"
+
+#~ msgid "Unable to contact MasterServer!)\n"
+#~ msgstr "Nedaří se kontaktovat MasterServer!)\n"
+
+#~ msgid "Quitting public server\n"
+#~ msgstr "Ukončuji veřejný server\n"
+
+#~ msgid "Loading configuration from: \"%s\"\n"
+#~ msgstr "Načítám nastavení z: \"%s\"\n"
+
+#~ msgid "I was unable to load config file. Falling back to defaults!\n"
+#~ msgstr "Nemohu načíst konfigurační soubor. Používám výchozí hodnoty!\n"
+
+#~ msgid "Scorefile: \"%s\"\n"
+#~ msgstr "Soubor se skóre: \"%s\"\n"
+
+#~ msgid "Event caught\n"
+#~ msgstr "Událost zachycena\n"
+
+#~ msgid "Bad filter!"
+#~ msgstr "Špatný filtr!"
 
 #~ msgid "Loading music file: %s\n"
 #~ msgstr "Načítám soubor s hudbou: %s\n"
 
-#~ msgid ""
-#~ "I've done this once, dont want to mess memory with module %s again!\n"
+#~ msgid "I've done this once, dont want to mess memory with module %s again!\n"
 #~ msgstr "Toto už jsem provedl, nechtěj znovu zaneřádit paměť modulem %s!\n"
 
 #~ msgid "Connected to: %s on port: %d via TCP\n"
@@ -820,9 +772,5 @@ msgstr "Špatný filtr!"
 #~ msgid "Bad client type (TCP/UDP)!"
 #~ msgstr "Špatný typ klienta (TCP/UDP)!"
 
-#~ msgid ""
-#~ "I was unable to initialize old nls system (if you see this something "
-#~ "wierd is happening)!\n"
-#~ msgstr ""
-#~ "Nemohl jsem inicializovat starý nls systém (vidíte-li toto, něco tu "
-#~ "smrdí)!\n"
+#~ msgid "I was unable to initialize old nls system (if you see this something wierd is happening)!\n"
+#~ msgstr "Nemohl jsem inicializovat starý nls systém (vidíte-li toto, něco tu smrdí)!\n"
