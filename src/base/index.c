@@ -103,7 +103,7 @@ void index_add(list_t *list, int key, void *data)
 			error("Cyclic error");
 			printIndexItem(item);
 			printListIndexItem(list);
-			abort(0);
+			abort();
 		}
 #endif /* DEBUG_INDEX */
 
