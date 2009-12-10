@@ -87,18 +87,9 @@ static mod_reg_t *mod_find (char *name)
 	return 0;
 }
 
-static void setModulePath(char *name, char *path)
-{
-	sprintf(path, PATH_MODULES "%s" MODULE_TYPE, name);
-}
-
 static module_t *newModule(char *name)
 {
-	char path[STR_PATH_SIZE];
-
-	module_t *ret;
-
-	assert(name != NULL);
+	assert (name != NULL);
 	
 	mod_reg_t *mod = mod_find (name);
 	
@@ -107,15 +98,13 @@ static module_t *newModule(char *name)
 		return 0;
 	}
 		
-	setModulePath(name, path);
-
-	ret = malloc (sizeof (module_t));
+	module_t *ret = malloc (sizeof (module_t));
 	
 	if (!ret)
 		return 0;
 	
 	ret->name = strdup (name);
-
+	
 	ret->fce_init = mod->sym->init;
 #ifndef PUBLIC_SERVER
 	ret->fce_draw = mod->sym->draw;
@@ -128,7 +117,7 @@ static module_t *newModule(char *name)
 
 	debug("Loading module [%s]", name);
 
-	if (ret->fce_init(&export_fce) != 0) {
+	if (ret->fce_init (&export_fce) != 0) {
 		error("Unable to load module [%s]", name);
 		free(ret->name);
 		free(ret);
@@ -207,9 +196,8 @@ int module_load(char *name)
 
 int module_load_dep(char *name)
 {
-	if (isModuleLoaded(name)) {
+	if (isModuleLoaded(name))
 		return 0;
-	}
 
 	return module_load(name);
 }
