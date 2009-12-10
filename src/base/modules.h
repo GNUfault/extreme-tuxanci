@@ -11,16 +11,6 @@
 #include "image.h"
 #endif /* PUBLIC_SERVER */
 
-#ifndef __WIN32__
-	#ifndef APPLE
-		#define MODULE_TYPE	".so"
-	#else
-		#define MODULE_TYPE	".dylib"
-	#endif
-#else
-	#define MODULE_TYPE	".dll"
-#endif
-
 typedef struct export_fce_s {
 	int (*fce_getValue) (char *line, char *env, char *val, int len);
 
