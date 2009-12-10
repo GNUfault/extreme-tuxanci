@@ -52,9 +52,9 @@ static space_t *spaceImgWall;
 static list_t *listWall;
 
 #ifndef PUBLIC_SERVER
-wall_t *newWall(int x, int y, int w, int h, int img_x, int img_y, int layer, image_t *img)
+static wall_t *newWall(int x, int y, int w, int h, int img_x, int img_y, int layer, image_t *img)
 #else
-wall_t *newWall(int x, int y, int w, int h, int img_x, int img_y, int layer)
+static wall_t *newWall(int x, int y, int w, int h, int img_x, int img_y, int layer)
 #endif
 {
 	static int last_id = 0;
@@ -83,7 +83,7 @@ wall_t *newWall(int x, int y, int w, int h, int img_x, int img_y, int layer)
 
 #ifndef PUBLIC_SERVER
 
-void drawWall(wall_t *p)
+static void drawWall(wall_t *p)
 {
 	assert(p != NULL);
 
@@ -94,7 +94,7 @@ void drawWall(wall_t *p)
 				 p->layer);
 }
 
-void drawListWall(list_t *list)
+static void drawListWall(list_t *list)
 {
 	wall_t *thisWall;
 	int i;
@@ -110,7 +110,7 @@ void drawListWall(list_t *list)
 
 #endif
 
-void destroyWall(wall_t *p)
+static void destroyWall(wall_t *p)
 {
 	assert(p != NULL);
 	free(p);
@@ -242,7 +242,7 @@ static void cmd_wall(char *line)
 #endif
 }
 
-int init(export_fce_t *p)
+static int init(export_fce_t *p)
 {
 	export_fce = p;
 	listWall = list_new();
@@ -259,7 +259,7 @@ static void action_drawwall(space_t *space, wall_t *wall, void *p)
 	drawWall(wall);
 }
 
-int draw(int x, int y, int w, int h)
+static int draw(int x, int y, int w, int h)
 {
 	if (spaceWall == NULL) {
 		return 0;
@@ -312,7 +312,7 @@ static void action_eventshot(space_t *space, shot_t *shot, space_t *p_spaceWall)
 	}
 }
 
-int event()
+static int event()
 {
 	if (spaceWall == NULL) {
 		return 0;
@@ -324,7 +324,7 @@ int event()
 	return 0;
 }
 
-int isConflict(int x, int y, int w, int h)
+static int isConflict(int x, int y, int w, int h)
 {
 	if (spaceWall == NULL) {
 		return 0;
@@ -333,19 +333,19 @@ int isConflict(int x, int y, int w, int h)
 	return space_is_conflict_with_object(spaceWall, x, y, w, h);
 }
 
-void cmdArena(char *line)
+static void cmdArena(char *line)
 {
 	if (strncmp(line, "wall", 4) == 0) {
 		cmd_wall(line);
 	}
 }
 
-void recvMsg(char *msg)
+static void recvMsg(char *msg)
 {
 	UNUSED(msg);
 }
 
-int destroy()
+static int destroy()
 {
 	space_destroy_with_item(spaceWall, destroyWall);
 #ifndef PUBLIC_SERVER
@@ -354,3 +354,11 @@ int destroy()
 	list_destroy(listWall);
 	return 0;
 }
+
+mod_sym_t modwall_sym = { &init,
+			  &draw,
+			  &event,
+			  &isConflict,
+			  &cmdArena,
+			  &recvMsg,
+			  &destroy };

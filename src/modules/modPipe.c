@@ -188,7 +188,7 @@ static void moveShotFromPipe(shot_t *shot, pipe_t *pipe)
 	fce_move_shot(shot, distPipe->position, pipe->x, pipe->y, distPipe->x, distPipe->y, distPipe->w, distPipe->h);
 }
 
-int init(export_fce_t *p)
+static int init(export_fce_t *p)
 {
 	export_fce = p;
 
@@ -214,7 +214,7 @@ static void action_drawpipe(space_t *space, pipe_t *pipe, void *p)
 	drawPipe(pipe);
 }
 
-int draw(int x, int y, int w, int h)
+static int draw(int x, int y, int w, int h)
 {
 	if (spacePipe == NULL) {
 		return 0;
@@ -289,7 +289,7 @@ static void action_eventshot(space_t *space, shot_t *shot, space_t *p_spacePipe)
 	}
 }
 
-int event()
+static int event()
 {
 	if (spacePipe == NULL) {
 		return 0;
@@ -305,7 +305,7 @@ int event()
 	return 0;
 }
 
-int isConflict(int x, int y, int w, int h)
+static int isConflict(int x, int y, int w, int h)
 {
 	if (spacePipe == NULL) {
 		return 0;
@@ -314,22 +314,30 @@ int isConflict(int x, int y, int w, int h)
 	return space_is_conflict_with_object(spacePipe, x, y, w, h);
 }
 
-void cmdArena(char *line)
+static void cmdArena(char *line)
 {
 	if (strncmp(line, "pipe", 4) == 0) {
 		cmd_teleport(line);
 	}
 }
 
-void recvMsg(char *msg)
+static void recvMsg(char *msg)
 {
 	UNUSED(msg);
 }
 
-int destroy()
+static int destroy()
 {
 	space_destroy_with_item(spacePipe, destroyPipe);
 	list_destroy(listPipe);
 
 	return 0;
 }
+
+mod_sym_t modpipe_sym = { &init,
+			  &draw,
+			  &event,
+			  &isConflict,
+			  &cmdArena,
+			  &recvMsg,
+			  &destroy };

@@ -78,6 +78,33 @@ typedef struct module_s {
 
 } module_t;
 
+/* module's call list */
+typedef struct {
+	void *init;
+	void *draw;
+	void *event;
+	void *isConflict;
+	void *cmdArena;
+	void *recvMsg;
+	void *destroy;
+} mod_sym_t;
+
+/* structure of the registered modules */
+typedef struct mod_context {
+	struct mod_context *next, *prev;
+
+	char *name;
+	mod_sym_t *sym;
+} mod_reg_t;
+
+/* available modules */
+extern mod_sym_t modai_sym;
+extern mod_sym_t modwall_sym;
+extern mod_sym_t modpipe_sym;
+extern mod_sym_t modmove_sym;
+extern mod_sym_t modbasic_sym;
+extern mod_sym_t modteleport_sym;
+
 extern void module_init();
 extern int module_load(char *name);
 extern int module_load_dep(char *name);

@@ -20,7 +20,7 @@
 
 static export_fce_t *export_fce;
 
-int init(export_fce_t *p)
+static int init(export_fce_t *p)
 {
 	export_fce = p;
 
@@ -29,8 +29,7 @@ int init(export_fce_t *p)
 }
 
 #ifndef PUBLIC_SERVER
-
-int draw(int x, int y, int w, int h)
+static int draw(int x, int y, int w, int h)
 {
 	UNUSED(x);
 	UNUSED(y);
@@ -42,13 +41,13 @@ int draw(int x, int y, int w, int h)
 }
 #endif
 
-int event()
+static int event()
 {
 	debug("Basic module catch event");
 	return 0;
 }
 
-int isConflict(int x, int y, int w, int h)
+static int isConflict(int x, int y, int w, int h)
 {
 	debug("isConflict(%d, %d, %d, %d) in Basic module", x, y, w, h);
 	return 0;
@@ -59,19 +58,27 @@ static void cmd_basic(char *line)
 	debug("cmd_basic(%s) in Basic module", line);
 }
 
-void cmdArena(char *line)
+static void cmdArena(char *line)
 {
 	if (strncmp(line, "basic", 5) == 0)
 		cmd_basic(line);
 }
 
-void recvMsg(char *msg)
+static void recvMsg(char *msg)
 {
 	debug("recvMsg(%s) in Basic module", msg);
 }
 
-int destroy()
+static int destroy()
 {
 	debug("Destroying Basic module");
 	return 0;
 }
+
+mod_sym_t modbasic_sym = { &init,
+			  &draw,
+			  &event,
+			  &isConflict,
+			  &cmdArena,
+			  &recvMsg,
+			  &destroy };

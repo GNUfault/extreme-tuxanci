@@ -160,7 +160,7 @@ static void move_shot(shot_t *shot, int position, int src_x, int src_y, int dist
 	}
 }
 
-int init(export_fce_t *p)
+static int init(export_fce_t *p)
 {
 	export_fce = p;
 	export_fce->fce_share_function_add("move_tux", (void *) move_tux);
@@ -216,7 +216,7 @@ static void proto_moveshot(char *msg)
 }
 
 #ifndef PUBLIC_SERVER
-int draw(int x, int y, int w, int h)
+static int draw(int x, int y, int w, int h)
 {
 	UNUSED(x);
 	UNUSED(y);
@@ -227,12 +227,12 @@ int draw(int x, int y, int w, int h)
 }
 #endif
 
-int event()
+static int event()
 {
 	return 0;
 }
 
-int isConflict(int x, int y, int w, int h)
+static int isConflict(int x, int y, int w, int h)
 {
 	UNUSED(x);
 	UNUSED(y);
@@ -242,12 +242,12 @@ int isConflict(int x, int y, int w, int h)
 	return 0;
 }
 
-void cmdArena(char *line)
+static void cmdArena(char *line)
 {
 	UNUSED(line);
 }
 
-void recvMsg(char *msg)
+static void recvMsg(char *msg)
 {
 	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		return;
@@ -259,7 +259,15 @@ void recvMsg(char *msg)
 		proto_moveshot(msg);
 }
 
-int destroy()
+static int destroy()
 {
 	return 0;
 }
+
+mod_sym_t modmove_sym = { &init,
+			  &draw,
+			  &event,
+			  &isConflict,
+			  &cmdArena,
+			  &recvMsg,
+			  &destroy };

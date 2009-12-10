@@ -49,9 +49,9 @@ static void (*fce_move_shot) (shot_t *shot, int position, int src_x,
 							  int dist_h);
 
 #ifndef PUBLIC_SERVER
-teleport_t *newTeleport(int x, int y, int w, int h, int layer, image_t *img)
+static teleport_t *newTeleport(int x, int y, int w, int h, int layer, image_t *img)
 #else
-teleport_t *newTeleport(int x, int y, int w, int h, int layer)
+static teleport_t *newTeleport(int x, int y, int w, int h, int layer)
 #endif
 {
 	static int last_id = 0;
@@ -218,7 +218,7 @@ static void moveShotFromTeleport(shot_t *shot, teleport_t *teleport, space_t *sp
 		      distTeleport->h);
 }
 
-int init(export_fce_t *p)
+static int init(export_fce_t *p)
 {
 	export_fce = p;
 
@@ -248,7 +248,7 @@ static void action_drawteleport(space_t *space, teleport_t *teleport, void *p)
 	drawTeleport(teleport);
 }
 
-int draw(int x, int y, int w, int h)
+static int draw(int x, int y, int w, int h)
 {
 	if (spaceTeleport == NULL) {
 		return 0;
@@ -304,7 +304,7 @@ static void action_eventtux(space_t *space, tux_t *tux, space_t *p_spaceTeleport
 	space_action_from_location(p_spaceTeleport, action_eventteleporttux, tux, x, y, w, h);
 }
 
-int event()
+static int event()
 {
 	if (spaceTeleport == NULL) {
 		return 0;
@@ -320,7 +320,7 @@ int event()
 	return 0;
 }
 
-int isConflict(int x, int y, int w, int h)
+static int isConflict(int x, int y, int w, int h)
 {
 	UNUSED(x);
 	UNUSED(y);
@@ -334,20 +334,28 @@ int isConflict(int x, int y, int w, int h)
 	return 0;
 }
 
-void cmdArena(char *line)
+static void cmdArena(char *line)
 {
 	if (strncmp(line, "teleport", 8) == 0)
 		cmd_teleport(line);
 }
 
-void recvMsg(char *msg)
+static void recvMsg(char *msg)
 {
 	UNUSED(msg);
 }
 
-int destroy()
+static int destroy()
 {
 	space_destroy_with_item(spaceTeleport, destroyTeleport);
 	list_destroy(listTeleport);
 	return 0;
 }
+
+mod_sym_t modteleport_sym = { &init,
+			      &draw,
+			      &event,
+			      &isConflict,
+			      &cmdArena,
+			      &recvMsg,
+			      &destroy };

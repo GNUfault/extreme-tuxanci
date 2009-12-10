@@ -27,7 +27,7 @@ typedef struct alternative_struct {
 	int x, y;
 } alternative_t;
 
-alternative_t *newAlternative(int route, int x, int y)
+static alternative_t *newAlternative(int route, int x, int y)
 {
 	alternative_t *new;
 
@@ -41,7 +41,7 @@ alternative_t *newAlternative(int route, int x, int y)
 	return new;
 }
 
-alternative_t *cloneAlternative(alternative_t *p, int route, int x, int y)
+static alternative_t *cloneAlternative(alternative_t *p, int route, int x, int y)
 {
 	alternative_t *new;
 
@@ -57,7 +57,7 @@ alternative_t *cloneAlternative(alternative_t *p, int route, int x, int y)
 	return new;
 }
 
-void forkAlternative(list_t *list, alternative_t *p, int w, int h)
+static void forkAlternative(list_t *list, alternative_t *p, int w, int h)
 {
 	int x, y;
 
@@ -88,7 +88,7 @@ void forkAlternative(list_t *list, alternative_t *p, int w, int h)
 
 }
 
-void moveAlternative(alternative_t *p, int offset)
+static void moveAlternative(alternative_t *p, int offset)
 {
 	assert(p != NULL);
 
@@ -112,7 +112,7 @@ void moveAlternative(alternative_t *p, int offset)
 	}
 }
 
-void destroyAlternative(alternative_t *p)
+static void destroyAlternative(alternative_t *p)
 {
 	assert(p != NULL);
 	free(p);
@@ -123,7 +123,7 @@ static void cmd_ai(char *line)
 	UNUSED(line);
 }
 
-int init(export_fce_t *p)
+static int init(export_fce_t *p)
 {
 	export_fce = p;
 
@@ -131,7 +131,7 @@ int init(export_fce_t *p)
 }
 
 #ifndef PUBLIC_SERVER
-int draw(int x, int y, int w, int h)
+static int draw(int x, int y, int w, int h)
 {
 	UNUSED(x);
 	UNUSED(y);
@@ -142,7 +142,7 @@ int draw(int x, int y, int w, int h)
 }
 #endif
 
-tux_t *findOtherTux(space_t *space)
+static tux_t *findOtherTux(space_t *space)
 {
 	int i;
 
@@ -343,7 +343,7 @@ static void action_tuxAI(space_t *space, tux_t *tux, void *p)
 	}
 }
 
-int event()
+static int event()
 {
 	static my_time_t lastEvent = 0;
 	my_time_t curentTime;
@@ -391,7 +391,7 @@ int event()
 	return 0;
 }
 
-int isConflict(int x, int y, int w, int h)
+static int isConflict(int x, int y, int w, int h)
 {
 	UNUSED(x);
 	UNUSED(y);
@@ -401,18 +401,26 @@ int isConflict(int x, int y, int w, int h)
 	return 0;
 }
 
-void cmdArena(char *line)
+static void cmdArena(char *line)
 {
 	if (strncmp(line, "ai", 2) == 0)
 		cmd_ai(line);
 }
 
-void recvMsg(char *msg)
+static void recvMsg(char *msg)
 {
 	UNUSED(msg);
 }
 
-int destroy()
+static int destroy()
 {
 	return 0;
 }
+
+mod_sym_t modai_sym = 	{ &init,
+			  &draw,
+			  &event,
+			  &isConflict,
+			  &cmdArena,
+			  &recvMsg,
+			  &destroy };

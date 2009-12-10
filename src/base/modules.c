@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#ifndef __WIN32__
-#include <dlfcn.h>
-#endif /* __WIN32__ */
 #include <assert.h>
 
 #include "main.h"
@@ -54,72 +51,40 @@ static export_fce_t export_fce = {
 	.fce_shot_bound_bombBall = shot_bound_bombBall,
 	.fce_shot_transform_lasser = shot_transform_lasser
 };
+
 static list_t *listModule;
+static mod_reg_t mod_reglist;
 
-static void *getFce(module_t *p, char *s)
+/* register module as valid */
+static mod_reg_t *mod_register (char *name, mod_sym_t *sym)
 {
-#ifndef __WIN32__
-	void *ret;
-	char *error;
+	/* alloc and init context */
+	mod_reg_t *mod = (mod_reg_t *) malloc (sizeof (mod_reg_t));
+	
+	if (!mod)
+		return 0;
 
-	assert(p != NULL);
-	assert(s != NULL);
-	ret = dlsym(p->image, s);
+	mod->name = strdup (name);
+	mod->sym = sym;
+		
+	/* add entry into list */
+	mod->next = &mod_reglist;
+	mod->prev = mod_reglist.prev;
+	mod->prev->next = mod;
+	mod->next->prev = mod;
 
-	if ((error = dlerror()) != NULL) {
-		error("Use of getFce function failed: %s", error);
-		return NULL;
-	}
-#else /* __WIN32__ */
-	FARPROC ret = GetProcAddress((HMODULE) p->image, (LPCSTR) s);
-	if (!ret) {
-		error("Use of getFce function failed: %s", s);
-	}
-#endif /* __WIN32__ */
-
-	return (void *) ret;
+	return mod;
 }
 
-static void *mapImage(char *name)
+static mod_reg_t *mod_find (char *name)
 {
-#ifndef __WIN32__
-	void *image;
-	image = dlopen(name, RTLD_LAZY);
-
-	if (image == NULL) {
-		fputs(dlerror(), stderr);
-		return NULL;
+	mod_reg_t *mod;
+	for (mod = mod_reglist.next; mod != &mod_reglist; mod = mod->next) {
+		if (!strcmp (mod->name, name))
+			return mod;
 	}
-#else /* __WIN32__ */
-	HINSTANCE image;
-	image = LoadLibrary((LPCSTR) name);
 
-	if (!image) {
-		LPVOID msg;
-		FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-				FORMAT_MESSAGE_FROM_SYSTEM |
-				FORMAT_MESSAGE_IGNORE_INSERTS,
-			      NULL,
-			      GetLastError(),
-			      MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-			      (LPTSTR) & msg, 0, NULL);
-		fputs(msg, stderr);
-		free(msg);
-		FreeLibrary(image);
-		return NULL;
-	}
-	/*FreeLibrary(image);*/		/* never ever uncomment this */
-#endif /* __WIN32__ */
-	return image;
-}
-
-static void unmapImage(void *image)
-{
-#ifndef __WIN32__
-	dlclose(image);
-#else /* __WIN32__ */
-	FreeLibrary(image);
-#endif /* __WIN32__ */
+	return 0;
 }
 
 static void setModulePath(char *name, char *path)
@@ -130,36 +95,41 @@ static void setModulePath(char *name, char *path)
 static module_t *newModule(char *name)
 {
 	char path[STR_PATH_SIZE];
-	void *image;
+
 	module_t *ret;
 
 	assert(name != NULL);
-	setModulePath(name, path);
-	image = mapImage(path);
-
-	if (image == NULL) {
-		error("Unable to map image of new module [%s]", name);
-		return NULL;
+	
+	mod_reg_t *mod = mod_find (name);
+	
+	if (!mod) {
+		error ("Module [%s] is unavailable", name);
+		return 0;
 	}
+		
+	setModulePath(name, path);
 
-	ret = malloc(sizeof(module_t));
-	ret->image = image;
-	ret->name = strdup(name);
-	ret->fce_init = getFce(ret, "init");
+	ret = malloc (sizeof (module_t));
+	
+	if (!ret)
+		return 0;
+	
+	ret->name = strdup (name);
+
+	ret->fce_init = mod->sym->init;
 #ifndef PUBLIC_SERVER
-	ret->fce_draw = getFce(ret, "draw");
+	ret->fce_draw = mod->sym->draw;
 #endif /* PUBLIC_SERVER */
-	ret->fce_event = getFce(ret, "event");
-	ret->fce_destroy = getFce(ret, "destroy");
-	ret->fce_isConflict = getFce(ret, "isConflict");
-	ret->fce_cmd = getFce(ret, "cmdArena");
-	ret->fce_recvMsg = getFce(ret, "recvMsg");
+	ret->fce_event = mod->sym->event;
+	ret->fce_destroy = mod->sym->destroy;
+	ret->fce_isConflict = mod->sym->isConflict;
+	ret->fce_cmd = mod->sym->cmdArena;
+	ret->fce_recvMsg = mod->sym->recvMsg;
 
 	debug("Loading module [%s]", name);
 
 	if (ret->fce_init(&export_fce) != 0) {
 		error("Unable to load module [%s]", name);
-		unmapImage(image);
 		free(ret->name);
 		free(ret);
 		return NULL;
@@ -175,7 +145,6 @@ static int destroyModule(module_t *p)
 	debug("Unloading module [%s]", p->name);
 
 	p->fce_destroy();
-	unmapImage(p->image);
 	free(p->name);
 	free(p);
 
@@ -186,6 +155,16 @@ void module_init()
 {
 	listModule = list_new();
 	share_function_init();
+
+	mod_reglist.next = &mod_reglist;
+	mod_reglist.prev = &mod_reglist;
+	
+	mod_register ("libmodAI", &modai_sym);
+	mod_register ("libmodWall", &modwall_sym);
+	mod_register ("libmodPipe", &modpipe_sym);
+	mod_register ("libmodMove", &modmove_sym);
+	mod_register ("libmodBasic", &modbasic_sym);
+	mod_register ("libmodTeleport", &modteleport_sym);
 }
 
 int isModuleLoaded(char *name)

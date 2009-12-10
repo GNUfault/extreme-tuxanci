@@ -362,6 +362,8 @@ static void load_arenaFromDirector(char *director)
 		exit(-1);
 	}
 
+	unsigned l = strlen(director) - 1;
+
 	for (i = 0; i < p->list->count; i++) {
 		char *line;
 
@@ -369,8 +371,9 @@ static void load_arenaFromDirector(char *director)
 
 		if (strstr(line, ".zip") != NULL && strstr(line, "~") == NULL) {
 			char path[STR_PATH_SIZE];
-
-			if (director[strlen(director)-1] == PATH_SEPARATOR) {
+			
+			
+			if (director[l] == (char) PATH_SEPARATOR[0]) {
 				sprintf(path, "%s%s", director, line);
 			} else {
 				sprintf(path, "%s%s%s", director, PATH_SEPARATOR, line);
