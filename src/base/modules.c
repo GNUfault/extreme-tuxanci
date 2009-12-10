@@ -76,6 +76,32 @@ static mod_reg_t *mod_register (char *name, mod_sym_t *sym)
 	return mod;
 }
 
+/* free all unnecessary memory blocks from module's reglist */
+static void mod_destroy ()
+{
+	unsigned i;
+	for (;;) {
+		i = 0;
+		
+		mod_reg_t *mod;
+		for (mod = mod_reglist.next; mod != &mod_reglist; mod = mod->next) {
+			/* delete entry from context */
+			mod->next->prev = mod->prev;
+			mod->prev->next = mod->next;
+			
+			free (mod->name);
+			free (mod);
+			
+			i ++;
+			
+			break;
+		}
+		
+		if (!i)
+			break;
+	}
+}
+
 static mod_reg_t *mod_find (char *name)
 {
 	mod_reg_t *mod;
@@ -104,6 +130,11 @@ static module_t *newModule(char *name)
 		return 0;
 	
 	ret->name = strdup (name);
+	
+	if (!ret->name) {
+		free (ret);
+		return 0;
+	}
 	
 	ret->fce_init = mod->sym->init;
 #ifndef PUBLIC_SERVER
@@ -134,9 +165,10 @@ static int destroyModule(module_t *p)
 	debug("Unloading module [%s]", p->name);
 
 	p->fce_destroy();
+	
 	free(p->name);
 	free(p);
-
+	
 	return 0;
 }
 
@@ -275,4 +307,6 @@ void module_quit()
 {
 	list_destroy_item(listModule, destroyModule);
 	share_function_quit();
+
+	mod_destroy ();
 }

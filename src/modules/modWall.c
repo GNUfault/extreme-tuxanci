@@ -225,14 +225,16 @@ static void cmd_wall(char *line)
 				      export_fce->fce_arena_get_current()->h,
 				      320, 240,
 				      getStatusWall, setStatusWall);
+	}
 
 #ifndef PUBLIC_SERVER
+	if (spaceImgWall == NULL) {
 		spaceImgWall = space_new(export_fce->fce_arena_get_current()->w,
 					 export_fce->fce_arena_get_current()->h,
 					 320, 240,
 					 getStatusImgWall, setStatusImgWall);
-#endif
 	}
+#endif
 
 	space_add(spaceWall, new);
 
@@ -351,6 +353,10 @@ static int destroy()
 	space_destroy(spaceImgWall);
 #endif
 	list_destroy(listWall);
+	
+	spaceWall = 0;
+	spaceImgWall = 0;
+	
 	return 0;
 }
 
