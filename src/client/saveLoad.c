@@ -249,7 +249,7 @@ void load_arena(char *filename)
 	textFile_t *textFile;
 	char path[STR_PATH_SIZE];
 
-	sprintf(path, "%s/%s", home_director_get(), filename);
+	sprintf(path, "%s%s%s", home_director_get(), PATH_SEPARATOR, filename);
 
 	debug("Loading arena [%s]", path);
 

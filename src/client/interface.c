@@ -126,7 +126,7 @@ int interface_init()
 
 #ifndef SUPPORT_OPENGL
 	use_open_gl = FALSE;
-	g_win_flags = SDL_HWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT;
+	g_win_flags = SDL_SWSURFACE | SDL_DOUBLEBUF | SDL_ANYFORMAT;
 
 	screen = SDL_SetVideoMode(WINDOW_SIZE_X, WINDOW_SIZE_Y, 0, g_win_flags);
 #else /* SUPPORT_OPENGL */
