@@ -5,7 +5,7 @@
 
 #cmakedefine USE_MAGICK
 #define APPNAME         "@APPNAME@"
-#ifdef __WIN32___
+#ifdef __WIN32__
 	#define PATH_DIR        "data" PATH_SEPARATOR
 #else 
 	#define PATH_DIR        "@CMAKE_DATA_PATH@"  PATH_SEPARATOR  APPNAME PATH_SEPARATOR
