@@ -76,7 +76,11 @@ static int destroy()
 }
 
 mod_sym_t modbasic_sym = { &init,
+#ifndef PUBLIC_SERVER
 			  &draw,
+#else
+			  0,
+#endif
 			  &event,
 			  &isConflict,
 			  &cmdArena,

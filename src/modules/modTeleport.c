@@ -353,7 +353,11 @@ static int destroy()
 }
 
 mod_sym_t modteleport_sym = { &init,
-			      &draw,
+#ifndef PUBLIC_SERVER
+			  &draw,
+#else
+			  0,
+#endif
 			      &event,
 			      &isConflict,
 			      &cmdArena,

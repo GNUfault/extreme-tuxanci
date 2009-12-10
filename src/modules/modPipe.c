@@ -335,7 +335,11 @@ static int destroy()
 }
 
 mod_sym_t modpipe_sym = { &init,
+#ifndef PUBLIC_SERVER
 			  &draw,
+#else
+			  0,
+#endif
 			  &event,
 			  &isConflict,
 			  &cmdArena,
