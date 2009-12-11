@@ -336,8 +336,9 @@ static int isConflict(int x, int y, int w, int h)
 
 static void cmdArena(char *line)
 {
-	if (strncmp(line, "teleport", 8) == 0)
+	if (strncmp(line, "teleport", 8) == 0) {
 		cmd_teleport(line);
+	}
 }
 
 static void recvMsg(char *msg)
@@ -358,9 +359,9 @@ static int destroy()
 
 mod_sym_t modteleport_sym = { &init,
 #ifndef PUBLIC_SERVER
-			  &draw,
+			      &draw,
 #else
-			  0,
+			      0,
 #endif
 			      &event,
 			      &isConflict,

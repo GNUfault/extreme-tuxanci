@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <assert.h>
+#include <SDL_keyboard.h>
 
 #include "main.h"
 #include "interface.h"
@@ -11,8 +12,6 @@
 #include "widget_textfield.h"
 
 #include "keyboardBuffer.h"
-
-#include <SDL_keyboard.h>
 
 widget_t *text_field_new(char *text, int filter, int x, int y)
 {
@@ -196,14 +195,17 @@ static void readKey(widget_textfield_t *p)
 
 		char *name = (char *) SDL_GetKeyName(k.sym);
 
-		if (!name)
+		if (!name) {
 			continue;
+		}
 
-		if (len >= STR_SIZE)
+		if (len >= STR_SIZE) {
 			break;
+		}
 		
-		if (k.sym == SDLK_RETURN)
+		if (k.sym == SDLK_RETURN) {
 			break;
+		}
 
 		char c = '\0';
 
@@ -211,17 +213,19 @@ static void readKey(widget_textfield_t *p)
 			case 1:
 				c = name[0];
 				break;
+
 			case 3:
 				c = name[1];
 				break;
 		}
 		
-		if ((k.unicode & 0xFF80) == 0)
+		if ((k.unicode & 0xFF80) == 0) {
 			c = k.unicode & 0x7F;
+		}
 
-		if (k.sym == SDLK_SPACE || k.sym == SDLK_TAB)
+		if (k.sym == SDLK_SPACE || k.sym == SDLK_TAB) {
 			c = ' ';
-		else if (k.sym == SDLK_BACKSPACE) {
+		} else if (k.sym == SDLK_BACKSPACE) {
 			if (len > 0) {
 				p->text[len-1] = '\0';
 				checkText(p, len);
@@ -230,12 +234,13 @@ static void readKey(widget_textfield_t *p)
 			break;
 		}
 
-		if (c == '\0' || p->w > WIDGET_TEXTFIELD_WIDTH - 40)
+		if (c == '\0' || p->w > WIDGET_TEXTFIELD_WIDTH - 40) {
 			continue;
+		}
 
 		p->text[len] = c;
 
-		len ++;
+		len++;
 		checkText(p, len);
 	}
 }

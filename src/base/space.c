@@ -42,8 +42,9 @@ space_t *space_new(int w, int h, int segW, int segH,
 
 	new = malloc(sizeof(space_t));
 	
-	if (!new)
+	if (!new) {
 		return 0;
+	}
 	
 	memset(new, 0, sizeof(space_t));
 
@@ -98,11 +99,13 @@ void space_add(space_t *p, void *item)
 	int id, x, y, w, h;
 	int i, j;
 
-	if (!p || !item)
+	if (!p || !item) {
 		return;
+	}
 	
-	if (!p->zone)
+	if (!p->zone) {
 		return;
+	}
 	
 	p->getStatus(item, &id, &x, &y, &w, &h);
 	getSegment(p, x, y, w, h, &segX, &segY, &segW, &segH);

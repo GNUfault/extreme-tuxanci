@@ -56,15 +56,16 @@ static list_t *listModule;
 static mod_reg_t mod_reglist;
 
 /* register module as valid */
-static mod_reg_t *mod_register (char *name, mod_sym_t *sym)
+static mod_reg_t *mod_register(char *name, mod_sym_t *sym)
 {
 	/* alloc and init context */
-	mod_reg_t *mod = (mod_reg_t *) malloc (sizeof (mod_reg_t));
+	mod_reg_t *mod = (mod_reg_t *) malloc(sizeof(mod_reg_t));
 	
-	if (!mod)
+	if (!mod) {
 		return 0;
+	}
 
-	mod->name = strdup (name);
+	mod->name = strdup(name);
 	mod->sym = sym;
 		
 	/* add entry into list */
@@ -77,7 +78,7 @@ static mod_reg_t *mod_register (char *name, mod_sym_t *sym)
 }
 
 /* free all unnecessary memory blocks from module's reglist */
-static void mod_destroy ()
+static void mod_destroy()
 {
 	unsigned i;
 	for (;;) {
@@ -89,25 +90,27 @@ static void mod_destroy ()
 			mod->next->prev = mod->prev;
 			mod->prev->next = mod->next;
 			
-			free (mod->name);
-			free (mod);
+			free(mod->name);
+			free(mod);
 			
-			i ++;
+			i++;
 			
 			break;
 		}
 		
-		if (!i)
+		if (!i) {
 			break;
+		}
 	}
 }
 
-static mod_reg_t *mod_find (char *name)
+static mod_reg_t *mod_find(char *name)
 {
 	mod_reg_t *mod;
 	for (mod = mod_reglist.next; mod != &mod_reglist; mod = mod->next) {
-		if (!strcmp (mod->name, name))
+		if (!strcmp(mod->name, name)) {
 			return mod;
+		}
 	}
 
 	return 0;
@@ -115,24 +118,25 @@ static mod_reg_t *mod_find (char *name)
 
 static module_t *newModule(char *name)
 {
-	assert (name != NULL);
+	assert(name != NULL);
 	
-	mod_reg_t *mod = mod_find (name);
+	mod_reg_t *mod = mod_find(name);
 	
 	if (!mod) {
-		error ("Module [%s] is unavailable", name);
+		error("Module [%s] is unavailable", name);
 		return 0;
 	}
 		
-	module_t *ret = malloc (sizeof (module_t));
+	module_t *ret = malloc(sizeof(module_t));
 	
-	if (!ret)
+	if (!ret) {
 		return 0;
+	}
 	
-	ret->name = strdup (name);
+	ret->name = strdup(name);
 	
 	if (!ret->name) {
-		free (ret);
+		free(ret);
 		return 0;
 	}
 	
@@ -148,7 +152,7 @@ static module_t *newModule(char *name)
 
 	debug("Loading module [%s]", name);
 
-	if (ret->fce_init (&export_fce) != 0) {
+	if (ret->fce_init(&export_fce) != 0) {
 		error("Unable to load module [%s]", name);
 		free(ret->name);
 		free(ret);
@@ -180,12 +184,12 @@ void module_init()
 	mod_reglist.next = &mod_reglist;
 	mod_reglist.prev = &mod_reglist;
 	
-	mod_register ("libmodAI", &modai_sym);
-	mod_register ("libmodWall", &modwall_sym);
-	mod_register ("libmodPipe", &modpipe_sym);
-	mod_register ("libmodMove", &modmove_sym);
-	mod_register ("libmodBasic", &modbasic_sym);
-	mod_register ("libmodTeleport", &modteleport_sym);
+	mod_register("libmodAI", &modai_sym);
+	mod_register("libmodWall", &modwall_sym);
+	mod_register("libmodPipe", &modpipe_sym);
+	mod_register("libmodMove", &modmove_sym);
+	mod_register("libmodBasic", &modbasic_sym);
+	mod_register("libmodTeleport", &modteleport_sym);
 }
 
 int isModuleLoaded(char *name)
@@ -228,8 +232,9 @@ int module_load(char *name)
 
 int module_load_dep(char *name)
 {
-	if (isModuleLoaded(name))
+	if (isModuleLoaded(name)) {
 		return 0;
+	}
 
 	return module_load(name);
 }
@@ -308,5 +313,5 @@ void module_quit()
 	list_destroy_item(listModule, destroyModule);
 	share_function_quit();
 
-	mod_destroy ();
+	mod_destroy();
 }
