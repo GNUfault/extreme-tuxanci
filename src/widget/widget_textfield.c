@@ -12,6 +12,8 @@
 
 #include "keyboardBuffer.h"
 
+#include <SDL_keyboard.h>
+
 widget_t *text_field_new(char *text, int filter, int x, int y)
 {
 	widget_textfield_t *new;
@@ -156,7 +158,8 @@ static void checkText(widget_textfield_t *p, unsigned len)
 			case WIDGET_TEXTFIELD_FILTER_IP_OR_DOMAIN:
 				if ((c >= '0' && c <= '9') ||
 				    (c == '.' || c == ':' || c == '-') ||
-				    (c >= 'a' && c <= 'z')) {
+				    (c >= 'a' && c <= 'z') ||
+				    (c >= 'A' && c <= 'Z')) {
 					isDel = FALSE;
 				}
 				break;
@@ -182,20 +185,6 @@ static void readKey(widget_textfield_t *p)
 	int len;
 	int i;
 
-	char shift_map[] = {
-		'-', '_',
-		'=', '+',
-		'[', '{',
-		']', '}',
-		';', ':',
-		'/', '\"',
-		'\\', '|',
-		',', '<',
-		'.', '>',
-		'/', '?',
-		')', '(',
-	};
-
 	if (p->active == FALSE) {
 		return;
 	}
@@ -207,17 +196,16 @@ static void readKey(widget_textfield_t *p)
 
 		char *name = (char *) SDL_GetKeyName(k.sym);
 
-		if (name == NULL) {
+		if (!name)
 			continue;
-		}
 
-		if (len >= STR_SIZE) {
+		if (len >= STR_SIZE)
 			break;
-		}
+		
+		if (k.sym == SDLK_RETURN)
+			break;
 
 		char c = '\0';
-
-		/* printf("name %s : %d\n", name, k.sym); */
 
 		switch (strlen(name)) {
 			case 1:
@@ -227,73 +215,27 @@ static void readKey(widget_textfield_t *p)
 				c = name[1];
 				break;
 		}
+		
+		if ((k.unicode & 0xFF80) == 0)
+			c = k.unicode & 0x7F;
 
-		if (k.sym == SDLK_SPACE || k.sym == SDLK_TAB) {
+		if (k.sym == SDLK_SPACE || k.sym == SDLK_TAB)
 			c = ' ';
-		} else if (k.sym == SDLK_BACKSPACE && len > 0 ) {
-			p->text[len-1] = '\0';
-			checkText(p, len);
+		else if (k.sym == SDLK_BACKSPACE) {
+			if (len > 0) {
+				p->text[len-1] = '\0';
+				checkText(p, len);
+			}
+			
 			break;
 		}
 
-		if (c == '\0' || p->w > WIDGET_TEXTFIELD_WIDTH - 40) {
+		if (c == '\0' || p->w > WIDGET_TEXTFIELD_WIDTH - 40)
 			continue;
-		}
 
 		p->text[len] = c;
 
-		if (k.mod & KMOD_SHIFT) {
-			unsigned int n;
-			int m = 0;
-
-			for (n = 0; n < sizeof(shift_map); n += 2) {
-				if (c == shift_map[n]) {
-					p->text[len] = shift_map[n+1];
-					m ++;
-					break;
-				}
-			}
-
-			if (!m) {
-				p->text[len] -= 32;
-			}
-		}
-
-/*
-		switch (k.sym) {
-			case SDLK_PLUS:
-				p->text[len] = '1';
-				break;
-			case SDLK_WORLD_76:
-				p->text[len] = '2';
-				break;
-			case SDLK_WORLD_25:
-				p->text[len] = '3';
-				break;
-			case SDLK_WORLD_72:
-				p->text[len] = '4';
-				break;
-			case SDLK_WORLD_88:
-				p->text[len] = '5';
-				break;
-			case SDLK_WORLD_30:
-				p->text[len] = '6';
-				break;
-			case SDLK_WORLD_93:
-				p->text[len] = '7';
-				break;
-			case SDLK_WORLD_65:
-				p->text[len] = '8';
-				break;
-			case SDLK_WORLD_77:
-				p->text[len] = '9';
-				break;
-			case SDLK_WORLD_73:
-				p->text[len] = '0';
-				break;
-		}
-*/
-		len ++;		
+		len ++;
 		checkText(p, len);
 	}
 }

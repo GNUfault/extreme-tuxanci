@@ -72,7 +72,7 @@ void catch_key_draw(widget_t *widget)
 	}
 }
 
-static int getPessAnyKey()
+static int getPressAnyKey()
 {
 	Uint8 *mapa;
 	int i;
@@ -117,7 +117,7 @@ void catch_key_event(widget_t *widget)
 	if (p->active == TRUE) {
 		int key;
 
-		key = getPessAnyKey();
+		key = getPressAnyKey();
 
 		if (key != WIDGET_CATCHKEY_NOKEY) {
 			p->key = key;
