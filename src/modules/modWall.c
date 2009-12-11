@@ -351,12 +351,12 @@ static int destroy()
 	space_destroy_with_item(spaceWall, destroyWall);
 #ifndef PUBLIC_SERVER
 	space_destroy(spaceImgWall);
+	spaceImgWall = NULL;
 #endif
 	list_destroy(listWall);
 	
 	listWall = NULL;
-	spaceWall = 0;
-	spaceImgWall = 0;
+	spaceWall = NULL;
 	
 	return 0;
 }
