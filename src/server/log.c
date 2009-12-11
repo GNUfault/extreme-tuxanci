@@ -59,7 +59,7 @@ void log_add(int type, char *msg)
 	}
 
 	sprintf(str, "[%02d-%02d-%02d %02d:%02d:%02d] [%s] %s\n",
-			1900 + tm_struct->tm_year, tm_struct->tm_mon, tm_struct->tm_mday,
+			1900 + tm_struct->tm_year, tm_struct->tm_mon+1, tm_struct->tm_mday,
 			tm_struct->tm_hour, tm_struct->tm_min, tm_struct->tm_sec,
 			str_type, msg);
 
