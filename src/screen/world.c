@@ -440,8 +440,6 @@ void stoptWorld()
 	hot_key_unregister(SDLK_ESCAPE);
 	arena_quit();
 
-	net_multiplayer_quit();
-
 	if (arena != NULL) {
 		arena_destroy(arena);
 	}
@@ -470,6 +468,8 @@ void stoptWorld()
 	module_quit();
 	chat_quit();
 	id_quit_list();
+
+	net_multiplayer_quit();
 }
 
 void world_init()
