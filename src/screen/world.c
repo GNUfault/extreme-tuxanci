@@ -440,10 +440,6 @@ void stoptWorld()
 	hot_key_unregister(SDLK_ESCAPE);
 	arena_quit();
 
-	if (arena != NULL) {
-		arena_destroy(arena);
-	}
-
 	radar_quit();
 	pauza_quit();
 	term_quit();
@@ -467,9 +463,14 @@ void stoptWorld()
 #endif /* NO_SOUND */
 	module_quit();
 	chat_quit();
-	id_quit_list();
 
 	net_multiplayer_quit();
+
+	if (arena != NULL) {
+		arena_destroy(arena);
+	}
+
+	id_quit_list();
 }
 
 void world_init()

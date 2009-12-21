@@ -66,7 +66,9 @@ int mouse_buffer_event(SDL_MouseButtonEvent *button)
 int mouse_buffer_clean()
 {
 	assert(list_event != NULL);
-	list_do_empty(list_event);
+
+	list_destroy_item(list_event, mouse_event_destroy);
+	list_event = list_new();
 
 	return 0;
 }
