@@ -28,6 +28,7 @@
 #include "pauza.h"
 #include "term.h"
 #include "saveDialog.h"
+#include "yes_no_dialog.h"
 #include "saveLoad.h"
 
 #ifndef NO_SOUND
@@ -205,6 +206,7 @@ void world_draw()
 	pauza_draw();
 	term_draw();
 	save_dialog_draw();
+	yes_no_dialog_draw();
 }
 
 static void netAction(tux_t *tux, int action)
@@ -346,7 +348,9 @@ void world_event()
 
 	net_multiplayer_event();
 
-	if (pauza_is_active() == FALSE && save_dialog_is_active() == FALSE) {
+	if (pauza_is_active() == FALSE &&
+	    save_dialog_is_active() == FALSE &&
+	    yes_no_dialog_is_active() == FALSE) {
 		arena_event(arena);
 		/*module_event();*/
 	}
@@ -366,11 +370,26 @@ void world_event()
 	pauza_event();
 	term_event();
 	save_dialog_event();
+	yes_no_dialog_event();
+}
+
+void dialog_yes(void *p)
+{
+	UNUSED(p);
+
+	world_do_end();
+}
+
+void dialog_no(void *p)
+{
+	UNUSED(p);
 }
 
 static void hotkey_escape()
 {
-	world_do_end();
+	yes_no_dialog_set("Naozaj chete ukoncit hru ?", dialog_yes, dialog_no, NULL);
+	yes_no_dialog_set_active(TRUE);
+	//world_do_end();
 }
 
 void startWorld()
@@ -386,6 +405,8 @@ void startWorld()
 	term_init();
 
 	setGameType();
+
+	yes_no_dialog_init();
 
 	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_NONE) {
 		save_dialog_init();
@@ -448,6 +469,8 @@ void stoptWorld()
 	pauza_quit();
 	term_quit();
 	
+	yes_no_dialog_quit();
+
 	if (net_multiplayer_get_game_type() == NET_GAME_TYPE_NONE) {
 		save_dialog_quit();
 	}
