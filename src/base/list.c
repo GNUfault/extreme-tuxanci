@@ -69,16 +69,12 @@ void list_add(list_t *p, void *item)
 	}
 
 	if (p->count + 1 > p->alloc) {
-		void **new;
 #ifdef DEBUG_LIST
 		printf("[Debug] Reallocating list from %d to %d (count: %d)\n",
 		       p->alloc, p->alloc + LIST_ALLOC_LIMIT, p->count);
 #endif
 		p->alloc += LIST_ALLOC_LIMIT;
-		new = malloc(p->alloc * sizeof(void *));
-		memcpy(new, p->list, p->count * sizeof(void *));
-		free(p->list);
-		p->list = new;
+		p->list = realloc(p->list, p->alloc * sizeof(void *));
 		p->list[p->count] = item;
 		p->count++;
 		return;
