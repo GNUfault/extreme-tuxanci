@@ -39,7 +39,7 @@ char *archive_extract_file(char *archive, char *filename)
 #else
 	tmp = getenv("TEMP");
 #endif
-	sprintf(name, "%s%stuxanci.%d-%s", tmp, PATH_SEPARATOR ,getpid(), filename);
+	sprintf(name, "%s%stuxanci.%d-%s", tmp, PATH_SEPARATOR, getpid(), filename);
 
 	/*printf("ARCHIVE %s %s %s\n", archive, filename, name);*/
 
@@ -99,15 +99,14 @@ char *archive_extract_file(char *archive, char *filename)
 #else
 	tmp = getenv("TEMP");
 #endif
-	sprintf(name, "%s%stuxanci.%d-%s", tmp, PATH_SEPARATOR ,getpid(), filename);
+	sprintf(name, "%s%stuxanci.%d-%s", tmp, PATH_SEPARATOR, getpid(), filename);
 
-	if( ! PHYSFS_init(get_program_name()) )
-	{
+	if (!(PHYSFS_init(get_program_name()))) {
 		error("Unable to init physfs");
 		return NULL;
 	}
 
-	if (! PHYSFS_addToSearchPath(archive, 1)) {
+	if (!(PHYSFS_addToSearchPath(archive, 1))) {
 		error("Unable to open archive [%s]", archive);
 		PHYSFS_deinit();
 		return NULL;
@@ -128,8 +127,7 @@ char *archive_extract_file(char *archive, char *filename)
 		return NULL;
 	}
 
-	while ((count = PHYSFS_read(file_archive, buffer, 1, ARCHIVE_BUFFER_SIZE)) > 0)
-	{
+	while ((count = PHYSFS_read(file_archive, buffer, 1, ARCHIVE_BUFFER_SIZE)) > 0) {
 		fwrite(buffer, count, 1, file);
 	}
 

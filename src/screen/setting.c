@@ -326,8 +326,8 @@ void setting_init()
 						WIDGET_TEXTFIELD_FILTER_ALPHANUM,
 						110 + label_count_round->w, WINDOW_SIZE_Y - 120);
 
-	label_weapons = label_new(_("weapons:"), 100, 160, WIDGET_LABEL_LEFT);
-	label_bonuses = label_new(_("bonuses:"), 430, 160, WIDGET_LABEL_LEFT);
+	label_weapons = label_new(_("Weapons:"), 100, 160, WIDGET_LABEL_LEFT);
+	label_bonuses = label_new(_("Bonuses:"), 430, 160, WIDGET_LABEL_LEFT);
 
 	for (i = GUN_DUAL_SIMPLE; i <= GUN_BOMBBALL; i++) {
 		int x = 0;
