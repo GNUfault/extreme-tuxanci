@@ -387,9 +387,9 @@ void dialog_no(void *p)
 
 static void hotkey_escape()
 {
-	yes_no_dialog_set("Naozaj chete ukoncit hru ?", dialog_yes, dialog_no, NULL);
+	yes_no_dialog_set(_("Do you really want to quit the game?"), dialog_yes, dialog_no, NULL);
 	yes_no_dialog_set_active(TRUE);
-	//world_do_end();
+	/*world_do_end();*/
 }
 
 void startWorld()
@@ -417,7 +417,7 @@ void startWorld()
 	prepareArena();
 }
 
-static void action_analyze(space_t * space, tux_t * tux, void *p)
+static void action_analyze(space_t *space, tux_t *tux, void *p)
 {
 	UNUSED(space);
 	UNUSED(p);

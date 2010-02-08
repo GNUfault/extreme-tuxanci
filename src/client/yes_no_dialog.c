@@ -73,12 +73,9 @@ void yes_no_dialog_set_active(bool_t active)
 {
 	active_dialog = active;
 
-	if (active_dialog == TRUE)
-	{
+	if (active_dialog == TRUE) {
 		hot_key_register(SDLK_ESCAPE, hotkey_escape);
-	}
-	else
-	{
+	} else {
 		hot_key_unregister(SDLK_ESCAPE);
 	}
 }

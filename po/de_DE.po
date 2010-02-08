@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxanci\n"
 "Report-Msgid-Bugs-To: team@tuxanci.org\n"
-"POT-Creation-Date: 2010-02-08 22:43+0100\n"
+"POT-Creation-Date: 2010-02-08 22:56+0100\n"
 "PO-Revision-Date: 2008-12-01 12:31+0100\n"
 "Last-Translator: Evgeni Golov <sargentd@die-welt.net>\n"
 "Language-Team: GERMAN <de@li.org>\n"
@@ -370,6 +370,10 @@ msgstr "Wechsle Waffe:"
 #: src/screen/settingKeys.c:291
 msgid "Player 1"
 msgstr "Spieler 1"
+
+#: src/screen/world.c:390
+msgid "Do you really want to quit the game?"
+msgstr ""
 
 #~ msgid "Up"
 #~ msgstr "Hoch:"
