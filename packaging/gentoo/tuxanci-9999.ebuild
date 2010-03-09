@@ -21,7 +21,7 @@ fi
 LICENSE="GPL-2"
 
 SLOT="0"
-IUSE="debug dedicated +ipv6 nls opengl +sound"
+IUSE="debug dedicated +ipv6 nls opengl physfs +sound"
 
 # >=x11-libs/cairo-1.8.8[X,svg]
 RDEPEND="
@@ -34,7 +34,8 @@ RDEPEND="
 			>=media-libs/sdl-mixer-1.2.11[vorbis]
 		)
 	)
-	>=dev-libs/libzip-0.9"
+	physfs? ( >=dev-games/physfs-2.0.0[zip] )
+	!physfs? ( >=dev-libs/libzip-0.9 )"
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
@@ -45,6 +46,7 @@ src_configure() {
 		$(cmake-utils_use_build dedicated SERVER)
 		$(cmake-utils_use_with nls)
 		$(cmake-utils_use_with opengl)
+		$(cmake-utils_use_with physfs)
 		$(cmake-utils_use_enable ipv6)
 		$(cmake-utils_use_enable debug)
 	)

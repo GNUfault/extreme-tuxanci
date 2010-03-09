@@ -57,6 +57,14 @@ IF ( ENABLE_IPV6 )
 	ADD_DEFINITIONS ( -DSUPPORT_IPv6 )
 ENDIF ( ENABLE_IPV6 )
 ###############################################################################
+# PHYSFS CHECK
+###############################################################################
+IF ( WITH_PHYSFS )
+	ADD_DEFINITIONS ( -DSUPPORT_LIBPHYSFS )
+ELSE ( WITH_PHYSFS )
+	ADD_DEFINITIONS ( -DSUPPORT_LIBZIP )
+ENDIF ( WITH_PHYSFS )
+###############################################################################
 # AUDIO CHECK
 ###############################################################################
 IF ( NOT BUILD_SERVER )
