@@ -36,7 +36,7 @@ extern int errno;
 
 #ifndef NO_SOUND
 #include "music.h"
-#endif
+#endif /* NO_SOUND */
 
 #include "gameType.h"
 #include "browser.h"
@@ -54,6 +54,7 @@ static widget_t *image_backgorund;
 static widget_t *button_play;
 static widget_t *button_back;
 static widget_t *button_refresh;
+static widget_t *button_reload;
 
 static widget_t *label_server;
 static widget_t *label_version;
@@ -70,6 +71,7 @@ static server_t server_list;
 static int LoadServers();
 static int RefreshServers();
 static server_t *server_getcurr();
+static void clear_server_list();
 
 static void hotkey_escape()
 {
@@ -80,7 +82,7 @@ void browser_start()
 {
 #ifndef NO_SOUND
 	music_play("menu", MUSIC_GROUP_BASE);
-#endif
+#endif /* NO_SOUND */
 
 	hot_key_register(SDLK_ESCAPE, hotkey_escape);
 
@@ -103,6 +105,7 @@ void browser_draw()
 	button_draw(button_play);
 	button_draw(button_back);
 	button_draw(button_refresh);
+	button_draw(button_reload);
 }
 
 void browser_event()
@@ -112,47 +115,16 @@ void browser_event()
 	button_event(button_play);
 	button_event(button_back);
 	button_event(button_refresh);
+	button_event(button_reload);
 }
 
 void browser_stop()
 {
-	unsigned i = 0;
-	server_t *server;
-
-	/*list_destroy_item(select_server->list, free);*/
-	/*select_server->list = list_new();*/
 	select_remove_all(select_server);
 
 	hot_key_unregister(SDLK_ESCAPE);
 
-	while (1) {
-		i = 0;
-		for (server = server_list.next; server != &server_list; server = server->next) {
-			server->next->prev = server->prev;
-			server->prev->next = server->next;
-
-			if (server->name) {
-				free(server->name);
-			}
-
-			if (server->version) {
-				free(server->version);
-			}
-
-			if (server->arena) {
-				free(server->arena);
-			}
-
-			free(server);
-
-			i++;
-			break;
-		}
-
-		if (!i) {
-			return;
-		}
-	}
+	clear_server_list();
 }
 
 static void eventWidget(void *p)
@@ -191,6 +163,10 @@ static void eventWidget(void *p)
 
 	if (button == button_refresh) {
 		RefreshServers();
+	}
+
+	if (button == button_reload) {
+		LoadServers();
 	}
 }
 
@@ -346,12 +322,12 @@ int server_getinfo(server_t *server)
 	   "uptime: D\n"
 	 */
 
-	/*unsigned i = 0;*/
 	int i = 0;
 
 	while (i < ret) {
-		if (str[i] == '\n')
+		if (str[i] == '\n') {
 			str[i] = '\0';
+		}
 
 		i++;
 	}
@@ -455,13 +431,18 @@ static int LoadServers()
 
 	char buf[1025];
 
+	/* first of all ensure the server list is empty */
+	clear_server_list();
+	select_remove_all(select_server);
+
 	/* TODO: TCP macro */
 	struct sockaddr_in server;
 	char *master_server_ip;
 
 	master_server_ip = dns_resolv(NET_MASTER_SERVER_DOMAIN);
 
-	if (master_server_ip == NULL) {		/* master server is down? */
+	if (master_server_ip == NULL) {
+		warning("Did not obtained IP of the MasterServer");
 		return -1;
 	}
 
@@ -471,8 +452,9 @@ static int LoadServers()
 
 	free(master_server_ip);
 
-	if ((s = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		return 0;
+	if ((s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+		warning("Unable to open socket for connection to MasterServer");
+		return -1;
 	}
 
 	/* Set to nonblocking socket mode */
@@ -558,7 +540,7 @@ static int LoadServers()
 		unsigned ip;
 	} response_head;
 
-	while (1) {
+	for (;;) {
 		response_head *header = (response_head *) ((char *) buf + i);
 
 		server_t *ctx;
@@ -632,10 +614,6 @@ static int LoadServers()
 
 static int RefreshServers()
 {
-/*
-	list_destroy_item(select_server->list, free);
-	select_server->list = list_new();
-*/
 	select_remove_all(select_server);
 
 	struct in_addr srv;
@@ -715,8 +693,11 @@ void browser_init()
 	button_play = button_new(_("Play"), WINDOW_SIZE_X - 200, WINDOW_SIZE_Y - 100,
 				 eventWidget);
 	button_refresh = button_new(_("Refresh"),
-				    WINDOW_SIZE_X / 2 - 50, WINDOW_SIZE_Y - 100,
+				    WINDOW_SIZE_X / 2 - 130, WINDOW_SIZE_Y - 100,
 				    eventWidget);
+	button_reload = button_new(_("Reload"),
+				   WINDOW_SIZE_X / 2 + 35, WINDOW_SIZE_Y - 100,
+				   eventWidget);
 
 	label_server = label_new(_("Server"), 120, 145, WIDGET_LABEL_LEFT);
 	label_version = label_new(_("Version"), 290, 145, WIDGET_LABEL_LEFT);
@@ -741,6 +722,7 @@ void browser_quit()
 	button_destroy(button_play);
 	button_destroy(button_back);
 	button_destroy(button_refresh);
+	button_destroy(button_reload);
 
 	label_destroy(label_server);
 	label_destroy(label_version);
@@ -750,4 +732,28 @@ void browser_quit()
 	label_destroy(label_ping);
 
 	select_destroy(select_server);
+}
+
+static void clear_server_list()
+{
+	server_t *server;
+
+	for (server = server_list.next; server != &server_list; server = server_list.next) {
+		server->next->prev = server->prev;
+		server->prev->next = server->next;
+
+		if (server->name) {
+			free(server->name);
+		}
+
+		if (server->version) {
+			free(server->version);
+		}
+
+		if (server->arena) {
+			free(server->arena);
+		}
+
+		free(server);
+	}
 }

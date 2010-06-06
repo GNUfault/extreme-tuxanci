@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxanci\n"
 "Report-Msgid-Bugs-To: team@tuxanci.org\n"
-"POT-Creation-Date: 2010-02-08 22:56+0100\n"
+"POT-Creation-Date: 2010-06-06 23:32+0200\n"
 "PO-Revision-Date: 2008-12-01 12:31+0100\n"
 "Last-Translator: Evgeni Golov <sargentd@die-welt.net>\n"
 "Language-Team: GERMAN <de@li.org>\n"
@@ -74,7 +74,7 @@ msgid "Save"
 msgstr ""
 
 #: src/client/saveDialog.c:80
-#: src/screen/browser.c:714
+#: src/screen/browser.c:692
 #: src/screen/credits.c:110
 #: src/screen/downArena.c:372
 #: src/screen/gameType.c:229
@@ -97,42 +97,46 @@ msgstr ""
 msgid "OK"
 msgstr ""
 
-#: src/screen/browser.c:715
+#: src/screen/browser.c:693
 #: src/screen/gameType.c:230
 #: src/screen/choiceArena.c:204
 msgid "Play"
 msgstr "Spielen"
 
-#: src/screen/browser.c:717
+#: src/screen/browser.c:695
 msgid "Refresh"
 msgstr "Aktualisieren"
 
-#: src/screen/browser.c:721
+#: src/screen/browser.c:698
+msgid "Reload"
+msgstr ""
+
+#: src/screen/browser.c:702
 #, fuzzy
 msgid "Server"
 msgstr "Server"
 
-#: src/screen/browser.c:722
+#: src/screen/browser.c:703
 #, fuzzy
 msgid "Version"
 msgstr "Version"
 
-#: src/screen/browser.c:723
+#: src/screen/browser.c:704
 #: src/screen/gameType.c:254
 msgid "IP"
 msgstr "IP"
 
-#: src/screen/browser.c:724
+#: src/screen/browser.c:705
 #, fuzzy
 msgid "Arena"
 msgstr "Arena"
 
-#: src/screen/browser.c:725
+#: src/screen/browser.c:706
 #, fuzzy
 msgid "Clients"
 msgstr "Clients"
 
-#: src/screen/browser.c:726
+#: src/screen/browser.c:707
 #, fuzzy
 msgid "Ping"
 msgstr "Ping"
