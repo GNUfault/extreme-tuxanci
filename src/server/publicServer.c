@@ -112,7 +112,7 @@ void daemonize()
 	dup(i);
 	dup(i);					/* handle standard I/O */
 
-	sprintf(spid, "/tmp/tuxanci-server.pid");
+	sprintf(spid, public_server_get_setting("PID_FILE", "--pid-file", "/tmp/tuxanci-server.pid"));
 
 	/* create local lock */
 	lockfd = open(spid, O_RDWR | O_CREAT, 0640);
