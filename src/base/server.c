@@ -228,7 +228,7 @@ void server_set_time()
 	timer_add_task(listServerTimer, TIMER_PERIODIC, eventSendPingClients, NULL, SERVER_TIME_PING);
 }
 
-int server_init(char *ip4, int port4, char *ip6, int port6)
+int server_init(char *ip4, char *ip6, int port)
 {
 	int ret;
 
@@ -240,17 +240,17 @@ int server_init(char *ip4, int port4, char *ip6, int port6)
 	server_set_max_clients(SERVER_MAX_CLIENTS);
 	server_set_time();
 
-	/*printf("%s %d %s %d\n", ip4, port4, ip6, port6);*/
-	ret = server_udp_init(ip4, port4, ip6, port6);
+	ret = server_udp_init(ip4, ip6, port);
 
 	if (ret == 0) {
 		return -1;
 	}
 
+	/* initialize the arena download server */
 	if (ip4 != NULL) {
-		down_server_init(ip4, port4);
+		down_server_init(ip4, port);
 	} else if (ip6 != NULL) {
-		down_server_init(ip6, port6);
+		down_server_init(ip6, port);
 	}
 
 	return ret;

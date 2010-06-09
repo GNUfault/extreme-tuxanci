@@ -118,9 +118,9 @@ static void destroyClient(client_ds_t *client)
 	free(client);
 }
 
-int down_server_init(char *ip4, int port4)
+int down_server_init(char *ip, int port)
 {
-	sock_server_tcp = sock_tcp_bind(ip4, port4);
+	sock_server_tcp = sock_tcp_bind(ip, port);
 
 	if (sock_server_tcp == NULL) {
 		error("Unable to initialize download server");

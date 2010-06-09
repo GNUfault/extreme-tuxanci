@@ -84,31 +84,31 @@ void server_udp_destroy_client(client_t *p)
 	server_destroy_any_client(p);
 }
 
-int server_udp_init(char *ip4, int port4, char *ip6, int port6)
+int server_udp_init(char *ip4, char *ip6, int port)
 {
 	int ret;
 
 	ret = 0;
 
 	if (ip4 != NULL) {
-		sock_server_udp = sock_udp_bind(ip4, port4);
+		sock_server_udp = sock_udp_bind(ip4, port);
 
 		if (sock_server_udp != NULL) {
 			ret++;
-			debug("Starting server on [%s]:%d", ip4, port4);
+			debug("Starting server on [%s]:%d", ip4, port);
 		} else {
-			debug("Unable to start server on [%s]:%d", ip4, port4);
+			debug("Unable to start server on [%s]:%d", ip4, port);
 		}
 	}
 
 	if (ip6 != NULL) {
-		sock_server_udp_second = sock_udp_bind(ip6, port6);
+		sock_server_udp_second = sock_udp_bind(ip6, port);
 
 		if (sock_server_udp_second != NULL) {
 			ret++;
-			debug("Starting server on [%s]:%d", ip6, port6);
+			debug("Starting server on [%s]:%d", ip6, port);
 		} else {
-			debug("Unable to start server on [%s]:%d", ip6, port6);
+			debug("Unable to start server on [%s]:%d", ip6, port);
 		}
 	}
 

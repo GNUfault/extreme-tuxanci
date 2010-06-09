@@ -26,7 +26,7 @@
 #define NET_MASTER_PORT			6800
 
 #ifdef PUBLIC_SERVER
-extern int net_multiplayer_init_for_game_server(char *ip4, int port4, char *ip6, int port6);
+extern int net_multiplayer_init_for_game_server(char *ip4, char *ip6, int port);
 #endif /* PUBLIC_SERVER */
 
 extern int net_multiplayer_init(int type, char *ip, int port, int proto);

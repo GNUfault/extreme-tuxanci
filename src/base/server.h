@@ -45,7 +45,7 @@ typedef struct client_struct {
 	list_t *listSeesShot;
 } client_t;
 
-extern int server_init(char *ip4, int port4, char *ip6, int port6);
+extern int server_init(char *ip4, char *ip6, int port);
 extern time_t server_get_update();
 extern client_t *server_new_any_client();
 extern void server_destroy_any_client(client_t *p);

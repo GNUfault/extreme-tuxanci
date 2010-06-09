@@ -223,8 +223,7 @@ static int public_server_initNetwork()
 	char ip4[STR_IP_SIZE];
 	char ip6[STR_IP_SIZE];
 	char *p_ip4, *p_ip6;
-	int port4;
-	int port6;
+	int port;
 	int ret;
 
 	ret = -1;
@@ -234,7 +233,7 @@ static int public_server_initNetwork()
 
 	p_ip4 = ip4;
 
-	if (strcmp(ip4, "none") == 0) {
+	if (strcmp(ip4, "none") == 0 || strcmp(ip6, "::") == 0) {
 		p_ip4 = NULL;
 	}
 
@@ -244,10 +243,9 @@ static int public_server_initNetwork()
 		p_ip6 = NULL;
 	}
 
-	port4 = atoi(public_server_get_setting("PORT4", "--port4", "6800"));
-	port6 = atoi(public_server_get_setting("PORT6", "--port6", "6800"));
+	port = atoi(public_server_get_setting("PORT", "--port", "6800"));
 
-	ret = net_multiplayer_init_for_game_server(p_ip4, port4, p_ip6, port6);
+	ret = net_multiplayer_init_for_game_server(p_ip4, p_ip6, port);
 
 	return ret;
 }

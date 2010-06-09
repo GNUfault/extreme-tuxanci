@@ -29,11 +29,11 @@ int net_multiplayer_get_game_type()
 	return netGameType;
 }
 
-int net_multiplayer_init_for_game_server(char *ip4, int port4, char *ip6, int port6)
+int net_multiplayer_init_for_game_server(char *ip4, char *ip6, int port)
 {
 	int ret;
 
-	ret = server_init(ip4, port4, ip6, port6);
+	ret = server_init(ip4, ip6, port);
 
 	if (ret > 0) {
 		netGameType = NET_GAME_TYPE_SERVER;
@@ -53,7 +53,7 @@ int net_multiplayer_init(int type, char *ip, int port, int proto)
 		case NET_GAME_TYPE_SERVER:
 			switch (proto) {
 				case PROTO_UDPv4:
-					if (server_init(ip, port, NULL, 0) != 1) {
+					if (server_init(ip, NULL, port) != 1) {
 						error("Unable to initialize multiplayer game");
 						netGameType = NET_GAME_TYPE_NONE;
 						return -1;
@@ -61,7 +61,7 @@ int net_multiplayer_init(int type, char *ip, int port, int proto)
 					break;
 
 				case PROTO_UDPv6:
-					if (server_init(NULL, 0, ip, port) != 1) {
+					if (server_init(NULL, ip, port) != 1) {
 						error("Unable to initialize multiplayer game");
 						netGameType = NET_GAME_TYPE_NONE;
 						return -1;

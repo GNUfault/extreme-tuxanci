@@ -5,7 +5,7 @@
 #include "tcp.h"
 #include "buffer.h"
 
-extern int down_server_init(char *ip4, int port4);
+extern int down_server_init(char *ip, int port);
 extern int down_server_set_select();
 extern int down_server_select_socket();
 extern int down_server_quit();
