@@ -58,98 +58,61 @@ char *public_server_get_setting(char *env, char *param, char *default_val)
 	return getParamElse(param, server_configFile_get_value(env, default_val));
 }
 
-void daemonize()
+/**
+ * Send the process to the background
+ */
+static void daemonize()
 {
 #ifndef __WIN32__
-	int i, lockfd, ipid;
-	char pid[16];
-	char spid[64];
+	pid_t pid, sid;
 
-	ipid = getpid();
+	FILE *pid_file;
 
-	/* detach if asked */
-	if (ipid == 1) {
-		return;				/* already a daemon */
+	/* are we already a daemon? */
+	if (getppid() == 1) {
+		return;
 	}
 
-	/* fork to guarantee we are not process group leader */
-	i = fork();
-
-	if (i < 0) {
-		exit(1);			/* fork error */
-	} else if (i > 0) {
-		exit(0);			/* parent exits */
-	}
-
-	/* child (daemon) continues */
-	setsid();				/* obtain a new process group */
-	ipid = getpid() + 1;
-
-	printf("The Tuxanci game server started with PID %d\n", ipid);
-	/* fork again so we become process group leader
-	 * and cannot regain a controlling tty
-	 */
-	i = fork();
-
-	if (i < 0) {
-		exit(1);			/* fork error */
-	} else if (i > 0) {
-		exit(0);			/* parent exits */
-	}
-
-	/* close all fds (descriptors) */
-	for (i = getdtablesize(); i >= 0; --i) {
-		close(i);
-	}
-
-	/* close parent fds and send output to fds 0, 1 and 2 to bitbucket */
-	i = open("/dev/null", O_RDWR);
-
-	if (i < 0) {
+	/* fork off the parent process */
+	pid = fork();
+	if (pid < 0) {
 		exit(1);
-	}
-
-	dup(i);
-	dup(i);					/* handle standard I/O */
-
-	sprintf(spid, public_server_get_setting("PID_FILE", "--pid-file", "/tmp/tuxanci-server.pid"));
-
-	/* create local lock */
-	lockfd = open(spid, O_RDWR | O_CREAT, 0640);
-
-	if (lockfd < 0) {
-		perror("[Error] Lock: open\n");
-		exit(1);
-	}
-	#ifndef __CYGWIN__
-	/* lock the file */
-	if (lockf(lockfd, F_TLOCK, 0) < 0) {
-		error("Lock: lockf");
-		warning("The Tuxanci game server is already running");
+	/* if we got a good PID, then we can exit the parent process */
+	} else if (pid > 0) {
 		exit(0);
 	}
-	#else /* __CYGWIN__ */
-	/* lock the file */
-	{
-		struct flock lock;
-		lock.l_type = F_RDLCK;
-		lock.l_start = 0;
-		lock.l_whence = SEEK_SET;
-		lock.l_len = 0;
-		
-		if (fcntl(lockfd, F_SETLK, &lock) < 0) {
-			warning("The Tuxanci game server is already running");
-			exit(0);
-		}
-	}
-	#endif /* __CYGWIN__ */
 
-	/* write to pid to lockfile */
-	snprintf(pid, 16, "%d\n", getpid());
-	write(lockfd, pid, strlen(pid));
+	/* ↓ at this point we are executing as the child process ↓ */
 
-	/* restrict created files to 0750 */
+	/* change the file mode mask */
 	umask(027);
+
+	/* create a new SID for the child process */
+	sid = setsid();
+	if (sid < 0) {
+		exit(1);
+	}
+
+	/* Change the current working directory. This prevents the current
+	 * directory from being locked; hence not being able to remove it.
+	 * /tmp seems to be the best place where to create temporary files ;c)
+	 */
+	if (chdir("/tmp") < 0) {
+		exit(1);
+	}
+
+	/* say loudly what PID we got */
+	printf("The Tuxanci game server started with the PID %d\n", sid);
+
+	/* write the PID to the PID file */
+	pid_file = fopen(public_server_get_setting("PID_FILE", "--pid-file", "/var/run/tuxanci-server.pid"), "w");
+	fprintf(pid_file, "%d\n", sid);
+	fclose(pid_file);
+
+	/* redirect standard files to /dev/null */
+	freopen("/dev/null", "r", stdin);
+	freopen("/dev/null", "w", stdout);
+	freopen("/dev/null", "w", stderr);
 #endif /* __WIN32__ */
 }
 
