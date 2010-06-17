@@ -333,6 +333,9 @@ void public_server_quit()
 	item_quiy();
 	shot_quit();
 
+	/* remove the PID file */
+	remove(public_server_get_setting("PID_FILE", "--pid-file", "/var/run/tuxanci-server.pid"));
+
 	arena_file_quit();
 	server_configFile_quit();
 	module_quit();
