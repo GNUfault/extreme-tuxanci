@@ -49,6 +49,7 @@ Note: you'll also need "-devel" version of libzip library package.
 
 The server is written for GNU/Linux and is not planned to be ported to other
 platforms (may be to BSD yes, but surely not to Windows ;c)).
+
 Note: if you don't know all available cmake switches which can be used, you can
 run `ccmake` command (it seems to be ncurses based) instead of `cmake`. And
 please do enable the debug -- it helps us when you find a bug.
