@@ -278,8 +278,6 @@ static void action_itemevent(space_t *space, item_t *item, void *p)
 {
 	my_time_t currentTime;
 
-	UNUSED(p);
-
 	currentTime = timer_get_current_time();
 	item->count++;
 

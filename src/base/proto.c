@@ -91,8 +91,6 @@ void proto_send_hello_client(char *name)
 
 static void action_sendItem(space_t *space, item_t *item, client_t *client)
 {
-	UNUSED(space);
-
 	proto_send_additem_server(PROTO_SEND_ONE, client, item);
 }
 
@@ -233,8 +231,6 @@ void proto_send_status_server(int type, client_t *client)
 
 void proto_recv_status_server(client_t *client, char *msg)
 {
-	UNUSED(msg);
-
 	proto_send_status_server(PROTO_SEND_ONE, client);
 }
 
@@ -842,8 +838,6 @@ void proto_send_module_client(char *msg)
 
 void proto_recv_module_server(client_t *client, char *msg)
 {
-	UNUSED(client);
-
 	module_recv_msg(msg + 7);
 }
 
@@ -878,8 +872,6 @@ void proto_send_ping_client()
 
 void proto_recv_ping_server(client_t *client, char *msg)
 {
-	UNUSED(client);
-	UNUSED(msg);
 }
 
 void proto_send_ping_server(int type, client_t *client)
@@ -893,7 +885,6 @@ void proto_send_ping_server(int type, client_t *client)
 #ifndef PUBLIC_SERVER
 void proto_recv_ping_client(char *msg)
 {
-	UNUSED(msg);
 }
 #endif /* PUBLIC_SERVER */
 

@@ -379,14 +379,11 @@ void world_event()
 
 void dialog_yes(void *p)
 {
-	UNUSED(p);
-
 	world_do_end();
 }
 
 void dialog_no(void *p)
 {
-	UNUSED(p);
 }
 
 static void hotkey_escape()
@@ -423,9 +420,6 @@ void startWorld()
 
 static void action_analyze(space_t *space, tux_t *tux, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	analyze_add(tux->name, tux->score);
 }
 

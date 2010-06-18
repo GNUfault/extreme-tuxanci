@@ -13,51 +13,49 @@
 #include "serverSendMsg.h"
 
 #ifndef PUBLIC_SERVER
-#    include "interface.h"
-#    include "image.h"
-#endif
-
-#ifdef PUBLIC_SERVER
-#    include "publicServer.h"
-#endif
+#include "interface.h"
+#include "image.h"
+#else /* PUBLIC_SERVER */
+#include "publicServer.h"
+#endif /* PUBLIC_SERVER */
 
 static export_fce_t *export_fce;
 
 static void move_tux(tux_t *tux, int x, int y, int w, int h)
 {
-	int dist_x = 0, dist_y = 0;	/* no warnings */
+	int dist_x = 0, dist_y = 0;
 
 	if (tux->bonus == BONUS_GHOST || export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_CLIENT) {
 		return;
 	}
 
 	switch (tux->position) {
-	case TUX_UP:
-		dist_x = x + w / 2;
-		dist_y = y - (TUX_HEIGHT + 20);
-		break;
-	case TUX_LEFT:
-		dist_x = x - (TUX_WIDTH + 20);
-		dist_y = y + h / 2;
-		break;
-	case TUX_RIGHT:
-		dist_x = x + w + 20;
-		dist_y = y + h / 2;
-		break;
-	case TUX_DOWN:
-		dist_x = x + w / 2;
-		dist_y = y + h + 20;
-		break;
-	default:
-		fatal("Variable p->control in modMove has a really weird value.");
-		break;
+		case TUX_UP:
+			dist_x = x + w / 2;
+			dist_y = y - (TUX_HEIGHT + 20);
+			break;
+		case TUX_LEFT:
+			dist_x = x - (TUX_WIDTH + 20);
+			dist_y = y + h / 2;
+			break;
+		case TUX_RIGHT:
+			dist_x = x + w + 20;
+			dist_y = y + h / 2;
+			break;
+		case TUX_DOWN:
+			dist_x = x + w / 2;
+			dist_y = y + h + 20;
+			break;
+		default:
+			fatal("Variable tux->position in modMove has an undefined value [%d]", tux->position);
+			break;
 	}
 
 	if (export_fce->fce_arena_is_free_space(export_fce->fce_arena_get_current(), dist_x, dist_y, TUX_WIDTH, TUX_HEIGHT)) {
 		space_move_object(export_fce->fce_arena_get_current()->spaceTux, tux, dist_x, dist_y);
 #ifndef PUBLIC_SERVER
 		/*sound_play("teleport", SOUND_GROUP_BASE);*/
-#endif
+#endif /* PUBLIC_SERVER */
 		if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 			char msg[STR_PROTO_SIZE];
 			sprintf(msg, "movetux %d %d %d", tux->id, dist_x, dist_y);
@@ -87,22 +85,22 @@ static void transformShot(shot_t *shot, int position)
 
 	speed = getSppedShot(shot);
 	switch (position) {
-	case TUX_UP:
-		shot->px = 0;
-		shot->py = -speed;
-		break;
-	case TUX_LEFT:
-		shot->px = -speed;
-		shot->py = 0;
-		break;
-	case TUX_RIGHT:
-		shot->px = speed;
-		shot->py = 0;
-		break;
-	case TUX_DOWN:
-		shot->px = 0;
-		shot->py = +speed;
-		break;
+		case TUX_UP:
+			shot->px = 0;
+			shot->py = -speed;
+			break;
+		case TUX_LEFT:
+			shot->px = -speed;
+			shot->py = 0;
+			break;
+		case TUX_RIGHT:
+			shot->px = +speed;
+			shot->py = 0;
+			break;
+		case TUX_DOWN:
+			shot->px = 0;
+			shot->py = +speed;
+			break;
 	}
 
 	shot->position = position;
@@ -113,49 +111,51 @@ static void transformShot(shot_t *shot, int position)
 	}
 }
 
-static void move_shot(shot_t *shot, int position, int src_x, int src_y, int dist_x, int dist_y, int dist_w, int dist_h)
+static void move_shot(shot_t *shot, int position, int src_x, int src_y,
+		      int dist_x, int dist_y, int dist_w, int dist_h)
 {
 	int offset = 0;
-	int new_x = 0, new_y = 0;	/* no warnings */
+	int new_x = 0, new_y = 0;
 
-	/*printf("move_shot\n");*/
 	switch (shot->position) {
-	case TUX_UP:
-	case TUX_DOWN:
-		offset = shot->x - src_x;
-		break;
-	case TUX_RIGHT:
-	case TUX_LEFT:
-		offset = shot->y - src_y;
-		break;
+		case TUX_UP:
+		case TUX_DOWN:
+			offset = shot->x - src_x;
+			break;
+
+		case TUX_RIGHT:
+		case TUX_LEFT:
+			offset = shot->y - src_y;
+			break;
 	}
 
 	transformShot(shot, position);
 
 	switch (shot->position) {
-	case TUX_UP:
-		new_x = dist_x + offset;
-		new_y = dist_y - (shot->h + 5);
-		break;
-	case TUX_LEFT:
-		new_x = dist_x - (shot->w + 5);
-		new_y = dist_y + offset;
-		break;
-	case TUX_RIGHT:
-		new_x = dist_x + dist_w + 5;
-		new_y = dist_y + offset;
-		break;
-	case TUX_DOWN:
-		new_x = dist_x + offset;
-		new_y = dist_y + dist_h + 5;
-		break;
+		case TUX_UP:
+			new_x = dist_x + offset;
+			new_y = dist_y - (shot->h + 5);
+			break;
+		case TUX_LEFT:
+			new_x = dist_x - (shot->w + 5);
+			new_y = dist_y + offset;
+			break;
+		case TUX_RIGHT:
+			new_x = dist_x + dist_w + 5;
+			new_y = dist_y + offset;
+			break;
+		case TUX_DOWN:
+			new_x = dist_x + offset;
+			new_y = dist_y + dist_h + 5;
+			break;
 	}
 
 	space_move_object(export_fce->fce_arena_get_current()->spaceShot, shot, new_x, new_y);
 	if (export_fce->fce_net_multiplayer_get_game_type() == NET_GAME_TYPE_SERVER) {
 		char msg[STR_PROTO_SIZE];
 
-		sprintf(msg, "moveshot %d %d %d %d %d %d", shot->id, shot->x, shot->y, shot->px, shot->py, shot->position);
+		sprintf(msg, "moveshot %d %d %d %d %d %d", shot->id,
+			shot->x, shot->y, shot->px, shot->py, shot->position);
 		export_fce->fce_proto_send_module_server(PROTO_SEND_ALL, NULL, msg);
 	}
 }
@@ -218,14 +218,9 @@ static void proto_moveshot(char *msg)
 #ifndef PUBLIC_SERVER
 static int draw(int x, int y, int w, int h)
 {
-	UNUSED(x);
-	UNUSED(y);
-	UNUSED(w);
-	UNUSED(h);
-
 	return 0;
 }
-#endif
+#endif /* PUBLIC_SERVER */
 
 static int event()
 {
@@ -234,17 +229,11 @@ static int event()
 
 static int isConflict(int x, int y, int w, int h)
 {
-	UNUSED(x);
-	UNUSED(y);
-	UNUSED(w);
-	UNUSED(h);
-
 	return 0;
 }
 
 static void cmdArena(char *line)
 {
-	UNUSED(line);
 }
 
 static void recvMsg(char *msg)
@@ -253,10 +242,13 @@ static void recvMsg(char *msg)
 		return;
 	}
 
-	if (strncmp(msg, "movetux", 7) == 0)
+	if (strncmp(msg, "movetux", 7) == 0) {
 		proto_movetux(msg);
-	if (strncmp(msg, "moveshot", 8) == 0)
+	}
+
+	if (strncmp(msg, "moveshot", 8) == 0) {
 		proto_moveshot(msg);
+	}
 }
 
 static int destroy()
@@ -267,9 +259,9 @@ static int destroy()
 mod_sym_t modmove_sym = { &init,
 #ifndef PUBLIC_SERVER
 			  &draw,
-#else
+#else /* PUBLIC_SERVER */
 			  0,
-#endif
+#endif /* PUBLIC_SERVER */
 			  &event,
 			  &isConflict,
 			  &cmdArena,

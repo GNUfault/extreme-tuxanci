@@ -16,11 +16,9 @@
 #ifndef PUBLIC_SERVER
 #include "interface.h"
 #include "image.h"
-#endif
-
-#ifdef PUBLIC_SERVER
+#else /* PUBLIC_SERVER */
 #include "publicServer.h"
-#endif
+#endif /* PUBLIC_SERVER */
 
 typedef struct pipe_struct {
 	/* position of the pipe */
@@ -41,7 +39,7 @@ typedef struct pipe_struct {
 #ifndef PUBLIC_SERVER
 	/* its image */
 	image_t *img;
-#endif
+#endif /* PUBLIC_SERVER */
 } pipe_t;
 
 static void (*fce_move_shot) (shot_t *shot, int position, int src_x, int src_y, int dist_x, int dist_y, int dist_w, int dist_h);
@@ -53,15 +51,15 @@ static space_t *spacePipe;
 
 #ifndef PUBLIC_SERVER
 static pipe_t *newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position, image_t *img)
-#else
+#else /* PUBLIC_SERVER */
 static pipe_t *newPipe(int x, int y, int w, int h, int layer, int id, int id_out, int position)
-#endif
+#endif /* PUBLIC_SERVER */
 {
 	pipe_t *new;
 
 #ifndef PUBLIC_SERVER
 	assert(img != NULL);
-#endif
+#endif /* PUBLIC_SERVER */
 
 	new = malloc(sizeof(pipe_t));
 	assert(new != NULL);
@@ -76,7 +74,7 @@ static pipe_t *newPipe(int x, int y, int w, int h, int layer, int id, int id_out
 	new->position = position;
 #ifndef PUBLIC_SERVER
 	new->img = img;
-#endif
+#endif /* PUBLIC_SERVER */
 	return new;
 }
 
@@ -112,7 +110,7 @@ static void drawPipe(pipe_t *p)
 
 	export_fce->fce_addLayer(p->img, p->x, p->y, 0, 0, p->img->w, p->img->h, p->layer);
 }
-#endif
+#endif /* PUBLIC_SERVER */
 
 static void destroyPipe(pipe_t *p)
 {
@@ -133,24 +131,17 @@ static void cmd_teleport(char *line)
 	char str_image[STR_SIZE];
 	pipe_t *new;
 
-	if (export_fce->fce_getValue(line, "x", str_x, STR_NUM_SIZE) != 0)
+	if (export_fce->fce_getValue(line, "x", str_x, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "y", str_y, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "w", str_w, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "h", str_h, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "id", str_id, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "id_out", str_id_out, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "position", str_position, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "image", str_image, STR_SIZE) != 0) {
 		return;
-	if (export_fce->fce_getValue(line, "y", str_y, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "w", str_w, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "h", str_h, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "id", str_id, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "id_out", str_id_out, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "position", str_position, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "image", str_image, STR_SIZE) != 0)
-		return;
+	}
 
 #ifndef PUBLIC_SERVER
 	new = newPipe(atoi(str_x), atoi(str_y),
@@ -158,12 +149,12 @@ static void cmd_teleport(char *line)
 		      atoi(str_layer), atoi(str_id), atoi(str_id_out),
 		      atoi(str_position),
 		      export_fce->fce_image_get(IMAGE_GROUP_USER, str_image));
-#else
+#else /* PUBLIC_SERVER */
 	new = newPipe(atoi(str_x), atoi(str_y),
 		      atoi(str_w), atoi(str_h),
 		      atoi(str_layer), atoi(str_id), atoi(str_id_out),
 		      atoi(str_position));
-#endif
+#endif /* PUBLIC_SERVER */
 
 	if (spacePipe == NULL) {
 		spacePipe = space_new(export_fce->fce_arena_get_current()->w,
@@ -208,9 +199,6 @@ static int init(export_fce_t *p)
 #ifndef PUBLIC_SERVER
 static void action_drawpipe(space_t *space, pipe_t *pipe, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	drawPipe(pipe);
 }
 
@@ -225,37 +213,35 @@ static int draw(int x, int y, int w, int h)
 
 	return 0;
 }
-#endif
+#endif /* PUBLIC_SERVER */
 
 static int negPosition(int n)
 {
 	switch (n) {
-	case TUX_UP:
-		return TUX_DOWN;
+		case TUX_UP:
+			return TUX_DOWN;
 
-	case TUX_LEFT:
-		return TUX_RIGHT;
+		case TUX_LEFT:
+			return TUX_RIGHT;
 
-	case TUX_RIGHT:
-		return TUX_LEFT;
+		case TUX_RIGHT:
+			return TUX_LEFT;
 
-	case TUX_DOWN:
-		return TUX_UP;
+		case TUX_DOWN:
+			return TUX_UP;
 
-	default:
-		fatal("Tux is probably moving in another dimension");
-		break;
+		default:
+			fatal("Tux is probably moving in another dimension");
+			break;
 	}
 
-	return -1;	/* no warnings */
+	return -1;
 }
 
 static void action_eventpipe(space_t *space, pipe_t *pipe, shot_t *shot)
 {
 	arena_t *arena;
 	tux_t *author;
-
-	UNUSED(space);
 
 	arena = export_fce->fce_arena_get_current();
 
@@ -323,7 +309,6 @@ static void cmdArena(char *line)
 
 static void recvMsg(char *msg)
 {
-	UNUSED(msg);
 }
 
 static int destroy()
@@ -340,9 +325,9 @@ static int destroy()
 mod_sym_t modpipe_sym = { &init,
 #ifndef PUBLIC_SERVER
 			  &draw,
-#else
+#else /* PUBLIC_SERVER */
 			  0,
-#endif
+#endif /* PUBLIC_SERVER */
 			  &event,
 			  &isConflict,
 			  &cmdArena,

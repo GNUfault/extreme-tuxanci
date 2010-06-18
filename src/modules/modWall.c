@@ -138,11 +138,6 @@ static void getStatusImgWall(void *p, int *id, int *x, int *y, int *w, int *h)
 
 static void setStatusImgWall(void *p, int x, int y, int w, int h)
 {
-	UNUSED(p);
-	UNUSED(x);
-	UNUSED(y);
-	UNUSED(w);
-	UNUSED(h);
 }
 #endif /* PUBLIC_SERVER */
 
@@ -163,24 +158,20 @@ static void cmd_wall(char *line)
 
 	rel = 0;
 
-	if (export_fce->fce_getValue(line, "rel", str_rel, STR_NUM_SIZE) != 0)
+	if (export_fce->fce_getValue(line, "rel", str_rel, STR_NUM_SIZE) != 0) {
 		strcpy(str_rel, "0");
-	if (export_fce->fce_getValue(line, "x", str_x, STR_NUM_SIZE) != 0)
+	}
+
+	if (export_fce->fce_getValue(line, "x", str_x, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "y", str_y, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "w", str_w, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "h", str_h, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "img_x", str_img_x, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "img_y", str_img_y, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0 ||
+	    export_fce->fce_getValue(line, "image", str_image, STR_SIZE) != 0) {
 		return;
-	if (export_fce->fce_getValue(line, "y", str_y, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "w", str_w, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "h", str_h, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "img_x", str_img_x, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "img_y", str_img_y, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "layer", str_layer, STR_NUM_SIZE) != 0)
-		return;
-	if (export_fce->fce_getValue(line, "image", str_image, STR_SIZE) != 0)
-		return;
+	}
 
 	rel = atoi(str_rel);
 	x = atoi(str_x);
@@ -234,9 +225,6 @@ static int init(export_fce_t *p)
 #ifndef PUBLIC_SERVER
 static void action_drawwall(space_t *space, wall_t *wall, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	drawWall(wall);
 }
 
@@ -258,9 +246,6 @@ static void action_eventwall(space_t *space, wall_t *wall, shot_t *shot)
 {
 	arena_t *arena;
 	tux_t *author;
-
-	UNUSED(space);
-	UNUSED(wall);
 
 	arena = export_fce->fce_arena_get_current();
 
@@ -323,7 +308,6 @@ static void cmdArena(char *line)
 
 static void recvMsg(char *msg)
 {
-	UNUSED(msg);
 }
 
 static int destroy()

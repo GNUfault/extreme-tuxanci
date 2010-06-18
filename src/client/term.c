@@ -76,9 +76,6 @@ static void action_refreshTerm(space_t *space, tux_t *tux, void *p)
 {
 	char str[STR_SIZE];
 
-	UNUSED(space);
-	UNUSED(p);
-
 	sprintf(str,
 		"name: %s "
 		"score: %d "

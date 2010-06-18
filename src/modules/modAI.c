@@ -14,9 +14,9 @@
 #ifndef PUBLIC_SERVER
 #include "interface.h"
 #include "image.h"
-#else
+#else /* PUBLIC_SERVER */
 #include "publicServer.h"
-#endif
+#endif /* PUBLIC_SERVER */
 
 static export_fce_t *export_fce;
 
@@ -47,9 +47,6 @@ static alternative_t *cloneAlternative(alternative_t *p, int route, int x, int y
 
 	assert(p != NULL);
 
-	UNUSED(x);
-	UNUSED(y);
-
 	new = newAlternative(route, p->x, p->y);
 	new->first = p->first;
 	new->step = p->step;
@@ -68,22 +65,22 @@ static void forkAlternative(list_t *list, alternative_t *p, int w, int h)
 	y = p->y;
 
 	switch (p->route) {
-	case TUX_UP:
-		list_add(list, cloneAlternative(p, TUX_RIGHT, x + (w + 5), y));
-		list_add(list, cloneAlternative(p, TUX_LEFT, x - (w + 5), y));
-		break;
-	case TUX_RIGHT:
-		list_add(list, cloneAlternative(p, TUX_UP, x, y - (h + 5)));
-		list_add(list, cloneAlternative(p, TUX_DOWN, x, y + (h + 5)));
-		break;
-	case TUX_LEFT:
-		list_add(list, cloneAlternative(p, TUX_UP, x, y - (h + 5)));
-		list_add(list, cloneAlternative(p, TUX_DOWN, x, y + (h + 5)));
-		break;
-	case TUX_DOWN:
-		list_add(list, cloneAlternative(p, TUX_RIGHT, x + (w + 5), y));
-		list_add(list, cloneAlternative(p, TUX_LEFT, x - (w + 5), y));
-		break;
+		case TUX_UP:
+			list_add(list, cloneAlternative(p, TUX_RIGHT, x + (w + 5), y));
+			list_add(list, cloneAlternative(p, TUX_LEFT, x - (w + 5), y));
+			break;
+		case TUX_RIGHT:
+			list_add(list, cloneAlternative(p, TUX_UP, x, y - (h + 5)));
+			list_add(list, cloneAlternative(p, TUX_DOWN, x, y + (h + 5)));
+			break;
+		case TUX_LEFT:
+			list_add(list, cloneAlternative(p, TUX_UP, x, y - (h + 5)));
+			list_add(list, cloneAlternative(p, TUX_DOWN, x, y + (h + 5)));
+			break;
+		case TUX_DOWN:
+			list_add(list, cloneAlternative(p, TUX_RIGHT, x + (w + 5), y));
+			list_add(list, cloneAlternative(p, TUX_LEFT, x - (w + 5), y));
+			break;
 	}
 
 }
@@ -97,18 +94,18 @@ static void moveAlternative(alternative_t *p, int offset)
 	/*printf("move %d %d %d\n", p->x, p->y, p->step);*/
 
 	switch (p->route) {
-	case TUX_UP:
-		p->y -= offset;
-		break;
-	case TUX_RIGHT:
-		p->x += offset;
-		break;
-	case TUX_LEFT:
-		p->x -= offset;
-		break;
-	case TUX_DOWN:
-		p->y += offset;
-		break;
+		case TUX_UP:
+			p->y -= offset;
+			break;
+		case TUX_RIGHT:
+			p->x += offset;
+			break;
+		case TUX_LEFT:
+			p->x -= offset;
+			break;
+		case TUX_DOWN:
+			p->y += offset;
+			break;
 	}
 }
 
@@ -120,7 +117,6 @@ static void destroyAlternative(alternative_t *p)
 
 static void cmd_ai(char *line)
 {
-	UNUSED(line);
 }
 
 static int init(export_fce_t *p)
@@ -133,14 +129,9 @@ static int init(export_fce_t *p)
 #ifndef PUBLIC_SERVER
 static int draw(int x, int y, int w, int h)
 {
-	UNUSED(x);
-	UNUSED(y);
-	UNUSED(w);
-	UNUSED(h);
-
 	return 0;
 }
-#endif
+#endif /* PUBLIC_SERVER */
 
 static tux_t *findOtherTux(space_t *space)
 {
@@ -165,8 +156,6 @@ static void shotTux(arena_t *arena, tux_t *tux_ai, tux_t *tux_rival)
 	int x_ai, y_ai;
 	int x_rival, y_rival;
 	int w, h;
-
-	UNUSED(arena);
 
 	export_fce->fce_tux_get_proportion(tux_ai, &x_ai, &y_ai, &w, &h);
 	export_fce->fce_tux_get_proportion(tux_rival, &x_rival, &y_rival, &w, &h);
@@ -236,12 +225,11 @@ static void tux_eventAI(tux_t *tux)
 	list_add(listAlternative, newAlternative(TUX_DOWN, x, y + (h + 10)));
 
 	my_index = -1;
-	while (1) {
+	for (;;) {
 		alternative_t *this;
 
 		my_index++;
 		if (my_index < 0 || my_index >= listAlternative->count) {
-
 			int j;
 
 			/*printf("listFork->count = %d\n", listFork->count);*/
@@ -261,8 +249,9 @@ static void tux_eventAI(tux_t *tux)
 
 		this = (alternative_t *) listAlternative->list[my_index];
 
-		if (++countDo == 100)
+		if (++countDo == 100) {
 			break;
+		}
 
 		if (this->step > 100) {
 			list_del_item(listAlternative, my_index, destroyAlternative);
@@ -279,9 +268,8 @@ static void tux_eventAI(tux_t *tux)
 			continue;
 		}
 
-		if (export_fce->
-			fce_arena_conflict_space(this->x, this->y, w, h, rival_x, rival_y, w,
-							  h)) {
+		if (export_fce->fce_arena_conflict_space(this->x, this->y, w, h,
+		    rival_x, rival_y, w, h)) {
 			/*printf("this->step = %d\n", this->step);*/
 
 			list_del(listAlternative, my_index);
@@ -335,9 +323,6 @@ static void tux_eventAI(tux_t *tux)
 
 static void action_tuxAI(space_t *space, tux_t *tux, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	if (tux->control == TUX_CONTROL_AI && tux->status == TUX_STATUS_ALIVE) {
 		tux_eventAI(tux);
 	}
@@ -393,23 +378,18 @@ static int event()
 
 static int isConflict(int x, int y, int w, int h)
 {
-	UNUSED(x);
-	UNUSED(y);
-	UNUSED(w);
-	UNUSED(h);
-
 	return 0;
 }
 
 static void cmdArena(char *line)
 {
-	if (strncmp(line, "ai", 2) == 0)
+	if (strncmp(line, "ai", 2) == 0) {
 		cmd_ai(line);
+	}
 }
 
 static void recvMsg(char *msg)
 {
-	UNUSED(msg);
 }
 
 static int destroy()
@@ -420,9 +400,9 @@ static int destroy()
 mod_sym_t modai_sym = 	{ &init,
 #ifndef PUBLIC_SERVER
 			  &draw,
-#else
+#else /* PUBLIC_SERVER */
 			  0,
-#endif
+#endif /* PUBLIC_SERVER */
 			  &event,
 			  &isConflict,
 			  &cmdArena,

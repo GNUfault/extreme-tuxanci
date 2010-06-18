@@ -14,9 +14,9 @@
 #ifndef PUBLIC_SERVER
 #include "interface.h"
 #include "image.h"
-#else
+#else /* PUBLIC_SERVER */
 #include "publicServer.h"
-#endif
+#endif /* PUBLIC_SERVER */
 
 static export_fce_t *export_fce;
 
@@ -31,15 +31,10 @@ static int init(export_fce_t *p)
 #ifndef PUBLIC_SERVER
 static int draw(int x, int y, int w, int h)
 {
-	UNUSED(x);
-	UNUSED(y);
-	UNUSED(w);
-	UNUSED(h);
-
 	debug("Drawing Basic module");
 	return 0;
 }
-#endif
+#endif /* PUBLIC_SERVER */
 
 static int event()
 {
@@ -60,8 +55,9 @@ static void cmd_basic(char *line)
 
 static void cmdArena(char *line)
 {
-	if (strncmp(line, "basic", 5) == 0)
+	if (strncmp(line, "basic", 5) == 0) {
 		cmd_basic(line);
+	}
 }
 
 static void recvMsg(char *msg)
@@ -78,9 +74,9 @@ static int destroy()
 mod_sym_t modbasic_sym = { &init,
 #ifndef PUBLIC_SERVER
 			  &draw,
-#else
+#else /* PUBLIC_SERVER */
 			  0,
-#endif
+#endif /* PUBLIC_SERVER */
 			  &event,
 			  &isConflict,
 			  &cmdArena,

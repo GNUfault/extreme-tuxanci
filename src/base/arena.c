@@ -127,27 +127,12 @@ int arena_conflict_space(int x1, int y1, int w1, int h1, int x2, int y2, int w2,
 
 int arena_is_free_space(arena_t *arena, int x, int y, int w, int h)
 {
-	if (x < 0 || y < 0 || x + w > arena->w || y + h > arena->h) {
-		return 0;
-	}
-
-	if (space_is_conflict_with_object(arena->spaceTux, x, y, w, h)) {
-		return 0;
-	}
-
-	if (space_is_conflict_with_object(arena->spaceShot, x, y, w, h)) {
-		return 0;
-	}
-
-	if (space_is_conflict_with_object(arena->spaceItem, x, y, w, h)) {
-		return 0;
-	}
-
-	if (space_is_conflict_with_object(arena->spaceShot, x, y, w, h)) {
-		return 0;
-	}
-
-	if (module_is_conflict(x, y, w, h)) {
+	if ((x < 0 || y < 0 || x + w > arena->w || y + h > arena->h) ||
+	    space_is_conflict_with_object(arena->spaceTux, x, y, w, h) ||
+	    space_is_conflict_with_object(arena->spaceShot, x, y, w, h) ||
+	    space_is_conflict_with_object(arena->spaceItem, x, y, w, h) ||
+	    space_is_conflict_with_object(arena->spaceShot, x, y, w, h) ||
+	    module_is_conflict(x, y, w, h)) {
 		return 0;
 	}
 
@@ -223,25 +208,16 @@ static void drawBackground(arena_t *arena, int screen_x, int screen_y)
 
 static void action_tux_draw(space_t *space, tux_t *tux, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	tux_draw(tux);
 }
 
 static void action_item_draw(space_t *space, item_t *item, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	item_draw(item);
 }
 
 static void action_shot_draw(space_t *space, shot_t *shot, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	shot_draw(shot);
 }
 
@@ -382,9 +358,6 @@ void arena_draw(arena_t *arena)
 
 static void action_tux(space_t *space, tux_t *tux, void *p)
 {
-	UNUSED(space);
-	UNUSED(p);
-
 	tux_event(tux);
 }
 
