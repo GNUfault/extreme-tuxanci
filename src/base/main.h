@@ -23,11 +23,9 @@
 
 #ifndef __WIN32__
 #define PATH_SEPARATOR "/"
-#else
+#else /* __WIN32__ */
 #define PATH_SEPARATOR "\\"
-#endif
-
-#define UNUSED(var)		if (0 && var) {}
+#endif /* __WIN32__ */
 
 extern char *getParam(char *s);
 extern char *getParamElse(char *s1, char *s2);

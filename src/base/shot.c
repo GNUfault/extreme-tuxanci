@@ -175,7 +175,7 @@ void shot_draw_list(list_t *listShot)
 
 static int getRandomCourse(int x, int y)
 {
-	int ret = -1;	/* no warnings */
+	int ret = -1;
 
 	do {
 		switch (random() % 3) {
@@ -233,6 +233,7 @@ void shot_transform_lasser(shot_t *shot)
 			shot->img = g_shot_lasserX;
 #endif /* PUBLIC_SERVER */
 			break;
+
 		case TUX_UP:
 		case TUX_DOWN:
 			shot->w = GUN_SHOT_VERTICAL;
@@ -252,8 +253,6 @@ static void action_moveShot(space_t *space, shot_t *shot, void *p)
 {
 	int new_x, new_y;
 	arena_t *arena;
-
-	UNUSED(p);
 
 	arena = arena_get_current();
 
@@ -288,8 +287,6 @@ static int isValueInList(list_t *list, int x)
 
 static void action_check(space_t *space, shot_t *shot, client_t *client)
 {
-	UNUSED(space);
-
 	if (isValueInList(client->listSeesShot, shot->id) == 0) {
 		list_add(client->listSeesShot, newInt(shot->id));
 		proto_send_shot_server(PROTO_SEND_ONE, client, shot);

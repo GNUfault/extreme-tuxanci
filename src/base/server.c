@@ -152,13 +152,11 @@ static void eventDelClientFromListClient(client_t *client)
 	list_del_item(listClient, offset, server_udp_destroy_client);
 }
 
-static void delZombieCLient(void *p_nothink)
+static void delZombieCLient(void *p_nothing)
 {
 	client_t *thisClient;
 	my_time_t currentTime;
 	int i;
-
-	UNUSED(p_nothink);
 
 	currentTime = timer_get_current_time();
 
@@ -182,17 +180,15 @@ static void delZombieCLient(void *p_nothink)
 	}
 }
 
-static void eventPeriodicSyncClient(void *p_nothink)
+static void eventPeriodicSyncClient(void *p_nothing)
 {
 	client_t *thisClientSend;
 	tux_t *thisTux;
 	int i;
 
-	UNUSED(p_nothink);
-
 #ifndef PUBLIC_SERVER
 	proto_send_newtux_server(PROTO_SEND_ALL_SEES_TUX, NULL, world_get_control_tux(TUX_CONTROL_KEYBOARD_RIGHT));
-#endif
+#endif /* PUBLIC_SERVER */
 
 	for (i = 0; i < listClient->count; i++) {
 		thisClientSend = (client_t *) listClient->list[i];
@@ -207,10 +203,8 @@ static void eventPeriodicSyncClient(void *p_nothink)
 	}
 }
 
-static void eventSendPingClients(void *p_nothink)
+static void eventSendPingClients(void *p_nothing)
 {
-	UNUSED(p_nothink);
-	
 	proto_send_ping_server(PROTO_SEND_ALL, NULL);
 }
 
@@ -277,7 +271,7 @@ void server_send_client(client_t *p, char *msg)
 	assert(msg != NULL);
 
 	if (p->status != NET_STATUS_ZOMBIE) {
-		int ret = -1;	/* no warnings */
+		int ret = -1;
 
 #ifndef PUBLIC_SERVER
 		if (isParamFlag("--send")) {
