@@ -727,7 +727,6 @@ void proto_send_shot_server(int type, client_t *client, shot_t *p)
 	assert(p != NULL);
 
 	snprintf(msg, STR_PROTO_SIZE, "shot %d %d %d %d %d %d %d %d %d\n",
-//	 	 p->id, p->x-p->px*8, p->y-p->py*8, p->px, p->py, p->position, p->gun,
 	 	 p->id, p->x, p->y, p->px, p->py, p->position, p->gun,
 		 p->author_id, p->isCanKillAuthor);
 
