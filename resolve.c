@@ -122,7 +122,38 @@ unsigned server_register (client_t *client, char *buf, unsigned int size)
 	return 1;
 }
 
-/* register new server  */
+/* unregister server */
+unsigned server_unregister (client_t *client, char *buf, unsigned int size)
+{
+	response_head *header = (response_head *) buf;
+
+	server_t *server;
+
+	/* find the server */
+	for (server = server_list.next; server != &server_list; server = server->next) {
+		if (server->ip == client->ip && server->port == header->port) {
+			/* remove it */
+			server->next->prev = server->prev;
+			server->prev->next = server->next;
+
+			server->state = SERVER_STATE_OFFLINE;
+
+			struct sockaddr_in srv;
+			srv.sin_addr.s_addr = server->ip;
+			printf ("> Server %s:%d unregistered\n", inet_ntoa (srv.sin_addr), server->port);
+
+			free (server);
+
+			/* disconnect */
+			client_disconnected (client);
+
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 unsigned server_getlist (client_t *client, char *buf, unsigned int size)
 {
 
@@ -249,7 +280,10 @@ unsigned handler (client_t *client, char *buf, int size)
 			if (size == 9)
 				server_register (client, buf+1, size-1);
 			break;
-	
+		case 'u':
+			if (size == 9)
+				server_unregister (client, buf+1, size-1);
+			break;
 	}
 
 	return 1;
