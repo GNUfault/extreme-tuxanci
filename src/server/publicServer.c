@@ -116,6 +116,9 @@ static void daemonize()
 #endif /* __WIN32__ */
 }
 
+/**
+ * Tell MasterServer that we want to be propagated
+ */
 static int public_server_register()
 {
 #ifndef __WIN32__
@@ -160,6 +163,74 @@ static int public_server_register()
 	register_head *head = (register_head *) malloc(sizeof(register_head));
 
 	head->cmd = 'p';
+	head->port = atoi(public_server_get_setting("PORT4", "--port4", "6800"));
+	head->ip = 0;				/* TODO */
+
+	/* send request for server list */
+	int r = send(s, head, sizeof(register_head), 0);
+
+	free(head);
+
+#ifndef __WIN32__
+	close(s);
+#else /* __WIN32__ */
+	closesocket(s);
+#endif /* __WIN32__ */
+
+	if (r == -1) {
+		return -1;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * Tell MasterServer that we are shutting down
+ */
+static int public_server_unregister()
+{
+#ifndef __WIN32__
+	int s;
+#else /* __WIN32__ */
+	SOCKET s;
+#endif /* __WIN32__ */
+
+	struct sockaddr_in server;
+	char *master_server_ip;
+
+	master_server_ip = dns_resolv(NET_MASTER_SERVER_DOMAIN);
+
+	if (master_server_ip == NULL) {
+		warning("Did not obtained IP of the MasterServer");
+		return -1;
+	}
+
+	server.sin_family = AF_INET;
+	server.sin_port = htons(NET_MASTER_PORT);
+	server.sin_addr.s_addr = inet_addr(master_server_ip);
+
+	free(master_server_ip);
+
+	if ((s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) < 0) {
+		warning("Unable to open socket for connection to MasterServer");
+		return -1;
+	}
+
+	/* connect to MasterServer */
+	if (connect(s, (struct sockaddr *) &server, sizeof(server)) < 0) {
+		warning("Unable to estabilish connection to MasterServer");
+		return -1;
+	}
+
+	typedef struct {
+		unsigned char cmd;
+		unsigned port;
+		unsigned ip;
+	} __PACKED__ register_head;
+
+	register_head *head = (register_head *) malloc(sizeof(register_head));
+
+	head->cmd = 'u';
 	head->port = atoi(public_server_get_setting("PORT4", "--port4", "6800"));
 	head->ip = 0;				/* TODO */
 
@@ -325,6 +396,13 @@ void public_server_quit()
 {
 	debug("Shutting down the Tuxanci game server");
 	/* TODO: Why not to log it? */
+
+	if (atoi(public_server_get_setting("LAN_ONLY", "--lan-only", "0")) == 0) {
+		if (public_server_unregister() < 0) {
+			error("Unable to contact MasterServer");
+			/* TODO: Why not to log it? */
+		}
+	}
 
 	net_multiplayer_quit();
 	arena_destroy(arena);
