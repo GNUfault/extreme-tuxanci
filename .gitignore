@@ -1,29 +1,17 @@
-### General section ###
-# build directory
+# build directories
 build/
+build_client/
+build_server/
+
+# documentation build
 doc/
 
-### xHire's section ###
-# private scripts
-ai.sh
-build.sh
-patch.sh
-chmod.sh
-indent.sh
-
-# notes
-NOTES
-CHANGELOG
-handbook_data/
-
-# tmp folder
+# temporary folder
 tmp/
 
 # core dumps
+core
 core.*
 
 # backup files
 *~
-
-# debug files
-DEBUG.*
