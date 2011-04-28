@@ -3,11 +3,12 @@
 ###############################################################################
 # LINKING ( for binary )
 ###############################################################################
-IF ( BUILD_SERVER )
-	LINK_LIBRARIES (
-		${ZIP_LIBRARIES}
-	)
-ELSE ( BUILD_SERVER )
+IF ( WITH_PHYSFS )
+	LINK_LIBRARIES ( ${PHYSFS_LIBRARY} )
+ELSE ( WITH_PHYSFS )
+	LINK_LIBRARIES ( ${ZIP_LIBRARIES} )
+ENDIF ( WITH_PHYSFS )
+IF ( NOT BUILD_SERVER )
 	IF ( WITH_OPENGL )
 		LINK_LIBRARIES ( ${OPENGL_LIBRARIES} )
 	ENDIF ( WITH_OPENGL )
@@ -26,11 +27,10 @@ ELSE ( BUILD_SERVER )
 		)
 	ENDIF ( WITH_AUDIO )
 	LINK_LIBRARIES (
-		${ZIP_LIBRARIES}
 		${CAIRO_LIBRARIES}
 		${FONTCONFIG_LIBRARIES}
 	)
-ENDIF ( BUILD_SERVER )
+ENDIF ( NOT BUILD_SERVER )
 IF( WIN32 )
 	LINK_LIBRARIES( -lwsock32 -lintl )
 ENDIF ( WIN32 )

@@ -173,10 +173,12 @@ MESSAGE ( STATUS "<Loading PkgConfig>" )
 FIND_PACKAGE ( PkgConfig REQUIRED )
 IF ( WITH_PHYSFS )
 	FIND_PACKAGE ( PhysFS REQUIRED )
+	INCLUDE_DIRECTORIES( ${PHYSFS_INCLUDE_DIR} )
 ELSE ( WITH_PHYSFS )
 	pkg_check_modules(ZIP REQUIRED libzip)
+	INCLUDE_DIRECTORIES( ${ZIP_INCLUDE_DIRS} )
 ENDIF ( WITH_PHYSFS )
-INCLUDE_DIRECTORIES( ${ZIP_INCLUDE_DIRS} )
+
 IF ( NOT BUILD_SERVER )
 	# cairo not needed until we start actually using the svg files
 	#pkg_check_modules(CAIRO REQUIRED cairo>=1.8.8)
