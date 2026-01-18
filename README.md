@@ -35,7 +35,7 @@ Teleport: if somebody shoots at Tux he teleport himself away
 Ghost: Tux can move and shoot through obstacles.
 ### Note
 Bonuses last only few seconds and if tux take another bonus then
-first one looses its effects.
+first one loses its effects.
 
 ## GAME USAGE
 Starting game is simple tuxanci-VERSION or tuxanci-server-V. based on what we
@@ -54,7 +54,7 @@ do some changes for it (again pretty selfexplaining).
 
 ## Controls
 ### Player one
-movement: cursor arows
+movement: cursor arrows
 fire: zero [ 0 ] NumPad
 change weapon: one [ 1 ] NumPad
 ### Player two
