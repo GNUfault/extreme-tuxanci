@@ -6,6 +6,7 @@
 - game is quitable through ESC from each section of game menu
 - switched from libzzip to libzip
 - big code cleaning and modernization
+- documentation updates
 
 ## from 0.20.0 to 0.21.0
 - implemented gettext -> automatic selection of right language
