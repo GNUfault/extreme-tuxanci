@@ -1,4 +1,5 @@
-* from 0.21.0 to 0.2.2
+# TUXANCI CHANGELOG
+## from 0.21.0 to 0.2.2
 - the download server is integrated in game server
 - support for OpenGL in master branch
 - ESC closes the chat window -- not the game
@@ -6,7 +7,7 @@
 - switched from libzzip to libzip
 - big code cleaning
 
-* from 0.20.0 to 0.21.0
+## from 0.20.0 to 0.21.0
 - implemented gettext -> automatic selection of right language
 - possibility to save game (key F2) and to load it
 - possibility to pause game (key P)
@@ -18,7 +19,7 @@
 - when playing 2 player in Big Arena, the screen is splitted -- it is possible to change the orientation with key F3
 - various little improvements (suicide takes off points, Tuxánci remembers last played arena and others) and fixes
 
-* from 0.18 to 0.20.0
+## from 0.18 to 0.20.0
 - completely rewritten engine, moreover modular
 - new network protocol and multiplayer
 - support for MasterServer (makes it possible to show list of game servers (and choose some) directly from the game)
