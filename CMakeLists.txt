@@ -220,7 +220,7 @@ ADD_SUBDIRECTORY ( src )
 ###############################################################################
 ADD_SUBDIRECTORY ( data )
 SET ( tuxanci_docs
-	${CMAKE_CURRENT_SOURCE_DIR}/LICENCE.md
+	${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md
 	${CMAKE_CURRENT_SOURCE_DIR}/AUTHORS
 	${CMAKE_CURRENT_SOURCE_DIR}/README.md
 )
