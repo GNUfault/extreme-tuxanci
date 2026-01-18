@@ -37,10 +37,12 @@ void font_init()
 		printf("path[%d]=%s\nflag[%d]=%s\n\n", i, font_list[i].path, i, font_list[i].flag);
 	}
 */
-	if (font_list == NULL) {
-		error("Unable to locate a font");
-		return;
-	}
+ 
+	// Make font checking more robust, by GNUfault
+	if (font_list == NULL || font_list[0].path == NULL) {
+        error("Unable to locate a font");
+        return;
+    }
 
 	font_file = strdup(font_list[0].path);
 	fontSize = FONT_SIZE;
