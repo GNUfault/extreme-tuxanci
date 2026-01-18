@@ -1,7 +1,7 @@
 # HOW TO INSTALL TUXANCI
 
 ## Client
-Requirements: `cmake >= 2.6.0`, `SDL`, `SDL_image`, `SDL_ttf`, (`SDL_mixer`), (`OpenGL`),
+Requirements: `cmake >= 3.10`, `SDL`, `SDL_image`, `SDL_ttf`, (`SDL_mixer`), (`OpenGL`),
 	      (`Gettext`), `libzip`
 (Those in brackets are optional and can be omitted if you choose appropriate
 switches while building the game. But we recommend to have all of them.)
@@ -45,7 +45,7 @@ Note: if you want to uninstall the game, run this command:
 ```
 
 ## Server
-Requirements: `cmake >= 2.6.0`, `libzip`
+Requirements: `cmake >= 3.10`, `libzip`
 
 Note: you'll also need "-devel" version of libzip library package.
 
