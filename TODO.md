@@ -1,8 +1,6 @@
 ## TODO for v0.21.1
 Fix version number
 
-Replace almost all text files with markdown
-
 Modernize the server
 
 Modernize the OSX and Windows version
