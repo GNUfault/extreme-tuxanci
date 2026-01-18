@@ -6,4 +6,4 @@ Modernize the OSX and Windows version
 Fix all compile warnings
 
 ## TODO for v0.22.0
-Switch to SDL2
+Switch to SDL2 from SDL 1.2
