@@ -63,7 +63,7 @@ do some changes for it (again pretty selfexplaining).
 | **Player Two** | Movement                   | W (up), S (down), A (left), D (right) |
 |                | Fire                       | Q                                     |
 |                | Change weapon              | Tab                                   |
-| **Common**     | Fullscreen/window mode     | F1 (dangerous with multiple monitors) |
+| **Common**     | Fullscreen/window mode     | F1                                    |
 |                | Save game                  | F2                                    |
 |                | Change splitting of screen | F3 (local multiplayer in big arena)   |
 |                | Pause                      | P                                     |
