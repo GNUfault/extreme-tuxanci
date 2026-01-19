@@ -382,8 +382,4 @@ mod_sym_t modai_sym = 	{ &init,
 #else /* PUBLIC_SERVER */
 			  0,
 #endif /* PUBLIC_SERVER */
-			  &event,
-			  &isConflict,
-			  &cmdArena,
-			  &recvMsg,
-			  &destroy };
+			  };
