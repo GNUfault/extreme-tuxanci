@@ -10,7 +10,7 @@
 #else 
 	#define PATH_DIR        "/usr/local/share"  PATH_SEPARATOR  APPNAME PATH_SEPARATOR
 #endif
-#define TUXANCI_VERSION		"0.2.99"
+#define TUXANCI_VERSION		"0.22.1"
 #define PREFIX			"/usr/local" PATH_SEPARATOR
 #ifdef PUBLIC_SERVER
 	#define SERVER_CONFIG	"/etc" PATH_SEPARATOR	APPNAME	PATH_SEPARATOR "server.conf"
