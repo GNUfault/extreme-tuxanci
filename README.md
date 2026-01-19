@@ -71,7 +71,7 @@ do some changes for it (again pretty selfexplaining).
 ## HAVE PROBLEM/FOUND BUG/ETC...
 If you found some bug, have feature request, or need some help with, please open a [issue](https://github.com/GNUfault/extreme-tuxanci/issues).
 
-# Original Tuxánci
+## Original Tuxánci
 The original Tuxánci can be found [here](https://repo.or.cz/tuxanci.git).
 
 ## NOTE
