@@ -3,7 +3,7 @@
 - remove appimage
 - fixed warnings in make uninstall
 - man pages updated
-- fixed server
+- fixed client not connecting to server
 
 ## from 0.21.0 to 0.22.0
 - the download server is integrated in game server
