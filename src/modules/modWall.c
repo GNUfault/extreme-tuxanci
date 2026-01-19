@@ -238,7 +238,7 @@ static int draw(int x, int y, int w, int h)
 }
 #endif /* PUBLIC_SERVER */
 
-static void action_eventwall(space_t *space, wall_t *wall, shot_t *shot)
+static void action_eventwall(shot_t *shot)
 {
 	arena_t *arena;
 	tux_t *author;
