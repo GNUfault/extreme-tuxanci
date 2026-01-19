@@ -135,10 +135,6 @@ static void getStatusImgWall(void *p, int *id, int *x, int *y, int *w, int *h)
 	*w = wall->img->w;
 	*h = wall->img->h;
 }
-
-static void setStatusImgWall(void *p, int x, int y, int w, int h)
-{
-}
 #endif /* PUBLIC_SERVER */
 
 static void cmd_wall(char *line)
@@ -204,7 +200,7 @@ static void cmd_wall(char *line)
 		spaceImgWall = space_new(export_fce->fce_arena_get_current()->w,
 					 export_fce->fce_arena_get_current()->h,
 					 320, 240,
-					 getStatusImgWall, setStatusImgWall);
+					 getStatusImgWall, NULL);
 	}
 #endif /* PUBLIC_SERVER */
 
