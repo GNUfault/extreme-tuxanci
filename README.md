@@ -39,18 +39,18 @@ Bonuses last only few seconds and if tux take another bonus then
 first one loses its effects.
 
 ## GAME USAGE
-Starting game is simple tuxanci-VERSION or tuxanci-server-V. based on what we
+Starting game is simple `tuxanci-VERSION` or `tuxanci-server-V`. based on what we
 compiled (based on presumption user installed into directories where path
 is set).
 
 If you are using bundled binary and tuxanci are reporting "File not found!"
 error, you need to launch it directly from BIN directory 
-(eg.: "$ cd tuxanci/bin && ./tuxanci-VERSION").
+(eg.: `$ cd tuxanci/bin && ./tuxanci-VERSION`).
 
 For client we create some configuration files in $HOME. There is created
-".tuxanci" directory and in there are pretty selfexplaining .conf files.
+`.tuxanci` directory and in there are pretty selfexplaining .conf files.
 
-For server we create directory /etc/tuxanci-server/server.conf where you could
+For server we create directory `/etc/tuxanci-server/server.conf` where you could
 do some changes for it (again pretty selfexplaining).
 
 ## Controls
