@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tuxanci\n"
-"Report-Msgid-Bugs-To: team@tuxanci.org\n"
+"Report-Msgid-Bugs-To: bluMATRIKZ@gmail.com\n"
 "POT-Creation-Date: 2010-06-06 23:32+0200\n"
 "PO-Revision-Date: 2008-12-01 12:31+0100\n"
 "Last-Translator: Evgeni Golov <sargentd@die-welt.net>\n"

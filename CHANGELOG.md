@@ -5,10 +5,13 @@
 - ESC closes the chat window -- not the game
 - game is quitable through ESC from each section of game menu
 - switched from libzzip to libzip
-- big code cleaning and modernization
+- big code cleaning and patching
 - documentation updates
 - abused link(s) removed
 - updated cmake to >= 3.10
+- removed gentoo ebuild
+- updated email to <bluMATRIKZ@gmail.com>
+- removed old server
 
 ## from 0.20.0 to 0.21.0
 - implemented gettext -> automatic selection of right language

@@ -33,7 +33,7 @@ done
 # VARIABLES
 ###############################################################################
 APPNAME="tuxanci"
-GIT="git://repo.or.cz/tuxanci.git"
+GIT="https://github.com/GNUfault/extreme-tuxanci.git"
 BUNDLE_PREFIX="${HOME}"/tmp/tuxanci-bundle
 LOG="${BUNDLE_PREFIX}"/linux.log
 SOURCE="${BUNDLE_PREFIX}"/"${APPNAME}-source-${VERSION}"
@@ -87,10 +87,10 @@ Priority: optional
 Depends: libc6 (>= 2.2.4-4), libsdl1.2debian (>= 1.2), libsdl-image1.2 (>= 1.2), libsdl-mixer1.2 (>= 1.2), libsdl-ttf2.0-0 (>= 2.0)
 Architecture: ${ARCH}
 Installed-Size: 4993
-Maintainer: Tomas Chvatal <tomas.chvatal@gmail.com>
+Maintainer: Connor Thomson <bluMATRIKZ@gmail.com>
 Description: Game tuxanci next generation version 0.2.1
  .
- http://www.tuxanci.org" > "${DEST_DEB}"/DEBIAN/control
+ https://github.com/GNUfault/extreme-tuxanci" > "${DEST_DEB}"/DEBIAN/control
 ###############################################################################
 # BUILDING DEBIAN PACKAGES
 ###############################################################################

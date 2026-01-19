@@ -98,7 +98,7 @@ ADD_CUSTOM_TARGET ( uninstall "${CMAKE_COMMAND}"
 ###############################################################################
 INCLUDE ( InstallRequiredSystemLibraries )
 SET ( CPACK_PACKAGE_DESCRIPTION_SUMMARY "Tuxanci is first tux shooter inspired by game Bulanci." )
-SET ( CPACK_PACKAGE_VENDOR "Tuxanci team <team@tuxanci.org>" )
+SET ( CPACK_PACKAGE_VENDOR "Connor <bluMATRIKZ@gmail.com>" )
 SET ( CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md" )
 SET ( CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README.md" )
 SET ( CPACK_GENERATOR "TGZ" )
