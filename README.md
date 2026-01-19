@@ -1,4 +1,3 @@
-# Tuxánci
 ![Tuxánci](data/tuxanci.svg)
 ## ABOUT TUXANCI
 Tuxanci is first tux shooter. In the absolute beginning it was inspired by
