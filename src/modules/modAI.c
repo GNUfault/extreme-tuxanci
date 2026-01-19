@@ -43,6 +43,9 @@ static alternative_t *newAlternative(int route, int x, int y)
 
 static alternative_t *cloneAlternative(alternative_t *p, int route, int x, int y)
 {
+	(void)x;
+	(void)y;
+	
 	alternative_t *new;
 
 	assert(p != NULL);
