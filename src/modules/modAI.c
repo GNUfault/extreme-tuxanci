@@ -118,10 +118,6 @@ static void destroyAlternative(alternative_t *p)
 	free(p);
 }
 
-static void cmd_ai(char *line)
-{
-}
-
 static int init(export_fce_t *p)
 {
 	export_fce = p;
