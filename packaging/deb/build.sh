@@ -19,8 +19,7 @@ Priority: optional
 Architecture: $ARCH
 Maintainer: GNUfault
 Depends: libc6, libsdl1.2debian, libsdl-image1.2, libsdl-mixer1.2, libsdl-ttf2.0-0, libzip5, libopengl0
-Description: Tuxanci is first tux shooter inspired by a well-known Czech game Bulanci.
-EOF
+Description: Tuxanci first tux shooter inspired by game Bulanci.
 
 make DESTDIR=../packaging/deb/$PKG_DIR -j$(( $(nproc) + 1 )) -C ../../build install
 
