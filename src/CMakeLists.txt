@@ -103,6 +103,24 @@ ELSE ( BUILD_SERVER )
 	MESSAGE ( STATUS "<Building client as requested>" )
 	ADD_EXECUTABLE ( ${APPNAME} ${SRC_compile} )
 ENDIF ( BUILD_SERVER )
+###############################################################################
+# POST COMPILATION STUFF
+###############################################################################
+IF ( NOT BUILD_DEBUG OR BUILD_DEVELOPER )
+    IF ( NOT BUILD_SERVER )
+        ADD_CUSTOM_COMMAND(
+            TARGET tuxanci
+            POST_BUILD
+            COMMAND ${CMAKE_OBJCOPY} --strip-all $<TARGET_FILE:tuxanci>
+        )
+    ELSE ()
+        ADD_CUSTOM_COMMAND(
+            TARGET tuxanci-server
+            POST_BUILD
+            COMMAND ${CMAKE_OBJCOPY} --strip-all $<TARGET_FILE:tuxanci-server>
+        )
+    ENDIF ()
+ENDIF ()
 ################################################################################
 # INSTALLATION OF BINARY
 ################################################################################
