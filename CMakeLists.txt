@@ -17,7 +17,7 @@
 OPTION (BUILD_SERVER        "Build the server instead of client"           OFF)
 OPTION (ENABLE_IPV6         "Build with the ipv6 support"                  ON)
 OPTION (WITH_AUDIO          "Build with audio enabled"                     ON)
-OPTION (ENABLE_DEBUG        "Build debug features"                         ON)
+OPTION (ENABLE_DEBUG        "Build debug features"                         OFF)
 OPTION (DEVELOPER           "Modify stuff to please tuxanci devs"          OFF)
 MARK_AS_ADVANCED ( DEVELOPER )
 OPTION (WITH_NLS            "Build the translations"                       ON)
@@ -147,6 +147,8 @@ IF ( DEVELOPER )
 	ADD_DEFINITIONS ( -DDEBUG )
 	# if somebody asks yes i am insane
 	SET ( CMAKE_C_FLAGS "-g -ggdb -O0 -pipe -Wall -Wshadow -Wall -Wextra -Wno-missing-field-initializers -Wno-unused-parameter -Wold-style-definition -Wdeclaration-after-statement -Wmissing-declarations -Wmissing-prototypes -Wredundant-decls -Wmissing-noreturn -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Winline -Wformat-nonliteral -Wformat-security -Wswitch-enum -Wswitch-default -Winit-self -Wmissing-include-dirs -Wundef -Waggregate-return -Wmissing-format-attribute -Wnested-externs -Wunsafe-loop-optimizations" )
+ELSE ( DEVELOPER )
+	SET ( CMAKE_C_FLAGS "-g0 -Oz -pipe -Wall -Wextra" )
 ENDIF ( DEVELOPER )
 ###############################################################################
 # BASIC DIRECTORIES FOR INCLUSION
